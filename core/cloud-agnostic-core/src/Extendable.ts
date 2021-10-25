@@ -12,7 +12,8 @@ import { Types } from "./Types";
 export abstract class Extendable {
   private _extensionFactories = new Map<string, ExtensionFactory>();
 
-  protected requireExtension(factory: ExtensionFactory): void {
+  protected requireExtension(extensionType: string): void {
+    const factory = new ExtensionFactory(extensionType);
     this._extensionFactories.set(factory.extensionType, factory);
   }
 

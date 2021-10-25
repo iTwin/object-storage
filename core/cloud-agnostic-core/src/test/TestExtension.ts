@@ -3,9 +3,15 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Extension } from "..";
+import { Extendable, Extension } from "..";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
+
+export class DefaultTestExtensions {
+  public static apply(extendable: Extendable): void {
+    extendable.useExtension(ConcreteTestExtension);
+  }
+}
 
 export abstract class TestExtension extends Extension {
   public static readonly extensionType = "testType";

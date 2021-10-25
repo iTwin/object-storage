@@ -4,16 +4,15 @@
 import { expect } from "chai";
 import { Container } from "inversify";
 
-import {
-  Extendable,
-  ExtensionError,
-  ExtensionFactory,
-  ExtensionsConfig,
-  Types,
-} from "..";
+import { Extendable, ExtensionError, ExtensionsConfig } from "..";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
-import { ConcreteTestExtension, TestExtension } from "./TestExtension";
+import { ConcreteTestExtension } from "./TestExtension";
+import {
+  TestSetup,
+  TestSetupNoDefaultExtensions,
+  TestSetupNoFactory,
+} from "./TestSetup";
 
 const testConfig: TestConfig = {
   extensionName: "testName",
@@ -28,7 +27,6 @@ describe(`${Extendable.name}`, () => {
   it(`should resolve registered extension`, () => {
     const setup = new TestSetup(new Container(), extensionsConfig);
 
-    setup.useExtension(ConcreteTestExtension);
     setup.start();
 
     const test = setup.container.get(Test);
@@ -49,7 +47,10 @@ describe(`${Extendable.name}`, () => {
   });
 
   it(`should throw if testName extension is not registered`, () => {
-    const setup = new TestSetup(new Container(), extensionsConfig);
+    const setup = new TestSetupNoDefaultExtensions(
+      new Container(),
+      extensionsConfig
+    );
 
     const testedFunction = () => setup.start();
     expect(testedFunction)
@@ -60,33 +61,3 @@ describe(`${Extendable.name}`, () => {
       );
   });
 });
-
-class TestSetup extends Extendable {
-  constructor(public container: Container, config: ExtensionsConfig) {
-    super();
-
-    this.requireExtension(new ExtensionFactory(TestExtension.extensionType));
-
-    container
-      .bind<ExtensionsConfig>(Types.extensionsConfig)
-      .toDynamicValue(() => config);
-  }
-
-  public start(): void {
-    this.bindExtensions(this.container);
-  }
-}
-
-class TestSetupNoFactory extends Extendable {
-  constructor(public container: Container, config: ExtensionsConfig) {
-    super();
-
-    container
-      .bind<ExtensionsConfig>(Types.extensionsConfig)
-      .toDynamicValue(() => config);
-  }
-
-  public start(): void {
-    this.bindExtensions(this.container);
-  }
-}

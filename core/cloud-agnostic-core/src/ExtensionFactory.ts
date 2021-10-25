@@ -7,12 +7,7 @@ import { Extension } from "./Extension";
 export class ExtensionFactory {
   private _extensionMap = new Map<string, Extension>();
 
-  constructor(
-    public readonly extensionType: string,
-    defaultExtensions?: (new () => Extension)[]
-  ) {
-    defaultExtensions?.forEach((x) => this.addExtension(new x()));
-  }
+  constructor(public readonly extensionType: string) {}
 
   public addExtension(extension: Extension): void {
     this._extensionMap.set(extension.extensionName, extension);
