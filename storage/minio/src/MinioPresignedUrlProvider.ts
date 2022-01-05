@@ -1,0 +1,45 @@
+/*-----------------------------------------------------------------------------
+|  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
+ *----------------------------------------------------------------------------*/
+import { inject, injectable } from "inversify";
+import { Client } from "minio";
+
+import {
+  buildObjectKey,
+  ObjectReference,
+  PresignedUrlProvider,
+} from "@itwin/object-storage-core";
+import { Types } from "@itwin/object-storage-s3";
+
+@injectable()
+export class MinioPresignedUrlProvider implements PresignedUrlProvider {
+  private readonly _client: Client;
+  private readonly _bucket: string;
+
+  public constructor(client: Client, @inject(Types.bucket) bucket: string) {
+    this._client = client;
+    this._bucket = bucket;
+  }
+
+  public async getDownloadUrl(
+    reference: ObjectReference,
+    expiresInSeconds = 3600
+  ): Promise<string> {
+    return this._client.presignedGetObject(
+      this._bucket,
+      buildObjectKey(reference),
+      expiresInSeconds
+    );
+  }
+
+  public async getUploadUrl(
+    reference: ObjectReference,
+    expiresInSeconds = 3600
+  ): Promise<string> {
+    return this._client.presignedPutObject(
+      this._bucket,
+      buildObjectKey(reference),
+      expiresInSeconds
+    );
+  }
+}

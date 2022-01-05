@@ -1,0 +1,95 @@
+/*-----------------------------------------------------------------------------
+|  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
+ *----------------------------------------------------------------------------*/
+import { injectable } from "inversify";
+
+import {
+  Metadata,
+  MultipartUploadOptions,
+  ObjectDirectory,
+  ObjectProperties,
+  ObjectReference,
+  TransferConfig,
+  TransferData,
+  TransferType,
+} from ".";
+
+@injectable()
+export abstract class ServerSideStorage
+  implements PresignedUrlProvider, TransferConfigProvider
+{
+  public abstract download(
+    reference: ObjectReference,
+    transferType: TransferType,
+    localPath?: string
+  ): Promise<TransferData>;
+
+  public abstract upload(
+    reference: ObjectReference,
+    data: TransferData,
+    metadata?: Metadata
+  ): Promise<void>;
+
+  public abstract uploadInMultipleParts(
+    reference: ObjectReference,
+    data: TransferData,
+    options?: MultipartUploadOptions
+  ): Promise<void>;
+
+  public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
+
+  public abstract remove(reference: ObjectReference): Promise<void>;
+
+  public abstract exists(reference: ObjectReference): Promise<boolean>;
+
+  public abstract updateMetadata(
+    reference: ObjectReference,
+    metadata: Metadata
+  ): Promise<void>;
+
+  public abstract getObjectProperties(
+    reference: ObjectReference
+  ): Promise<ObjectProperties>;
+
+  public abstract getDownloadUrl(
+    reference: ObjectReference,
+    expiresInSeconds?: number
+  ): Promise<string>;
+  public abstract getUploadUrl(
+    reference: ObjectReference,
+    expiresInSeconds?: number
+  ): Promise<string>;
+
+  /** Azure will only be limited to baseDirectory. */
+  public abstract getDownloadConfig(
+    directory: ObjectDirectory,
+    expiresInSeconds?: number
+  ): Promise<TransferConfig>;
+  /** Azure will only be limited to baseDirectory. */
+  public abstract getUploadConfig(
+    directory: ObjectDirectory,
+    expiresInSeconds?: number
+  ): Promise<TransferConfig>;
+}
+
+export interface PresignedUrlProvider {
+  getDownloadUrl(
+    reference: ObjectReference,
+    expiresInSeconds?: number
+  ): Promise<string>;
+  getUploadUrl(
+    reference: ObjectReference,
+    expiresInSeconds?: number
+  ): Promise<string>;
+}
+
+export interface TransferConfigProvider {
+  getDownloadConfig(
+    directory: ObjectDirectory,
+    expiresInSeconds?: number
+  ): Promise<TransferConfig>;
+  getUploadConfig(
+    directory: ObjectDirectory,
+    expiresInSeconds?: number
+  ): Promise<TransferConfig>;
+}
