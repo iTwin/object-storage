@@ -34,4 +34,4 @@ const tests = new StorageIntegrationTests(
   MinioServerSideStorageExtension,
   MinioClientSideStorageExtension
 );
-tests.start();
+tests.start().catch(() => (process.exitCode = 1));

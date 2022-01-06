@@ -16,6 +16,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { Types } from "./Types";
+
 @injectable()
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: S3Client;

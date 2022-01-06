@@ -134,7 +134,9 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    return (
+      Contents?.map((object) => buildObjectReference(object.Key!, "/")) ?? []
+    );
   }
 
   public async remove(reference: ObjectReference): Promise<void> {

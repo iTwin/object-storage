@@ -43,7 +43,7 @@ export class StorageIntegrationTests extends Extendable {
       .toConstantValue(_config);
   }
 
-  public start(): void {
+  public async start(): Promise<void> {
     this.bindExtensions(this.container);
 
     const serverSideStorage = this.container.get(ServerSideStorage);
@@ -52,8 +52,8 @@ export class StorageIntegrationTests extends Extendable {
     setOptions({
       serverSideStorage,
       clientSideStorage,
-      clientExtensionName: this._config.ServerSideStorage.extensionName,
-      serverExtensionName: this._config.ClientSideStorage.extensionName,
+      serverExtensionName: this._config.ServerSideStorage.extensionName,
+      clientExtensionName: this._config.ClientSideStorage.extensionName,
       baseDirectory: randomUUID(),
       relativeDirectory: "foobar",
     });
@@ -74,11 +74,8 @@ export class StorageIntegrationTests extends Extendable {
       .filter((file) => file.toLowerCase().endsWith("test.js"))
       .forEach((file) => mocha.addFile(join(testDirectory, file)));
 
-    mocha
-      .run()
-      .on("fail", () => {
-        process.exitCode = 1;
-      })
-      .on("end", () => process.exit(0)); // process hangs after tests without this
+    return new Promise<void>((resolve, reject) =>
+      mocha.run().on("fail", reject).on("end", resolve)
+    );
   }
 }

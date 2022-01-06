@@ -34,4 +34,4 @@ const tests = new StorageIntegrationTests(
   OssServerSideStorageExtension,
   S3ClientSideStorageExtension
 );
-tests.start();
+tests.start().catch(() => (process.exitCode = 1));

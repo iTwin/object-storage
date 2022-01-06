@@ -42,8 +42,11 @@ export function buildObjectKey(reference: {
   }/${objectName}`;
 }
 
-export function buildObjectReference(objectKey: string): ObjectReference {
-  const parts = objectKey.split("/");
+export function buildObjectReference(
+  objectKey: string,
+  separator: string
+): ObjectReference {
+  const parts = objectKey.split(separator).filter((key) => key);
   const lastIndex = parts.length - 1;
 
   return {
