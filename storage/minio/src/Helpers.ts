@@ -5,19 +5,17 @@ import { Client } from "minio";
 
 export function createClient(config: {
   accessKey: string;
-  hostname: string;
-  protocol: string;
+  baseUrl: string;
   secretKey: string;
 }): Client {
-  const { accessKey, hostname, protocol, secretKey } = config;
+  const { accessKey, baseUrl, secretKey } = config;
 
-  const parts = hostname.split(":");
-  const endPoint = parts[0];
-  const port = parts.length === 2 ? Number(parts[1]) : undefined;
+  const [protocol, hostname] = baseUrl.split("://");
+  const [endPoint, port] = hostname.split(":");
 
   return new Client({
     endPoint,
-    port,
+    port: port ? Number(port) : undefined,
     useSSL: protocol === "https",
     accessKey,
     secretKey,

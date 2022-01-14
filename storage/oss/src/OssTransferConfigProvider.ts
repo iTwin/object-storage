@@ -71,8 +71,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         sessionToken: Credentials.SecurityToken,
       },
       expiration: new Date(Credentials.Expiration),
-      protocol: this._config.protocol,
-      hostname: this._config.hostname,
+      baseUrl: this._config.baseUrl,
     };
   }
 
@@ -117,8 +116,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         sessionToken: Credentials.SecurityToken,
       },
       expiration: new Date(Credentials.Expiration),
-      protocol: this._config.protocol,
-      hostname: this._config.hostname,
+      baseUrl: this._config.baseUrl,
     };
   }
 }

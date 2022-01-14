@@ -5,18 +5,15 @@ import { createReadStream } from "fs";
 import { stat } from "fs/promises";
 import { Readable } from "stream";
 
-import axios from "axios";
-
 import {
   ConfigUploadInput,
   instanceOfUrlUploadInput,
+  metadataToHeaders,
   streamToBuffer,
+  uploadToUrl,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
-import {
-  metadataToHeaders,
-  S3ClientSideStorage,
-} from "@itwin/object-storage-s3";
+import { S3ClientSideStorage } from "@itwin/object-storage-s3";
 
 export class MinioClientSideStorage extends S3ClientSideStorage {
   public override async upload(
@@ -25,32 +22,31 @@ export class MinioClientSideStorage extends S3ClientSideStorage {
     if (instanceOfUrlUploadInput(input)) {
       // minio responds with 411 error if Content-Length header is not present
       // used streamToBuffer to get the length before uploading for streams
+      const { data, metadata, url } = input;
 
-      const metaHeaders = input.metadata
-        ? metadataToHeaders(input.metadata)
+      const metaHeaders = metadata
+        ? metadataToHeaders(metadata, "x-amz-meta-")
         : undefined;
 
       const headers = {
         ...metaHeaders,
       };
 
-      const data =
-        typeof input.data === "string"
-          ? createReadStream(input.data)
-          : input.data instanceof Readable
-          ? await streamToBuffer(input.data)
-          : input.data;
+      const dataToUpload =
+        typeof data === "string"
+          ? createReadStream(data)
+          : data instanceof Readable
+          ? await streamToBuffer(data)
+          : data;
 
       const size =
-        typeof input.data === "string"
-          ? (await stat(input.data)).size
-          : (data as Buffer).byteLength;
+        typeof data === "string"
+          ? (await stat(data)).size
+          : (dataToUpload as Buffer).byteLength;
 
       headers["Content-Length"] = size.toString();
 
-      await axios.put(input.url, data, {
-        headers,
-      });
+      return uploadToUrl(url, dataToUpload, headers);
     } else {
       return super.upload(input);
     }

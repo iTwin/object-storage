@@ -17,10 +17,9 @@ const config = {
     bucket,
     accessKey: process.env.test_oss_access_key,
     secretKey: process.env.test_oss_secret_key,
-    protocol: "https",
-    hostname: process.env.test_oss_hostname,
+    baseUrl: process.env.test_oss_base_url,
     roleArn: process.env.test_oss_role_arn,
-    stsHostname: process.env.test_oss_sts_hostname,
+    stsBaseUrl: process.env.test_oss_sts_base_url,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientSideStorage: {
@@ -34,4 +33,7 @@ const tests = new StorageIntegrationTests(
   OssServerSideStorageExtension,
   S3ClientSideStorageExtension
 );
-tests.start().catch(() => (process.exitCode = 1));
+tests.start().catch((err) => {
+  process.exitCode = 1;
+  throw err;
+});

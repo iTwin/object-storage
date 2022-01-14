@@ -5,6 +5,7 @@ import { inject, injectable } from "inversify";
 
 import {
   Metadata,
+  MultipartUploadData,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
@@ -21,13 +22,12 @@ import {
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
 export interface S3ServerSideStorageConfig {
-  protocol: "http" | "https";
-  hostname: string;
+  baseUrl: string;
   bucket: string;
   accessKey: string;
   secretKey: string;
   roleArn: string;
-  stsHostname: string;
+  stsBaseUrl: string;
 }
 
 @injectable()
@@ -68,7 +68,7 @@ export class S3ServerSideStorage extends ServerSideStorage {
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
-    data: TransferData,
+    data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
     return this._s3Client.uploadInMultipleParts(reference, data, options);

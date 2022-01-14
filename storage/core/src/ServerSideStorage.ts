@@ -5,6 +5,7 @@ import { injectable } from "inversify";
 
 import {
   Metadata,
+  MultipartUploadData,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
@@ -32,7 +33,7 @@ export abstract class ServerSideStorage
 
   public abstract uploadInMultipleParts(
     reference: ObjectReference,
-    data: TransferData,
+    data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void>;
 

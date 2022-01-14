@@ -67,8 +67,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         sessionToken: Credentials!.SessionToken!,
       },
       expiration: Credentials!.Expiration!,
-      protocol: this._config.protocol,
-      hostname: this._config.hostname,
+      baseUrl: this._config.baseUrl,
     };
   }
 
@@ -109,8 +108,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         sessionToken: Credentials!.SessionToken!,
       },
       expiration: Credentials!.Expiration!,
-      protocol: this._config.protocol,
-      hostname: this._config.hostname,
+      baseUrl: this._config.baseUrl,
     };
   }
 }

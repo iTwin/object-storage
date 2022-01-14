@@ -1,12 +1,20 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { createWriteStream } from "fs";
+import { createReadStream, createWriteStream } from "fs";
 import { mkdir } from "fs/promises";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { ObjectDirectory, ObjectReference } from "./StorageInterfaces";
+import axios from "axios";
+
+import { UrlDownloadInput } from "./ClientSideStorage";
+import {
+  Metadata,
+  ObjectDirectory,
+  ObjectReference,
+  TransferData,
+} from "./StorageInterfaces";
 
 export async function streamToLocalFile(
   stream: Readable,
@@ -24,10 +32,12 @@ export async function streamToLocalFile(
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
-    const buffer = Array<Uint8Array>();
-    stream.on("data", (chunk) => buffer.push(chunk as Uint8Array));
+    const chunks = Array<Uint8Array>();
+    stream.on("data", (data) =>
+      chunks.push(data instanceof Buffer ? data : Buffer.from(data))
+    );
+    stream.on("end", () => resolve(Buffer.concat(chunks)));
     stream.on("error", reject);
-    stream.on("end", () => resolve(Buffer.concat(buffer)));
   });
 }
 
@@ -44,7 +54,7 @@ export function buildObjectKey(reference: {
 
 export function buildObjectReference(
   objectKey: string,
-  separator: string
+  separator = "/"
 ): ObjectReference {
   const parts = objectKey.split(separator).filter((key) => key);
   const lastIndex = parts.length - 1;
@@ -59,4 +69,65 @@ export function buildObjectReference(
 export function buildObjectDirectoryString(directory: ObjectDirectory): string {
   const { baseDirectory, relativeDirectory } = directory;
   return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""}`;
+}
+
+export async function downloadFromUrl(
+  input: UrlDownloadInput
+): Promise<TransferData> {
+  const { transferType, localPath, url } = input;
+
+  switch (transferType) {
+    case "buffer":
+      const bufferResponse = await axios.get(url, {
+        responseType: "arraybuffer",
+      });
+      return bufferResponse.data as Buffer;
+
+    case "stream":
+      const streamResponse = await axios.get(url, {
+        responseType: "stream",
+      });
+      return streamResponse.data as Readable;
+
+    case "local":
+      if (!localPath) throw new Error("Specify localPath");
+
+      const localResponse = await axios.get(url, {
+        responseType: "stream",
+      });
+
+      await streamToLocalFile(localResponse.data, localPath);
+
+      return localPath;
+
+    default:
+      throw new Error(`Type '${transferType}' is not supported`);
+  }
+}
+
+export async function uploadToUrl(
+  url: string,
+  data: TransferData,
+  headers?: Record<string, string>
+): Promise<void> {
+  await axios.put(
+    url,
+    typeof data === "string" ? createReadStream(data) : data,
+    {
+      headers,
+    }
+  );
+}
+
+export function metadataToHeaders(
+  metadata: Metadata,
+  prefix: string
+): Record<string, string> {
+  return Object.keys(metadata).reduce(
+    (acc: Record<string, string>, suffix: string) => ({
+      ...acc,
+      [`${prefix}${suffix}`.toLowerCase()]: metadata[suffix],
+    }),
+    {}
+  );
 }

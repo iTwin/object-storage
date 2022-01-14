@@ -3,7 +3,7 @@
  *----------------------------------------------------------------------------*/
 export * from "./ClientSideStorage";
 export * from "./Extensions";
+export * from "./Helpers";
 export * from "./ServerSideStorage";
 export * from "./StorageInterfaces";
 export * from "./Types";
-export * from "./Helpers";

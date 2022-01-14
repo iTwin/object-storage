@@ -26,7 +26,7 @@ export class StorageIntegrationTests extends Extendable {
   public readonly container = new Container();
 
   constructor(
-    private readonly _config: ExtensionsConfig,
+    config: ExtensionsConfig,
     serverSideExtension: new () => ServerSideStorageExtension,
     clientSideExtension: new () => ClientSideStorageExtension
   ) {
@@ -40,7 +40,7 @@ export class StorageIntegrationTests extends Extendable {
 
     this.container
       .bind<ExtensionsConfig>(ExtensionTypes.extensionsConfig)
-      .toConstantValue(_config);
+      .toConstantValue(config);
   }
 
   public async start(): Promise<void> {
@@ -52,8 +52,6 @@ export class StorageIntegrationTests extends Extendable {
     setOptions({
       serverSideStorage,
       clientSideStorage,
-      serverExtensionName: this._config.ServerSideStorage.extensionName,
-      clientExtensionName: this._config.ClientSideStorage.extensionName,
       baseDirectory: randomUUID(),
       relativeDirectory: "foobar",
     });

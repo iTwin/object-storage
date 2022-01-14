@@ -1,37 +1,33 @@
 /*-----------------------------------------------------------------------------
-|  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
+|  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
 import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import {
-  MinioClientSideStorageExtension,
-  MinioServerSideStorageExtension,
-} from "..";
+import { AzureClientSideBlobStorageExtension } from "../AzureClientSideBlobStorageExtension";
+import { AzureServerSideBlobStorageExtension } from "../AzureServerSideBlobStorageExtension";
+
+const extensionName = "azure";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerSideStorage: {
-    extensionName: "minio",
-    bucket: "integration-test",
-    accessKey: "minioadmin",
-    secretKey: "minioadmin",
-    baseUrl: "http://127.0.0.1:9000",
-    roleArn: "<role-arn>",
-    stsBaseUrl: "http://127.0.0.1:9000",
+    extensionName,
+    accountName: process.env.test_azure_storage_account_name,
+    accountKey: process.env.test_azure_storage_account_key,
+    baseUrl: process.env.test_azure_storage_base_url,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientSideStorage: {
-    extensionName: "minio",
-    bucket: "integration-test",
+    extensionName,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  MinioServerSideStorageExtension,
-  MinioClientSideStorageExtension
+  AzureServerSideBlobStorageExtension,
+  AzureClientSideBlobStorageExtension
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

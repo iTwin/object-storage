@@ -5,6 +5,7 @@ import { Readable } from "stream";
 
 export type TransferType = "buffer" | "stream" | "local";
 export type TransferData = Buffer | Readable | string;
+export type MultipartUploadData = Readable | string;
 
 export interface Metadata {
   [key: string]: string;
@@ -28,8 +29,7 @@ export interface ObjectReference extends ObjectDirectory {
 }
 
 export interface TransferConfig {
-  protocol: "http" | "https";
-  hostname: string;
+  baseUrl: string;
   authentication: string | TemporaryS3Credentials;
   expiration: Date;
 }

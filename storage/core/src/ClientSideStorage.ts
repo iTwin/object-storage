@@ -5,6 +5,7 @@ import { injectable } from "inversify";
 
 import {
   Metadata,
+  MultipartUploadData,
   MultipartUploadOptions,
   ObjectReference,
   TransferConfig,
@@ -55,7 +56,7 @@ export interface ConfigUploadInput {
 
 export interface UploadInMultiplePartsInput {
   reference: ObjectReference;
-  data: TransferData;
+  data: MultipartUploadData;
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
 }

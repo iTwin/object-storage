@@ -27,9 +27,7 @@ use(chaiAsPromised);
 const {
   relativeDirectory,
   baseDirectory,
-  clientExtensionName,
   clientSideStorage,
-  serverExtensionName,
   serverSideStorage,
 } = config;
 
@@ -70,12 +68,11 @@ const downloadTestCases: {
   },
 ];
 
-describe(`${ServerSideStorage.name}: ${serverExtensionName}`, () => {
+describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () => {
   const testUploadBufferFile = "test-upload-buffer.txt";
   const testUploadStreamFile = "test-upload-stream.txt";
   const testUploadLocalFile = "test-upload-local.txt";
   const testMultipartUploadLocalFile = "test-multipart-upload-local.txt";
-  const testMultipartUploadBufferFile = "test-multipart-upload-buffer.txt";
   const testMultipartUploadStreamFile = "test-multipart-upload-stream.txt";
 
   const remoteFiles = [
@@ -83,7 +80,6 @@ describe(`${ServerSideStorage.name}: ${serverExtensionName}`, () => {
     testUploadBufferFile,
     testUploadStreamFile,
     testMultipartUploadLocalFile,
-    testMultipartUploadBufferFile,
     testMultipartUploadStreamFile,
   ];
 
@@ -146,11 +142,6 @@ describe(`${ServerSideStorage.name}: ${serverExtensionName}`, () => {
     const fileToUploadPath = "server-side-multipart-test.txt";
 
     const uploadTestCases = [
-      {
-        caseName: "Buffer",
-        objectName: testMultipartUploadBufferFile,
-        dataCallback: () => contentBuffer,
-      },
       {
         caseName: "Stream",
         objectName: testMultipartUploadStreamFile,
@@ -357,7 +348,7 @@ describe(`${ServerSideStorage.name}: ${serverExtensionName}`, () => {
   });
 });
 
-describe(`${ClientSideStorage.name}: ${clientExtensionName}`, () => {
+describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () => {
   describe("PresignedUrlProvider", () => {
     describe(`${clientSideStorage.upload.name}() & ${serverSideStorage.getUploadUrl.name}()`, () => {
       const contentBuffer = Buffer.from("test-url-upload-content");
@@ -554,19 +545,12 @@ describe(`${ClientSideStorage.name}: ${clientExtensionName}`, () => {
 
       const testMultipartUploadConfigLocalFile =
         "test-multipart-upload-config-local.txt";
-      const testMultipartUploadConfigBufferFile =
-        "test-multipart-upload-config-buffer.txt";
       const testMultipartUploadConfigStreamFile =
         "test-multipart-upload-config-stream.txt";
 
       let uploadConfig: TransferConfig;
 
       const uploadTestCases = [
-        {
-          caseName: "Buffer",
-          objectName: testMultipartUploadConfigBufferFile,
-          dataCallback: () => contentBuffer,
-        },
         {
           caseName: "Stream",
           objectName: testMultipartUploadConfigStreamFile,
@@ -615,7 +599,6 @@ describe(`${ClientSideStorage.name}: ${clientExtensionName}`, () => {
       after(async () => {
         const removePromises = [
           testMultipartUploadConfigLocalFile,
-          testMultipartUploadConfigBufferFile,
           testMultipartUploadConfigStreamFile,
         ].map(async (file) =>
           serverSideStorage.remove({

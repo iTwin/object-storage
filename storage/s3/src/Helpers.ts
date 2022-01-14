@@ -5,7 +5,6 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
-  Metadata,
   TemporaryS3Credentials,
   TransferConfig,
 } from "@itwin/object-storage-core";
@@ -16,29 +15,28 @@ export function transferConfigToS3ClientWrapper(
   transferConfig: TransferConfig,
   bucket: string
 ): S3ClientWrapper {
-  const { authentication, expiration, hostname, protocol } = transferConfig;
+  const { authentication, expiration, baseUrl } = transferConfig;
   const { accessKey, secretKey, sessionToken } =
     authentication as TemporaryS3Credentials;
 
   if (new Date() > expiration) throw Error("Transfer config is expired");
 
   return new S3ClientWrapper(
-    createS3Client({ protocol, hostname, accessKey, secretKey, sessionToken }),
+    createS3Client({ baseUrl, accessKey, secretKey, sessionToken }),
     bucket
   );
 }
 
 export function createS3Client(config: {
-  protocol: string;
-  hostname: string;
+  baseUrl: string;
   accessKey: string;
   secretKey: string;
   sessionToken?: string;
 }): S3Client {
-  const { protocol, hostname, accessKey, secretKey, sessionToken } = config;
+  const { baseUrl, accessKey, secretKey, sessionToken } = config;
 
   return new S3Client({
-    endpoint: `${protocol}://${hostname}`,
+    endpoint: baseUrl,
     credentials: {
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
@@ -49,29 +47,18 @@ export function createS3Client(config: {
 }
 
 export function createStsClient(config: {
-  protocol: string;
-  stsHostname: string;
+  stsBaseUrl: string;
   accessKey: string;
   secretKey: string;
 }): STSClient {
-  const { protocol, stsHostname, accessKey, secretKey } = config;
+  const { stsBaseUrl, accessKey, secretKey } = config;
 
   return new STSClient({
     apiVersion: "2011-06-15",
-    endpoint: `${protocol}://${stsHostname}`,
+    endpoint: stsBaseUrl,
     credentials: {
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
     },
   });
-}
-
-export function metadataToHeaders(metadata: Metadata): Record<string, string> {
-  return Object.keys(metadata).reduce(
-    (acc: Record<string, string>, suffix: string) => ({
-      ...acc,
-      [`x-amz-meta-${suffix}`.toLowerCase()]: metadata[suffix],
-    }),
-    {}
-  );
 }

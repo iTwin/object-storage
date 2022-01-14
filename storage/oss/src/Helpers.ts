@@ -6,15 +6,14 @@ import * as Core from "@alicloud/pop-core";
 export function createCore(config: {
   accessKey: string;
   secretKey: string;
-  protocol: string;
-  stsHostname: string;
+  stsBaseUrl: string;
 }): Core {
-  const { accessKey, secretKey, protocol, stsHostname } = config;
+  const { accessKey, secretKey, stsBaseUrl } = config;
 
   return new Core({
     accessKeyId: accessKey,
     accessKeySecret: secretKey,
-    endpoint: `${protocol}://${stsHostname}`,
+    endpoint: stsBaseUrl,
     apiVersion: "2015-04-01",
   });
 }
