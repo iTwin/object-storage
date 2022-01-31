@@ -62,13 +62,31 @@ export function buildObjectReference(
   return {
     baseDirectory: parts[0],
     relativeDirectory: parts.slice(1, lastIndex).join("/"),
-    objectName: parts[lastIndex],
+    objectName: parts.length !== 1 ? parts[lastIndex] : "",
   };
 }
 
 export function buildObjectDirectoryString(directory: ObjectDirectory): string {
   const { baseDirectory, relativeDirectory } = directory;
   return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""}`;
+}
+
+interface GetTransferTimeInSecondsOptions {
+  maxTransferTime?: number;
+  minTransferSpeedInKbps?: number;
+  padding?: number;
+}
+export function getTransferTimeInSeconds(
+  fileSize: number,
+  {
+    maxTransferTime = 3600,
+    minTransferSpeedInKbps = 100,
+    padding = 300,
+  }: GetTransferTimeInSecondsOptions = {}
+): number {
+  const bytesPerSecond = minTransferSpeedInKbps * 125;
+  const seconds = fileSize / bytesPerSecond + padding;
+  return seconds > maxTransferTime ? maxTransferTime : seconds;
 }
 
 export async function downloadFromUrl(

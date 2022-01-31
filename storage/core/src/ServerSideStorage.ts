@@ -71,6 +71,9 @@ export abstract class ServerSideStorage
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
+
+  public abstract createBaseDirectory(name: string): Promise<void>;
+  public abstract deleteBaseDirectory(name: string): Promise<void>;
 }
 
 export interface PresignedUrlProvider {

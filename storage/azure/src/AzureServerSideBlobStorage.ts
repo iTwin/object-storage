@@ -60,8 +60,6 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
-    await this._client.createContainerIfNotExists(reference.baseDirectory);
-
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).upload(data, metadata);
@@ -72,8 +70,6 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
-    await this._client.createContainerIfNotExists(reference.baseDirectory);
-
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).uploadInMultipleParts(data, options);
@@ -151,10 +147,6 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     reference: ObjectReference,
     expiresInSeconds = 3600
   ): Promise<string> {
-    const { baseDirectory } = reference;
-
-    await this._client.createContainerIfNotExists(baseDirectory);
-
     const blobClient = this._client.getBlockBlobClient(reference);
     const parameters = buildSASParameters(
       reference.baseDirectory,
@@ -192,13 +184,9 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     directory: ObjectDirectory,
     expiresInSeconds = 3600
   ): Promise<TransferConfig> {
-    const { baseDirectory } = directory;
-
-    await this._client.createContainerIfNotExists(baseDirectory);
-
     const expiresOn = buildExpiresOn(expiresInSeconds);
     const parameters = buildSASParameters(
-      baseDirectory,
+      directory.baseDirectory,
       "write",
       expiresOn,
       this._config.accountName,
@@ -210,5 +198,13 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
     };
+  }
+
+  public async createBaseDirectory(name: string): Promise<void> {
+    return this._client.createContainer(name);
+  }
+
+  public async deleteBaseDirectory(name: string): Promise<void> {
+    return this._client.deleteContainer(name);
   }
 }

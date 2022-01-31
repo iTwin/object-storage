@@ -136,4 +136,14 @@ export class S3ServerSideStorage extends ServerSideStorage {
       expiresInSeconds
     );
   }
+
+  public async createBaseDirectory(_name: string): Promise<void> {}
+
+  public async deleteBaseDirectory(name: string): Promise<void> {
+    await Promise.all(
+      (
+        await this.list({ baseDirectory: name })
+      ).map(async (file) => this.remove(file))
+    );
+  }
 }

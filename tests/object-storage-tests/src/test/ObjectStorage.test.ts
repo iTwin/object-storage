@@ -83,6 +83,14 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     testMultipartUploadStreamFile,
   ];
 
+  describe(`${serverSideStorage.createBaseDirectory.name}`, () => {
+    it("should create base directory", async () => {
+      const createBaseDirectoryPromise =
+        serverSideStorage.createBaseDirectory(baseDirectory);
+      await expect(createBaseDirectoryPromise).to.eventually.be.fulfilled;
+    });
+  });
+
   describe(`${serverSideStorage.upload.name}()`, () => {
     const contentBuffer = Buffer.from("server-side-upload-content");
     const fileToUploadPath = "server-side-test.txt";
@@ -346,9 +354,40 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
       await serverSideStorage.remove(reference);
     });
   });
+
+  describe(`${serverSideStorage.deleteBaseDirectory.name}`, () => {
+    it("should delete base directory and its contents", async () => {
+      const tempFiles = ["temp-1", "temp-2", "temp-3"];
+
+      await Promise.all(
+        tempFiles.map(async (file) =>
+          serverSideStorage.upload(
+            { baseDirectory, objectName: file },
+            Buffer.from(file)
+          )
+        )
+      );
+
+      const deleteBaseDirectoryPromise =
+        serverSideStorage.deleteBaseDirectory(baseDirectory);
+
+      await expect(deleteBaseDirectoryPromise).to.eventually.be.fulfilled;
+
+      const existsArray = await Promise.all(
+        tempFiles.map(async (file) =>
+          serverSideStorage.exists({ baseDirectory, objectName: file })
+        )
+      );
+      existsArray.forEach((exists) => expect(exists).to.be.false);
+    });
+  });
 });
 
 describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () => {
+  before(async () => {
+    await serverSideStorage.createBaseDirectory(baseDirectory);
+  });
+
   describe("PresignedUrlProvider", () => {
     describe(`${clientSideStorage.upload.name}() & ${serverSideStorage.getUploadUrl.name}()`, () => {
       const contentBuffer = Buffer.from("test-url-upload-content");

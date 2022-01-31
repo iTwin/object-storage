@@ -21,10 +21,6 @@ export class BlobServiceClientWrapper {
     this._client = client;
   }
 
-  public async createContainerIfNotExists(name: string): Promise<void> {
-    await this.getContainerClient(name).createIfNotExists();
-  }
-
   public getContainerClient(containerName: string): ContainerClient {
     return this._client.getContainerClient(containerName);
   }
@@ -39,5 +35,13 @@ export class BlobServiceClientWrapper {
     return this._client
       .getContainerClient(reference.baseDirectory)
       .getBlockBlobClient(buildBlobName(reference));
+  }
+
+  public async createContainer(name: string): Promise<void> {
+    await this.getContainerClient(name).create();
+  }
+
+  public async deleteContainer(name: string): Promise<void> {
+    await this.getContainerClient(name).delete();
   }
 }
