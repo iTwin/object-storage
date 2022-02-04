@@ -149,3 +149,5 @@ export function metadataToHeaders(
     {}
   );
 }
+
+export const uploadFileSizeLimit = 5_000_000_000; // 5GB
