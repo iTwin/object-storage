@@ -106,7 +106,7 @@ export class S3ServerSideStorage extends ServerSideStorage {
   ): Promise<string> {
     return this._presignedUrlProvider.getDownloadUrl(
       reference,
-      expiresInSeconds
+      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
     );
   }
 
@@ -114,7 +114,10 @@ export class S3ServerSideStorage extends ServerSideStorage {
     reference: ObjectReference,
     expiresInSeconds?: number
   ): Promise<string> {
-    return this._presignedUrlProvider.getUploadUrl(reference, expiresInSeconds);
+    return this._presignedUrlProvider.getUploadUrl(
+      reference,
+      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
+    );
   }
 
   public async getDownloadConfig(
@@ -123,7 +126,7 @@ export class S3ServerSideStorage extends ServerSideStorage {
   ): Promise<TransferConfig> {
     return this._transferConfigProvider.getDownloadConfig(
       directory,
-      expiresInSeconds
+      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
     );
   }
 
@@ -133,7 +136,7 @@ export class S3ServerSideStorage extends ServerSideStorage {
   ): Promise<TransferConfig> {
     return this._transferConfigProvider.getUploadConfig(
       directory,
-      expiresInSeconds
+      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
     );
   }
 
