@@ -1,6 +1,8 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
+import { Readable } from "stream";
+
 import { injectable } from "inversify";
 
 import {
@@ -19,6 +21,22 @@ import {
 export abstract class ServerSideStorage
   implements PresignedUrlProvider, TransferConfigProvider
 {
+  public abstract download(
+    reference: ObjectReference,
+    transferType: "buffer"
+  ): Promise<Buffer>;
+
+  public abstract download(
+    reference: ObjectReference,
+    transferType: "stream"
+  ): Promise<Readable>;
+
+  public abstract download(
+    reference: ObjectReference,
+    transferType: "local",
+    localPath?: string
+  ): Promise<string>;
+
   public abstract download(
     reference: ObjectReference,
     transferType: TransferType,

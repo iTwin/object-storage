@@ -1,6 +1,8 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
+import { Readable } from "stream";
+
 import { inject, injectable } from "inversify";
 
 import {
@@ -49,6 +51,22 @@ export class S3ServerSideStorage extends ServerSideStorage {
     this._presignedUrlProvider = presignedUrlProvider;
     this._transferConfigProvider = transferConfigProvider;
   }
+
+  public download(
+    reference: ObjectReference,
+    transferType: "buffer"
+  ): Promise<Buffer>;
+
+  public download(
+    reference: ObjectReference,
+    transferType: "stream"
+  ): Promise<Readable>;
+
+  public download(
+    reference: ObjectReference,
+    transferType: "local",
+    localPath?: string
+  ): Promise<string>;
 
   public async download(
     reference: ObjectReference,

@@ -3,6 +3,8 @@
  *----------------------------------------------------------------------------*/
 import "reflect-metadata";
 
+import { Readable } from "stream";
+
 import { injectable } from "inversify";
 
 import {
@@ -17,6 +19,21 @@ import {
 
 @injectable()
 export abstract class ClientSideStorage {
+  public abstract download(
+    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+  ): Promise<Buffer>;
+
+  public abstract download(
+    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+  ): Promise<Readable>;
+
+  public abstract download(
+    input: (UrlDownloadInput | ConfigDownloadInput) & {
+      transferType: "local";
+      localPath: string;
+    }
+  ): Promise<string>;
+
   public abstract download(
     input: UrlDownloadInput | ConfigDownloadInput
   ): Promise<TransferData>;

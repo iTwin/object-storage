@@ -1,6 +1,8 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
+import { Readable } from "stream";
+
 import { inject, injectable } from "inversify";
 
 import {
@@ -44,6 +46,22 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     this._config = config;
     this._client = client;
   }
+
+  public download(
+    reference: ObjectReference,
+    transferType: "buffer"
+  ): Promise<Buffer>;
+
+  public download(
+    reference: ObjectReference,
+    transferType: "stream"
+  ): Promise<Readable>;
+
+  public download(
+    reference: ObjectReference,
+    transferType: "local",
+    localPath?: string
+  ): Promise<string>;
 
   public async download(
     reference: ObjectReference,
