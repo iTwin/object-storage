@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { mkdir } from "fs/promises";
+import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
@@ -28,7 +28,7 @@ export class BlockBlobClientWrapper {
       case "local":
         if (!localPath) throw new Error("Specify localPath");
 
-        await mkdir(dirname(localPath), { recursive: true });
+        await promises.mkdir(dirname(localPath), { recursive: true });
         await this._client.downloadToFile(localPath);
 
         return localPath;

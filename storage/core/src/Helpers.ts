@@ -1,8 +1,7 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { createReadStream, createWriteStream } from "fs";
-import { mkdir } from "fs/promises";
+import { createReadStream, createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
@@ -20,7 +19,7 @@ export async function streamToLocalFile(
   stream: Readable,
   destinationPath: string
 ): Promise<void> {
-  await mkdir(dirname(destinationPath), { recursive: true });
+  await promises.mkdir(dirname(destinationPath), { recursive: true });
 
   return new Promise<void>((resolve, reject) => {
     const fileStream = createWriteStream(destinationPath);

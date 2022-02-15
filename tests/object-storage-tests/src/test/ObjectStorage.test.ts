@@ -2,8 +2,7 @@
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
 import { randomUUID } from "crypto";
-import { createReadStream } from "fs";
-import { readFile, rmdir, unlink, writeFile } from "fs/promises";
+import { createReadStream, promises } from "fs";
 import { Readable } from "stream";
 
 import { expect, use } from "chai";
@@ -62,7 +61,7 @@ const downloadTestCases: {
     caseName: "path",
     transferType: "local",
     assertion: async (response, contentBuffer) => {
-      expect(contentBuffer.equals(await readFile(response as string)));
+      expect(contentBuffer.equals(await promises.readFile(response as string)));
     },
     defineLocalPath: true,
   },
@@ -114,7 +113,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     ];
 
     before(async () => {
-      await writeFile(fileToUploadPath, contentBuffer);
+      await promises.writeFile(fileToUploadPath, contentBuffer);
     });
 
     for (const testCase of uploadTestCases) {
@@ -141,7 +140,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     }
 
     after(async () => {
-      await unlink(fileToUploadPath);
+      await promises.unlink(fileToUploadPath);
     });
   });
 
@@ -163,7 +162,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     ];
 
     before(async () => {
-      await writeFile(fileToUploadPath, contentBuffer);
+      await promises.writeFile(fileToUploadPath, contentBuffer);
     });
 
     for (const testCase of uploadTestCases) {
@@ -192,7 +191,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     }
 
     after(async () => {
-      await unlink(fileToUploadPath);
+      await promises.unlink(fileToUploadPath);
     });
   });
 
@@ -280,7 +279,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     after(async () => {
       await Promise.all([
         serverSideStorage.remove(reference),
-        rmdir(testDownloadFolder, { recursive: true }),
+        promises.rmdir(testDownloadFolder, { recursive: true }),
       ]);
     });
   });
@@ -416,7 +415,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       ];
 
       before(async () => {
-        await writeFile(fileToUploadPath, contentBuffer);
+        await promises.writeFile(fileToUploadPath, contentBuffer);
       });
 
       for (const testCase of uploadTestCases) {
@@ -457,7 +456,10 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           })
         );
 
-        await Promise.all([...removePromises, unlink(fileToUploadPath)]);
+        await Promise.all([
+          ...removePromises,
+          promises.unlink(fileToUploadPath),
+        ]);
       });
     });
 
@@ -494,7 +496,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       after(async () => {
         await Promise.all([
           serverSideStorage.remove(reference),
-          rmdir(testDownloadFolder, { recursive: true }),
+          promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });
     });
@@ -530,7 +532,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       ];
 
       before(async () => {
-        await writeFile(fileToUploadPath, contentBuffer);
+        await promises.writeFile(fileToUploadPath, contentBuffer);
         uploadConfig = await serverSideStorage.getUploadConfig({
           baseDirectory,
           relativeDirectory,
@@ -574,7 +576,10 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           })
         );
 
-        await Promise.all([...removePromises, unlink(fileToUploadPath)]);
+        await Promise.all([
+          ...removePromises,
+          promises.unlink(fileToUploadPath),
+        ]);
       });
     });
 
@@ -603,7 +608,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       ];
 
       before(async () => {
-        await writeFile(fileToUploadPath, contentBuffer);
+        await promises.writeFile(fileToUploadPath, contentBuffer);
         uploadConfig = await serverSideStorage.getUploadConfig({
           baseDirectory,
           relativeDirectory,
@@ -647,7 +652,10 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           })
         );
 
-        await Promise.all([...removePromises, unlink(fileToUploadPath)]);
+        await Promise.all([
+          ...removePromises,
+          promises.unlink(fileToUploadPath),
+        ]);
       });
     });
 
@@ -689,7 +697,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       after(async () => {
         await Promise.all([
           serverSideStorage.remove(reference),
-          rmdir(testDownloadFolder, { recursive: true }),
+          promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });
     });

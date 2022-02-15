@@ -1,8 +1,7 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { createReadStream } from "fs";
-import { stat } from "fs/promises";
+import { createReadStream, promises } from "fs";
 import { Readable } from "stream";
 
 import {
@@ -41,7 +40,7 @@ export class MinioClientSideStorage extends S3ClientSideStorage {
 
       const size =
         typeof data === "string"
-          ? (await stat(data)).size
+          ? (await promises.stat(data)).size
           : (dataToUpload as Buffer).byteLength;
 
       headers["Content-Length"] = size.toString();
