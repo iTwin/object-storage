@@ -1,0 +1,17 @@
+{
+  "extends": "./node_modules/@bentley/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": "../../../lib",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noUnusedLocals": true,
+    "noImplicitOverride": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": [
+    "../../../src/**/*.ts"
+  ],
+}

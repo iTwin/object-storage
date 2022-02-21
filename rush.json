@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.55.1",
+  "pnpmVersion": "6.13.0",
+  "nodeSupportedVersionRange": ">=10.17.0 <15.0.0",
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 1,
+  "projectFolderMaxDepth": 2,
+  "repository": {
+    "url": "https://github.com/iTwin/object-storage",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "pnpmOptions": {
+    "useWorkspaces": true
+  },
+  "projects": [
+    {
+      "packageName": "@itwin/cloud-agnostic-core",
+      "projectFolder": "core/cloud-agnostic-core",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-common-config",
+      "projectFolder": "utils/common-config",
+      "shouldPublish": false
+    }
+  ]
+}
