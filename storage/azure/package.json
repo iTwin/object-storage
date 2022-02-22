@@ -1,0 +1,49 @@
+{
+  "name": "@itwin/object-storage-azure",
+  "version": "0.0.1-dev.1",
+  "description": "Object storage wrapper for Azure Blob Storage.",
+  "license": "MIT",
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "https://www.bentley.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib",
+    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "test": "",
+    "test:integration": "node lib/test/RunIntegrationTests.js"
+  },
+  "prettier": "@itwin/object-storage-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "~12.2.1",
+    "@itwin/cloud-agnostic-core": "workspace:*",
+    "@itwin/object-storage-core": "workspace:*",
+    "inversify": "~5.0.1",
+    "reflect-metadata": "~0.1.13"
+  },
+  "devDependencies": {
+    "@bentley/build-tools": "~2.19.9",
+    "@itwin/object-storage-common-config": "workspace:*",
+    "@itwin/object-storage-tests": "workspace:*",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^14.14.41",
+    "chai": "^4.2.0",
+    "eslint": "~7.32.0",
+    "mocha": "^8.3.2",
+    "nyc": "^14.0.0",
+    "rimraf": "^2.6.2",
+    "sort-package-json": "~1.53.1",
+    "typescript": "~4.3.0"
+  },
+  "engines": {
+    "node": ">=12.20 <15.0"
+  }
+}

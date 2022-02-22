@@ -36,6 +36,21 @@
         "index",
         "object"
       ],
+      "pathGroups": [
+        {
+          "pattern": "@itwin/cloud-agnostic-core",
+          "group": "internal"
+        },
+        {
+          "pattern": "@itwin/object-storage**",
+          "group": "internal"
+        },
+        {
+          "pattern": "@itwin/**",
+          "group": "external",
+          "position": "after"
+        }
+      ],
       "pathGroupsExcludedImportTypes": ["builtin"],
       "alphabetize": {
         "order": "asc",
