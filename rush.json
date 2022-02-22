@@ -24,6 +24,11 @@
       "packageName": "@itwin/object-storage-common-config",
       "projectFolder": "utils/common-config",
       "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/object-storage-core",
+      "projectFolder": "storage/core",
+      "shouldPublish": true
     }
   ]
 }
