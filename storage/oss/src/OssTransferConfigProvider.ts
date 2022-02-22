@@ -12,10 +12,7 @@ import {
   TransferConfig,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
-import {
-  S3ServerSideStorageConfig,
-  Types,
-} from "@itwin/object-storage-s3";
+import { S3ServerSideStorageConfig, Types } from "@itwin/object-storage-s3";
 
 @injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {

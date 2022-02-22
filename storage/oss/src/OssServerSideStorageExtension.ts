@@ -4,10 +4,7 @@
 import * as Core from "@alicloud/pop-core";
 import { Container } from "inversify";
 
-import {
-  TransferConfigProvider,
-  Types,
-} from "@itwin/object-storage-core";
+import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
 import {
   S3ServerSideStorageExtension,
   S3ServerSideStorageExtensionConfig,

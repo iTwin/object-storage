@@ -16,5 +16,8 @@
     "**/out": true,
     "**/lib": true,
     "common/temp": true
-  }
+  },
+  "editor.rulers": [
+    80
+  ]
 }

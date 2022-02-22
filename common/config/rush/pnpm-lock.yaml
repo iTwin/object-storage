@@ -114,6 +114,51 @@ importers:
       rimraf: 2.7.1
       typescript: 4.3.5
 
+  ../../storage/oss:
+    specifiers:
+      '@alicloud/pop-core': ~1.7.10
+      '@bentley/build-tools': ~2.19.9
+      '@itwin/object-storage-common-config': workspace:*
+      '@itwin/object-storage-core': workspace:*
+      '@itwin/object-storage-s3': workspace:*
+      '@itwin/object-storage-tests': workspace:*
+      '@types/chai': ^4.1.7
+      '@types/chai-as-promised': ^7.1.2
+      '@types/mocha': ^8.2.2
+      '@types/node': ^14.14.41
+      chai: ^4.2.0
+      chai-as-promised: ^7.1.1
+      eslint: ~7.32.0
+      inversify: ~5.0.1
+      mocha: ^8.3.2
+      nyc: ^14.0.0
+      reflect-metadata: ~0.1.13
+      rimraf: ^2.6.2
+      sort-package-json: ~1.53.1
+      typescript: ~4.3.0
+    dependencies:
+      '@alicloud/pop-core': 1.7.10
+      '@itwin/object-storage-core': link:../core
+      '@itwin/object-storage-s3': link:../s3
+      inversify: 5.0.5
+      reflect-metadata: 0.1.13
+    devDependencies:
+      '@bentley/build-tools': 2.19.28
+      '@itwin/object-storage-common-config': link:../../utils/common-config
+      '@itwin/object-storage-tests': link:../../tests/object-storage-tests
+      '@types/chai': 4.3.0
+      '@types/chai-as-promised': 7.1.5
+      '@types/mocha': 8.2.3
+      '@types/node': 14.18.12
+      chai: 4.3.6
+      chai-as-promised: 7.1.1_chai@4.3.6
+      eslint: 7.32.0
+      mocha: 8.4.0
+      nyc: 14.1.1
+      rimraf: 2.7.1
+      sort-package-json: 1.53.1
+      typescript: 4.3.5
+
   ../../storage/s3:
     specifiers:
       '@aws-sdk/client-s3': ~3.44.0
@@ -237,6 +282,18 @@ importers:
       sort-package-json: 1.53.1
 
 packages:
+
+  /@alicloud/pop-core/1.7.10:
+    resolution: {integrity: sha512-9/aLWgmgaAdB1ERNTpdOvF7wueLY5CDTRxKZr93x542iuYRA1NDpcKslFqLOy5CUOa0CbopET3JGaHSAz5qv9g==}
+    dependencies:
+      debug: 3.2.7
+      httpx: 2.2.7
+      json-bigint: 1.0.0
+      kitx: 1.3.0
+      xml2js: 0.4.23
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@aws-crypto/crc32/2.0.0:
     resolution: {integrity: sha512-TvE1r2CUueyXOuHdEigYjIZVesInd9KN+K/TFFNfkkxRThiNxO6i4ZqqAVMoEjAamZZ1AA8WXJkjCz7YShHPQA==}
@@ -2280,6 +2337,10 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
+  /bignumber.js/9.0.2:
+    resolution: {integrity: sha512-GAcQvbpsM0pUb0zw1EI0KhQEZ+lRwR5fYaAp3vPOYuP7aDvGy6cVN6XHLauvF8SOga2y0dcLcjt3iQDTSEliyw==}
+    dev: false
+
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
@@ -2773,7 +2834,6 @@ packages:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     dependencies:
       ms: 2.1.3
-    dev: true
 
   /debug/4.3.1_supports-color@8.1.1:
     resolution: {integrity: sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==}
@@ -2797,7 +2857,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /decamelize-keys/1.1.0:
     resolution: {integrity: sha1-0XGoeTMlKAfrPLYdwcFEXQeN8tk=}
@@ -4110,6 +4169,15 @@ packages:
       - supports-color
     dev: true
 
+  /httpx/2.2.7:
+    resolution: {integrity: sha512-Wjh2JOAah0pdczfqL8NC5378G7jMt0Zcpn8U+yyxAiejjlagzSTQgJHuVvka2VNPQlKfoGehYRc79WKq9E4gDw==}
+    dependencies:
+      '@types/node': 14.18.12
+      debug: 4.3.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -4526,6 +4594,12 @@ packages:
     hasBin: true
     dev: true
 
+  /json-bigint/1.0.0:
+    resolution: {integrity: sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==}
+    dependencies:
+      bignumber.js: 9.0.2
+    dev: false
+
   /json-buffer/3.0.0:
     resolution: {integrity: sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=}
     dev: true
@@ -4624,6 +4698,10 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /kitx/1.3.0:
+    resolution: {integrity: sha512-fhBqFlXd0GkKTB+8ayLfpzPUw+LHxZlPAukPNBD1Om7JMeInT+/PxCAf1yLagvD+VKoyWhXtJR68xQkX/a0wOQ==}
+    dev: false
 
   /language-subtag-registry/0.3.21:
     resolution: {integrity: sha512-L0IqwlIXjilBVVYKFT37X9Ih11Um5NEl9cbJIuU/SwP/zEEAbBPOnEeeuxVMf45ydWQRDQN3Nqc96OgbH1K+Pg==}
