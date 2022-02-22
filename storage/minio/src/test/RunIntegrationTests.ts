@@ -15,7 +15,9 @@ const config = {
   ServerSideStorage: {
     extensionName: "minio",
     bucket: "integration-test",
+    // cspell:disable-next-line
     accessKey: "minioadmin",
+    // cspell:disable-next-line
     secretKey: "minioadmin",
     baseUrl: "http://127.0.0.1:9000",
     roleArn: "<role-arn>",

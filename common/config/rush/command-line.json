@@ -10,15 +10,6 @@
       "ignoreMissingScript": false
     },
     {
-      "name": "spell-check",
-      "commandKind": "bulk",
-      "summary": "Run spell checker on each package",
-      "description": "Iterates through each package in the monorepo and runs the 'spell-check' script",
-      "enableParallelism": true,
-      "ignoreMissingScript": false,
-      "allowWarningsInSuccessfulBuild": true
-    },
-    {
       "name": "lint",
       "commandKind": "bulk",
       "summary": "Run lint rules on each package",
@@ -34,6 +25,15 @@
       "description": "Iterates through each package in the monorepo and runs the 'lint-fix' script",
       "enableParallelism": true,
       "ignoreMissingScript": false
+    },
+    {
+      "name": "spell-check",
+      "commandKind": "bulk",
+      "summary": "Run spell checker on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'spell-check' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
     },
     {
       "name": "test",
