@@ -18,7 +18,8 @@
     "clean": "rimraf lib",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
-    "test": "node ./node_modules/@bentley/build-tools/scripts/test.js"
+    "test": "node ./node_modules/@bentley/build-tools/scripts/test.js",
+    "test:integration": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

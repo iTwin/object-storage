@@ -15,7 +15,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "test": "",
-    "test:storage:integration": "node lib/test/RunIntegrationTests.js"
+    "test:integration": "node lib/test/RunIntegrationTests.js"
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

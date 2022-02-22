@@ -16,7 +16,8 @@
     "clean": "",
     "lint": "",
     "lint-fix": "sort-package-json",
-    "test": ""
+    "test": "",
+    "test:integration": ""
   },
   "devDependencies": {
     "@bentley/build-tools": "~2.19.9",
