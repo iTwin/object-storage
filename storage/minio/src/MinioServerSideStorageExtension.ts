@@ -4,10 +4,7 @@
 import { Container } from "inversify";
 import { Client } from "minio";
 
-import {
-  PresignedUrlProvider,
-  Types,
-} from "@itwin/object-storage-core";
+import { PresignedUrlProvider, Types } from "@itwin/object-storage-core";
 import {
   S3ServerSideStorageExtension,
   S3ServerSideStorageExtensionConfig,

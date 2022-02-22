@@ -46,6 +46,11 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@itwin/object-storage-minio",
+      "projectFolder": "storage/minio",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@itwin/object-storage-tests",
       "projectFolder": "tests/object-storage-tests",
       "shouldPublish": false
