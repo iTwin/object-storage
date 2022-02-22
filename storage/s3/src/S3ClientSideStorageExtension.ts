@@ -3,10 +3,7 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import {
-  ConfigError,
-  ExtensionConfig,
-} from "@itwin/cloud-agnostic-core";
+import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
 import {
   ClientSideStorage,
   ClientSideStorageExtension,

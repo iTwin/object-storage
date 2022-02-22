@@ -1,7 +1,7 @@
 {
-  "name": "@itwin/object-storage-azure",
+  "name": "@itwin/object-storage-s3",
   "version": "0.0.1-dev.1",
-  "description": "Object storage implementation for Azure Blob Storage.",
+  "description": "Object storage implementation for S3 storage.",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
@@ -14,15 +14,17 @@
     "clean": "rimraf lib",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
-    "test": "",
-    "test:integration": "node lib/test/RunIntegrationTests.js"
+    "test": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
   },
   "dependencies": {
-    "@azure/storage-blob": "~12.2.1",
+    "@aws-sdk/client-s3": "~3.44.0",
+    "@aws-sdk/client-sts": "~3.43.0",
+    "@aws-sdk/lib-storage": "~3.44.0",
+    "@aws-sdk/s3-request-presigner": "~3.44.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
     "inversify": "~5.0.1",
@@ -31,7 +33,6 @@
   "devDependencies": {
     "@bentley/build-tools": "~2.19.9",
     "@itwin/object-storage-common-config": "workspace:*",
-    "@itwin/object-storage-tests": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.41",

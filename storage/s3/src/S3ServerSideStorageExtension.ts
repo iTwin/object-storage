@@ -5,10 +5,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 import { Container } from "inversify";
 
-import {
-  ConfigError,
-  ExtensionConfig,
-} from "@itwin/cloud-agnostic-core";
+import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
 import {
   PresignedUrlProvider,
   ServerSideStorage,

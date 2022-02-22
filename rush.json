@@ -36,6 +36,11 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@itwin/object-storage-s3",
+      "projectFolder": "storage/s3",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@itwin/object-storage-tests",
       "projectFolder": "tests/object-storage-tests",
       "shouldPublish": false

@@ -13,6 +13,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@itwin/no-internal-barrel-imports": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/explicit-module-boundary-types": [
