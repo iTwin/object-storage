@@ -21,11 +21,6 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@itwin/object-storage-common-config",
-      "projectFolder": "utils/common-config",
-      "shouldPublish": false
-    },
-    {
       "packageName": "@itwin/object-storage-core",
       "projectFolder": "storage/core",
       "shouldPublish": true
@@ -53,6 +48,11 @@
     {
       "packageName": "@itwin/object-storage-tests",
       "projectFolder": "tests/object-storage-tests",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/object-storage-common-config",
+      "projectFolder": "utils/common-config",
       "shouldPublish": false
     }
   ]
