@@ -5,7 +5,7 @@ importers:
   .:
     specifiers: {}
 
-  ../../core/cloud-agnostic-core:
+  ../../cloud-agnostic/core:
     specifiers:
       '@bentley/build-tools': ~2.19.9
       '@itwin/object-storage-common-config': workspace:*
@@ -61,14 +61,14 @@ importers:
       typescript: ~4.3.0
     dependencies:
       '@azure/storage-blob': 12.2.1
-      '@itwin/cloud-agnostic-core': link:../../core/cloud-agnostic-core
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core
       inversify: 5.0.5
       reflect-metadata: 0.1.13
     devDependencies:
       '@bentley/build-tools': 2.19.28
       '@itwin/object-storage-common-config': link:../../utils/common-config
-      '@itwin/object-storage-tests': link:../../tests/object-storage-tests
+      '@itwin/object-storage-tests': link:../../tests/object-storage
       '@types/chai': 4.3.0
       '@types/mocha': 8.2.3
       '@types/node': 14.18.12
@@ -102,7 +102,7 @@ importers:
       sort-package-json: ~1.53.1
       typescript: ~4.3.0
     dependencies:
-      '@itwin/cloud-agnostic-core': link:../../core/cloud-agnostic-core
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       axios: 0.24.0
       inversify: 5.0.5
       reflect-metadata: 0.1.13
@@ -155,7 +155,7 @@ importers:
     devDependencies:
       '@bentley/build-tools': 2.19.28
       '@itwin/object-storage-common-config': link:../../utils/common-config
-      '@itwin/object-storage-tests': link:../../tests/object-storage-tests
+      '@itwin/object-storage-tests': link:../../tests/object-storage
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/minio': 7.0.12
@@ -203,7 +203,7 @@ importers:
     devDependencies:
       '@bentley/build-tools': 2.19.28
       '@itwin/object-storage-common-config': link:../../utils/common-config
-      '@itwin/object-storage-tests': link:../../tests/object-storage-tests
+      '@itwin/object-storage-tests': link:../../tests/object-storage
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/mocha': 8.2.3
@@ -246,7 +246,7 @@ importers:
       '@aws-sdk/client-sts': 3.43.0
       '@aws-sdk/lib-storage': 3.44.0_@aws-sdk+client-s3@3.44.0
       '@aws-sdk/s3-request-presigner': 3.44.0
-      '@itwin/cloud-agnostic-core': link:../../core/cloud-agnostic-core
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core
       inversify: 5.0.5
       reflect-metadata: 0.1.13
@@ -265,7 +265,7 @@ importers:
       sort-package-json: 1.53.1
       typescript: 4.3.5
 
-  ../../tests/object-storage-tests:
+  ../../tests/object-storage:
     specifiers:
       '@bentley/bentleyjs-core': ~2.19.9
       '@bentley/build-tools': ~2.19.9
@@ -294,7 +294,7 @@ importers:
     dependencies:
       '@bentley/bentleyjs-core': 2.19.28
       '@bentley/config-loader': 2.19.28
-      '@itwin/cloud-agnostic-core': link:../../core/cloud-agnostic-core
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../../storage/core
       chai: 4.3.6
       chai-as-promised: 7.1.1_chai@4.3.6
