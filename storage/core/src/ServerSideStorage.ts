@@ -15,7 +15,7 @@ import {
   TransferConfig,
   TransferData,
   TransferType,
-} from "./StorageInterfaces";
+} from ".";
 
 @injectable()
 export abstract class ServerSideStorage
