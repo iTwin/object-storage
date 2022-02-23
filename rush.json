@@ -17,7 +17,7 @@
   "projects": [
     {
       "packageName": "@itwin/cloud-agnostic-core",
-      "projectFolder": "core/cloud-agnostic-core",
+      "projectFolder": "cloud-agnostic/core",
       "shouldPublish": true
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "packageName": "@itwin/object-storage-tests",
-      "projectFolder": "tests/object-storage-tests",
+      "projectFolder": "tests/object-storage",
       "shouldPublish": false
     },
     {
