@@ -2,6 +2,13 @@
   "name": "@itwin/object-storage-tests",
   "version": "0.0.1-dev.1",
   "description": "Tests for generic storage packages",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "Tests"
+  ],
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

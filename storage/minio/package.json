@@ -2,6 +2,13 @@
   "name": "@itwin/object-storage-minio",
   "version": "0.0.1-dev.1",
   "description": "Object storage implementation for Minio",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "Minio"
+  ],
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

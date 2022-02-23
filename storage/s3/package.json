@@ -2,6 +2,13 @@
   "name": "@itwin/object-storage-s3",
   "version": "0.0.1-dev.1",
   "description": "Object storage implementation for S3 storage",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "S3"
+  ],
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

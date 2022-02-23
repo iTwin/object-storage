@@ -2,6 +2,13 @@
   "name": "@itwin/object-storage-oss",
   "version": "0.0.1-dev.1",
   "description": "Object storage implementation for OSS",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "OSS"
+  ],
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
