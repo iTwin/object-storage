@@ -14,9 +14,9 @@
     "clean": "rimraf lib",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test": "",
-    "test:integration": "",
-    "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json"
+    "test:integration": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
@@ -39,15 +39,15 @@
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.41",
     "chai": "^4.2.0",
+    "cspell": "~5.18.5",
     "eslint": "~7.32.0",
     "mocha": "^8.3.2",
     "nyc": "^14.0.0",
     "rimraf": "^2.6.2",
     "sort-package-json": "~1.53.1",
-    "typescript": "~4.3.0",
-    "cspell": "~5.18.5"
+    "typescript": "~4.3.0"
   },
   "engines": {
-    "node": ">=12.20 <15.0"
+    "node": ">=12.20 <17.0.0"
   }
 }

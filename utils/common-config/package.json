@@ -16,25 +16,25 @@
     "clean": "",
     "lint": "",
     "lint-fix": "sort-package-json",
+    "spell-check": "cspell ** --config ./cspell.json",
     "test": "",
-    "test:integration": "",
-    "spell-check": "cspell ** --config ./cspell.json"
+    "test:integration": ""
   },
   "devDependencies": {
     "@bentley/build-tools": "~2.19.9",
     "@itwin/eslint-plugin": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "~4.11.1",
     "@typescript-eslint/parser": "~4.11.1",
+    "cspell": "~5.18.5",
     "eslint": "~7.32.0",
     "eslint-config-prettier": "~8.3.0",
     "eslint-import-resolver-node": "~0.3.4",
     "eslint-plugin-import": "~2.22.0",
     "eslint-plugin-prettier": "~4.0.0",
     "prettier": "2.4.1",
-    "sort-package-json": "~1.53.1",
-    "cspell": "~5.18.5"
+    "sort-package-json": "~1.53.1"
   },
   "engines": {
-    "node": ">=10.17.0 <15.0"
+    "node": ">=12.20 <17.0.0"
   }
 }
