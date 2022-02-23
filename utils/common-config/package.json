@@ -1,7 +1,7 @@
 {
   "name": "@itwin/object-storage-common-config",
   "version": "0.0.1-dev.1",
-  "description": "Common configuration for object storage components",
+  "description": "Common configuration for object storage packages",
   "repository": {
     "type": "git",
     "url": "https://github.com/iTwin/object-storage"

@@ -1,7 +1,7 @@
 {
   "name": "@itwin/cloud-agnostic-core",
   "version": "0.0.1-dev.1",
-  "description": "Core package that allows configuring components loaded by dependency injection",
+  "description": "Package that allows configuring components loaded by dependency injection",
   "keywords": [
     "Bentley",
     "iTwin",
