@@ -1,7 +1,7 @@
 {
   "name": "@itwin/object-storage-core",
   "version": "0.0.1-dev.1",
-  "description": "Core interfaces for generic object storage.",
+  "description": "Core interfaces for generic object storage",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
