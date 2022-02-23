@@ -13,7 +13,3 @@ common/deploy/
 common/temp/
 common/autoinstallers/*/.npmrc
 **/.rush/temp/
-
-**/test-results.xml
-.nyc_output/
-coverage
