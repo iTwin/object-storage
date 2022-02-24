@@ -1,0 +1,23 @@
+name:
+  $(Date:yyyy.M.d)$(Rev:.r)
+
+trigger: none
+
+jobs:
+  - job: BuildTestAndPublish
+    strategy:
+      matrix:
+        linux:
+          imageName: 'ubuntu-latest'
+        mac:
+          imageName: 'macos-latest'
+        windows:
+          imageName: 'windows-latest'
+    pool:
+        vmImage: $(imageName)
+    workspace:
+      clean: all
+
+    steps:
+    - template: templates/build-test.yml
+    - template: templates/publish.yml
