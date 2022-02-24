@@ -1,0 +1,30 @@
+steps:
+  - task: NodeTool@0
+    displayName: Install Node@14.17.5
+    inputs:
+      versionSpec: '14.17.5'
+      checkLatest: true
+
+  - script: node common/scripts/install-run-rush.js install --purge
+    displayName: rush install
+
+  - script: node common/scripts/install-run-rush.js rebuild -v
+    displayName: rush rebuild
+
+  - script: node common/scripts/install-run-rush.js lint
+    displayName: rush lint
+
+  - script: node common/scripts/install-run-rush.js spell-check
+    displayName: rush spell-check
+
+  - script: node common/scripts/install-run-rush.js test
+    displayName: rush test
+
+  - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
+    displayName: rush publish (into .tgz)
+
+  - task: PublishBuildArtifacts@1
+    displayName: publish .tgz as build artifacts
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
+      ArtifactName: packages
