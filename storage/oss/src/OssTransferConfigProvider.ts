@@ -69,6 +69,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       },
       expiration: new Date(Credentials.Expiration),
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 
@@ -114,6 +115,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       },
       expiration: new Date(Credentials.Expiration),
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 }

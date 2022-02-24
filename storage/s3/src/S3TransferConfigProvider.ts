@@ -68,6 +68,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       },
       expiration: Credentials!.Expiration!,
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 
@@ -109,6 +110,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       },
       expiration: Credentials!.Expiration!,
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 }

@@ -25,6 +25,7 @@ import { S3ClientWrapper } from "./S3ClientWrapper";
 
 export interface S3ServerSideStorageConfig {
   baseUrl: string;
+  region: string;
   bucket: string;
   accessKey: string;
   secretKey: string;

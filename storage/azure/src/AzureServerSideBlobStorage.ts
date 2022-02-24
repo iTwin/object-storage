@@ -195,6 +195,7 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       authentication: parameters,
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
+      region: undefined
     };
   }
 
@@ -215,6 +216,7 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       authentication: parameters,
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
+      region: undefined
     };
   }
 

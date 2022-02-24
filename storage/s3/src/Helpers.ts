@@ -15,28 +15,32 @@ export function transferConfigToS3ClientWrapper(
   transferConfig: TransferConfig,
   bucket: string
 ): S3ClientWrapper {
-  const { authentication, expiration, baseUrl } = transferConfig;
+  const { baseUrl, region, authentication, expiration } = transferConfig;
   const { accessKey, secretKey, sessionToken } =
     authentication as TemporaryS3Credentials;
 
   if (new Date() > expiration) throw Error("Transfer config is expired");
 
+  if (!region) throw new Error("Region must be defined for S3 storage.")
+
   return new S3ClientWrapper(
-    createS3Client({ baseUrl, accessKey, secretKey, sessionToken }),
+    createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),
     bucket
   );
 }
 
 export function createS3Client(config: {
   baseUrl: string;
+  region: string;
   accessKey: string;
   secretKey: string;
   sessionToken?: string;
 }): S3Client {
-  const { baseUrl, accessKey, secretKey, sessionToken } = config;
+  const { baseUrl, region, accessKey, secretKey, sessionToken } = config;
 
   return new S3Client({
     endpoint: baseUrl,
+    region,
     credentials: {
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
