@@ -19,6 +19,18 @@ export class ExtensionError extends Error {
 
 export class ConfigError<T> extends Error {
   constructor(property: keyof T) {
-    super(`${property} is not defined.`);
+    super(`${property} is not defined in configuration`);
+  }
+}
+
+export class FalsyPropertyError extends Error {
+  constructor(propertyPath: string) {
+    super(`${propertyPath} is falsy`);
+  }
+}
+
+export class InvalidTypeError extends Error {
+  constructor(propertyPath: string, expectedTypeName: string) {
+    super(`${propertyPath} should be of type '${expectedTypeName}''`);
   }
 }

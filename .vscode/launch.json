@@ -1,0 +1,42 @@
+{
+  "configurations": [
+    {
+      "name": "-- Integration Tests --"
+    },
+    {
+      "name": "OSS Integration tests",
+      "cwd": "${workspaceFolder}/storage/oss",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/storage/oss/src/test/.env"
+    },
+    {
+      "name": "MinIO Integration tests",
+      "cwd": "${workspaceFolder}/storage/minio",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    }
+  ]
+}

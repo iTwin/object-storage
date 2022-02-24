@@ -28,36 +28,14 @@ export interface ObjectReference extends ObjectDirectory {
   objectName: string;
 }
 
-export interface TransferConfig {
+export interface CommonTransferConfig {
   baseUrl: string;
-  region: string | undefined;
-  authentication: string | TemporaryS3Credentials;
   expiration: Date;
 }
 
-// export interface CommonTransferConfig {
-//   baseUrl: string;
-//   expiration: Date;
-// }
-
-// export interface S3TransferConfig extends CommonTransferConfig {
-//   authentication: TemporaryS3Credentials;
-//   region: string;
-// }
-
-// export interface AzureTransferConfig extends CommonTransferConfig {
-//   authentication: string;
-// }
-
-// export type TransferConfig = AzureTransferConfig | S3TransferConfig;
-
-export interface S3Credentials {
-  accessKey: string;
-  secretKey: string;
-}
-
-export interface TemporaryS3Credentials extends S3Credentials {
-  sessionToken: string;
+export interface TransferConfig {
+  baseUrl: string;
+  expiration: Date;
 }
 
 export interface ObjectProperties {

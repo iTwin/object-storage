@@ -8,7 +8,6 @@ import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
 import {
-  buildObjectKey,
   ClientSideStorage,
   ConfigDownloadInput,
   ConfigUploadInput,
@@ -21,15 +20,9 @@ import {
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
+import { buildBlobUrlFromConfig } from "./Helpers";
 
-function buildBlobUrlFromConfig(
-  input: ConfigDownloadInput | ConfigUploadInput
-) {
-  const { transferConfig, reference } = input;
-  const { authentication, baseUrl } = transferConfig;
 
-  return `${baseUrl}/${buildObjectKey(reference)}?${authentication}`;
-}
 
 @injectable()
 export class AzureClientSideBlobStorage extends ClientSideStorage {

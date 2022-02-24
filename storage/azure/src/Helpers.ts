@@ -6,8 +6,32 @@ import {
   generateBlobSASQueryParameters,
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
+import { assertValueIsTruthyAndOfType } from "@itwin/cloud-agnostic-core";
 
-import { ObjectReference } from "@itwin/object-storage-core";
+import { buildObjectKey, ConfigDownloadInput, ConfigUploadInput, ObjectReference, TransferConfig } from "@itwin/object-storage-core";
+import { AzureTransferConfig } from ".";
+
+export function assertAzureTransferConfig(
+  transferConfig: TransferConfig
+): asserts transferConfig is AzureTransferConfig {
+  assertValueIsTruthyAndOfType(transferConfig, "transferConfig", "object");
+  assertValueIsTruthyAndOfType(
+    (transferConfig as AzureTransferConfig).authentication,
+    "transferConfig.authentication",
+    "string"
+  );
+}
+
+export function buildBlobUrlFromConfig(
+  input: ConfigDownloadInput | ConfigUploadInput
+) {
+  const { transferConfig, reference } = input;
+
+  assertAzureTransferConfig(transferConfig);
+  const { authentication, baseUrl } = transferConfig;
+
+  return `${baseUrl}/${buildObjectKey(reference)}?${authentication}`;
+}
 
 export function buildBlobName(reference: ObjectReference): string {
   const { relativeDirectory, objectName } = reference;

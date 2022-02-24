@@ -8,4 +8,5 @@ export * from "./AzureServerSideBlobStorageExtension";
 export * from "./BlobServiceClientWrapper";
 export * from "./BlockBlobClientWrapper";
 export * from "./Helpers";
+export * from "./Interfaces";
 export * from "./Types";

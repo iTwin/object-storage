@@ -6,3 +6,4 @@ export * from "./Extendable";
 export * from "./Extension";
 export * from "./ExtensionConfig";
 export * from "./Types";
+export * from "./Utils";
