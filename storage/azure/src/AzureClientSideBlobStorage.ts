@@ -22,8 +22,6 @@ import {
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobUrlFromConfig } from "./Helpers";
 
-
-
 @injectable()
 export class AzureClientSideBlobStorage extends ClientSideStorage {
   public download(
