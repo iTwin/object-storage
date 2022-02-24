@@ -28,11 +28,6 @@ export interface ObjectReference extends ObjectDirectory {
   objectName: string;
 }
 
-export interface CommonTransferConfig {
-  baseUrl: string;
-  expiration: Date;
-}
-
 export interface TransferConfig {
   baseUrl: string;
   expiration: Date;
