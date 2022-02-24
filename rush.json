@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.55.1",
+  "pnpmVersion": "6.13.0",
+  "nodeSupportedVersionRange": ">=10.17.0 <15.0.0",
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 1,
+  "projectFolderMaxDepth": 2,
+  "repository": {
+    "url": "https://github.com/iTwin/object-storage",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "pnpmOptions": {
+    "useWorkspaces": true
+  },
+  "projects": [
+    {
+      "packageName": "@itwin/cloud-agnostic-core",
+      "projectFolder": "cloud-agnostic/core",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-core",
+      "projectFolder": "storage/core",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-azure",
+      "projectFolder": "storage/azure",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-s3",
+      "projectFolder": "storage/s3",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-oss",
+      "projectFolder": "storage/oss",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-minio",
+      "projectFolder": "storage/minio",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-tests",
+      "projectFolder": "tests/object-storage",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@itwin/object-storage-common-config",
+      "projectFolder": "utils/common-config",
+      "shouldPublish": false
+    }
+  ]
+}

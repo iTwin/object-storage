@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "ignorePaths": [
+    "node_modules/**",
+    "src/assets/**",
+    "lib/**",
+    "*.log",
+    "tsconfig.json",
+    "package.json"
+  ],
+  "words": [
+    "itwin",
+    "inversify",
+    "minio",
+    "alicloud",
+    "kbps",
+    "presigner"
+  ]
+}

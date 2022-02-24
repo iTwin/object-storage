@@ -1,0 +1,57 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "clean",
+      "commandKind": "bulk",
+      "summary": "Cleans build output within each package",
+      "description": "Iterates through each package in the monorepo and runs the 'clean' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false
+    },
+    {
+      "name": "lint",
+      "commandKind": "bulk",
+      "summary": "Run lint rules on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'lint' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "lint-fix",
+      "commandKind": "bulk",
+      "summary": "Automatically fixes some tslint issues on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'lint-fix' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false
+    },
+    {
+      "name": "spell-check",
+      "commandKind": "bulk",
+      "summary": "Run spell checker on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'spell-check' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test",
+      "commandKind": "bulk",
+      "summary": "Run test script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:integration",
+      "commandKind": "bulk",
+      "summary": "Run test:integration script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:integration' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    }
+  ]
+}

@@ -7,10 +7,7 @@ import {
 } from "@azure/storage-blob";
 import { Container } from "inversify";
 
-import {
-  ConfigError,
-  ExtensionConfig,
-} from "@itwin/cloud-agnostic-core";
+import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
 import {
   ServerSideStorage,
   ServerSideStorageExtension,
