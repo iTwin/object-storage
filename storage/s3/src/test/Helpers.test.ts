@@ -82,10 +82,11 @@ describe("Helper functions", () => {
       },
     ].forEach((testCase) => {
       it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
-        const testedFunction = () => transferConfigToS3ClientWrapper(
-          testCase.transferConfig as S3TransferConfig,
-          "testBucket"
-        );
+        const testedFunction = () =>
+          transferConfigToS3ClientWrapper(
+            testCase.transferConfig as S3TransferConfig,
+            "testBucket"
+          );
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
