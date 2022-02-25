@@ -1,6 +1,26 @@
 {
   "configurations": [
     {
+      "name": "-- Unit Tests --"
+    },
+    {
+      "name": "Azure Unit tests",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
       "name": "-- Integration Tests --"
     },
     {

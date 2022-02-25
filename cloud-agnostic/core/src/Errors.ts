@@ -31,6 +31,6 @@ export class FalsyPropertyError extends Error {
 
 export class InvalidTypeError extends Error {
   constructor(propertyPath: string, expectedTypeName: string) {
-    super(`${propertyPath} should be of type '${expectedTypeName}''`);
+    super(`${propertyPath} should be of type '${expectedTypeName}'`);
   }
 }
