@@ -4,8 +4,9 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { TransferConfig, TransferType } from "@itwin/object-storage-core";
+import { TransferType } from "@itwin/object-storage-core";
 
+import { S3TransferConfig } from "../Interfaces";
 import { S3ClientSideStorage } from "../S3ClientSideStorage";
 
 use(chaiAsPromised);
@@ -95,7 +96,7 @@ describe(`${S3ClientSideStorage.name}`, () => {
               objectName: "testObjectName",
             },
             transferType,
-            transferConfig: testCase.transferConfig as TransferConfig,
+            transferConfig: testCase.transferConfig as S3TransferConfig,
           };
           const testedFunction = s3ClientSideStorage.download(input);
           await expect(testedFunction).to.eventually.be.rejected.with.property(

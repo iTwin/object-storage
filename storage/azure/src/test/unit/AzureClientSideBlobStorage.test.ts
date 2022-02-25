@@ -4,9 +4,9 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { TransferConfig, TransferType } from "@itwin/object-storage-core";
+import { TransferType } from "@itwin/object-storage-core";
 
-import { AzureClientSideBlobStorage } from "../..";
+import { AzureClientSideBlobStorage, AzureTransferConfig } from "../..";
 
 use(chaiAsPromised);
 
@@ -51,7 +51,8 @@ describe(`${AzureClientSideBlobStorage.name}`, () => {
               objectName: "testObjectName",
             },
             transferType,
-            transferConfig: testCase.transferConfig as TransferConfig,
+            transferConfig:
+              testCase.transferConfig as unknown as AzureTransferConfig,
           };
           const testedFunction = azureClientSideBlobStorage.download(input);
           await expect(testedFunction).to.eventually.be.rejected.with.property(

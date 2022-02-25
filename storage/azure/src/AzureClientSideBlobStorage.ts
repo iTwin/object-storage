@@ -9,38 +9,44 @@ import { injectable } from "inversify";
 
 import {
   ClientSideStorage,
-  ConfigDownloadInput,
-  ConfigUploadInput,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   TransferData,
-  UploadInMultiplePartsInput,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobUrlFromConfig } from "./Helpers";
+import {
+  AzureConfigDownloadInput,
+  AzureConfigUploadInput,
+  AzureUploadInMultiplePartsInput,
+} from "./Interfaces";
 
 @injectable()
 export class AzureClientSideBlobStorage extends ClientSideStorage {
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & {
+    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "local";
       localPath: string;
     }
   ): Promise<string>;
 
   public async download(
-    input: UrlDownloadInput | ConfigDownloadInput
+    input: UrlDownloadInput | AzureConfigDownloadInput
   ): Promise<TransferData> {
     const blobClient = new BlockBlobClient(
       instanceOfUrlDownloadInput(input)
@@ -55,7 +61,7 @@ export class AzureClientSideBlobStorage extends ClientSideStorage {
   }
 
   public async upload(
-    input: UrlUploadInput | ConfigUploadInput
+    input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
     const blobClient = new BlockBlobClient(
       instanceOfUrlUploadInput(input)
@@ -70,7 +76,7 @@ export class AzureClientSideBlobStorage extends ClientSideStorage {
   }
 
   public async uploadInMultipleParts(
-    input: UploadInMultiplePartsInput
+    input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
     const blobClient = new BlockBlobClient(buildBlobUrlFromConfig(input));
 

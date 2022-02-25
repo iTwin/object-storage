@@ -7,20 +7,22 @@ import { inject, injectable } from "inversify";
 
 import {
   ClientSideStorage,
-  ConfigDownloadInput,
-  ConfigUploadInput,
   downloadFromUrl,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
   TransferData,
-  UploadInMultiplePartsInput,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
 import { transferConfigToS3ClientWrapper } from "./Helpers";
+import {
+  S3ConfigDownloadInput,
+  S3ConfigUploadInput,
+  S3UploadInMultiplePartsInput,
+} from "./Interfaces";
 import { Types } from "./Types";
 
 export interface S3ClientSideStorageConfig {
@@ -40,22 +42,26 @@ export class S3ClientSideStorage extends ClientSideStorage {
   }
 
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+    input: (UrlDownloadInput | S3ConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+    input: (UrlDownloadInput | S3ConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   public download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & {
+    input: (UrlDownloadInput | S3ConfigDownloadInput) & {
       transferType: "local";
       localPath: string;
     }
   ): Promise<string>;
 
   public async download(
-    input: UrlDownloadInput | ConfigDownloadInput
+    input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
     if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
 
@@ -68,7 +74,7 @@ export class S3ClientSideStorage extends ClientSideStorage {
   }
 
   public async upload(
-    input: UrlUploadInput | ConfigUploadInput
+    input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
     const { data, metadata } = input;
 
@@ -86,7 +92,7 @@ export class S3ClientSideStorage extends ClientSideStorage {
   }
 
   public async uploadInMultipleParts(
-    input: UploadInMultiplePartsInput
+    input: S3UploadInMultiplePartsInput
   ): Promise<void> {
     return transferConfigToS3ClientWrapper(
       input.transferConfig,
