@@ -2,6 +2,7 @@
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
 export * from "./Helpers";
+export * from "./Interfaces";
 export * from "./S3ClientSideStorage";
 export * from "./S3ClientSideStorageExtension";
 export * from "./S3ClientWrapper";

@@ -5,8 +5,8 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { AzureClientSideBlobStorageExtension } from "../AzureClientSideBlobStorageExtension";
-import { AzureServerSideBlobStorageExtension } from "../AzureServerSideBlobStorageExtension";
+import { AzureClientSideBlobStorageExtension } from "../../AzureClientSideBlobStorageExtension";
+import { AzureServerSideBlobStorageExtension } from "../../AzureServerSideBlobStorageExtension";
 
 const extensionName = "azure";
 

@@ -18,6 +18,7 @@ const config = {
     accessKey: process.env.test_oss_access_key,
     secretKey: process.env.test_oss_secret_key,
     baseUrl: process.env.test_oss_base_url,
+    region: process.env.test_oss_region,
     roleArn: process.env.test_oss_role_arn,
     stsBaseUrl: process.env.test_oss_sts_base_url,
   },

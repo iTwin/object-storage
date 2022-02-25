@@ -42,6 +42,8 @@ export class S3ServerSideStorageExtension extends ServerSideStorageExtension {
       throw new ConfigError<S3ServerSideStorageConfig>("bucket");
     if (!config.baseUrl)
       throw new ConfigError<S3ServerSideStorageConfig>("baseUrl");
+    if (!config.region)
+      throw new ConfigError<S3ServerSideStorageConfig>("region");
     if (!config.roleArn)
       throw new ConfigError<S3ServerSideStorageConfig>("roleArn");
     if (!config.secretKey)

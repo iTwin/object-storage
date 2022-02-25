@@ -30,17 +30,7 @@ export interface ObjectReference extends ObjectDirectory {
 
 export interface TransferConfig {
   baseUrl: string;
-  authentication: string | TemporaryS3Credentials;
   expiration: Date;
-}
-
-export interface S3Credentials {
-  accessKey: string;
-  secretKey: string;
-}
-
-export interface TemporaryS3Credentials extends S3Credentials {
-  sessionToken: string;
 }
 
 export interface ObjectProperties {

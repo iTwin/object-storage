@@ -9,10 +9,13 @@ import { inject, injectable } from "inversify";
 import {
   buildObjectDirectoryString,
   ObjectDirectory,
-  TransferConfig,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
-import { S3ServerSideStorageConfig, Types } from "@itwin/object-storage-s3";
+import {
+  S3ServerSideStorageConfig,
+  S3TransferConfig,
+  Types,
+} from "@itwin/object-storage-s3";
 
 @injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {
@@ -30,7 +33,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
   public async getDownloadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
-  ): Promise<TransferConfig> {
+  ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
@@ -69,13 +72,14 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       },
       expiration: new Date(Credentials.Expiration),
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 
   public async getUploadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
-  ): Promise<TransferConfig> {
+  ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
@@ -114,6 +118,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       },
       expiration: new Date(Credentials.Expiration),
       baseUrl: this._config.baseUrl,
+      region: this._config.region,
     };
   }
 }

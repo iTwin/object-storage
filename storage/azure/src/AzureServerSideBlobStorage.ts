@@ -15,7 +15,6 @@ import {
   ObjectProperties,
   ObjectReference,
   ServerSideStorage,
-  TransferConfig,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
@@ -23,6 +22,7 @@ import {
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobName, buildExpiresOn, buildSASParameters } from "./Helpers";
+import { AzureTransferConfig } from "./Interfaces";
 import { Types } from "./Types";
 
 export interface AzureServerSideBlobStorageConfig {
@@ -181,7 +181,7 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
   public async getDownloadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
-  ): Promise<TransferConfig> {
+  ): Promise<AzureTransferConfig> {
     const expiresOn = buildExpiresOn(expiresInSeconds);
     const parameters = buildSASParameters(
       directory.baseDirectory,
@@ -201,7 +201,7 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
   public async getUploadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
-  ): Promise<TransferConfig> {
+  ): Promise<AzureTransferConfig> {
     const expiresOn = buildExpiresOn(expiresInSeconds);
     const parameters = buildSASParameters(
       directory.baseDirectory,

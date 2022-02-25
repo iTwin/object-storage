@@ -5,38 +5,77 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
-  TemporaryS3Credentials,
+  assertPrimitiveType,
+  FalsyValueError,
+} from "@itwin/cloud-agnostic-core";
+import {
+  assertTransferConfig,
   TransferConfig,
 } from "@itwin/object-storage-core";
 
+import { S3TransferConfig } from "./Interfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
+
+function assertS3TransferConfig(
+  transferConfig: TransferConfig | S3TransferConfig
+): asserts transferConfig is S3TransferConfig {
+  assertTransferConfig(transferConfig);
+
+  if (!("authentication" in transferConfig))
+    throw new FalsyValueError("transferConfig.authentication");
+  assertPrimitiveType(
+    transferConfig.authentication,
+    "transferConfig.authentication",
+    "object"
+  );
+  assertPrimitiveType(
+    transferConfig.authentication.accessKey,
+    "transferConfig.authentication.accessKey",
+    "string"
+  );
+  assertPrimitiveType(
+    transferConfig.authentication.secretKey,
+    "transferConfig.authentication.secretKey",
+    "string"
+  );
+  assertPrimitiveType(
+    transferConfig.authentication.sessionToken,
+    "transferConfig.authentication.sessionToken",
+    "string"
+  );
+
+  if (!("region" in transferConfig))
+    throw new FalsyValueError("transferConfig.region");
+  assertPrimitiveType(transferConfig.region, "transferConfig.region", "string");
+}
 
 export function transferConfigToS3ClientWrapper(
   transferConfig: TransferConfig,
   bucket: string
 ): S3ClientWrapper {
-  const { authentication, expiration, baseUrl } = transferConfig;
-  const { accessKey, secretKey, sessionToken } =
-    authentication as TemporaryS3Credentials;
+  assertS3TransferConfig(transferConfig);
 
-  if (new Date() > expiration) throw Error("Transfer config is expired");
+  const { baseUrl, region, authentication } = transferConfig;
+  const { accessKey, secretKey, sessionToken } = authentication;
 
   return new S3ClientWrapper(
-    createS3Client({ baseUrl, accessKey, secretKey, sessionToken }),
+    createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),
     bucket
   );
 }
 
 export function createS3Client(config: {
   baseUrl: string;
+  region: string;
   accessKey: string;
   secretKey: string;
   sessionToken?: string;
 }): S3Client {
-  const { baseUrl, accessKey, secretKey, sessionToken } = config;
+  const { baseUrl, region, accessKey, secretKey, sessionToken } = config;
 
   return new S3Client({
     endpoint: baseUrl,
+    region,
     credentials: {
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
