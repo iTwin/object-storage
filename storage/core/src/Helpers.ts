@@ -7,11 +7,14 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
+import { assertTypeAndValue } from "@itwin/cloud-agnostic-core";
+
 import { UrlDownloadInput } from "./ClientSideStorage";
 import {
   Metadata,
   ObjectDirectory,
   ObjectReference,
+  TransferConfig,
   TransferData,
 } from "./StorageInterfaces";
 
@@ -147,6 +150,22 @@ export function metadataToHeaders(
     }),
     {}
   );
+}
+
+export function assertTransferConfig(transferConfig: TransferConfig): void {
+  assertTypeAndValue(transferConfig, "transferConfig", "object");
+  assertTypeAndValue(
+    transferConfig.baseUrl,
+    "transferConfig.baseUrl",
+    "string"
+  );
+  assertTypeAndValue(
+    transferConfig.expiration,
+    "transferConfig.expiration",
+    "Date"
+  );
+  if (new Date() > transferConfig.expiration)
+    throw Error("Transfer config is expired");
 }
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB

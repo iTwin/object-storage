@@ -21,6 +21,23 @@
       ]
     },
     {
+      "name": "S3 Unit tests",
+      "cwd": "${workspaceFolder}/storage/s3",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
       "name": "-- Integration Tests --"
     },
     {

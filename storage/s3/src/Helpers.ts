@@ -8,7 +8,10 @@ import {
   assertTypeAndValue,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
-import { TransferConfig } from "@itwin/object-storage-core";
+import {
+  assertTransferConfig,
+  TransferConfig,
+} from "@itwin/object-storage-core";
 
 import { S3TransferConfig } from "./Interfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
@@ -16,7 +19,7 @@ import { S3ClientWrapper } from "./S3ClientWrapper";
 function assertS3TransferConfig(
   transferConfig: TransferConfig | S3TransferConfig
 ): asserts transferConfig is S3TransferConfig {
-  assertTypeAndValue(transferConfig, "transferConfig", "object");
+  assertTransferConfig(transferConfig);
 
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");
@@ -52,12 +55,8 @@ export function transferConfigToS3ClientWrapper(
 ): S3ClientWrapper {
   assertS3TransferConfig(transferConfig);
 
-  const { baseUrl, region, authentication, expiration } = transferConfig;
+  const { baseUrl, region, authentication } = transferConfig;
   const { accessKey, secretKey, sessionToken } = authentication;
-
-  if (new Date() > expiration) throw Error("Transfer config is expired");
-
-  if (!region) throw new Error("Region must be defined for S3 storage.");
 
   return new S3ClientWrapper(
     createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),

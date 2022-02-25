@@ -12,6 +12,7 @@ import {
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 import {
+  assertTransferConfig,
   buildObjectKey,
   ConfigDownloadInput,
   ConfigUploadInput,
@@ -24,7 +25,7 @@ import { AzureTransferConfig } from ".";
 export function assertAzureTransferConfig(
   transferConfig: TransferConfig | AzureTransferConfig
 ): asserts transferConfig is AzureTransferConfig {
-  assertTypeAndValue(transferConfig, "transferConfig", "object");
+  assertTransferConfig(transferConfig);
 
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");

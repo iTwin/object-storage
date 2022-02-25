@@ -91,6 +91,7 @@ importers:
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@types/chai': ^4.1.7
+      '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ^8.2.2
       '@types/node': ^14.14.41
       axios: ~0.24.0
@@ -114,6 +115,7 @@ importers:
       '@bentley/build-tools': 2.19.28
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@types/chai': 4.3.0
+      '@types/chai-as-promised': 7.1.5
       '@types/mocha': 8.2.3
       '@types/node': 14.18.12
       chai: 4.3.6

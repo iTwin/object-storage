@@ -6,9 +6,20 @@ import { FalsyValueError, InvalidTypeError } from "./Errors";
 export function assertTypeAndValue(
   value: unknown,
   valueName: string,
-  expectedValueType: "string" | "object"
+  expectedValueType: "string" | "object" | "Date"
 ): void {
   if (!value) throw new FalsyValueError(valueName);
-  if (typeof value !== expectedValueType)
-    throw new InvalidTypeError(valueName, expectedValueType);
+
+  let isValueOfType;
+  switch (expectedValueType) {
+    case "Date":
+      isValueOfType = value instanceof Date;
+      break;
+    case "string":
+    case "object":
+      isValueOfType = typeof value === expectedValueType;
+      break;
+  }
+
+  if (!isValueOfType) throw new InvalidTypeError(valueName, expectedValueType);
 }
