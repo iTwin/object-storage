@@ -4,6 +4,23 @@
       "name": "-- Unit Tests --"
     },
     {
+      "name": "Storage Core Unit tests",
+      "cwd": "${workspaceFolder}/storage/core",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
       "name": "Azure Unit tests",
       "cwd": "${workspaceFolder}/storage/azure",
       "type": "pwa-node",

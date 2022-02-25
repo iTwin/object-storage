@@ -7,7 +7,10 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
-import { assertTypeAndValue } from "@itwin/cloud-agnostic-core";
+import {
+  assertInstanceType,
+  assertPrimitiveType,
+} from "@itwin/cloud-agnostic-core";
 
 import { UrlDownloadInput } from "./ClientSideStorage";
 import {
@@ -153,16 +156,16 @@ export function metadataToHeaders(
 }
 
 export function assertTransferConfig(transferConfig: TransferConfig): void {
-  assertTypeAndValue(transferConfig, "transferConfig", "object");
-  assertTypeAndValue(
+  assertPrimitiveType(transferConfig, "transferConfig", "object");
+  assertPrimitiveType(
     transferConfig.baseUrl,
     "transferConfig.baseUrl",
     "string"
   );
-  assertTypeAndValue(
+  assertInstanceType(
     transferConfig.expiration,
     "transferConfig.expiration",
-    "Date"
+    Date
   );
   if (new Date() > transferConfig.expiration)
     throw Error("Transfer config is expired");

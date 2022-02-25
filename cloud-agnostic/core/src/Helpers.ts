@@ -3,23 +3,22 @@
  *----------------------------------------------------------------------------*/
 import { FalsyValueError, InvalidTypeError } from "./Errors";
 
-export function assertTypeAndValue(
+export function assertPrimitiveType(
   value: unknown,
   valueName: string,
-  expectedValueType: "string" | "object" | "Date"
+  expectedValueType: "string" | "object"
 ): void {
   if (!value) throw new FalsyValueError(valueName);
+  if (!(typeof value === expectedValueType))
+    throw new InvalidTypeError(valueName, expectedValueType);
+}
 
-  let isValueOfType;
-  switch (expectedValueType) {
-    case "Date":
-      isValueOfType = value instanceof Date;
-      break;
-    case "string":
-    case "object":
-      isValueOfType = typeof value === expectedValueType;
-      break;
-  }
-
-  if (!isValueOfType) throw new InvalidTypeError(valueName, expectedValueType);
+export function assertInstanceType<T>(
+  value: unknown,
+  valueName: string,
+  instanceConstructor: new () => T
+): void {
+  if (!value) throw new FalsyValueError(valueName);
+  if (!(value instanceof instanceConstructor))
+    throw new InvalidTypeError(valueName, instanceConstructor.name);
 }

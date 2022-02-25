@@ -5,7 +5,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
-  assertTypeAndValue,
+  assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 import {
@@ -23,22 +23,22 @@ function assertS3TransferConfig(
 
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");
-  assertTypeAndValue(
+  assertPrimitiveType(
     transferConfig.authentication,
     "transferConfig.authentication",
     "object"
   );
-  assertTypeAndValue(
+  assertPrimitiveType(
     transferConfig.authentication.accessKey,
     "transferConfig.authentication.accessKey",
     "string"
   );
-  assertTypeAndValue(
+  assertPrimitiveType(
     transferConfig.authentication.secretKey,
     "transferConfig.authentication.secretKey",
     "string"
   );
-  assertTypeAndValue(
+  assertPrimitiveType(
     transferConfig.authentication.sessionToken,
     "transferConfig.authentication.sessionToken",
     "string"
@@ -46,7 +46,7 @@ function assertS3TransferConfig(
 
   if (!("region" in transferConfig))
     throw new FalsyValueError("transferConfig.region");
-  assertTypeAndValue(transferConfig.region, "transferConfig.region", "string");
+  assertPrimitiveType(transferConfig.region, "transferConfig.region", "string");
 }
 
 export function transferConfigToS3ClientWrapper(

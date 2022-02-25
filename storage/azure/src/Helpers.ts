@@ -8,7 +8,7 @@ import {
 } from "@azure/storage-blob";
 
 import {
-  assertTypeAndValue,
+  assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 import {
@@ -29,7 +29,7 @@ export function assertAzureTransferConfig(
 
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");
-  assertTypeAndValue(
+  assertPrimitiveType(
     transferConfig.authentication,
     "transferConfig.authentication",
     "string"
