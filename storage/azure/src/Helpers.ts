@@ -7,7 +7,10 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
-import { assertValueIsTruthyAndOfType } from "@itwin/cloud-agnostic-core";
+import {
+  assertTypeAndValue,
+  FalsyValueError,
+} from "@itwin/cloud-agnostic-core";
 import {
   buildObjectKey,
   ConfigDownloadInput,
@@ -19,11 +22,14 @@ import {
 import { AzureTransferConfig } from ".";
 
 export function assertAzureTransferConfig(
-  transferConfig: TransferConfig
+  transferConfig: TransferConfig | AzureTransferConfig
 ): asserts transferConfig is AzureTransferConfig {
-  assertValueIsTruthyAndOfType(transferConfig, "transferConfig", "object");
-  assertValueIsTruthyAndOfType(
-    (transferConfig as AzureTransferConfig).authentication,
+  assertTypeAndValue(transferConfig, "transferConfig", "object");
+
+  if (!("authentication" in transferConfig))
+    throw new FalsyValueError("transferConfig.authentication");
+  assertTypeAndValue(
+    transferConfig.authentication,
     "transferConfig.authentication",
     "string"
   );

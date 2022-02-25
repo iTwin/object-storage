@@ -4,41 +4,46 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
-import { assertValueIsTruthyAndOfType } from "@itwin/cloud-agnostic-core";
+import {
+  assertTypeAndValue,
+  FalsyValueError,
+} from "@itwin/cloud-agnostic-core";
 import { TransferConfig } from "@itwin/object-storage-core";
 
 import { S3TransferConfig } from "./Interfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
 function assertS3TransferConfig(
-  transferConfig: TransferConfig
+  transferConfig: TransferConfig | S3TransferConfig
 ): asserts transferConfig is S3TransferConfig {
-  assertValueIsTruthyAndOfType(transferConfig, "transferConfig", "object");
-  assertValueIsTruthyAndOfType(
-    (transferConfig as S3TransferConfig).authentication,
+  assertTypeAndValue(transferConfig, "transferConfig", "object");
+
+  if (!("authentication" in transferConfig))
+    throw new FalsyValueError("transferConfig.authentication");
+  assertTypeAndValue(
+    transferConfig.authentication,
     "transferConfig.authentication",
     "object"
   );
-  assertValueIsTruthyAndOfType(
-    (transferConfig as S3TransferConfig).authentication.accessKey,
+  assertTypeAndValue(
+    transferConfig.authentication.accessKey,
     "transferConfig.authentication.accessKey",
     "string"
   );
-  assertValueIsTruthyAndOfType(
-    (transferConfig as S3TransferConfig).authentication.secretKey,
+  assertTypeAndValue(
+    transferConfig.authentication.secretKey,
     "transferConfig.authentication.secretKey",
     "string"
   );
-  assertValueIsTruthyAndOfType(
-    (transferConfig as S3TransferConfig).authentication.sessionToken,
+  assertTypeAndValue(
+    transferConfig.authentication.sessionToken,
     "transferConfig.authentication.sessionToken",
     "string"
   );
-  assertValueIsTruthyAndOfType(
-    (transferConfig as S3TransferConfig).region,
-    "transferConfig.region",
-    "string"
-  );
+
+  if (!("region" in transferConfig))
+    throw new FalsyValueError("transferConfig.region");
+  assertTypeAndValue(transferConfig.region, "transferConfig.region", "string");
 }
 
 export function transferConfigToS3ClientWrapper(

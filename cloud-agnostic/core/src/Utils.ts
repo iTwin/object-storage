@@ -1,14 +1,14 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { FalsyPropertyError, InvalidTypeError } from "./Errors";
+import { FalsyValueError, InvalidTypeError } from "./Errors";
 
-export function assertValueIsTruthyAndOfType(
+export function assertTypeAndValue(
   value: unknown,
-  readablePath: string,
-  expectedPropertyType: "string" | "object"
+  valueName: string,
+  expectedValueType: "string" | "object"
 ): void {
-  if (!value) throw new FalsyPropertyError(readablePath);
-  if (typeof value !== expectedPropertyType)
-    throw new InvalidTypeError(readablePath, expectedPropertyType);
+  if (!value) throw new FalsyValueError(valueName);
+  if (typeof value !== expectedValueType)
+    throw new InvalidTypeError(valueName, expectedValueType);
 }

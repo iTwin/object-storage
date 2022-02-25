@@ -23,7 +23,7 @@ export class ConfigError<T> extends Error {
   }
 }
 
-export class FalsyPropertyError extends Error {
+export class FalsyValueError extends Error {
   constructor(propertyPath: string) {
     super(`${propertyPath} is falsy`);
   }
