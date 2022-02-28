@@ -20,6 +20,7 @@ import {
   buildObjectDirectoryString,
   buildObjectKey,
   buildObjectReference,
+  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -125,12 +126,16 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
+  public async list(
+    directory: ObjectDirectory,
+    maxResults?: number
+  ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
         Prefix: buildObjectDirectoryString(directory),
+        MaxKeys: maxResults,
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -149,14 +154,21 @@ export class S3ClientWrapper {
     /* eslint-enable @typescript-eslint/naming-convention */
   }
 
-  public async exists(reference: ObjectReference): Promise<boolean> {
-    try {
-      return !!(await this.getObjectProperties(reference));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      if (error.name === "NotFound") return false;
-      throw error;
+  public async exists(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<boolean> {
+    if (instanceOfObjectReference(reference)) {
+      try {
+        return !!(await this.getObjectProperties(reference));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.name === "NotFound") return false;
+        throw error;
+      }
     }
+
+    const files: ObjectReference[] = await this.list(reference, 1);
+    return files.length !== 0;
   }
 
   public async updateMetadata(

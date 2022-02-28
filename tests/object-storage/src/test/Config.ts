@@ -9,7 +9,6 @@ import {
 interface StorageIntegrationTestsConfig {
   serverSideStorage: ServerSideStorage;
   clientSideStorage: ClientSideStorage;
-  baseDirectory: string;
   relativeDirectory: string;
 }
 

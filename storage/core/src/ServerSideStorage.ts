@@ -59,7 +59,9 @@ export abstract class ServerSideStorage
 
   public abstract remove(reference: ObjectReference): Promise<void>;
 
-  public abstract exists(reference: ObjectReference): Promise<boolean>;
+  public abstract exists(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<boolean>;
 
   public abstract updateMetadata(
     reference: ObjectReference,
@@ -114,4 +116,10 @@ export interface TransferConfigProvider {
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
+}
+
+export function instanceOfObjectReference(
+  reference: ObjectDirectory | ObjectReference
+): reference is ObjectReference {
+  return "objectName" in reference;
 }

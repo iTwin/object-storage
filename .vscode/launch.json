@@ -58,6 +58,24 @@
       "name": "-- Integration Tests --"
     },
     {
+      "name": "Azure Integration tests",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/storage/azure/src/test/integration/.env"
+    },
+    {
       "name": "OSS Integration tests",
       "cwd": "${workspaceFolder}/storage/oss",
       "type": "pwa-node",

@@ -8,6 +8,7 @@ import { inject, injectable } from "inversify";
 import {
   buildObjectKey,
   buildObjectReference,
+  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -118,8 +119,14 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     await this._client.getBlobClient(reference).delete();
   }
 
-  public async exists(reference: ObjectReference): Promise<boolean> {
-    return this._client.getBlobClient(reference).exists();
+  public async exists(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<boolean> {
+    if (instanceOfObjectReference(reference)) {
+      return this._client.getBlobClient(reference).exists();
+    }
+
+    return this._client.getContainerClient(reference.baseDirectory).exists();
   }
 
   public async updateMetadata(
