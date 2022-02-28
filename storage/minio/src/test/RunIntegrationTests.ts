@@ -20,6 +20,7 @@ const config = {
     // cspell:disable-next-line
     secretKey: "minioadmin",
     baseUrl: "http://127.0.0.1:9000",
+    region: "us-east-1",
     roleArn: "<role-arn>",
     stsBaseUrl: "http://127.0.0.1:9000",
   },
