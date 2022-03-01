@@ -20,6 +20,20 @@ steps:
   - script: node common/scripts/install-run-rush.js test
     displayName: rush test
 
+  - script: npm run test:integration
+    displayName: npm run test:integration (OSS integration tests)
+    workingDirectory: storage/oss
+    env:
+      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
+      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
+      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
+
+  - script: npm run test:integration
+    displayName: npm run test:integration (Azure integration tests)
+    workingDirectory: storage/azure
+    env:
+      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+
   - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
     displayName: rush publish (into .tgz)
 

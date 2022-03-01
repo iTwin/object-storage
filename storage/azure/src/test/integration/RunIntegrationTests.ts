@@ -14,9 +14,9 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerSideStorage: {
     extensionName,
-    accountName: process.env.test_azure_storage_account_name,
-    accountKey: process.env.test_azure_storage_account_key,
-    baseUrl: process.env.test_azure_storage_base_url,
+    accountName: process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME,
+    accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY,
+    baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientSideStorage: {
