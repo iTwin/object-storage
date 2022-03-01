@@ -60,10 +60,10 @@ export abstract class ServerSideStorage
   public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
 
   /**
-   * Deletes specified resource which is either an object or a directory. Note
+   * Deletes the specified resource which is either an object or a directory. Note
    * that some storage providers (Azure, for example) do not immediately delete
    * all associated resources and cleanup can take up to several minutes. To check
-   * if a resource exists use the {@link exists} method.
+   * if the resource has been deleted use the {@link exists} method.
    * @param {ObjectDirectory | ObjectReference} reference object or directory reference
    * @returns {Promise<void>}
    */
@@ -71,6 +71,11 @@ export abstract class ServerSideStorage
     reference: ObjectDirectory | ObjectReference
   ): Promise<void>;
 
+  /**
+   * Checks if the specified resource has been deleted.
+   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * @returns `true` if the resource has not been deleted, `false` otherwise.
+   */
   public abstract exists(
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean>;
