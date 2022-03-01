@@ -222,8 +222,8 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
   });
 
   describe(`${serverSideStorage.delete.name}()`, () => {
-    it("should remove objects from upload tests", async () => {
-      const removePromises = remoteFiles.map(
+    it("should delete objects from upload tests", async () => {
+      const deletePromises = remoteFiles.map(
         (file) =>
           expect(
             serverSideStorage.delete({
@@ -233,7 +233,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
           ).to.eventually.be.fulfilled
       );
 
-      await Promise.all(removePromises);
+      await Promise.all(deletePromises);
     });
   });
 
@@ -452,7 +452,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       }
 
       after(async () => {
-        const removePromises = [
+        const deletePromises = [
           testUploadUrlLocalFile,
           testUploadUrlBufferFile,
           testUploadUrlStreamFile,
@@ -464,7 +464,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
         );
 
         await Promise.all([
-          ...removePromises,
+          ...deletePromises,
           promises.unlink(fileToUploadPath),
         ]);
       });
@@ -568,7 +568,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       }
 
       after(async () => {
-        const removePromises = [
+        const deletePromises = [
           testUploadConfigLocalFile,
           testUploadConfigBufferFile,
           testUploadConfigStreamFile,
@@ -580,7 +580,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
         );
 
         await Promise.all([
-          ...removePromises,
+          ...deletePromises,
           promises.unlink(fileToUploadPath),
         ]);
       });
@@ -642,7 +642,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       }
 
       after(async () => {
-        const removePromises = [
+        const deletePromises = [
           testMultipartUploadConfigLocalFile,
           testMultipartUploadConfigStreamFile,
         ].map(async (file) =>
@@ -653,7 +653,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
         );
 
         await Promise.all([
-          ...removePromises,
+          ...deletePromises,
           promises.unlink(fileToUploadPath),
         ]);
       });
