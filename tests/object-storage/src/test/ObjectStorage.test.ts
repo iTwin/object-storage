@@ -376,8 +376,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         )
       );
 
-      const deleteDirectoryPromise =
-        serverSideStorage.delete(testDirectory);
+      const deleteDirectoryPromise = serverSideStorage.delete(testDirectory);
 
       await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
