@@ -94,6 +94,10 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     ).uploadInMultipleParts(data, options);
   }
 
+  public async create(directory: ObjectDirectory): Promise<void> {
+    await this._client.getContainerClient(directory.baseDirectory).create();
+  }
+
   public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
     const { baseDirectory, relativeDirectory } = directory;
     const containerClient = this._client.getContainerClient(baseDirectory);
@@ -228,9 +232,5 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
     };
-  }
-
-  public async createBaseDirectory(name: string): Promise<void> {
-    return this._client.createContainer(name);
   }
 }

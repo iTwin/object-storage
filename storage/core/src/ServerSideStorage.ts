@@ -54,6 +54,8 @@ export abstract class ServerSideStorage
     options?: MultipartUploadOptions
   ): Promise<void>;
 
+  public abstract create(directory: ObjectDirectory): Promise<void>;
+
   public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
 
   public abstract delete(
@@ -92,8 +94,6 @@ export abstract class ServerSideStorage
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
-
-  public abstract createBaseDirectory(name: string): Promise<void>;
 }
 
 export interface PresignedUrlProvider {

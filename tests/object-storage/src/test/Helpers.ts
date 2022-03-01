@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 
 import { expect } from "chai";
 
-import { Metadata, ObjectReference } from "@itwin/object-storage-core";
+import { Metadata, ObjectDirectory, ObjectReference } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 
@@ -31,20 +31,23 @@ export async function checkUploadedFileValidity(
 }
 
 export class TestDirectoryManager {
-  private _createdDirectories: string[] = [];
+  private _createdDirectories: ObjectDirectory[] = [];
 
-  public async createNewDirectory(): Promise<string> {
-    const newDirectoryName = randomUUID();
-    this._createdDirectories.push(newDirectoryName);
+  public async createNewDirectory(): Promise<ObjectDirectory> {
+    const newDirectory: ObjectDirectory = {
+      baseDirectory: randomUUID(),
+      relativeDirectory: "foobar",
+    };
+    this._createdDirectories.push(newDirectory);
 
-    await serverSideStorage.createBaseDirectory(newDirectoryName);
+    await serverSideStorage.create(newDirectory);
 
-    return newDirectoryName;
+    return newDirectory;
   }
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverSideStorage.delete({baseDirectory: directoryToDelete});
+      await serverSideStorage.delete(directoryToDelete);
     this._createdDirectories = [];
   }
 }

@@ -36,8 +36,4 @@ export class BlobServiceClientWrapper {
       .getContainerClient(reference.baseDirectory)
       .getBlockBlobClient(buildBlobName(reference));
   }
-
-  public async createContainer(name: string): Promise<void> {
-    await this.getContainerClient(name).create();
-  }
 }

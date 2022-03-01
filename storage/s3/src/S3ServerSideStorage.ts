@@ -94,6 +94,16 @@ export class S3ServerSideStorage extends ServerSideStorage {
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
+  public async create(directory: ObjectDirectory): Promise<void> {
+    return this.upload(
+      {
+        baseDirectory: directory.baseDirectory,
+        objectName: "",
+      },
+      Buffer.from("")
+    );
+  }
+
   /** Max 1000 objects */
   public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
     return this._s3Client.list(directory);
@@ -177,16 +187,6 @@ export class S3ServerSideStorage extends ServerSideStorage {
     return this._transferConfigProvider.getUploadConfig(
       directory,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
-  }
-
-  public async createBaseDirectory(name: string): Promise<void> {
-    return this.upload(
-      {
-        baseDirectory: name,
-        objectName: "",
-      },
-      Buffer.from("")
     );
   }
 
