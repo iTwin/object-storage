@@ -8,7 +8,7 @@ import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { OssServerSideStorageExtension } from "../OssServerSideStorageExtension";
 
-const bucket = process.env.test_oss_bucket;
+const bucket = process.env.TEST_OSS_BUCKET;
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
