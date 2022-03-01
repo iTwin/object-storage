@@ -94,9 +94,9 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         baseDirectory: "test-create-directory",
       };
       try {
-        const createtestDirectoryPromise =
+        const createDirectoryPromise =
           serverSideStorage.create(directoryToCreate);
-        await expect(createtestDirectoryPromise).to.eventually.be.fulfilled;
+        await expect(createDirectoryPromise).to.eventually.be.fulfilled;
 
         const doesDirectoryExist = await serverSideStorage.exists(
           directoryToCreate
@@ -364,7 +364,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
   });
 
   describe(`${serverSideStorage.delete.name}`, () => {
-    it("should delete base directory", async () => {
+    it("should delete directory", async () => {
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
 
       await Promise.all(
@@ -376,10 +376,10 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         )
       );
 
-      const deletetestDirectoryPromise =
+      const deleteDirectoryPromise =
         serverSideStorage.delete(testDirectory);
 
-      await expect(deletetestDirectoryPromise).to.eventually.be.fulfilled;
+      await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
       const doesDirectoryExist = await serverSideStorage.exists(testDirectory);
       expect(doesDirectoryExist).to.be.equal(false);
