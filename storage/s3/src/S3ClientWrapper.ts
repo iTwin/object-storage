@@ -157,18 +157,10 @@ export class S3ClientWrapper {
   public async exists(
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean> {
-    if (instanceOfObjectReference(reference)) {
-      try {
-        return !!(await this.getObjectProperties(reference));
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (error.name === "NotFound") return false;
-        throw error;
-      }
-    }
+    if (instanceOfObjectReference(reference))
+      return this.objectExists(reference);
 
-    const files: ObjectReference[] = await this.list(reference, 1);
-    return files.length !== 0;
+    return this.directoryExists(reference);
   }
 
   public async updateMetadata(
@@ -210,5 +202,20 @@ export class S3ClientWrapper {
       size: ContentLength!,
       metadata,
     };
+  }
+
+  private async objectExists(reference: ObjectReference): Promise<boolean> {
+    try {
+      return !!(await this.getObjectProperties(reference));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.name === "NotFound") return false;
+      throw error;
+    }
+  }
+
+  private async directoryExists(directory: ObjectDirectory): Promise<boolean> {
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
+    return filesWithPrefix.length !== 0;
   }
 }
