@@ -44,7 +44,7 @@ export class TestDirectoryManager {
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverSideStorage.deleteBaseDirectory(directoryToDelete);
+      await serverSideStorage.delete({baseDirectory: directoryToDelete});
     this._createdDirectories = [];
   }
 }

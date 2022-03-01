@@ -19,6 +19,7 @@ import {
   TransferData,
   TransferType,
   Types,
+  instanceOfObjectReference
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "./S3ClientWrapper";
@@ -98,14 +99,32 @@ export class S3ServerSideStorage extends ServerSideStorage {
     return this._s3Client.list(directory);
   }
 
-  public async remove(reference: ObjectReference): Promise<void> {
-    return this._s3Client.remove(reference);
+  /**
+   * Deletes specified resource which is either an object or a directory. Note
+   * that some storage providers (Azure, for example) do not immediately delete
+   * all associated resources and cleanup can take up to several minutes. To check
+   * if a resource exists use the {@link exists} method.
+   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * @returns {Promise<void>}
+   */
+  public async delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void> {
+    if (instanceOfObjectReference(reference)) {
+      await this._s3Client.deleteObject(reference);
+      return;
+    }
+
+    await this.deleteObjectsWithPrefix(reference);
   }
 
   public async exists(
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean> {
-    return this._s3Client.exists(reference);
+    if (instanceOfObjectReference(reference))
+      return this._s3Client.objectExists(reference);
+
+    return this._s3Client.prefixExists(reference);
   }
 
   public async updateMetadata(
@@ -171,11 +190,11 @@ export class S3ServerSideStorage extends ServerSideStorage {
     );
   }
 
-  public async deleteBaseDirectory(name: string): Promise<void> {
+  private async deleteObjectsWithPrefix(directory: ObjectDirectory): Promise<void> {
     await Promise.all(
       (
-        await this.list({ baseDirectory: name })
-      ).map(async (file) => this.remove(file))
+        await this.list(directory)
+      ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
 }

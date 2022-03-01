@@ -115,8 +115,13 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     );
   }
 
-  public async remove(reference: ObjectReference): Promise<void> {
-    await this._client.getBlobClient(reference).delete();
+  public async delete(reference: ObjectDirectory | ObjectReference): Promise<void> {
+    if (instanceOfObjectReference(reference)) {
+      await this._client.getBlobClient(reference).delete();
+      return;
+    }
+
+    await this._client.getContainerClient(reference.baseDirectory).delete();
   }
 
   public async exists(
@@ -227,9 +232,5 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
 
   public async createBaseDirectory(name: string): Promise<void> {
     return this._client.createContainer(name);
-  }
-
-  public async deleteBaseDirectory(name: string): Promise<void> {
-    return this._client.deleteContainer(name);
   }
 }

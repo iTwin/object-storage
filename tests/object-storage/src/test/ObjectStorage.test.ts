@@ -89,18 +89,18 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
   describe(`${serverSideStorage.createBaseDirectory.name}()`, () => {
     it("should create directory", async () => {
-      const directoryName = `test-create-directory`;
+      const directoryToCreate = {
+        baseDirectory: "test-create-directory",
+      };
       try {
         const createBaseDirectoryPromise =
-          serverSideStorage.createBaseDirectory(directoryName);
+          serverSideStorage.createBaseDirectory(directoryToCreate.baseDirectory);
         await expect(createBaseDirectoryPromise).to.eventually.be.fulfilled;
 
-        const doesDirectoryExist = await serverSideStorage.exists({
-          baseDirectory: directoryName,
-        });
+        const doesDirectoryExist = await serverSideStorage.exists(directoryToCreate);
         expect(doesDirectoryExist).to.be.equal(true);
       } finally {
-        await serverSideStorage.deleteBaseDirectory(directoryName);
+        await serverSideStorage.delete(directoryToCreate);
       }
     });
   });
@@ -223,12 +223,12 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.remove.name}()`, () => {
+  describe(`${serverSideStorage.delete.name}()`, () => {
     it("should remove objects from upload tests", async () => {
       const removePromises = remoteFiles.map(
         (file) =>
           expect(
-            serverSideStorage.remove({
+            serverSideStorage.delete({
               baseDirectory,
               relativeDirectory,
               objectName: file,
@@ -252,7 +252,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
       const exists = await serverSideStorage.exists(reference);
       expect(exists).to.be.true;
 
-      await serverSideStorage.remove(reference);
+      await serverSideStorage.delete(reference);
     });
 
     it("should return false if file does not exist", async () => {
@@ -293,7 +293,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
     after(async () => {
       await Promise.all([
-        serverSideStorage.remove(reference),
+        serverSideStorage.delete(reference),
         promises.rmdir(testDownloadFolder, { recursive: true }),
       ]);
     });
@@ -329,7 +329,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
 
     after(async () => {
-      await serverSideStorage.remove(reference);
+      await serverSideStorage.delete(reference);
     });
   });
 
@@ -367,11 +367,11 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
 
     after(async () => {
-      await serverSideStorage.remove(reference);
+      await serverSideStorage.delete(reference);
     });
   });
 
-  describe(`${serverSideStorage.deleteBaseDirectory.name}`, () => {
+  describe(`${serverSideStorage.delete.name}`, () => {
     it("should delete base directory and its contents", async () => {
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
 
@@ -385,7 +385,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
       );
 
       const deleteBaseDirectoryPromise =
-        serverSideStorage.deleteBaseDirectory(baseDirectory);
+        serverSideStorage.delete({baseDirectory});
 
       await expect(deleteBaseDirectoryPromise).to.eventually.be.fulfilled;
 
@@ -468,7 +468,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testUploadUrlBufferFile,
           testUploadUrlStreamFile,
         ].map(async (file) =>
-          serverSideStorage.remove({
+          serverSideStorage.delete({
             baseDirectory,
             relativeDirectory,
             objectName: file,
@@ -514,7 +514,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       after(async () => {
         await Promise.all([
-          serverSideStorage.remove(reference),
+          serverSideStorage.delete(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });
@@ -588,7 +588,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testUploadConfigBufferFile,
           testUploadConfigStreamFile,
         ].map(async (file) =>
-          serverSideStorage.remove({
+          serverSideStorage.delete({
             baseDirectory,
             relativeDirectory,
             objectName: file,
@@ -664,7 +664,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testMultipartUploadConfigLocalFile,
           testMultipartUploadConfigStreamFile,
         ].map(async (file) =>
-          serverSideStorage.remove({
+          serverSideStorage.delete({
             baseDirectory,
             relativeDirectory,
             objectName: file,
@@ -714,7 +714,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       after(async () => {
         await Promise.all([
-          serverSideStorage.remove(reference),
+          serverSideStorage.delete(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });

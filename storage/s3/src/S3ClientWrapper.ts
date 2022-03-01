@@ -20,7 +20,6 @@ import {
   buildObjectDirectoryString,
   buildObjectKey,
   buildObjectReference,
-  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -143,7 +142,7 @@ export class S3ClientWrapper {
     return Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
   }
 
-  public async remove(reference: ObjectReference): Promise<void> {
+  public async deleteObject(reference: ObjectReference): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
     await this._client.send(
       new DeleteObjectCommand({
@@ -152,15 +151,6 @@ export class S3ClientWrapper {
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
-  }
-
-  public async exists(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<boolean> {
-    if (instanceOfObjectReference(reference))
-      return this.objectExists(reference);
-
-    return this.directoryExists(reference);
   }
 
   public async updateMetadata(
@@ -204,7 +194,7 @@ export class S3ClientWrapper {
     };
   }
 
-  private async objectExists(reference: ObjectReference): Promise<boolean> {
+  public async objectExists(reference: ObjectReference): Promise<boolean> {
     try {
       return !!(await this.getObjectProperties(reference));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -214,7 +204,7 @@ export class S3ClientWrapper {
     }
   }
 
-  private async directoryExists(directory: ObjectDirectory): Promise<boolean> {
+  public async prefixExists(directory: ObjectDirectory): Promise<boolean> {
     const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
     return filesWithPrefix.length !== 0;
   }

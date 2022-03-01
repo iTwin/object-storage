@@ -19,8 +19,7 @@ import {
 
 @injectable()
 export abstract class ServerSideStorage
-  implements PresignedUrlProvider, TransferConfigProvider
-{
+  implements PresignedUrlProvider, TransferConfigProvider {
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"
@@ -57,7 +56,9 @@ export abstract class ServerSideStorage
 
   public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
 
-  public abstract remove(reference: ObjectReference): Promise<void>;
+  public abstract delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void>;
 
   public abstract exists(
     reference: ObjectDirectory | ObjectReference
@@ -93,7 +94,6 @@ export abstract class ServerSideStorage
   ): Promise<TransferConfig>;
 
   public abstract createBaseDirectory(name: string): Promise<void>;
-  public abstract deleteBaseDirectory(name: string): Promise<void>;
 }
 
 export interface PresignedUrlProvider {

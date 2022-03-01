@@ -40,8 +40,4 @@ export class BlobServiceClientWrapper {
   public async createContainer(name: string): Promise<void> {
     await this.getContainerClient(name).create();
   }
-
-  public async deleteContainer(name: string): Promise<void> {
-    await this.getContainerClient(name).delete();
-  }
 }
