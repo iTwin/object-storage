@@ -51,7 +51,6 @@ export class StorageIntegrationTests extends Extendable {
     setOptions({
       serverSideStorage,
       clientSideStorage,
-      relativeDirectory: "foobar",
     });
 
     const mochaOptions: Mocha.MochaOptions = {

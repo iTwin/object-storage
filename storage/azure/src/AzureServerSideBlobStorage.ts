@@ -94,6 +94,10 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     ).uploadInMultipleParts(data, options);
   }
 
+  public async create(directory: ObjectDirectory): Promise<void> {
+    await this._client.getContainerClient(directory.baseDirectory).create();
+  }
+
   public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
     const { baseDirectory, relativeDirectory } = directory;
     const containerClient = this._client.getContainerClient(baseDirectory);
@@ -115,8 +119,15 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     );
   }
 
-  public async remove(reference: ObjectReference): Promise<void> {
-    await this._client.getBlobClient(reference).delete();
+  public async delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void> {
+    if (instanceOfObjectReference(reference)) {
+      await this._client.getBlobClient(reference).delete();
+      return;
+    }
+
+    await this._client.getContainerClient(reference.baseDirectory).delete();
   }
 
   public async exists(
@@ -223,13 +234,5 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
     };
-  }
-
-  public async createBaseDirectory(name: string): Promise<void> {
-    return this._client.createContainer(name);
-  }
-
-  public async deleteBaseDirectory(name: string): Promise<void> {
-    return this._client.deleteContainer(name);
   }
 }

@@ -55,10 +55,27 @@ export abstract class ServerSideStorage
     options?: MultipartUploadOptions
   ): Promise<void>;
 
+  public abstract create(directory: ObjectDirectory): Promise<void>;
+
   public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
 
-  public abstract remove(reference: ObjectReference): Promise<void>;
+  /**
+   * Deletes the specified resource which is either an object or a directory. Note
+   * that some storage providers (Azure, for example) do not immediately delete
+   * all associated resources and cleanup can take up to several minutes. To check
+   * if the resource has been deleted use the {@link exists} method.
+   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * @returns {Promise<void>}
+   */
+  public abstract delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void>;
 
+  /**
+   * Checks if the specified resource has been deleted.
+   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * @returns `true` if the resource has not been deleted, `false` otherwise.
+   */
   public abstract exists(
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean>;
@@ -91,9 +108,6 @@ export abstract class ServerSideStorage
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
-
-  public abstract createBaseDirectory(name: string): Promise<void>;
-  public abstract deleteBaseDirectory(name: string): Promise<void>;
 }
 
 export interface PresignedUrlProvider {

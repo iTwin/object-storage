@@ -9,7 +9,6 @@ import {
 interface StorageIntegrationTestsConfig {
   serverSideStorage: ServerSideStorage;
   clientSideStorage: ClientSideStorage;
-  relativeDirectory: string;
 }
 
 export let config: StorageIntegrationTestsConfig;

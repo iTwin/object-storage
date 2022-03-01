@@ -6,6 +6,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
+  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -93,19 +94,39 @@ export class S3ServerSideStorage extends ServerSideStorage {
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
+  public async create(directory: ObjectDirectory): Promise<void> {
+    return this.upload(
+      {
+        baseDirectory: directory.baseDirectory,
+        objectName: "",
+      },
+      Buffer.from("")
+    );
+  }
+
   /** Max 1000 objects */
   public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
     return this._s3Client.list(directory);
   }
 
-  public async remove(reference: ObjectReference): Promise<void> {
-    return this._s3Client.remove(reference);
+  public async delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void> {
+    if (instanceOfObjectReference(reference)) {
+      await this._s3Client.deleteObject(reference);
+      return;
+    }
+
+    await this.deleteObjectsWithPrefix(reference);
   }
 
   public async exists(
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean> {
-    return this._s3Client.exists(reference);
+    if (instanceOfObjectReference(reference))
+      return this._s3Client.objectExists(reference);
+
+    return this._s3Client.prefixExists(reference);
   }
 
   public async updateMetadata(
@@ -161,21 +182,13 @@ export class S3ServerSideStorage extends ServerSideStorage {
     );
   }
 
-  public async createBaseDirectory(name: string): Promise<void> {
-    return this.upload(
-      {
-        baseDirectory: name,
-        objectName: "",
-      },
-      Buffer.from("")
-    );
-  }
-
-  public async deleteBaseDirectory(name: string): Promise<void> {
+  private async deleteObjectsWithPrefix(
+    directory: ObjectDirectory
+  ): Promise<void> {
     await Promise.all(
       (
-        await this.list({ baseDirectory: name })
-      ).map(async (file) => this.remove(file))
+        await this.list(directory)
+      ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
 }
