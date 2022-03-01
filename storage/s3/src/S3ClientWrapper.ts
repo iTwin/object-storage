@@ -20,6 +20,7 @@ import {
   buildObjectDirectoryString,
   buildObjectKey,
   buildObjectReference,
+  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -125,12 +126,16 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
+  public async list(
+    directory: ObjectDirectory,
+    maxResults?: number
+  ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
         Prefix: buildObjectDirectoryString(directory),
+        MaxKeys: maxResults,
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -149,14 +154,13 @@ export class S3ClientWrapper {
     /* eslint-enable @typescript-eslint/naming-convention */
   }
 
-  public async exists(reference: ObjectReference): Promise<boolean> {
-    try {
-      return !!(await this.getObjectProperties(reference));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      if (error.name === "NotFound") return false;
-      throw error;
-    }
+  public async exists(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<boolean> {
+    if (instanceOfObjectReference(reference))
+      return this.objectExists(reference);
+
+    return this.directoryExists(reference);
   }
 
   public async updateMetadata(
@@ -198,5 +202,20 @@ export class S3ClientWrapper {
       size: ContentLength!,
       metadata,
     };
+  }
+
+  private async objectExists(reference: ObjectReference): Promise<boolean> {
+    try {
+      return !!(await this.getObjectProperties(reference));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.name === "NotFound") return false;
+      throw error;
+    }
+  }
+
+  private async directoryExists(directory: ObjectDirectory): Promise<boolean> {
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
+    return filesWithPrefix.length !== 0;
   }
 }

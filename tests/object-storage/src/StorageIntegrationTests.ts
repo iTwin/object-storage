@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { randomUUID } from "crypto";
 import { readdirSync } from "fs";
 import { join } from "path";
 
@@ -52,7 +51,6 @@ export class StorageIntegrationTests extends Extendable {
     setOptions({
       serverSideStorage,
       clientSideStorage,
-      baseDirectory: randomUUID(),
       relativeDirectory: "foobar",
     });
 

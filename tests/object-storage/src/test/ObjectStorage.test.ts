@@ -19,16 +19,11 @@ import {
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
-import { checkUploadedFileValidity } from "./Helpers";
+import { checkUploadedFileValidity, TestDirectoryManager } from "./Helpers";
 
 use(chaiAsPromised);
 
-const {
-  relativeDirectory,
-  baseDirectory,
-  clientSideStorage,
-  serverSideStorage,
-} = config;
+const { relativeDirectory, clientSideStorage, serverSideStorage } = config;
 
 const testDownloadFolder = "test-download";
 
@@ -67,7 +62,11 @@ const downloadTestCases: {
   },
 ];
 
+const testDirectoryManager = new TestDirectoryManager();
+
 describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () => {
+  let baseDirectory: string;
+
   const testUploadBufferFile = "test-upload-buffer.txt";
   const testUploadStreamFile = "test-upload-stream.txt";
   const testUploadLocalFile = "test-upload-local.txt";
@@ -82,11 +81,27 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     testMultipartUploadStreamFile,
   ];
 
-  describe(`${serverSideStorage.createBaseDirectory.name}`, () => {
-    it("should create base directory", async () => {
-      const createBaseDirectoryPromise =
-        serverSideStorage.createBaseDirectory(baseDirectory);
-      await expect(createBaseDirectoryPromise).to.eventually.be.fulfilled;
+  before(async () => {
+    baseDirectory = await testDirectoryManager.createNewDirectory();
+  });
+
+  after(async () => testDirectoryManager.purgeCreatedDirectories());
+
+  describe(`${serverSideStorage.createBaseDirectory.name}()`, () => {
+    it("should create directory", async () => {
+      const directoryName = `test-create-directory`;
+      try {
+        const createBaseDirectoryPromise =
+          serverSideStorage.createBaseDirectory(directoryName);
+        await expect(createBaseDirectoryPromise).to.eventually.be.fulfilled;
+
+        const doesDirectoryExist = await serverSideStorage.exists({
+          baseDirectory: directoryName,
+        });
+        expect(doesDirectoryExist).to.be.equal(true);
+      } finally {
+        await serverSideStorage.deleteBaseDirectory(directoryName);
+      }
     });
   });
 
@@ -253,14 +268,14 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
   describe(`${serverSideStorage.download.name}()`, () => {
     const contentBuffer = Buffer.from("test-download");
-
-    const reference = {
-      baseDirectory,
-      relativeDirectory,
-      objectName: "file-to-download.txt",
-    };
+    let reference: ObjectReference;
 
     before(async () => {
+      reference = {
+        baseDirectory,
+        relativeDirectory,
+        objectName: "file-to-download.txt",
+      };
       await serverSideStorage.upload(reference, contentBuffer);
     });
 
@@ -285,14 +300,15 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
   });
 
   describe(`${serverSideStorage.getObjectProperties.name}()`, () => {
-    const reference: ObjectReference = {
-      baseDirectory,
-      relativeDirectory,
-      objectName: "test-object-properties.txt",
-    };
+    let reference: ObjectReference;
     const data = Buffer.from("test-properties");
 
     before(async () => {
+      reference = {
+        baseDirectory,
+        relativeDirectory,
+        objectName: "test-object-properties.txt",
+      };
       await serverSideStorage.upload(reference, data, {
         test: "test-metadata",
       });
@@ -318,13 +334,14 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
   });
 
   describe(`${serverSideStorage.updateMetadata.name}()`, () => {
-    const reference = {
-      baseDirectory,
-      relativeDirectory,
-      objectName: "update-metadata-test.txt",
-    };
+    let reference: ObjectReference;
 
     before(async () => {
+      reference = {
+        baseDirectory,
+        relativeDirectory,
+        objectName: "update-metadata-test.txt",
+      };
       await serverSideStorage.upload(reference, Buffer.from("test-metadata"), {
         test: "test-metadata",
       });
@@ -372,20 +389,22 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
       await expect(deleteBaseDirectoryPromise).to.eventually.be.fulfilled;
 
-      const existsArray = await Promise.all(
-        tempFiles.map(async (file) =>
-          serverSideStorage.exists({ baseDirectory, objectName: file })
-        )
-      );
-      existsArray.forEach((exists) => expect(exists).to.be.false);
+      const doesDirectoryExist = await serverSideStorage.exists({
+        baseDirectory,
+      });
+      expect(doesDirectoryExist).to.be.equal(false);
     });
   });
 });
 
 describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () => {
+  let baseDirectory: string;
+
   before(async () => {
-    await serverSideStorage.createBaseDirectory(baseDirectory);
+    baseDirectory = await testDirectoryManager.createNewDirectory();
   });
+
+  after(async () => testDirectoryManager.purgeCreatedDirectories());
 
   describe("PresignedUrlProvider", () => {
     describe(`${clientSideStorage.upload.name}() & ${serverSideStorage.getUploadUrl.name}()`, () => {
@@ -464,15 +483,15 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
     });
 
     describe(`${serverSideStorage.download.name}() & ${serverSideStorage.getDownloadUrl.name}()`, () => {
+      let reference: ObjectReference;
       const contentBuffer = Buffer.from("test-download-url");
 
-      const reference = {
-        baseDirectory,
-        relativeDirectory,
-        objectName: "file-to-download-from-url.txt",
-      };
-
       before(async () => {
+        reference = {
+          baseDirectory,
+          relativeDirectory,
+          objectName: "file-to-download-from-url.txt",
+        };
         await serverSideStorage.upload(reference, contentBuffer);
       });
 
@@ -660,17 +679,16 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
     });
 
     describe(`${clientSideStorage.download.name}() & ${serverSideStorage.getDownloadConfig.name}()`, () => {
+      let reference: ObjectReference;
+      let downloadConfig: TransferConfig;
       const contentBuffer = Buffer.from("test-download-config");
 
-      const reference = {
-        baseDirectory,
-        relativeDirectory,
-        objectName: "file-to-download-with-config.txt",
-      };
-
-      let downloadConfig: TransferConfig;
-
       before(async () => {
+        reference = {
+          baseDirectory,
+          relativeDirectory,
+          objectName: "file-to-download-with-config.txt",
+        };
         await serverSideStorage.upload(reference, contentBuffer);
         downloadConfig = await serverSideStorage.getDownloadConfig({
           baseDirectory,
