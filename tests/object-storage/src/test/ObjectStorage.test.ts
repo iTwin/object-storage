@@ -98,7 +98,9 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
           serverSideStorage.create(directoryToCreate);
         await expect(createtestDirectoryPromise).to.eventually.be.fulfilled;
 
-        const doesDirectoryExist = await serverSideStorage.exists(directoryToCreate);
+        const doesDirectoryExist = await serverSideStorage.exists(
+          directoryToCreate
+        );
         expect(doesDirectoryExist).to.be.equal(true);
       } finally {
         await serverSideStorage.delete(directoryToCreate);

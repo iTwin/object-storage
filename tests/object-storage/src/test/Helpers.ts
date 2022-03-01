@@ -5,7 +5,11 @@ import { randomUUID } from "crypto";
 
 import { expect } from "chai";
 
-import { Metadata, ObjectDirectory, ObjectReference } from "@itwin/object-storage-core";
+import {
+  Metadata,
+  ObjectDirectory,
+  ObjectReference,
+} from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 

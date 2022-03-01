@@ -19,7 +19,8 @@ import {
 
 @injectable()
 export abstract class ServerSideStorage
-  implements PresignedUrlProvider, TransferConfigProvider {
+  implements PresignedUrlProvider, TransferConfigProvider
+{
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"

@@ -6,6 +6,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
+  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -19,7 +20,6 @@ import {
   TransferData,
   TransferType,
   Types,
-  instanceOfObjectReference
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "./S3ClientWrapper";
@@ -190,7 +190,9 @@ export class S3ServerSideStorage extends ServerSideStorage {
     );
   }
 
-  private async deleteObjectsWithPrefix(directory: ObjectDirectory): Promise<void> {
+  private async deleteObjectsWithPrefix(
+    directory: ObjectDirectory
+  ): Promise<void> {
     await Promise.all(
       (
         await this.list(directory)

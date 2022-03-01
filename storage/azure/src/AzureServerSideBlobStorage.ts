@@ -119,7 +119,9 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     );
   }
 
-  public async delete(reference: ObjectDirectory | ObjectReference): Promise<void> {
+  public async delete(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<void> {
     if (instanceOfObjectReference(reference)) {
       await this._client.getBlobClient(reference).delete();
       return;
