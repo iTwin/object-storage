@@ -1,6 +1,8 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
+import { randomUUID } from "crypto";
+
 import { expect } from "chai";
 
 import { Metadata, ObjectReference } from "@itwin/object-storage-core";
@@ -26,4 +28,23 @@ export async function checkUploadedFileValidity(
     reference
   );
   expect(_metadata).to.eql(metadata);
+}
+
+export class TestDirectoryManager {
+  private _createdDirectories: string[] = [];
+
+  public async createNewDirectory(): Promise<string> {
+    const newDirectoryName = randomUUID();
+    this._createdDirectories.push(newDirectoryName);
+
+    await serverSideStorage.createBaseDirectory(newDirectoryName);
+
+    return newDirectoryName;
+  }
+
+  public async purgeCreatedDirectories(): Promise<void> {
+    for (const directoryToDelete of this._createdDirectories)
+      await serverSideStorage.deleteBaseDirectory(directoryToDelete);
+    this._createdDirectories = [];
+  }
 }

@@ -87,7 +87,7 @@ export function createS3Client(config: {
 
 export function createStsClient(config: {
   stsBaseUrl: string;
-  region: string,
+  region: string;
   accessKey: string;
   secretKey: string;
 }): STSClient {

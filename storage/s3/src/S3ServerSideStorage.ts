@@ -102,7 +102,9 @@ export class S3ServerSideStorage extends ServerSideStorage {
     return this._s3Client.remove(reference);
   }
 
-  public async exists(reference: ObjectReference): Promise<boolean> {
+  public async exists(
+    reference: ObjectDirectory | ObjectReference
+  ): Promise<boolean> {
     return this._s3Client.exists(reference);
   }
 
