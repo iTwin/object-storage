@@ -15,6 +15,8 @@ jobs:
           imageName: 'windows-latest'
     pool:
         vmImage: $(imageName)
+    variables:
+      - group: object-storage - Integration Tests Variables
     workspace:
       clean: all
 
