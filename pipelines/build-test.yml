@@ -7,8 +7,8 @@ jobs:
   - job: BuildAndTest
     strategy:
       matrix:
-        linux:
-          imageName: 'ubuntu-latest'
+        # linux:
+        #   imageName: 'ubuntu-latest'
         windows:
           imageName: 'windows-latest'
     pool:

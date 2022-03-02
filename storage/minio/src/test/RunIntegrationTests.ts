@@ -9,12 +9,14 @@ import {
   MinioClientSideStorageExtension,
   MinioServerSideStorageExtension,
 } from "..";
+import { MinioProcess } from "./MinioProcess";
 
+const bucket = "integration-test";
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerSideStorage: {
     extensionName: "minio",
-    bucket: "integration-test",
+    bucket,
     // cspell:disable-next-line
     accessKey: "minioadmin",
     // cspell:disable-next-line
@@ -27,16 +29,30 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientSideStorage: {
     extensionName: "minio",
-    bucket: "integration-test",
+    bucket,
   },
 };
 
-const tests = new StorageIntegrationTests(
-  config,
-  MinioServerSideStorageExtension,
-  MinioClientSideStorageExtension
-);
-tests.start().catch((err) => {
-  process.exitCode = 1;
-  throw err;
-});
+async function runTests(): Promise<void> {
+  const minioProcess = new MinioProcess();
+  const tests = new StorageIntegrationTests(
+    config,
+    MinioServerSideStorageExtension,
+    MinioClientSideStorageExtension
+  );
+
+  await minioProcess.start(bucket);
+  try {
+    await tests.start();
+  } catch (err) {
+    process.exitCode = 1;
+    throw err;
+  } finally {
+    minioProcess.terminate();
+  }
+}
+
+runTests();
+
+
+
