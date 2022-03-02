@@ -11,7 +11,7 @@ export class MinioProcess {
 
   public async start(bucketName: string): Promise<void> {
     const minioFilePath = path.join(process.cwd(), "lib", "test");
-    const minioStoragePath = path.join(minioFilePath, "miniostorage");
+    const minioStoragePath = path.join(minioFilePath, "minioStorage");
     const testBucketPath = path.join(minioStoragePath, bucketName);
     if (!fs.existsSync(testBucketPath))
       fs.mkdirSync(testBucketPath, { recursive: true });
