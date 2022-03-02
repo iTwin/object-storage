@@ -9,6 +9,7 @@ import {
   MinioClientSideStorageExtension,
   MinioServerSideStorageExtension,
 } from "..";
+
 import { MinioProcess } from "./MinioProcess";
 
 const bucket = "integration-test";
@@ -52,7 +53,5 @@ async function runTests(): Promise<void> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 runTests();
-
-
-
