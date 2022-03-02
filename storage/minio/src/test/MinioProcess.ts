@@ -50,8 +50,7 @@ export class MinioProcess {
 
   private getExecutableName(): string {
     let executableFileName = "minio";
-    if (process.platform === "win32")
-      executableFileName += ".exe";
+    if (process.platform === "win32") executableFileName += ".exe";
 
     return executableFileName;
   }
