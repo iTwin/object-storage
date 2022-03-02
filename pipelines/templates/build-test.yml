@@ -35,7 +35,7 @@ steps:
   #     TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
   # - task: PowerShell@2
-  #   displayName: Download and start MinIO binary (Windows)
+  #   displayName: Download MinIO binary (Windows)
   #   inputs:
   #     targetType: 'inline'
   #     script: |
@@ -44,12 +44,12 @@ steps:
   #     condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
 
   - script: wget https://dl.min.io/server/minio/release/linux-amd64/minio --directory-prefix "storage/minio/lib/test"
-    displayName: Download and start MinIO binary (Linux)
+    displayName: Download MinIO binary (Linux)
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-  # - script: npm run test:integration
-  #   displayName: npm run test:integration (MinIO integration tests)
-  #   workingDirectory: storage/minio
+  - script: npm run test:integration
+    displayName: npm run test:integration (MinIO integration tests)
+    workingDirectory: storage/minio
 
   # - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
   #   displayName: rush publish (into .tgz)

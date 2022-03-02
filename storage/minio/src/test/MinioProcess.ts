@@ -16,6 +16,12 @@ export class MinioProcess {
     if (!fs.existsSync(testBucketPath))
       fs.mkdirSync(testBucketPath, { recursive: true });
 
+    fs.readdir(minioFilePath, (_, files) => {
+      files.forEach(file => {
+        console.log("**", file);
+      });
+    });
+
     const windowsCommand = path.join(minioFilePath, "minio.exe");
 
     this._childProcess = spawn(windowsCommand, ["server", minioStoragePath], {
