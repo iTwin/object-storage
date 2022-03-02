@@ -34,9 +34,6 @@ steps:
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
-  - script: Download MinIO binary (Windows)
-    displayName: 
-    condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
   - task: PowerShell@2
     displayName: Download and start MinIO binary (Windows)
     inputs:
@@ -44,6 +41,7 @@ steps:
       script: |
         $minioBinaryDownloadUrl = "https://dl.min.io/server/minio/release/windows-amd64/minio.exe"
         Invoke-WebRequest -Uri $minioBinaryDownloadUrl -OutFile "storage\minio\lib\test\minio.exe"
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
 
   - script: npm run test:integration
     displayName: npm run test:integration (MinIO integration tests)
