@@ -1,57 +1,62 @@
 steps:
-  - task: NodeTool@0
-    displayName: Install Node@14.17.5
+  # - task: NodeTool@0
+  #   displayName: Install Node@14.17.5
+  #   inputs:
+  #     versionSpec: '14.17.5'
+  #     checkLatest: true
+
+  # - script: node common/scripts/install-run-rush.js install --purge
+  #   displayName: rush install
+
+  # - script: node common/scripts/install-run-rush.js rebuild -v
+  #   displayName: rush rebuild
+
+  # - script: node common/scripts/install-run-rush.js lint
+  #   displayName: rush lint
+
+  # - script: node common/scripts/install-run-rush.js spell-check
+  #   displayName: rush spell-check
+
+  # - script: node common/scripts/install-run-rush.js test
+  #   displayName: rush test
+
+  # - script: npm run test:integration
+  #   displayName: npm run test:integration (OSS integration tests)
+  #   workingDirectory: storage/oss
+  #   env:
+  #     TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
+  #     TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
+  #     TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
+
+  # - script: npm run test:integration
+  #   displayName: npm run test:integration (Azure integration tests)
+  #   workingDirectory: storage/azure
+  #   env:
+  #     TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+
+  # - task: PowerShell@2
+  #   displayName: Download and start MinIO binary (Windows)
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       $minioBinaryDownloadUrl = "https://dl.min.io/server/minio/release/windows-amd64/minio.exe"
+  #       Invoke-WebRequest -Uri $minioBinaryDownloadUrl -OutFile "storage\minio\lib\test\minio.exe"
+  #     condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+
+  - script: wget
+    displayName: Download and start MinIO binary (Linux)
     inputs:
-      versionSpec: '14.17.5'
-      checkLatest: true
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
-  - script: node common/scripts/install-run-rush.js install --purge
-    displayName: rush install
+  # - script: npm run test:integration
+  #   displayName: npm run test:integration (MinIO integration tests)
+  #   workingDirectory: storage/minio
 
-  - script: node common/scripts/install-run-rush.js rebuild -v
-    displayName: rush rebuild
+  # - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
+  #   displayName: rush publish (into .tgz)
 
-  - script: node common/scripts/install-run-rush.js lint
-    displayName: rush lint
-
-  - script: node common/scripts/install-run-rush.js spell-check
-    displayName: rush spell-check
-
-  - script: node common/scripts/install-run-rush.js test
-    displayName: rush test
-
-  - script: npm run test:integration
-    displayName: npm run test:integration (OSS integration tests)
-    workingDirectory: storage/oss
-    env:
-      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
-      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
-      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
-
-  - script: npm run test:integration
-    displayName: npm run test:integration (Azure integration tests)
-    workingDirectory: storage/azure
-    env:
-      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
-
-  - task: PowerShell@2
-    displayName: Download and start MinIO binary (Windows)
-    inputs:
-      targetType: 'inline'
-      script: |
-        $minioBinaryDownloadUrl = "https://dl.min.io/server/minio/release/windows-amd64/minio.exe"
-        Invoke-WebRequest -Uri $minioBinaryDownloadUrl -OutFile "storage\minio\lib\test\minio.exe"
-      condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
-
-  - script: npm run test:integration
-    displayName: npm run test:integration (MinIO integration tests)
-    workingDirectory: storage/minio
-
-  - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
-    displayName: rush publish (into .tgz)
-
-  - task: PublishBuildArtifacts@1
-    displayName: publish .tgz as build artifacts
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
-      ArtifactName: packages
+  # - task: PublishBuildArtifacts@1
+  #   displayName: publish .tgz as build artifacts
+  #   inputs:
+  #     PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
+  #     ArtifactName: packages
