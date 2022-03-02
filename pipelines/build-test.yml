@@ -9,8 +9,8 @@ jobs:
       matrix:
         linux:
           imageName: 'ubuntu-latest'
-        # windows:
-        #   imageName: 'windows-latest'
+        windows:
+          imageName: 'windows-latest'
     pool:
         vmImage: $(imageName)
     variables:
