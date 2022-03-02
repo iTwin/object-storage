@@ -43,7 +43,7 @@ steps:
   #       Invoke-WebRequest -Uri $minioBinaryDownloadUrl -OutFile "storage\minio\lib\test\minio.exe"
   #     condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
 
-  - script: wget https://dl.min.io/server/minio/release/linux-amd64/minio --directory-prefix "storage/minio/lib/test"
+  - script: wget https://dl.min.io/server/minio/release/linux-amd64/minio --directory-prefix "storage/minio/lib/test" && chmod +x "storage/minio/lib/test/minio"
     displayName: Download MinIO binary (Linux)
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
