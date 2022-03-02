@@ -1,15 +1,15 @@
 steps:
-  # - task: NodeTool@0
-  #   displayName: Install Node@14.17.5
-  #   inputs:
-  #     versionSpec: '14.17.5'
-  #     checkLatest: true
+  - task: NodeTool@0
+    displayName: Install Node@14.17.5
+    inputs:
+      versionSpec: '14.17.5'
+      checkLatest: true
 
-  # - script: node common/scripts/install-run-rush.js install --purge
-  #   displayName: rush install
+  - script: node common/scripts/install-run-rush.js install --purge
+    displayName: rush install
 
-  # - script: node common/scripts/install-run-rush.js rebuild -v
-  #   displayName: rush rebuild
+  - script: node common/scripts/install-run-rush.js rebuild -v
+    displayName: rush rebuild
 
   # - script: node common/scripts/install-run-rush.js lint
   #   displayName: rush lint
@@ -43,7 +43,7 @@ steps:
   #       Invoke-WebRequest -Uri $minioBinaryDownloadUrl -OutFile "storage\minio\lib\test\minio.exe"
   #     condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
 
-  - script: wget
+  - script: wget https://dl.min.io/server/minio/release/linux-amd64/minio --directory-prefix "storage/minio/lib/test"
     displayName: Download and start MinIO binary (Linux)
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
