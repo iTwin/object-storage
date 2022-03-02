@@ -45,8 +45,7 @@ steps:
 
   - script: wget
     displayName: Download and start MinIO binary (Linux)
-    inputs:
-      condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+    condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
   # - script: npm run test:integration
   #   displayName: npm run test:integration (MinIO integration tests)
