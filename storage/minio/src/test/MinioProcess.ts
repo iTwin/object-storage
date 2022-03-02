@@ -16,13 +16,7 @@ export class MinioProcess {
     if (!fs.existsSync(testBucketPath))
       fs.mkdirSync(testBucketPath, { recursive: true });
 
-    fs.readdir(minioFilePath, (_, files) => {
-      files.forEach(file => {
-        console.log("**", file);
-      });
-    });
-
-    const windowsCommand = path.join(minioFilePath, "minio.exe");
+    const windowsCommand = path.join(minioFilePath, this.getExecutableName());
 
     this._childProcess = spawn(windowsCommand, ["server", minioStoragePath], {
       timeout: 5 * 60 * 1000,
@@ -52,6 +46,14 @@ export class MinioProcess {
       readable.setEncoding("utf8");
       readable.on("data", dataCallback);
     }
+  }
+
+  private getExecutableName(): string {
+    let executableFileName = "minio";
+    if (process.platform === "win32")
+      executableFileName += ".exe";
+
+    return executableFileName;
   }
 
   private async sleep(ms: number): Promise<void> {
