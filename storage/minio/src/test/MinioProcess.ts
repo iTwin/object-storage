@@ -1,26 +1,42 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import { ChildProcess, spawn } from "child_process";
+import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import { Readable } from "stream";
 
 export class MinioProcess {
-  private _childProcess: ChildProcess | undefined;
+  private readonly _minioExecutableDirectory = path.join(
+    process.cwd(),
+    "lib",
+    "test"
+  );
+  private readonly _minioExecutablePath = path.join(
+    this._minioExecutableDirectory,
+    process.platform === "win32" ? "minio.exe" : "minio"
+  );
+  private readonly _minioServerArgument = "server";
+  private readonly _minioStoragePath = path.join(
+    this._minioExecutableDirectory,
+    "minioStorage"
+  );
+  private readonly _childProcessTimeoutMs = 5 * 60 * 1000;
+
+  private _childProcess: child_process.ChildProcess | undefined;
 
   public async start(bucketName: string): Promise<void> {
-    const minioFilePath = path.join(process.cwd(), "lib", "test");
-    const minioStoragePath = path.join(minioFilePath, "minioStorage");
-    const testBucketPath = path.join(minioStoragePath, bucketName);
+    const testBucketPath = path.join(this._minioStoragePath, bucketName);
     if (!fs.existsSync(testBucketPath))
       fs.mkdirSync(testBucketPath, { recursive: true });
 
-    const windowsCommand = path.join(minioFilePath, this.getExecutableName());
-
-    this._childProcess = spawn(windowsCommand, ["server", minioStoragePath], {
-      timeout: 5 * 60 * 1000,
-    });
+    this._childProcess = child_process.spawn(
+      this._minioExecutablePath,
+      [this._minioServerArgument, this._minioStoragePath],
+      {
+        timeout: this._childProcessTimeoutMs,
+      }
+    );
     if (this._childProcess.stdout)
       this.listenTo(this._childProcess.stdout, (data) => {
         // eslint-disable-next-line no-console
@@ -46,13 +62,6 @@ export class MinioProcess {
       readable.setEncoding("utf8");
       readable.on("data", dataCallback);
     }
-  }
-
-  private getExecutableName(): string {
-    let executableFileName = "minio";
-    if (process.platform === "win32") executableFileName += ".exe";
-
-    return executableFileName;
   }
 
   private async sleep(ms: number): Promise<void> {
