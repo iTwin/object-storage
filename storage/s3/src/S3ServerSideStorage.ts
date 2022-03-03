@@ -191,4 +191,8 @@ export class S3ServerSideStorage extends ServerSideStorage {
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
+
+  public releaseResources(): void {
+    this._s3Client.releaseResources();
+  }
 }

@@ -208,4 +208,8 @@ export class S3ClientWrapper {
     const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
     return filesWithPrefix.length !== 0;
   }
+
+  public releaseResources(): void {
+    this._client.destroy();
+  }
 }

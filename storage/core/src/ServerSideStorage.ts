@@ -108,6 +108,9 @@ export abstract class ServerSideStorage
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
+
+  /** Closes underlying resources, sockets for example. */
+  public abstract releaseResources(): void;
 }
 
 export interface PresignedUrlProvider {
