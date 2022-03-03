@@ -113,7 +113,7 @@ export abstract class ServerSideStorage
    * Closes underlying resources, sockets for example. Clients should call this
    * method after an instance of this class is not used anymore to free the
    * resources and avoid hanging processes or similar issues.
-  */
+   */
   public abstract releaseResources(): void;
 }
 
