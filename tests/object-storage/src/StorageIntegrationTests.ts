@@ -75,9 +75,7 @@ export class StorageIntegrationTests extends Extendable {
   }
 
   public releaseResources(): void {
-    console.log("foo");
     const serverSideStorage = this.container.get(ServerSideStorage);
-    // console.log(JSON.stringify(serverSideStorage));
     serverSideStorage.releaseResources();
   }
 }
