@@ -40,4 +40,4 @@ tests
     process.exitCode = 1;
     throw err;
   })
-  .finally(() => tests.releaseResources);
+  .finally(() => tests.releaseResources());
