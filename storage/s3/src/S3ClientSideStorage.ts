@@ -25,6 +25,7 @@ import {
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
 import { Types } from "./Types";
+
 import { S3ClientWrapper } from ".";
 
 export interface S3ClientSideStorageConfig {
@@ -71,7 +72,7 @@ export class S3ClientSideStorage extends ClientSideStorage {
 
     return this.useClient(
       transferConfig,
-      (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.download(reference, transferType, localPath)
     );
   }
@@ -90,7 +91,7 @@ export class S3ClientSideStorage extends ClientSideStorage {
 
     return this.useClient(
       input.transferConfig,
-      (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
   }
@@ -100,14 +101,19 @@ export class S3ClientSideStorage extends ClientSideStorage {
   ): Promise<void> {
     return this.useClient(
       input.transferConfig,
-      (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.uploadInMultipleParts(input.reference, input.data, input.options)
+      async (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.uploadInMultipleParts(
+          input.reference,
+          input.data,
+          input.options
+        )
     );
   }
 
   private async useClient<T>(
     transferConfig: TransferConfig,
-    method: (clientWrapper: S3ClientWrapper) => Promise<T>): Promise<T> {
+    method: (clientWrapper: S3ClientWrapper) => Promise<T>
+  ): Promise<T> {
     const clientWrapper = transferConfigToS3ClientWrapper(
       transferConfig,
       this._bucket

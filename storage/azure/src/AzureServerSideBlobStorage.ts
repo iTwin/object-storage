@@ -236,6 +236,5 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
     };
   }
 
-  public releaseResources(): void {
-  }
+  public releaseResources(): void {}
 }
