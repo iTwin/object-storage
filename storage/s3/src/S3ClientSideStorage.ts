@@ -11,6 +11,7 @@ import {
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
+  TransferConfig,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
@@ -24,6 +25,7 @@ import {
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
 import { Types } from "./Types";
+import { S3ClientWrapper } from ".";
 
 export interface S3ClientSideStorageConfig {
   bucket: string;
@@ -67,10 +69,11 @@ export class S3ClientSideStorage extends ClientSideStorage {
 
     const { transferType, localPath, reference, transferConfig } = input;
 
-    return transferConfigToS3ClientWrapper(
+    return this.useClient(
       transferConfig,
-      this._bucket
-    ).download(reference, transferType, localPath);
+      (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.download(reference, transferType, localPath)
+    );
   }
 
   public async upload(
@@ -85,18 +88,32 @@ export class S3ClientSideStorage extends ClientSideStorage {
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
 
-    return transferConfigToS3ClientWrapper(
+    return this.useClient(
       input.transferConfig,
-      this._bucket
-    ).upload(input.reference, data, metadata);
+      (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.upload(input.reference, data, metadata)
+    );
   }
 
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
-    return transferConfigToS3ClientWrapper(
+    return this.useClient(
       input.transferConfig,
+      (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.uploadInMultipleParts(input.reference, input.data, input.options)
+    );
+  }
+
+  private async useClient<T>(
+    transferConfig: TransferConfig,
+    method: (clientWrapper: S3ClientWrapper) => Promise<T>): Promise<T> {
+    const clientWrapper = transferConfigToS3ClientWrapper(
+      transferConfig,
       this._bucket
-    ).uploadInMultipleParts(input.reference, input.data, input.options);
+    );
+    const result: T = await method(clientWrapper);
+    clientWrapper.releaseResources();
+    return result;
   }
 }
