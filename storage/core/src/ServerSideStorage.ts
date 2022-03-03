@@ -109,7 +109,11 @@ export abstract class ServerSideStorage
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
 
-  /** Closes underlying resources, sockets for example. */
+  /**
+   * Closes underlying resources, sockets for example. Clients should call this
+   * method after an instance of this class is not used anymore to free the
+   * resources and avoid hanging processes or similar issues.
+  */
   public abstract releaseResources(): void;
 }
 
