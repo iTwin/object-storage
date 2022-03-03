@@ -120,7 +120,7 @@ export class S3ClientSideStorage extends ClientSideStorage {
     );
 
     try {
-      return method(clientWrapper);
+      return await method(clientWrapper);
     } finally {
       clientWrapper.releaseResources();
     }
