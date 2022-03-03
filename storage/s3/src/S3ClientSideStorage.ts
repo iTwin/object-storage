@@ -118,8 +118,11 @@ export class S3ClientSideStorage extends ClientSideStorage {
       transferConfig,
       this._bucket
     );
-    const result: T = await method(clientWrapper);
-    clientWrapper.releaseResources();
-    return result;
+
+    try {
+      return method(clientWrapper);
+    } finally {
+      clientWrapper.releaseResources();
+    }
   }
 }
