@@ -34,19 +34,6 @@ steps:
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
-  - task: PowerShell@2
-    displayName: Download MinIO binary (Windows)
-    inputs:
-      targetType: 'inline'
-      script: |
-        $webClient = New-Object System.Net.WebClient
-        $webClient.DownloadFile("https://dl.min.io/server/minio/release/windows-amd64/minio.exe", "storage\minio\lib\test\minio.exe")
-    condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
-
-  - script: wget https://dl.min.io/server/minio/release/linux-amd64/minio --directory-prefix "storage/minio/lib/test" && chmod +x "storage/minio/lib/test/minio"
-    displayName: Download MinIO binary (Linux)
-    condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
-
   - script: npm run test:integration
     displayName: npm run test:integration (MinIO integration tests)
     workingDirectory: storage/minio
