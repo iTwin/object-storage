@@ -11,28 +11,28 @@ steps:
   - script: node common/scripts/install-run-rush.js rebuild -v
     displayName: rush rebuild
 
-  # - script: node common/scripts/install-run-rush.js lint
-  #   displayName: rush lint
+  - script: node common/scripts/install-run-rush.js lint
+    displayName: rush lint
 
-  # - script: node common/scripts/install-run-rush.js spell-check
-  #   displayName: rush spell-check
+  - script: node common/scripts/install-run-rush.js spell-check
+    displayName: rush spell-check
 
-  # - script: node common/scripts/install-run-rush.js test
-  #   displayName: rush test
+  - script: node common/scripts/install-run-rush.js test
+    displayName: rush test
 
-  # - script: npm run test:integration
-  #   displayName: npm run test:integration (OSS integration tests)
-  #   workingDirectory: storage/oss
-  #   env:
-  #     TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
-  #     TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
-  #     TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
+  - script: npm run test:integration
+    displayName: npm run test:integration (OSS integration tests)
+    workingDirectory: storage/oss
+    env:
+      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
+      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
+      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
 
-  # - script: npm run test:integration
-  #   displayName: npm run test:integration (Azure integration tests)
-  #   workingDirectory: storage/azure
-  #   env:
-  #     TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+  - script: npm run test:integration
+    displayName: npm run test:integration (Azure integration tests)
+    workingDirectory: storage/azure
+    env:
+      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
   - task: PowerShell@2
     displayName: Download MinIO binary (Windows)
@@ -51,11 +51,11 @@ steps:
     displayName: npm run test:integration (MinIO integration tests)
     workingDirectory: storage/minio
 
-  # - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
-  #   displayName: rush publish (into .tgz)
+  - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
+    displayName: rush publish (into .tgz)
 
-  # - task: PublishBuildArtifacts@1
-  #   displayName: publish .tgz as build artifacts
-  #   inputs:
-  #     PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
-  #     ArtifactName: packages
+  - task: PublishBuildArtifacts@1
+    displayName: publish .tgz as build artifacts
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
+      ArtifactName: packages
