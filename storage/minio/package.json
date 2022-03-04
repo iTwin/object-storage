@@ -26,7 +26,7 @@
     "test:integration": "npm run test:integration:minio:createBucket && npm-run-all -p -r test:integration:minio:start test:integration:runTests",
     "test:integration:runTests": "wait-on tcp:9000 -t 30000 && node lib/test/RunIntegrationTests.js",
     "test:integration:minio:createBucket": "node -e \"const testBucketPath = path.join('lib', 'test', 'storage', 'integration-test'); if(!fs.existsSync(testBucketPath)) fs.mkdirSync(testBucketPath, { recursive: true });\"",
-    "test:integration:minio:start": "cd lib/test && ./minio server storage"
+    "test:integration:minio:start": "cd lib/test && (minio server storage || ./minio server storage)"
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
