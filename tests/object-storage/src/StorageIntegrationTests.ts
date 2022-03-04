@@ -73,4 +73,9 @@ export class StorageIntegrationTests extends Extendable {
       mocha.run().on("fail", reject).on("end", resolve)
     );
   }
+
+  public releaseResources(): void {
+    const serverSideStorage = this.container.get(ServerSideStorage);
+    serverSideStorage.releaseResources();
+  }
 }

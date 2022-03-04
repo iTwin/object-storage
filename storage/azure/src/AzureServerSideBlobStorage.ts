@@ -235,4 +235,6 @@ export class AzureServerSideBlobStorage extends ServerSideStorage {
       baseUrl: this._config.baseUrl,
     };
   }
+
+  public releaseResources(): void {}
 }
