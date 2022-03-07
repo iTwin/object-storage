@@ -15,16 +15,16 @@ import {
 import { S3TransferConfig } from "./Interfaces";
 import { Types } from "./Types";
 
-import { S3ServerSideStorageConfig } from ".";
+import { S3ServerStorageConfig } from ".";
 
 @injectable()
 export class S3TransferConfigProvider implements TransferConfigProvider {
-  private readonly _config: S3ServerSideStorageConfig;
+  private readonly _config: S3ServerStorageConfig;
   private readonly _client: STSClient;
 
   public constructor(
     client: STSClient,
-    @inject(Types.S3ServerSide.config) config: S3ServerSideStorageConfig
+    @inject(Types.S3Server.config) config: S3ServerStorageConfig
   ) {
     this._config = config;
     this._client = client;

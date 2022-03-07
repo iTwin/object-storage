@@ -5,11 +5,11 @@
 
 const types = {
   bucket: Symbol.for("Types.Bucket"),
-  S3ServerSide: {
-    config: Symbol.for("Types.S3ServerSide.Config"),
+  S3Server: {
+    config: Symbol.for("Types.S3Server.Config"),
   },
-  S3ClientSide: {
-    config: Symbol.for("Types.S3ClientSide.Config"),
+  S3Client: {
+    config: Symbol.for("Types.S3Client.Config"),
   },
 };
 

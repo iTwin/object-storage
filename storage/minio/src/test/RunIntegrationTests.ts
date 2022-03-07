@@ -5,14 +5,11 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import {
-  MinioClientSideStorageBindings,
-  MinioServerSideStorageBindings,
-} from "..";
+import { MinioClientStorageBindings, MinioServerStorageBindings } from "..";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerSideStorage: {
+  ServerStorage: {
     dependencyName: "minio",
     bucket: "integration-test",
     // cspell:disable-next-line
@@ -25,7 +22,7 @@ const config = {
     stsBaseUrl: "http://127.0.0.1:9000",
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ClientSideStorage: {
+  ClientStorage: {
     dependencyName: "minio",
     bucket: "integration-test",
   },
@@ -33,8 +30,8 @@ const config = {
 
 const tests = new StorageIntegrationTests(
   config,
-  MinioServerSideStorageBindings,
-  MinioClientSideStorageBindings
+  MinioServerStorageBindings,
+  MinioClientStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

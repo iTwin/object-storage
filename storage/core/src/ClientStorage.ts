@@ -18,7 +18,7 @@ import {
 } from ".";
 
 @injectable()
-export abstract class ClientSideStorage {
+export abstract class ClientStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
   ): Promise<Buffer>;

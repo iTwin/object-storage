@@ -13,10 +13,10 @@ import {
   Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
 import {
-  ClientSideStorage,
-  ClientSideStorageDependency,
-  ServerSideStorage,
-  ServerSideStorageDependency,
+  ClientStorage,
+  ClientStorageDependency,
+  ServerStorage,
+  ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
@@ -26,16 +26,16 @@ export class StorageIntegrationTests extends Dependable {
 
   constructor(
     config: DependenciesConfig,
-    serverSideDependency: new () => ServerSideStorageDependency,
-    clientSideDependency: new () => ClientSideStorageDependency
+    serverStorageDependency: new () => ServerStorageDependency,
+    clientStorageDependency: new () => ClientStorageDependency
   ) {
     super();
 
-    this.requireDependency(ServerSideStorageDependency.dependencyType);
-    this.requireDependency(ClientSideStorageDependency.dependencyType);
+    this.requireDependency(ServerStorageDependency.dependencyType);
+    this.requireDependency(ClientStorageDependency.dependencyType);
 
-    this.useDependency(serverSideDependency);
-    this.useDependency(clientSideDependency);
+    this.useDependency(serverStorageDependency);
+    this.useDependency(clientStorageDependency);
 
     this.container
       .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
@@ -45,12 +45,12 @@ export class StorageIntegrationTests extends Dependable {
   public async start(): Promise<void> {
     this.registerDependencies(this.container);
 
-    const serverSideStorage = this.container.get(ServerSideStorage);
-    const clientSideStorage = this.container.get(ClientSideStorage);
+    const serverStorage = this.container.get(ServerStorage);
+    const clientStorage = this.container.get(ClientStorage);
 
     setOptions({
-      serverSideStorage,
-      clientSideStorage,
+      serverStorage,
+      clientStorage,
     });
 
     const mochaOptions: Mocha.MochaOptions = {
@@ -72,7 +72,7 @@ export class StorageIntegrationTests extends Dependable {
     return new Promise<void>((resolve) =>
       mocha.run((failures: number) => {
         process.exitCode = failures ? 1 : 0;
-        serverSideStorage.releaseResources();
+        serverStorage.releaseResources();
         resolve();
       })
     );

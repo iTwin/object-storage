@@ -9,39 +9,39 @@ import { Container } from "inversify";
 
 import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
-  ServerSideStorage,
-  ServerSideStorageDependency,
+  ServerStorage,
+  ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
 import {
-  AzureServerSideStorage,
-  AzureServerSideStorageConfig,
-} from "./AzureServerSideStorage";
+  AzureServerStorage,
+  AzureServerStorageConfig,
+} from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 import { Types } from "./Types";
 
-export type AzureServerSideStorageBindingsConfig =
-  AzureServerSideStorageConfig & DependencyConfig;
+export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
+  DependencyConfig;
 
-export class AzureServerSideStorageBindings extends ServerSideStorageDependency {
+export class AzureServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(
     container: Container,
-    config: AzureServerSideStorageBindingsConfig
+    config: AzureServerStorageBindingsConfig
   ): void {
     if (!config.accountName)
-      throw new ConfigError<AzureServerSideStorageConfig>("accountName");
+      throw new ConfigError<AzureServerStorageConfig>("accountName");
     if (!config.accountKey)
-      throw new ConfigError<AzureServerSideStorageConfig>("accountKey");
+      throw new ConfigError<AzureServerStorageConfig>("accountKey");
     if (!config.baseUrl)
       config.baseUrl = `https://${config.accountName}.blob.core.windows.net`;
 
     container
-      .bind<AzureServerSideStorageConfig>(Types.ServerSide.config)
+      .bind<AzureServerStorageConfig>(Types.Server.config)
       .toConstantValue(config);
 
-    container.bind(ServerSideStorage).to(AzureServerSideStorage);
+    container.bind(ServerStorage).to(AzureServerStorage);
     container.bind(BlobServiceClientWrapper).toSelf();
     container
       .bind(BlobServiceClient)

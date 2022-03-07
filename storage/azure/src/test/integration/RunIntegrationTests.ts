@@ -5,29 +5,29 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { AzureClientSideStorageBindings } from "../../AzureClientSideStorageBindings";
-import { AzureServerSideStorageBindings } from "../../AzureServerSideStorageBindings";
+import { AzureClientStorageBindings } from "../../AzureClientStorageBindings";
+import { AzureServerStorageBindings } from "../../AzureServerStorageBindings";
 
 const dependencyName = "azure";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerSideStorage: {
+  ServerStorage: {
     dependencyName,
     accountName: process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME,
     accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY,
     baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ClientSideStorage: {
+  ClientStorage: {
     dependencyName,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  AzureServerSideStorageBindings,
-  AzureClientSideStorageBindings
+  AzureServerStorageBindings,
+  AzureClientStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

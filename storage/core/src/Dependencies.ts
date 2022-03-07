@@ -3,12 +3,12 @@
  *----------------------------------------------------------------------------*/
 import { Dependency } from "@itwin/cloud-agnostic-core";
 
-export abstract class ServerSideStorageDependency extends Dependency {
-  public static readonly dependencyType = "ServerSideStorage";
-  public readonly dependencyType = ServerSideStorageDependency.dependencyType;
+export abstract class ServerStorageDependency extends Dependency {
+  public static readonly dependencyType = "ServerStorage";
+  public readonly dependencyType = ServerStorageDependency.dependencyType;
 }
 
-export abstract class ClientSideStorageDependency extends Dependency {
-  public static readonly dependencyType = "ClientSideStorage";
-  public readonly dependencyType = ClientSideStorageDependency.dependencyType;
+export abstract class ClientStorageDependency extends Dependency {
+  public static readonly dependencyType = "ClientStorage";
+  public readonly dependencyType = ClientStorageDependency.dependencyType;
 }

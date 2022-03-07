@@ -8,7 +8,7 @@ import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
 import {
-  ClientSideStorage,
+  ClientStorage,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   TransferData,
@@ -25,7 +25,7 @@ import {
 } from "./Interfaces";
 
 @injectable()
-export class AzureClientSideStorage extends ClientSideStorage {
+export class AzureClientStorage extends ClientStorage {
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "buffer";

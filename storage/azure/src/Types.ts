@@ -4,8 +4,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
-  ServerSide: {
-    config: Symbol.for("Types.AzureServerSideStorage.Config"),
+  Server: {
+    config: Symbol.for("Types.AzureServerStorage.Config"),
   },
 };
 

@@ -3,23 +3,23 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ClientSideStorage } from "@itwin/object-storage-core";
+import { ClientStorage } from "@itwin/object-storage-core";
 import {
-  S3ClientSideStorageBindings,
-  S3ClientSideStorageBindingsConfig,
+  S3ClientStorageBindings,
+  S3ClientStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
-import { MinioClientSideStorage } from "./MinioClientSideStorage";
+import { MinioClientStorage } from "./MinioClientStorage";
 
-export class MinioClientSideStorageBindings extends S3ClientSideStorageBindings {
+export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override readonly dependencyName: string = "minio";
 
   public override register(
     container: Container,
-    config: S3ClientSideStorageBindingsConfig
+    config: S3ClientStorageBindingsConfig
   ): void {
     super.register(container, config);
 
-    container.rebind(ClientSideStorage).to(MinioClientSideStorage);
+    container.rebind(ClientStorage).to(MinioClientStorage);
   }
 }

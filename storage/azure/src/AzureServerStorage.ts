@@ -15,7 +15,7 @@ import {
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
-  ServerSideStorage,
+  ServerStorage,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
@@ -26,20 +26,20 @@ import { buildBlobName, buildExpiresOn, buildSASParameters } from "./Helpers";
 import { AzureTransferConfig } from "./Interfaces";
 import { Types } from "./Types";
 
-export interface AzureServerSideStorageConfig {
+export interface AzureServerStorageConfig {
   accountName: string;
   accountKey: string;
   baseUrl: string;
 }
 
 @injectable()
-export class AzureServerSideStorage extends ServerSideStorage {
-  private readonly _config: AzureServerSideStorageConfig;
+export class AzureServerStorage extends ServerStorage {
+  private readonly _config: AzureServerStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
-    @inject(Types.ServerSide.config)
-    config: AzureServerSideStorageConfig,
+    @inject(Types.Server.config)
+    config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {
     super();
