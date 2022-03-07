@@ -5,11 +5,11 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 import { Container } from "inversify";
 
-import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   PresignedUrlProvider,
   ServerSideStorage,
-  ServerSideStorageExtension,
+  ServerSideStorageDependency,
   Types as StorageTypes,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
@@ -26,15 +26,15 @@ import {
   S3ServerSideStorageConfig,
 } from ".";
 
-export type S3ServerSideStorageExtensionConfig = S3ServerSideStorageConfig &
-  ExtensionConfig;
+export type S3ServerSideStorageBindingsConfig = S3ServerSideStorageConfig &
+  DependencyConfig;
 
-export class S3ServerSideStorageExtension extends ServerSideStorageExtension {
-  public readonly extensionName: string = "s3";
+export class S3ServerSideStorageBindings extends ServerSideStorageDependency {
+  public readonly dependencyName: string = "s3";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: S3ServerSideStorageExtensionConfig
+    config: S3ServerSideStorageBindingsConfig
   ): void {
     if (!config.accessKey)
       throw new ConfigError<S3ServerSideStorageConfig>("accessKey");

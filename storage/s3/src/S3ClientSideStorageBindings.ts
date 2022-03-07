@@ -3,26 +3,26 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   ClientSideStorage,
-  ClientSideStorageExtension,
+  ClientSideStorageDependency,
 } from "@itwin/object-storage-core";
 
 import { S3ClientSideStorage, S3ClientSideStorageConfig, Types } from ".";
 
-export type S3ClientSideStorageExtensionConfig = S3ClientSideStorageConfig &
-  ExtensionConfig;
+export type S3ClientSideStorageBindingsConfig = S3ClientSideStorageConfig &
+  DependencyConfig;
 
-export class S3ClientSideStorageExtension extends ClientSideStorageExtension {
-  public readonly extensionName: string = "s3";
+export class S3ClientSideStorageBindings extends ClientSideStorageDependency {
+  public readonly dependencyName: string = "s3";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: S3ClientSideStorageExtensionConfig
+    config: S3ClientSideStorageBindingsConfig
   ): void {
     if (!config.bucket)
-      throw new ConfigError<S3ClientSideStorageExtensionConfig>("bucket");
+      throw new ConfigError<S3ClientSideStorageBindingsConfig>("bucket");
 
     container
       .bind<S3ClientSideStorageConfig>(Types.S3ClientSide.config)
