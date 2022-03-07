@@ -8,42 +8,42 @@ import { Container } from "inversify";
 import * as Mocha from "mocha";
 
 import {
-  Extendable,
-  ExtensionsConfig,
-  Types as ExtensionTypes,
+  Dependable,
+  DependenciesConfig,
+  Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
 import {
   ClientSideStorage,
-  ClientSideStorageExtension,
+  ClientSideStorageDependency,
   ServerSideStorage,
-  ServerSideStorageExtension,
+  ServerSideStorageDependency,
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
 
-export class StorageIntegrationTests extends Extendable {
+export class StorageIntegrationTests extends Dependable {
   public readonly container = new Container();
 
   constructor(
-    config: ExtensionsConfig,
-    serverSideExtension: new () => ServerSideStorageExtension,
-    clientSideExtension: new () => ClientSideStorageExtension
+    config: DependenciesConfig,
+    serverSideDependency: new () => ServerSideStorageDependency,
+    clientSideDependency: new () => ClientSideStorageDependency
   ) {
     super();
 
-    this.requireExtension(ServerSideStorageExtension.extensionType);
-    this.requireExtension(ClientSideStorageExtension.extensionType);
+    this.requireDependency(ServerSideStorageDependency.dependencyType);
+    this.requireDependency(ClientSideStorageDependency.dependencyType);
 
-    this.useExtension(serverSideExtension);
-    this.useExtension(clientSideExtension);
+    this.useDependency(serverSideDependency);
+    this.useDependency(clientSideDependency);
 
     this.container
-      .bind<ExtensionsConfig>(ExtensionTypes.extensionsConfig)
+      .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
       .toConstantValue(config);
   }
 
   public async start(): Promise<void> {
-    this.bindExtensions(this.container);
+    this.registerDependencies(this.container);
 
     const serverSideStorage = this.container.get(ServerSideStorage);
     const clientSideStorage = this.container.get(ClientSideStorage);
