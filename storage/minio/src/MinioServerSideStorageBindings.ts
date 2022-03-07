@@ -6,20 +6,20 @@ import { Client } from "minio";
 
 import { PresignedUrlProvider, Types } from "@itwin/object-storage-core";
 import {
-  S3ServerSideStorageExtension,
-  S3ServerSideStorageExtensionConfig,
+  S3ServerSideStorageBindings,
+  S3ServerSideStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
 import { createClient, MinioPresignedUrlProvider } from ".";
 
-export class MinioServerSideStorageExtension extends S3ServerSideStorageExtension {
-  public override readonly extensionName: string = "minio";
+export class MinioServerSideStorageBindings extends S3ServerSideStorageBindings {
+  public override readonly dependencyName: string = "minio";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: S3ServerSideStorageExtensionConfig
+    config: S3ServerSideStorageBindingsConfig
   ): void {
-    super.bind(container, config);
+    super.register(container, config);
 
     container
       .rebind<PresignedUrlProvider>(Types.ServerSide.presignedUrlProvider)

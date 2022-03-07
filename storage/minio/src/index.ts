@@ -3,6 +3,6 @@
  *----------------------------------------------------------------------------*/
 export * from "./Helpers";
 export * from "./MinioClientSideStorage";
-export * from "./MinioClientSideStorageExtension";
+export * from "./MinioClientSideStorageBindings";
 export * from "./MinioPresignedUrlProvider";
-export * from "./MinioServerSideStorageExtension";
+export * from "./MinioServerSideStorageBindings";
