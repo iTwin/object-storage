@@ -36,10 +36,7 @@ const tests = new StorageIntegrationTests(
   MinioServerSideStorageExtension,
   MinioClientSideStorageExtension
 );
-tests
-  .start()
-  .catch((err) => {
-    process.exitCode = 1;
-    throw err;
-  })
-  .finally(() => tests.releaseResources());
+tests.start().catch((err) => {
+  process.exitCode = 1;
+  throw err;
+});

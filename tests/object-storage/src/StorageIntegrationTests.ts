@@ -69,13 +69,12 @@ export class StorageIntegrationTests extends Extendable {
       .filter((file) => file.toLowerCase().endsWith("test.js"))
       .forEach((file) => mocha.addFile(join(testDirectory, file)));
 
-    return new Promise<void>((resolve, reject) =>
-      mocha.run().on("fail", reject).on("end", resolve)
+    return new Promise<void>((resolve) =>
+      mocha.run((failures: number) => {
+        process.exitCode = failures ? 1 : 0;
+        serverSideStorage.releaseResources();
+        resolve();
+      })
     );
-  }
-
-  public releaseResources(): void {
-    const serverSideStorage = this.container.get(ServerSideStorage);
-    serverSideStorage.releaseResources();
   }
 }

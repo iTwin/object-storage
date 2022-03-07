@@ -34,6 +34,10 @@ steps:
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
+  - script: npm run test:integration
+    displayName: npm run test:integration (MinIO integration tests)
+    workingDirectory: storage/minio
+
   - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
     displayName: rush publish (into .tgz)
 
