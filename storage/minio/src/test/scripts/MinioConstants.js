@@ -16,14 +16,19 @@ const minioStorageFolder = "storage";
 const minioTestBucketName = "integration-test";
 
 function resolveFileProperties() {
+  const commonFileProperties = {
+    targetFileDirectory: minioExecutablePath
+  };
   switch (process.platform) {
     case "win32":
       return {
+        ...commonFileProperties,
         executableDownloadLink: minioExecutableLinkWindows,
         targetFilePath: minioExecutablePathWindows,
       };
     case "linux":
       return {
+        ...commonFileProperties,
         executableDownloadLink: minioExecutableLinkLinux,
         targetFilePath: minioExecutablePathLinux,
       };
