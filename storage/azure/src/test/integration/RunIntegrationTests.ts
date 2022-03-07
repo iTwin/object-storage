@@ -29,10 +29,7 @@ const tests = new StorageIntegrationTests(
   AzureServerSideBlobStorageExtension,
   AzureClientSideBlobStorageExtension
 );
-tests
-  .start()
-  .catch((err) => {
-    process.exitCode = 1;
-    throw err;
-  })
-  .finally(() => tests.releaseResources());
+tests.start().catch((err) => {
+  process.exitCode = 1;
+  throw err;
+});

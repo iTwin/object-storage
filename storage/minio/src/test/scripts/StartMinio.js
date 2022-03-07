@@ -1,41 +1,33 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import * as child_process from "child_process";
-import * as fs from "fs";
-import * as path from "path";
-import { Readable } from "stream";
+const fs = require("fs");
+const path = require("path");
+const child_process = require("child_process");
+const constants = require("./MinioConstants");
 
-import {
-  minioExecutablePath,
-  minioServerCommand,
-  minioStorageFolder,
-  minioTestBucketName,
-  resolveFileProperties,
-} from "./MinioConstants";
-
-function listenTo(readable: Readable, dataCallback: (data: unknown) => void) {
+function listenTo(readable, dataCallback) {
   if (readable) {
     readable.setEncoding("utf8");
     readable.on("data", dataCallback);
   }
 }
 
-function runMinio(): void {
+function runMinio() {
   const testStorageDirectory = path.join(
-    minioExecutablePath,
-    minioStorageFolder
+    constants.minioExecutablePath,
+    constants.minioStorageFolder
   );
   const testBucketFilePath = path.join(
     testStorageDirectory,
-    minioTestBucketName
+    constants.minioTestBucketName
   );
   if (!fs.existsSync(testBucketFilePath))
     fs.mkdirSync(testBucketFilePath, { recursive: true });
 
-  const { targetFilePath } = resolveFileProperties();
+  const { targetFilePath } = constants.resolveFileProperties();
   const childProcess = child_process.spawn(targetFilePath, [
-    minioServerCommand,
+    constants.minioServerCommand,
     testStorageDirectory,
   ]);
   if (childProcess.stdout)

@@ -1,24 +1,21 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-import * as path from "path";
+const path = require("path");
 
 const minioExecutableLinkWindows =
   "https://dl.min.io/server/minio/release/windows-amd64/minio.exe";
 const minioExecutableLinkLinux =
   "https://dl.min.io/server/minio/release/linux-amd64/minio";
 
-export const minioExecutablePath = path.join(process.cwd(), "lib", "test");
+const minioExecutablePath = path.join(process.cwd(), "lib", "test");
 const minioExecutablePathWindows = path.join(minioExecutablePath, "minio.exe");
 const minioExecutablePathLinux = path.join(minioExecutablePath, "minio");
-export const minioServerCommand = "server";
-export const minioStorageFolder = "storage";
-export const minioTestBucketName = "integration-test";
+const minioServerCommand = "server";
+const minioStorageFolder = "storage";
+const minioTestBucketName = "integration-test";
 
-export function resolveFileProperties(): {
-  executableDownloadLink: string;
-  targetFilePath: string;
-} {
+function resolveFileProperties() {
   switch (process.platform) {
     case "win32":
       return {
@@ -34,3 +31,5 @@ export function resolveFileProperties(): {
       throw new Error(`Unsupported OS for MinIO download: ${process.env}`);
   }
 }
+
+module.exports = { minioExecutablePath, minioServerCommand, minioStorageFolder, minioTestBucketName, resolveFileProperties };

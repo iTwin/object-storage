@@ -34,10 +34,7 @@ const tests = new StorageIntegrationTests(
   OssServerSideStorageExtension,
   S3ClientSideStorageExtension
 );
-tests
-  .start()
-  .catch((err) => {
-    process.exitCode = 1;
-    throw err;
-  })
-  .finally(() => tests.releaseResources());
+tests.start().catch((err) => {
+  process.exitCode = 1;
+  throw err;
+});

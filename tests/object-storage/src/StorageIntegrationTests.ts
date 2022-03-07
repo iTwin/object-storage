@@ -70,12 +70,13 @@ export class StorageIntegrationTests extends Extendable {
       .forEach((file) => mocha.addFile(join(testDirectory, file)));
 
     return new Promise<void>((resolve, reject) =>
-      mocha.run().on("fail", reject).on("end", resolve)
+      mocha
+        .run()
+        .on("fail", reject)
+        .on("end", () => {
+          serverSideStorage.releaseResources();
+          resolve();
+        })
     );
-  }
-
-  public releaseResources(): void {
-    const serverSideStorage = this.container.get(ServerSideStorage);
-    serverSideStorage.releaseResources();
   }
 }
