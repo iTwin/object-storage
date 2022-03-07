@@ -22,10 +22,7 @@ export async function checkUploadedFileValidity(
 ): Promise<void> {
   expect(await serverStorage.exists(reference)).to.be.true;
 
-  const downloadedBuffer = await serverStorage.download(
-    reference,
-    "buffer"
-  );
+  const downloadedBuffer = await serverStorage.download(reference, "buffer");
   expect(downloadedBuffer.equals(contentBuffer)).to.be.true;
 
   const { metadata: _metadata } = await serverStorage.getObjectProperties(

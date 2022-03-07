@@ -94,8 +94,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         baseDirectory: "test-create-directory",
       };
       try {
-        const createDirectoryPromise =
-          serverStorage.create(directoryToCreate);
+        const createDirectoryPromise = serverStorage.create(directoryToCreate);
         await expect(createDirectoryPromise).to.eventually.be.fulfilled;
 
         const doesDirectoryExist = await serverStorage.exists(
@@ -340,17 +339,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should update metadata", async () => {
-      const { metadata } = await serverStorage.getObjectProperties(
-        reference
-      );
+      const { metadata } = await serverStorage.getObjectProperties(reference);
       expect(metadata?.test).to.be.equal("test-metadata");
 
-      const updateMetadataPromise = serverStorage.updateMetadata(
-        reference,
-        {
-          test: "test-metadata-updated",
-        }
-      );
+      const updateMetadataPromise = serverStorage.updateMetadata(reference, {
+        test: "test-metadata-updated",
+      });
       await expect(updateMetadataPromise).to.eventually.be.fulfilled;
 
       const { metadata: metadataUpdated } =
@@ -627,13 +621,12 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           const metadata = {
             test: "test-metadata",
           };
-          const multipartUploadPromise =
-            clientStorage.uploadInMultipleParts({
-              data: dataCallback(),
-              reference,
-              transferConfig: uploadConfig,
-              options: { metadata },
-            });
+          const multipartUploadPromise = clientStorage.uploadInMultipleParts({
+            data: dataCallback(),
+            reference,
+            transferConfig: uploadConfig,
+            options: { metadata },
+          });
           await expect(multipartUploadPromise).to.eventually.be.fulfilled;
 
           await checkUploadedFileValidity(reference, contentBuffer, metadata);
