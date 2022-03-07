@@ -33,7 +33,7 @@ function resolveFileProperties() {
         targetFilePath: minioExecutablePathLinux,
       };
     default:
-      throw new Error(`Unsupported OS for MinIO download: ${process.env}`);
+      throw new Error(`Unsupported OS for MinIO download: ${process.platform}`);
   }
 }
 
