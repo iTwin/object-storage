@@ -1,6 +1,7 @@
-/*-----------------------------------------------------------------------------
-|  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
- *----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { createReadStream, createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
