@@ -5,29 +5,29 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { AzureClientSideBlobStorageExtension } from "../../AzureClientSideBlobStorageExtension";
-import { AzureServerSideBlobStorageExtension } from "../../AzureServerSideBlobStorageExtension";
+import { AzureClientSideBlobStorageBindings } from "../../AzureClientSideBlobStorageBindings";
+import { AzureServerSideBlobStorageBindings } from "../../AzureServerSideBlobStorageBindings";
 
-const extensionName = "azure";
+const dependencyName = "azure";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerSideStorage: {
-    extensionName,
+    dependencyName,
     accountName: process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME,
     accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY,
     baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientSideStorage: {
-    extensionName,
+    dependencyName,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  AzureServerSideBlobStorageExtension,
-  AzureClientSideBlobStorageExtension
+  AzureServerSideBlobStorageBindings,
+  AzureClientSideBlobStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

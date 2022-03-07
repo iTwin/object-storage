@@ -5,15 +5,15 @@ import { Container } from "inversify";
 
 import {
   ClientSideStorage,
-  ClientSideStorageExtension,
+  ClientSideStorageDependency,
 } from "@itwin/object-storage-core";
 
 import { AzureClientSideBlobStorage } from "./AzureClientSideBlobStorage";
 
-export class AzureClientSideBlobStorageExtension extends ClientSideStorageExtension {
-  public readonly extensionName: string = "azure";
+export class AzureClientSideBlobStorageBindings extends ClientSideStorageDependency {
+  public readonly dependencyName: string = "azure";
 
-  public override bind(container: Container): void {
+  public override register(container: Container): void {
     container.bind(ClientSideStorage).to(AzureClientSideBlobStorage);
   }
 }

@@ -7,10 +7,10 @@ import {
 } from "@azure/storage-blob";
 import { Container } from "inversify";
 
-import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   ServerSideStorage,
-  ServerSideStorageExtension,
+  ServerSideStorageDependency,
 } from "@itwin/object-storage-core";
 
 import {
@@ -20,15 +20,15 @@ import {
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 import { Types } from "./Types";
 
-export type AzureServerSideStorageExtensionConfig =
-  AzureServerSideBlobStorageConfig & ExtensionConfig;
+export type AzureServerSideStorageBindingsConfig =
+  AzureServerSideBlobStorageConfig & DependencyConfig;
 
-export class AzureServerSideBlobStorageExtension extends ServerSideStorageExtension {
-  public readonly extensionName: string = "azure";
+export class AzureServerSideBlobStorageBindings extends ServerSideStorageDependency {
+  public readonly dependencyName: string = "azure";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: AzureServerSideStorageExtensionConfig
+    config: AzureServerSideStorageBindingsConfig
   ): void {
     if (!config.accountName)
       throw new ConfigError<AzureServerSideBlobStorageConfig>("accountName");
