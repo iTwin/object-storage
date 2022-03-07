@@ -5,7 +5,7 @@
 
 const types = {
   ServerSide: {
-    config: Symbol.for("Types.AzureServerSideBlobStorage.Config"),
+    config: Symbol.for("Types.AzureServerSideStorage.Config"),
   },
 };
 

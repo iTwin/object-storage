@@ -26,20 +26,20 @@ import { buildBlobName, buildExpiresOn, buildSASParameters } from "./Helpers";
 import { AzureTransferConfig } from "./Interfaces";
 import { Types } from "./Types";
 
-export interface AzureServerSideBlobStorageConfig {
+export interface AzureServerSideStorageConfig {
   accountName: string;
   accountKey: string;
   baseUrl: string;
 }
 
 @injectable()
-export class AzureServerSideBlobStorage extends ServerSideStorage {
-  private readonly _config: AzureServerSideBlobStorageConfig;
+export class AzureServerSideStorage extends ServerSideStorage {
+  private readonly _config: AzureServerSideStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
     @inject(Types.ServerSide.config)
-    config: AzureServerSideBlobStorageConfig,
+    config: AzureServerSideStorageConfig,
     client: BlobServiceClientWrapper
   ) {
     super();

@@ -25,7 +25,7 @@ import {
 } from "./Interfaces";
 
 @injectable()
-export class AzureClientSideBlobStorage extends ClientSideStorage {
+export class AzureClientSideStorage extends ClientSideStorage {
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "buffer";

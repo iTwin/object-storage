@@ -8,12 +8,12 @@ import {
   ClientSideStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { AzureClientSideBlobStorage } from "./AzureClientSideBlobStorage";
+import { AzureClientSideStorage } from "./AzureClientSideStorage";
 
-export class AzureClientSideBlobStorageBindings extends ClientSideStorageDependency {
+export class AzureClientSideStorageBindings extends ClientSideStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container.bind(ClientSideStorage).to(AzureClientSideBlobStorage);
+    container.bind(ClientSideStorage).to(AzureClientSideStorage);
   }
 }

@@ -5,8 +5,8 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { AzureClientSideBlobStorageBindings } from "../../AzureClientSideBlobStorageBindings";
-import { AzureServerSideBlobStorageBindings } from "../../AzureServerSideBlobStorageBindings";
+import { AzureClientSideStorageBindings } from "../../AzureClientSideStorageBindings";
+import { AzureServerSideStorageBindings } from "../../AzureServerSideStorageBindings";
 
 const dependencyName = "azure";
 
@@ -26,8 +26,8 @@ const config = {
 
 const tests = new StorageIntegrationTests(
   config,
-  AzureServerSideBlobStorageBindings,
-  AzureClientSideBlobStorageBindings
+  AzureServerSideStorageBindings,
+  AzureClientSideStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;
