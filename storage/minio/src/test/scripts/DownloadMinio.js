@@ -26,7 +26,9 @@ async function downloadMinioExecutable() {
     fs.mkdirSync(targetFileDirectory, { recursive: true });
 
   await downloadFile(targetFilePath, executableDownloadLink);
+
   if (process.platform === "linux") {
+    // Mark the file as executable
     fs.chmodSync(targetFilePath, 0o755);
   }
 }
