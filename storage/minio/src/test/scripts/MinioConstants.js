@@ -37,4 +37,10 @@ function resolveFileProperties() {
   }
 }
 
-module.exports = { minioExecutablePath, minioServerCommand, minioStorageFolder, minioTestBucketName, resolveFileProperties };
+module.exports = {
+  minioExecutablePath,
+  minioServerCommand,
+  minioStorageFolder,
+  minioTestBucketName,
+  resolveFileProperties
+};
