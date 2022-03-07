@@ -358,6 +358,10 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
       expect(metadataUpdated?.test).to.be.equal("test-metadata-updated");
     });
 
+    it("bar", () => {
+      throw new Error("bar");
+    });
+
     after(async () => {
       await serverSideStorage.delete(reference);
     });
