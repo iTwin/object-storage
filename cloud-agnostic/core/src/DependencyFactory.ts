@@ -18,7 +18,7 @@ export class DependencyFactory {
 
     if (!dependency)
       throw new DependencyError(
-        `Dependency "${name}" is not registered`,
+        `dependency "${name}" is not registered`,
         this.dependencyType,
         [...this._dependencyMap.keys()]
       );
