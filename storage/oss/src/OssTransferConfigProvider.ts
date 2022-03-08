@@ -13,19 +13,19 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 import {
-  S3ServerSideStorageConfig,
+  S3ServerStorageConfig,
   S3TransferConfig,
   Types,
 } from "@itwin/object-storage-s3";
 
 @injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {
-  private readonly _config: S3ServerSideStorageConfig;
+  private readonly _config: S3ServerStorageConfig;
   private readonly _client: Core;
 
   public constructor(
     client: Core,
-    @inject(Types.S3ServerSide.config) config: S3ServerSideStorageConfig
+    @inject(Types.S3Server.config) config: S3ServerStorageConfig
   ) {
     this._config = config;
     this._client = client;

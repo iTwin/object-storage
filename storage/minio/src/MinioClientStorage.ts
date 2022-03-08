@@ -12,12 +12,9 @@ import {
   uploadToUrl,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
-import {
-  S3ClientSideStorage,
-  S3ConfigUploadInput,
-} from "@itwin/object-storage-s3";
+import { S3ClientStorage, S3ConfigUploadInput } from "@itwin/object-storage-s3";
 
-export class MinioClientSideStorage extends S3ClientSideStorage {
+export class MinioClientStorage extends S3ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {

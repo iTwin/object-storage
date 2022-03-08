@@ -2,10 +2,15 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-export interface ExtensionConfig {
-  extensionName: string;
-}
+import { Container } from "inversify";
 
-export interface ExtensionsConfig {
-  [extensionType: string]: ExtensionConfig;
+import { DependencyConfig } from "./DependencyConfig";
+
+export abstract class Dependency {
+  public abstract dependencyName: string;
+  public abstract dependencyType: string;
+  public abstract register(
+    container: Container,
+    config: DependencyConfig
+  ): void;
 }

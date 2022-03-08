@@ -13,7 +13,7 @@ import {
   assertPrimitiveType,
 } from "@itwin/cloud-agnostic-core";
 
-import { UrlDownloadInput } from "./ClientSideStorage";
+import { UrlDownloadInput } from "./ClientStorage";
 import {
   Metadata,
   ObjectDirectory,

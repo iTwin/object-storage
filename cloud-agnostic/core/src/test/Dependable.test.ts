@@ -5,28 +5,28 @@
 import { expect } from "chai";
 import { Container } from "inversify";
 
-import { Extendable, ExtensionError, ExtensionsConfig } from "..";
+import { Bindable, DependenciesConfig, DependencyError } from "..";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
-import { ConcreteTestExtension } from "./TestExtension";
+import { ConcreteTestDependencyBindings } from "./TestDependency";
 import {
   TestSetup,
-  TestSetupNoDefaultExtensions,
+  TestSetupNoDefaultDependencies,
   TestSetupNoFactory,
 } from "./TestSetup";
 
 const testConfig: TestConfig = {
-  extensionName: "testName",
+  dependencyName: "testName",
   testProperty: "testProperty",
 };
 
-const extensionsConfig: ExtensionsConfig = {
+const dependenciesConfig: DependenciesConfig = {
   testType: testConfig,
 };
 
-describe(`${Extendable.name}`, () => {
-  it(`should resolve registered extension`, () => {
-    const setup = new TestSetup(new Container(), extensionsConfig);
+describe(`${Bindable.name}`, () => {
+  it(`should resolve registered dependency`, () => {
+    const setup = new TestSetup(new Container(), dependenciesConfig);
 
     setup.start();
 
@@ -35,30 +35,31 @@ describe(`${Extendable.name}`, () => {
     expect(test.property === "testProperty").to.be.true;
   });
 
-  it(`should throw if extension factory is not registered`, () => {
-    const setup = new TestSetupNoFactory(new Container(), extensionsConfig);
+  it(`should throw if dependency factory is not registered`, () => {
+    const setup = new TestSetupNoFactory(new Container(), dependenciesConfig);
 
-    const testedFunction = () => setup.useExtension(ConcreteTestExtension);
+    const testedFunction = () =>
+      setup.useBindings(ConcreteTestDependencyBindings);
     expect(testedFunction)
-      .to.throw(ExtensionError)
+      .to.throw(DependencyError)
       .with.property(
         "message",
-        'testType factory is not registered, use "requireExtension" method.'
+        'testType factory is not registered, use "requireDependency" method.'
       );
   });
 
-  it(`should throw if testName extension is not registered`, () => {
-    const setup = new TestSetupNoDefaultExtensions(
+  it(`should throw if testName dependency is not registered`, () => {
+    const setup = new TestSetupNoDefaultDependencies(
       new Container(),
-      extensionsConfig
+      dependenciesConfig
     );
 
     const testedFunction = () => setup.start();
     expect(testedFunction)
-      .to.throw(ExtensionError)
+      .to.throw(DependencyError)
       .with.property(
         "message",
-        'testType extension "testName" is not registered.'
+        'testType dependency "testName" is not registered.'
       );
   });
 });

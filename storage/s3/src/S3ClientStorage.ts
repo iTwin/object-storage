@@ -7,7 +7,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
-  ClientSideStorage,
+  ClientStorage,
   downloadFromUrl,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
@@ -29,16 +29,16 @@ import { Types } from "./Types";
 
 import { S3ClientWrapper } from ".";
 
-export interface S3ClientSideStorageConfig {
+export interface S3ClientStorageConfig {
   bucket: string;
 }
 
 @injectable()
-export class S3ClientSideStorage extends ClientSideStorage {
+export class S3ClientStorage extends ClientStorage {
   private readonly _bucket: string;
 
   public constructor(
-    @inject(Types.S3ServerSide.config) config: S3ClientSideStorageConfig
+    @inject(Types.S3Server.config) config: S3ClientStorageConfig
   ) {
     super();
 

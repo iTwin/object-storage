@@ -4,25 +4,25 @@
 *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Extendable, Extension } from "..";
+import { Bindable, Dependency } from "..";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
 
-export class DefaultTestExtensions {
-  public static apply(extendable: Extendable): void {
-    extendable.useExtension(ConcreteTestExtension);
+export class DefaultTestDependencies {
+  public static apply(dependable: Bindable): void {
+    dependable.useBindings(ConcreteTestDependencyBindings);
   }
 }
 
-export abstract class TestExtension extends Extension {
-  public static readonly extensionType = "testType";
-  public readonly extensionType = TestExtension.extensionType;
+export abstract class TestDependency extends Dependency {
+  public static readonly dependencyType = "testType";
+  public readonly dependencyType = TestDependency.dependencyType;
 }
 
-export class ConcreteTestExtension extends TestExtension {
-  public readonly extensionName = "testName";
+export class ConcreteTestDependencyBindings extends TestDependency {
+  public readonly dependencyName = "testName";
 
-  public bind(container: Container, config: TestConfig): void {
+  public register(container: Container, config: TestConfig): void {
     container.bind<TestConfig>(testConfigType).toDynamicValue(() => config);
     container.bind(Test).to(ConcreteTest).inSingletonScope();
   }

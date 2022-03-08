@@ -5,11 +5,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
-  ServerSide: {
-    presignedUrlProvider: Symbol.for("Types.ServerSide.PresignedUrlProvider"),
-    transferConfigProvider: Symbol.for(
-      "Types.ServerSide.TransferConfigProvider"
-    ),
+  Server: {
+    presignedUrlProvider: Symbol.for("Types.Server.PresignedUrlProvider"),
+    transferConfigProvider: Symbol.for("Types.Server.TransferConfigProvider"),
   },
 };
 

@@ -2,16 +2,16 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-export class ExtensionError extends Error {
+export class DependencyError extends Error {
   constructor(
     message: string,
-    public readonly extensionType: string,
+    public readonly dependencyType: string,
     public readonly registered?: string[]
   ) {
     super(
-      `${extensionType} ${message}.${
+      `${dependencyType} ${message}.${
         registered && registered.length > 0
-          ? ` Registered extensions: ${registered}`
+          ? ` Registered dependencies: ${registered}`
           : ""
       }`
     );

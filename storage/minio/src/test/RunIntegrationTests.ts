@@ -6,15 +6,12 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import {
-  MinioClientSideStorageExtension,
-  MinioServerSideStorageExtension,
-} from "..";
+import { MinioClientStorageBindings, MinioServerStorageBindings } from "..";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerSideStorage: {
-    extensionName: "minio",
+  ServerStorage: {
+    dependencyName: "minio",
     bucket: "integration-test",
     // cspell:disable-next-line
     accessKey: "minioadmin",
@@ -26,16 +23,16 @@ const config = {
     stsBaseUrl: "http://127.0.0.1:9000",
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ClientSideStorage: {
-    extensionName: "minio",
+  ClientStorage: {
+    dependencyName: "minio",
     bucket: "integration-test",
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  MinioServerSideStorageExtension,
-  MinioClientSideStorageExtension
+  MinioServerStorageBindings,
+  MinioClientStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

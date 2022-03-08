@@ -8,41 +8,41 @@ import {
 } from "@azure/storage-blob";
 import { Container } from "inversify";
 
-import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
-  ServerSideStorage,
-  ServerSideStorageExtension,
+  ServerStorage,
+  ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
 import {
-  AzureServerSideBlobStorage,
-  AzureServerSideBlobStorageConfig,
-} from "./AzureServerSideBlobStorage";
+  AzureServerStorage,
+  AzureServerStorageConfig,
+} from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 import { Types } from "./Types";
 
-export type AzureServerSideStorageExtensionConfig =
-  AzureServerSideBlobStorageConfig & ExtensionConfig;
+export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
+  DependencyConfig;
 
-export class AzureServerSideBlobStorageExtension extends ServerSideStorageExtension {
-  public readonly extensionName: string = "azure";
+export class AzureServerStorageBindings extends ServerStorageDependency {
+  public readonly dependencyName: string = "azure";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: AzureServerSideStorageExtensionConfig
+    config: AzureServerStorageBindingsConfig
   ): void {
     if (!config.accountName)
-      throw new ConfigError<AzureServerSideBlobStorageConfig>("accountName");
+      throw new ConfigError<AzureServerStorageConfig>("accountName");
     if (!config.accountKey)
-      throw new ConfigError<AzureServerSideBlobStorageConfig>("accountKey");
+      throw new ConfigError<AzureServerStorageConfig>("accountKey");
     if (!config.baseUrl)
       config.baseUrl = `https://${config.accountName}.blob.core.windows.net`;
 
     container
-      .bind<AzureServerSideBlobStorageConfig>(Types.ServerSide.config)
+      .bind<AzureServerStorageConfig>(Types.Server.config)
       .toConstantValue(config);
 
-    container.bind(ServerSideStorage).to(AzureServerSideBlobStorage);
+    container.bind(ServerStorage).to(AzureServerStorage);
     container.bind(BlobServiceClientWrapper).toSelf();
     container
       .bind(BlobServiceClient)

@@ -19,7 +19,7 @@ import {
 } from ".";
 
 @injectable()
-export abstract class ServerSideStorage
+export abstract class ServerStorage
   implements PresignedUrlProvider, TransferConfigProvider
 {
   public abstract download(

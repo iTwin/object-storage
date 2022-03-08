@@ -6,11 +6,11 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 import { Container } from "inversify";
 
-import { ConfigError, ExtensionConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   PresignedUrlProvider,
-  ServerSideStorage,
-  ServerSideStorageExtension,
+  ServerStorage,
+  ServerStorageDependency,
   Types as StorageTypes,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
@@ -23,40 +23,38 @@ import { Types } from "./Types";
 import {
   createS3Client,
   createStsClient,
-  S3ServerSideStorage,
-  S3ServerSideStorageConfig,
+  S3ServerStorage,
+  S3ServerStorageConfig,
 } from ".";
 
-export type S3ServerSideStorageExtensionConfig = S3ServerSideStorageConfig &
-  ExtensionConfig;
+export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
+  DependencyConfig;
 
-export class S3ServerSideStorageExtension extends ServerSideStorageExtension {
-  public readonly extensionName: string = "s3";
+export class S3ServerStorageBindings extends ServerStorageDependency {
+  public readonly dependencyName: string = "s3";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: S3ServerSideStorageExtensionConfig
+    config: S3ServerStorageBindingsConfig
   ): void {
     if (!config.accessKey)
-      throw new ConfigError<S3ServerSideStorageConfig>("accessKey");
-    if (!config.bucket)
-      throw new ConfigError<S3ServerSideStorageConfig>("bucket");
+      throw new ConfigError<S3ServerStorageConfig>("accessKey");
+    if (!config.bucket) throw new ConfigError<S3ServerStorageConfig>("bucket");
     if (!config.baseUrl)
-      throw new ConfigError<S3ServerSideStorageConfig>("baseUrl");
-    if (!config.region)
-      throw new ConfigError<S3ServerSideStorageConfig>("region");
+      throw new ConfigError<S3ServerStorageConfig>("baseUrl");
+    if (!config.region) throw new ConfigError<S3ServerStorageConfig>("region");
     if (!config.roleArn)
-      throw new ConfigError<S3ServerSideStorageConfig>("roleArn");
+      throw new ConfigError<S3ServerStorageConfig>("roleArn");
     if (!config.secretKey)
-      throw new ConfigError<S3ServerSideStorageConfig>("secretKey");
+      throw new ConfigError<S3ServerStorageConfig>("secretKey");
     if (!config.stsBaseUrl)
-      throw new ConfigError<S3ServerSideStorageConfig>("stsBaseUrl");
+      throw new ConfigError<S3ServerStorageConfig>("stsBaseUrl");
 
     container
-      .bind<S3ServerSideStorageConfig>(Types.S3ServerSide.config)
+      .bind<S3ServerStorageConfig>(Types.S3Server.config)
       .toConstantValue(config);
 
-    container.bind(ServerSideStorage).to(S3ServerSideStorage);
+    container.bind(ServerStorage).to(S3ServerStorage);
 
     container.bind(S3Client).toConstantValue(createS3Client(config));
     container.bind(STSClient).toConstantValue(createStsClient(config));
@@ -66,12 +64,10 @@ export class S3ServerSideStorageExtension extends ServerSideStorageExtension {
     container.bind(S3ClientWrapper).toSelf();
 
     container
-      .bind<PresignedUrlProvider>(StorageTypes.ServerSide.presignedUrlProvider)
+      .bind<PresignedUrlProvider>(StorageTypes.Server.presignedUrlProvider)
       .to(S3PresignedUrlProvider);
     container
-      .bind<TransferConfigProvider>(
-        StorageTypes.ServerSide.transferConfigProvider
-      )
+      .bind<TransferConfigProvider>(StorageTypes.Server.transferConfigProvider)
       .to(S3TransferConfigProvider);
   }
 }

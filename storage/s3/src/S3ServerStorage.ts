@@ -15,7 +15,7 @@ import {
   ObjectProperties,
   ObjectReference,
   PresignedUrlProvider,
-  ServerSideStorage,
+  ServerStorage,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
@@ -25,7 +25,7 @@ import {
 
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
-export interface S3ServerSideStorageConfig {
+export interface S3ServerStorageConfig {
   baseUrl: string;
   region: string;
   bucket: string;
@@ -36,16 +36,16 @@ export interface S3ServerSideStorageConfig {
 }
 
 @injectable()
-export class S3ServerSideStorage extends ServerSideStorage {
+export class S3ServerStorage extends ServerStorage {
   private readonly _s3Client: S3ClientWrapper;
   private readonly _presignedUrlProvider: PresignedUrlProvider;
   private readonly _transferConfigProvider: TransferConfigProvider;
 
   public constructor(
     s3Client: S3ClientWrapper,
-    @inject(Types.ServerSide.presignedUrlProvider)
+    @inject(Types.Server.presignedUrlProvider)
     presignedUrlProvider: PresignedUrlProvider,
-    @inject(Types.ServerSide.transferConfigProvider)
+    @inject(Types.Server.transferConfigProvider)
     transferConfigProvider: TransferConfigProvider
   ) {
     super();

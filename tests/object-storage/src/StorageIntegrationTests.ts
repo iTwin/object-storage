@@ -9,49 +9,49 @@ import { Container } from "inversify";
 import * as Mocha from "mocha";
 
 import {
-  Extendable,
-  ExtensionsConfig,
-  Types as ExtensionTypes,
+  Bindable,
+  DependenciesConfig,
+  Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
 import {
-  ClientSideStorage,
-  ClientSideStorageExtension,
-  ServerSideStorage,
-  ServerSideStorageExtension,
+  ClientStorage,
+  ClientStorageDependency,
+  ServerStorage,
+  ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
 
-export class StorageIntegrationTests extends Extendable {
+export class StorageIntegrationTests extends Bindable {
   public readonly container = new Container();
 
   constructor(
-    config: ExtensionsConfig,
-    serverSideExtension: new () => ServerSideStorageExtension,
-    clientSideExtension: new () => ClientSideStorageExtension
+    config: DependenciesConfig,
+    serverStorageDependency: new () => ServerStorageDependency,
+    clientStorageDependency: new () => ClientStorageDependency
   ) {
     super();
 
-    this.requireExtension(ServerSideStorageExtension.extensionType);
-    this.requireExtension(ClientSideStorageExtension.extensionType);
+    this.requireDependency(ServerStorageDependency.dependencyType);
+    this.requireDependency(ClientStorageDependency.dependencyType);
 
-    this.useExtension(serverSideExtension);
-    this.useExtension(clientSideExtension);
+    this.useBindings(serverStorageDependency);
+    this.useBindings(clientStorageDependency);
 
     this.container
-      .bind<ExtensionsConfig>(ExtensionTypes.extensionsConfig)
+      .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
       .toConstantValue(config);
   }
 
   public async start(): Promise<void> {
-    this.bindExtensions(this.container);
+    this.bindDependencies(this.container);
 
-    const serverSideStorage = this.container.get(ServerSideStorage);
-    const clientSideStorage = this.container.get(ClientSideStorage);
+    const serverStorage = this.container.get(ServerStorage);
+    const clientStorage = this.container.get(ClientStorage);
 
     setOptions({
-      serverSideStorage,
-      clientSideStorage,
+      serverStorage,
+      clientStorage,
     });
 
     const mochaOptions: Mocha.MochaOptions = {
@@ -73,7 +73,7 @@ export class StorageIntegrationTests extends Extendable {
     return new Promise<void>((resolve) =>
       mocha.run((failures: number) => {
         process.exitCode = failures ? 1 : 0;
-        serverSideStorage.releaseResources();
+        serverStorage.releaseResources();
         resolve();
       })
     );

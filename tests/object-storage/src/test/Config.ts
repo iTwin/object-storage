@@ -2,14 +2,11 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  ClientSideStorage,
-  ServerSideStorage,
-} from "@itwin/object-storage-core";
+import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
 
 interface StorageIntegrationTestsConfig {
-  serverSideStorage: ServerSideStorage;
-  clientSideStorage: ClientSideStorage;
+  serverStorage: ServerStorage;
+  clientStorage: ClientStorage;
 }
 
 export let config: StorageIntegrationTestsConfig;
