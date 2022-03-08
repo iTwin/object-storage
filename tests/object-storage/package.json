@@ -41,7 +41,6 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@bentley/build-tools": "~2.19.9",
     "@bentley/oidc-signin-tool": "~2.19.9",
     "@bentley/telemetry-client": "~2.19.9",
     "@itwin/object-storage-common-config": "workspace:*",

@@ -24,7 +24,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test": "node ./node_modules/@bentley/build-tools/scripts/test.js",
+    "test": "mocha lib/**/*.test.js",
     "test:integration": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
@@ -36,7 +36,6 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@bentley/build-tools": "~2.19.9",
     "@itwin/object-storage-common-config": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^8.2.2",
