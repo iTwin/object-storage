@@ -8,7 +8,7 @@ import { Container } from "inversify";
 import * as Mocha from "mocha";
 
 import {
-  Dependable,
+  Bindable,
   DependenciesConfig,
   Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
@@ -21,7 +21,7 @@ import {
 
 import { setOptions } from "./test/Config";
 
-export class StorageIntegrationTests extends Dependable {
+export class StorageIntegrationTests extends Bindable {
   public readonly container = new Container();
 
   constructor(
@@ -34,8 +34,8 @@ export class StorageIntegrationTests extends Dependable {
     this.requireDependency(ServerStorageDependency.dependencyType);
     this.requireDependency(ClientStorageDependency.dependencyType);
 
-    this.useDependency(serverStorageDependency);
-    this.useDependency(clientStorageDependency);
+    this.useBindings(serverStorageDependency);
+    this.useBindings(clientStorageDependency);
 
     this.container
       .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
@@ -43,7 +43,7 @@ export class StorageIntegrationTests extends Dependable {
   }
 
   public async start(): Promise<void> {
-    this.registerDependencies(this.container);
+    this.bindDependencies(this.container);
 
     const serverStorage = this.container.get(ServerStorage);
     const clientStorage = this.container.get(ClientStorage);

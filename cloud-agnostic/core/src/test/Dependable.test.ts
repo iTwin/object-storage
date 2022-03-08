@@ -4,7 +4,7 @@
 import { expect } from "chai";
 import { Container } from "inversify";
 
-import { Dependable, DependenciesConfig, DependencyError } from "..";
+import { Bindable, DependenciesConfig, DependencyError } from "..";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
 import { ConcreteTestDependencyBindings } from "./TestDependency";
@@ -23,7 +23,7 @@ const dependenciesConfig: DependenciesConfig = {
   testType: testConfig,
 };
 
-describe(`${Dependable.name}`, () => {
+describe(`${Bindable.name}`, () => {
   it(`should resolve registered dependency`, () => {
     const setup = new TestSetup(new Container(), dependenciesConfig);
 
@@ -38,7 +38,7 @@ describe(`${Dependable.name}`, () => {
     const setup = new TestSetupNoFactory(new Container(), dependenciesConfig);
 
     const testedFunction = () =>
-      setup.useDependency(ConcreteTestDependencyBindings);
+      setup.useBindings(ConcreteTestDependencyBindings);
     expect(testedFunction)
       .to.throw(DependencyError)
       .with.property(

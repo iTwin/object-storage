@@ -9,7 +9,7 @@ import { DependencyFactory } from "./DependencyFactory";
 import { DependencyError } from "./Errors";
 import { Types } from "./Types";
 
-export abstract class Dependable {
+export abstract class Bindable {
   private _dependencyFactories = new Map<string, DependencyFactory>();
 
   protected requireDependency(dependencyType: string): void {
@@ -17,21 +17,23 @@ export abstract class Dependable {
     this._dependencyFactories.set(factory.dependencyType, factory);
   }
 
-  public useDependency(dependencyConstructor: new () => Dependency): void {
-    const dependency = new dependencyConstructor();
-    const factory = this._dependencyFactories.get(dependency.dependencyType);
+  public useBindings(bindings: new () => Dependency): void {
+    const dependencyBindings = new bindings();
+    const factory = this._dependencyFactories.get(
+      dependencyBindings.dependencyType
+    );
 
     if (!factory)
       throw new DependencyError(
-        `factory is not registered, use "${Dependable.prototype.requireDependency.name}" method`,
-        dependency.dependencyType
+        `factory is not registered, use "${Bindable.prototype.requireDependency.name}" method`,
+        dependencyBindings.dependencyType
       );
 
-    factory.addDependency(dependency);
+    factory.addDependency(dependencyBindings);
   }
 
   // should be protected but is set public for tests
-  public registerDependencies(container: Container): void {
+  public bindDependencies(container: Container): void {
     const config = container.get<DependenciesConfig>(Types.dependenciesConfig);
 
     this._dependencyFactories.forEach((factory) => {

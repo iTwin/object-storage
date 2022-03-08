@@ -3,11 +3,11 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Dependable, DependenciesConfig, Types } from "..";
+import { Bindable, DependenciesConfig, Types } from "..";
 
 import { DefaultTestDependencies, TestDependency } from "./TestDependency";
 
-export class TestSetup extends Dependable {
+export class TestSetup extends Bindable {
   constructor(public container: Container, config: DependenciesConfig) {
     super();
 
@@ -20,11 +20,11 @@ export class TestSetup extends Dependable {
   }
 
   public start(): void {
-    this.registerDependencies(this.container);
+    this.bindDependencies(this.container);
   }
 }
 
-export class TestSetupNoFactory extends Dependable {
+export class TestSetupNoFactory extends Bindable {
   constructor(public container: Container, config: DependenciesConfig) {
     super();
 
@@ -34,11 +34,11 @@ export class TestSetupNoFactory extends Dependable {
   }
 
   public start(): void {
-    this.registerDependencies(this.container);
+    this.bindDependencies(this.container);
   }
 }
 
-export class TestSetupNoDefaultDependencies extends Dependable {
+export class TestSetupNoDefaultDependencies extends Bindable {
   constructor(public container: Container, config: DependenciesConfig) {
     super();
 
@@ -50,6 +50,6 @@ export class TestSetupNoDefaultDependencies extends Dependable {
   }
 
   public start(): void {
-    this.registerDependencies(this.container);
+    this.bindDependencies(this.container);
   }
 }

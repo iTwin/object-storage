@@ -3,13 +3,13 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Dependable, Dependency } from "..";
+import { Bindable, Dependency } from "..";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
 
 export class DefaultTestDependencies {
-  public static apply(dependable: Dependable): void {
-    dependable.useDependency(ConcreteTestDependencyBindings);
+  public static apply(dependable: Bindable): void {
+    dependable.useBindings(ConcreteTestDependencyBindings);
   }
 }
 
