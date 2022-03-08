@@ -4,4 +4,4 @@ Copyright © Bentley Systems, Incorporated. All rights reserved. See [LICENSE.md
 
 ## About this package
 
-This is a core package that allows to load different components into an application using `inversify` framework based on the configuration.
+This is a core package that allows to load dependencies into an application based on the configuration using [`inversify`](https://www.npmjs.com/package/inversify) framework. It allows the user to define what dependencies are required and register specific implementations.
