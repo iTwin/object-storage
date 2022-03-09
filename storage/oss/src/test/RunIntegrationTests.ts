@@ -3,17 +3,17 @@
  *----------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { S3ClientSideStorageExtension } from "@itwin/object-storage-s3";
+import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { OssServerSideStorageExtension } from "../OssServerSideStorageExtension";
+import { OssServerStorageBindings } from "../OssServerStorageBindings";
 
 const bucket = process.env.TEST_OSS_BUCKET;
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerSideStorage: {
-    extensionName: "oss",
+  ServerStorage: {
+    dependencyName: "oss",
     bucket,
     accessKey: process.env.TEST_OSS_ACCESS_KEY,
     secretKey: process.env.TEST_OSS_SECRET_KEY,
@@ -23,16 +23,16 @@ const config = {
     stsBaseUrl: process.env.TEST_OSS_STS_BASE_URL,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ClientSideStorage: {
-    extensionName: "s3",
+  ClientStorage: {
+    dependencyName: "s3",
     bucket,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  OssServerSideStorageExtension,
-  S3ClientSideStorageExtension
+  OssServerStorageBindings,
+  S3ClientStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

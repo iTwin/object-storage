@@ -3,53 +3,53 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Extendable, ExtensionsConfig, Types } from "..";
+import { Bindable, DependenciesConfig, Types } from "..";
 
-import { DefaultTestExtensions, TestExtension } from "./TestExtension";
+import { DefaultTestDependencies, TestDependency } from "./TestDependency";
 
-export class TestSetup extends Extendable {
-  constructor(public container: Container, config: ExtensionsConfig) {
+export class TestSetup extends Bindable {
+  constructor(public container: Container, config: DependenciesConfig) {
     super();
 
-    this.requireExtension(TestExtension.extensionType);
-    DefaultTestExtensions.apply(this);
+    this.requireDependency(TestDependency.dependencyType);
+    DefaultTestDependencies.apply(this);
 
     container
-      .bind<ExtensionsConfig>(Types.extensionsConfig)
+      .bind<DependenciesConfig>(Types.dependenciesConfig)
       .toDynamicValue(() => config);
   }
 
   public start(): void {
-    this.bindExtensions(this.container);
+    this.bindDependencies(this.container);
   }
 }
 
-export class TestSetupNoFactory extends Extendable {
-  constructor(public container: Container, config: ExtensionsConfig) {
+export class TestSetupNoFactory extends Bindable {
+  constructor(public container: Container, config: DependenciesConfig) {
     super();
 
     container
-      .bind<ExtensionsConfig>(Types.extensionsConfig)
+      .bind<DependenciesConfig>(Types.dependenciesConfig)
       .toDynamicValue(() => config);
   }
 
   public start(): void {
-    this.bindExtensions(this.container);
+    this.bindDependencies(this.container);
   }
 }
 
-export class TestSetupNoDefaultExtensions extends Extendable {
-  constructor(public container: Container, config: ExtensionsConfig) {
+export class TestSetupNoDefaultDependencies extends Bindable {
+  constructor(public container: Container, config: DependenciesConfig) {
     super();
 
-    this.requireExtension(TestExtension.extensionType);
+    this.requireDependency(TestDependency.dependencyType);
 
     container
-      .bind<ExtensionsConfig>(Types.extensionsConfig)
+      .bind<DependenciesConfig>(Types.dependenciesConfig)
       .toDynamicValue(() => config);
   }
 
   public start(): void {
-    this.bindExtensions(this.container);
+    this.bindDependencies(this.container);
   }
 }

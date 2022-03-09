@@ -13,22 +13,19 @@ import {
 
 import { config } from "./Config";
 
-const { serverSideStorage } = config;
+const { serverStorage } = config;
 
 export async function checkUploadedFileValidity(
   reference: ObjectReference,
   contentBuffer: Buffer,
   metadata: Metadata
 ): Promise<void> {
-  expect(await serverSideStorage.exists(reference)).to.be.true;
+  expect(await serverStorage.exists(reference)).to.be.true;
 
-  const downloadedBuffer = await serverSideStorage.download(
-    reference,
-    "buffer"
-  );
+  const downloadedBuffer = await serverStorage.download(reference, "buffer");
   expect(downloadedBuffer.equals(contentBuffer)).to.be.true;
 
-  const { metadata: _metadata } = await serverSideStorage.getObjectProperties(
+  const { metadata: _metadata } = await serverStorage.getObjectProperties(
     reference
   );
   expect(_metadata).to.eql(metadata);
@@ -44,14 +41,14 @@ export class TestDirectoryManager {
     };
     this._createdDirectories.push(newDirectory);
 
-    await serverSideStorage.create(newDirectory);
+    await serverStorage.create(newDirectory);
 
     return newDirectory;
   }
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverSideStorage.delete(directoryToDelete);
+      await serverStorage.delete(directoryToDelete);
     this._createdDirectories = [];
   }
 }

@@ -3,10 +3,13 @@
  *----------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ExtensionConfig } from "./ExtensionConfig";
+import { DependencyConfig } from "./DependencyConfig";
 
-export abstract class Extension {
-  public abstract extensionName: string;
-  public abstract extensionType: string;
-  public abstract bind(container: Container, config: ExtensionConfig): void;
+export abstract class Dependency {
+  public abstract dependencyName: string;
+  public abstract dependencyType: string;
+  public abstract register(
+    container: Container,
+    config: DependencyConfig
+  ): void;
 }

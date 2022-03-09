@@ -1,10 +1,10 @@
 /*-----------------------------------------------------------------------------
 |  $Copyright: (c) 2022 Bentley Systems, Incorporated. All rights reserved. $
  *----------------------------------------------------------------------------*/
-export * from "./AzureClientSideBlobStorage";
-export * from "./AzureClientSideBlobStorageExtension";
-export * from "./AzureServerSideBlobStorage";
-export * from "./AzureServerSideBlobStorageExtension";
+export * from "./AzureClientStorage";
+export * from "./AzureClientStorageBindings";
+export * from "./AzureServerStorage";
+export * from "./AzureServerStorageBindings";
 export * from "./BlobServiceClientWrapper";
 export * from "./BlockBlobClientWrapper";
 export * from "./Helpers";

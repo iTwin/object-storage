@@ -9,10 +9,10 @@ import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
 import {
-  ClientSideStorage,
+  ClientStorage,
   ObjectDirectory,
   ObjectReference,
-  ServerSideStorage,
+  ServerStorage,
   streamToBuffer,
   TransferConfig,
   TransferData,
@@ -24,7 +24,7 @@ import { checkUploadedFileValidity, TestDirectoryManager } from "./Helpers";
 
 use(chaiAsPromised);
 
-const { clientSideStorage, serverSideStorage } = config;
+const { clientStorage, serverStorage } = config;
 
 const testDownloadFolder = "test-download";
 
@@ -65,7 +65,7 @@ const downloadTestCases: {
 
 const testDirectoryManager = new TestDirectoryManager();
 
-describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () => {
+describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   let testDirectory: ObjectDirectory;
 
   const testUploadBufferFile = "test-upload-buffer.txt";
@@ -88,29 +88,28 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
   after(async () => testDirectoryManager.purgeCreatedDirectories());
 
-  describe(`${serverSideStorage.create.name}()`, () => {
+  describe(`${serverStorage.create.name}()`, () => {
     it("should create directory", async () => {
       const directoryToCreate = {
         baseDirectory: "test-create-directory",
       };
       try {
-        const createDirectoryPromise =
-          serverSideStorage.create(directoryToCreate);
+        const createDirectoryPromise = serverStorage.create(directoryToCreate);
         await expect(createDirectoryPromise).to.eventually.be.fulfilled;
 
-        const doesDirectoryExist = await serverSideStorage.exists(
+        const doesDirectoryExist = await serverStorage.exists(
           directoryToCreate
         );
         expect(doesDirectoryExist).to.be.equal(true);
       } finally {
-        await serverSideStorage.delete(directoryToCreate);
+        await serverStorage.delete(directoryToCreate);
       }
     });
   });
 
-  describe(`${serverSideStorage.upload.name}()`, () => {
-    const contentBuffer = Buffer.from("server-side-upload-content");
-    const fileToUploadPath = "server-side-test.txt";
+  describe(`${serverStorage.upload.name}()`, () => {
+    const contentBuffer = Buffer.from("server-upload-content");
+    const fileToUploadPath = "server-test.txt";
 
     const uploadTestCases = [
       {
@@ -145,7 +144,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         const metadata = {
           test: "test-metadata",
         };
-        const uploadPromise = serverSideStorage.upload(
+        const uploadPromise = serverStorage.upload(
           reference,
           dataCallback(),
           metadata
@@ -161,9 +160,9 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.uploadInMultipleParts.name}()`, () => {
-    const contentBuffer = Buffer.from("server-side-multipart-upload-content");
-    const fileToUploadPath = "server-side-multipart-test.txt";
+  describe(`${serverStorage.uploadInMultipleParts.name}()`, () => {
+    const contentBuffer = Buffer.from("server-multipart-upload-content");
+    const fileToUploadPath = "server-multipart-test.txt";
 
     const uploadTestCases = [
       {
@@ -193,7 +192,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         const metadata = {
           test: "test-metadata",
         };
-        const uploadPromise = serverSideStorage.uploadInMultipleParts(
+        const uploadPromise = serverStorage.uploadInMultipleParts(
           reference,
           dataCallback(),
           {
@@ -211,9 +210,9 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.list.name}()`, () => {
+  describe(`${serverStorage.list.name}()`, () => {
     it("should list objects from upload tests", async () => {
-      const references = await serverSideStorage.list(testDirectory);
+      const references = await serverStorage.list(testDirectory);
 
       remoteFiles.forEach((name) =>
         expect(references.find((ref) => ref.objectName === name))
@@ -221,12 +220,12 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.delete.name}()`, () => {
+  describe(`${serverStorage.delete.name}()`, () => {
     it("should delete objects from upload tests", async () => {
       const deletePromises = remoteFiles.map(
         (file) =>
           expect(
-            serverSideStorage.delete({
+            serverStorage.delete({
               ...testDirectory,
               objectName: file,
             })
@@ -237,22 +236,22 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.exists.name}()`, () => {
+  describe(`${serverStorage.exists.name}()`, () => {
     it("should return true if file exists", async () => {
       const reference = {
         ...testDirectory,
         objectName: "exists.txt",
       };
-      await serverSideStorage.upload(reference, Buffer.from("test-exists"));
+      await serverStorage.upload(reference, Buffer.from("test-exists"));
 
-      const exists = await serverSideStorage.exists(reference);
+      const exists = await serverStorage.exists(reference);
       expect(exists).to.be.true;
 
-      await serverSideStorage.delete(reference);
+      await serverStorage.delete(reference);
     });
 
     it("should return false if file does not exist", async () => {
-      const exists = await serverSideStorage.exists({
+      const exists = await serverStorage.exists({
         ...testDirectory,
         objectName: randomUUID(),
       });
@@ -261,7 +260,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
   });
 
-  describe(`${serverSideStorage.download.name}()`, () => {
+  describe(`${serverStorage.download.name}()`, () => {
     const contentBuffer = Buffer.from("test-download");
     let reference: ObjectReference;
 
@@ -270,13 +269,13 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         ...testDirectory,
         objectName: "file-to-download.txt",
       };
-      await serverSideStorage.upload(reference, contentBuffer);
+      await serverStorage.upload(reference, contentBuffer);
     });
 
     for (const testCase of downloadTestCases) {
       const { caseName, transferType, defineLocalPath, assertion } = testCase;
       it(`should download a file to ${caseName}`, async () => {
-        const response = await serverSideStorage.download(
+        const response = await serverStorage.download(
           reference,
           transferType,
           defineLocalPath ? `${testDownloadFolder}/download.txt` : undefined
@@ -287,13 +286,13 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
 
     after(async () => {
       await Promise.all([
-        serverSideStorage.delete(reference),
+        serverStorage.delete(reference),
         promises.rmdir(testDownloadFolder, { recursive: true }),
       ]);
     });
   });
 
-  describe(`${serverSideStorage.getObjectProperties.name}()`, () => {
+  describe(`${serverStorage.getObjectProperties.name}()`, () => {
     let reference: ObjectReference;
     const data = Buffer.from("test-properties");
 
@@ -302,7 +301,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         ...testDirectory,
         objectName: "test-object-properties.txt",
       };
-      await serverSideStorage.upload(reference, data, {
+      await serverStorage.upload(reference, data, {
         test: "test-metadata",
       });
     });
@@ -313,7 +312,7 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         reference: _reference,
         size,
         metadata,
-      } = await serverSideStorage.getObjectProperties(reference);
+      } = await serverStorage.getObjectProperties(reference);
 
       expect(Date.now() - lastModified.getTime() < 60 * 1000).to.be.true; // not older than 1 minute
       expect(_reference).to.eql(reference);
@@ -322,11 +321,11 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
     });
 
     after(async () => {
-      await serverSideStorage.delete(reference);
+      await serverStorage.delete(reference);
     });
   });
 
-  describe(`${serverSideStorage.updateMetadata.name}()`, () => {
+  describe(`${serverStorage.updateMetadata.name}()`, () => {
     let reference: ObjectReference;
 
     before(async () => {
@@ -334,59 +333,54 @@ describe(`${ServerSideStorage.name}: ${serverSideStorage.constructor.name}`, () 
         ...testDirectory,
         objectName: "update-metadata-test.txt",
       };
-      await serverSideStorage.upload(reference, Buffer.from("test-metadata"), {
+      await serverStorage.upload(reference, Buffer.from("test-metadata"), {
         test: "test-metadata",
       });
     });
 
     it("should update metadata", async () => {
-      const { metadata } = await serverSideStorage.getObjectProperties(
-        reference
-      );
+      const { metadata } = await serverStorage.getObjectProperties(reference);
       expect(metadata?.test).to.be.equal("test-metadata");
 
-      const updateMetadataPromise = serverSideStorage.updateMetadata(
-        reference,
-        {
-          test: "test-metadata-updated",
-        }
-      );
+      const updateMetadataPromise = serverStorage.updateMetadata(reference, {
+        test: "test-metadata-updated",
+      });
       await expect(updateMetadataPromise).to.eventually.be.fulfilled;
 
       const { metadata: metadataUpdated } =
-        await serverSideStorage.getObjectProperties(reference);
+        await serverStorage.getObjectProperties(reference);
       expect(metadataUpdated?.test).to.be.equal("test-metadata-updated");
     });
 
     after(async () => {
-      await serverSideStorage.delete(reference);
+      await serverStorage.delete(reference);
     });
   });
 
-  describe(`${serverSideStorage.delete.name}`, () => {
+  describe(`${serverStorage.delete.name}`, () => {
     it("should delete directory", async () => {
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
 
       await Promise.all(
         tempFiles.map(async (file) =>
-          serverSideStorage.upload(
+          serverStorage.upload(
             { ...testDirectory, objectName: file },
             Buffer.from(file)
           )
         )
       );
 
-      const deleteDirectoryPromise = serverSideStorage.delete(testDirectory);
+      const deleteDirectoryPromise = serverStorage.delete(testDirectory);
 
       await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
-      const doesDirectoryExist = await serverSideStorage.exists(testDirectory);
+      const doesDirectoryExist = await serverStorage.exists(testDirectory);
       expect(doesDirectoryExist).to.be.equal(false);
     });
   });
 });
 
-describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () => {
+describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   let testDirectory: ObjectDirectory;
 
   before(async () => {
@@ -396,9 +390,9 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
   after(async () => testDirectoryManager.purgeCreatedDirectories());
 
   describe("PresignedUrlProvider", () => {
-    describe(`${clientSideStorage.upload.name}() & ${serverSideStorage.getUploadUrl.name}()`, () => {
+    describe(`${clientStorage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
       const contentBuffer = Buffer.from("test-url-upload-content");
-      const fileToUploadPath = "client-side-url-test.txt";
+      const fileToUploadPath = "client-url-test.txt";
 
       const testUploadUrlLocalFile = "test-upload-url-local.txt";
       const testUploadUrlBufferFile = "test-upload-url-buffer.txt";
@@ -434,12 +428,12 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
             objectName,
           };
 
-          const uploadUrl = await serverSideStorage.getUploadUrl(reference);
+          const uploadUrl = await serverStorage.getUploadUrl(reference);
 
           const metadata = {
             test: "test-metadata",
           };
-          const uploadPromise = clientSideStorage.upload({
+          const uploadPromise = clientStorage.upload({
             url: uploadUrl,
             data: dataCallback(),
             metadata,
@@ -456,7 +450,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testUploadUrlBufferFile,
           testUploadUrlStreamFile,
         ].map(async (file) =>
-          serverSideStorage.delete({
+          serverStorage.delete({
             ...testDirectory,
             objectName: file,
           })
@@ -469,7 +463,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       });
     });
 
-    describe(`${serverSideStorage.download.name}() & ${serverSideStorage.getDownloadUrl.name}()`, () => {
+    describe(`${serverStorage.download.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
       let reference: ObjectReference;
       const contentBuffer = Buffer.from("test-download-url");
 
@@ -478,15 +472,15 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           ...testDirectory,
           objectName: "file-to-download-from-url.txt",
         };
-        await serverSideStorage.upload(reference, contentBuffer);
+        await serverStorage.upload(reference, contentBuffer);
       });
 
       for (const testCase of downloadTestCases) {
         const { caseName, transferType, defineLocalPath, assertion } = testCase;
         it(`should download a file to ${caseName} from URL`, async () => {
-          const downloadUrl = await serverSideStorage.getDownloadUrl(reference);
+          const downloadUrl = await serverStorage.getDownloadUrl(reference);
 
-          const response = await clientSideStorage.download({
+          const response = await clientStorage.download({
             url: downloadUrl,
             transferType,
             localPath: defineLocalPath
@@ -500,7 +494,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       after(async () => {
         await Promise.all([
-          serverSideStorage.delete(reference),
+          serverStorage.delete(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });
@@ -508,9 +502,9 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
   });
 
   describe("TransferConfigProvider", () => {
-    describe(`${clientSideStorage.upload.name}() & ${serverSideStorage.getUploadConfig.name}()`, () => {
+    describe(`${clientStorage.upload.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
       const contentBuffer = Buffer.from("test-config-upload-content");
-      const fileToUploadPath = "client-side-config-test.txt";
+      const fileToUploadPath = "client-config-test.txt";
 
       const testUploadConfigLocalFile = "test-upload-config-local.txt";
       const testUploadConfigBufferFile = "test-upload-config-buffer.txt";
@@ -538,7 +532,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       before(async () => {
         await promises.writeFile(fileToUploadPath, contentBuffer);
-        uploadConfig = await serverSideStorage.getUploadConfig({
+        uploadConfig = await serverStorage.getUploadConfig({
           ...testDirectory,
         });
       });
@@ -554,7 +548,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           const metadata = {
             test: "test-metadata",
           };
-          const uploadPromise = clientSideStorage.upload({
+          const uploadPromise = clientStorage.upload({
             data: dataCallback(),
             reference,
             transferConfig: uploadConfig,
@@ -572,7 +566,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testUploadConfigBufferFile,
           testUploadConfigStreamFile,
         ].map(async (file) =>
-          serverSideStorage.delete({
+          serverStorage.delete({
             ...testDirectory,
             objectName: file,
           })
@@ -585,9 +579,9 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       });
     });
 
-    describe(`${clientSideStorage.uploadInMultipleParts.name}() & ${serverSideStorage.getUploadConfig.name}()`, () => {
+    describe(`${clientStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
       const contentBuffer = Buffer.from("test-config-multipart-upload-content");
-      const fileToUploadPath = "client-side-config-test-multipart.txt";
+      const fileToUploadPath = "client-config-test-multipart.txt";
 
       const testMultipartUploadConfigLocalFile =
         "test-multipart-upload-config-local.txt";
@@ -611,7 +605,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       before(async () => {
         await promises.writeFile(fileToUploadPath, contentBuffer);
-        uploadConfig = await serverSideStorage.getUploadConfig({
+        uploadConfig = await serverStorage.getUploadConfig({
           ...testDirectory,
         });
       });
@@ -627,13 +621,12 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           const metadata = {
             test: "test-metadata",
           };
-          const multipartUploadPromise =
-            clientSideStorage.uploadInMultipleParts({
-              data: dataCallback(),
-              reference,
-              transferConfig: uploadConfig,
-              options: { metadata },
-            });
+          const multipartUploadPromise = clientStorage.uploadInMultipleParts({
+            data: dataCallback(),
+            reference,
+            transferConfig: uploadConfig,
+            options: { metadata },
+          });
           await expect(multipartUploadPromise).to.eventually.be.fulfilled;
 
           await checkUploadedFileValidity(reference, contentBuffer, metadata);
@@ -645,7 +638,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           testMultipartUploadConfigLocalFile,
           testMultipartUploadConfigStreamFile,
         ].map(async (file) =>
-          serverSideStorage.delete({
+          serverStorage.delete({
             ...testDirectory,
             objectName: file,
           })
@@ -658,7 +651,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       });
     });
 
-    describe(`${clientSideStorage.download.name}() & ${serverSideStorage.getDownloadConfig.name}()`, () => {
+    describe(`${clientStorage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
       let reference: ObjectReference;
       let downloadConfig: TransferConfig;
       const contentBuffer = Buffer.from("test-download-config");
@@ -668,8 +661,8 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
           ...testDirectory,
           objectName: "file-to-download-with-config.txt",
         };
-        await serverSideStorage.upload(reference, contentBuffer);
-        downloadConfig = await serverSideStorage.getDownloadConfig({
+        await serverStorage.upload(reference, contentBuffer);
+        downloadConfig = await serverStorage.getDownloadConfig({
           ...testDirectory,
         });
       });
@@ -677,7 +670,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
       for (const testCase of downloadTestCases) {
         const { caseName, transferType, defineLocalPath, assertion } = testCase;
         it(`should download a file to ${caseName} using transfer config`, async () => {
-          const response = await clientSideStorage.download({
+          const response = await clientStorage.download({
             reference,
             transferConfig: downloadConfig,
             transferType,
@@ -692,7 +685,7 @@ describe(`${ClientSideStorage.name}: ${clientSideStorage.constructor.name}`, () 
 
       after(async () => {
         await Promise.all([
-          serverSideStorage.delete(reference),
+          serverStorage.delete(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });

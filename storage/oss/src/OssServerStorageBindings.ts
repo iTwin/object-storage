@@ -6,25 +6,25 @@ import { Container } from "inversify";
 
 import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
 import {
-  S3ServerSideStorageExtension,
-  S3ServerSideStorageExtensionConfig,
+  S3ServerStorageBindings,
+  S3ServerStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
 import { createCore } from "./Helpers";
 
 import { OssTransferConfigProvider } from ".";
 
-export class OssServerSideStorageExtension extends S3ServerSideStorageExtension {
-  public override readonly extensionName: string = "oss";
+export class OssServerStorageBindings extends S3ServerStorageBindings {
+  public override readonly dependencyName: string = "oss";
 
-  public override bind(
+  public override register(
     container: Container,
-    config: S3ServerSideStorageExtensionConfig
+    config: S3ServerStorageBindingsConfig
   ): void {
-    super.bind(container, config);
+    super.register(container, config);
 
     container
-      .rebind<TransferConfigProvider>(Types.ServerSide.transferConfigProvider)
+      .rebind<TransferConfigProvider>(Types.Server.transferConfigProvider)
       .to(OssTransferConfigProvider);
     container.bind(Core).toConstantValue(createCore(config));
   }
