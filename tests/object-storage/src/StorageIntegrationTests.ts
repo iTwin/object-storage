@@ -55,7 +55,6 @@ export class StorageIntegrationTests extends Extendable {
 
     const mochaOptions: Mocha.MochaOptions = {
       timeout: 999999,
-      reporter: "@bentley/build-tools/mocha-reporter",
       color: true,
       reporterOptions: {
         mochaFile: "lib/test/junit_results.xml",
