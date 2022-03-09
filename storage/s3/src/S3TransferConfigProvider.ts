@@ -1,6 +1,7 @@
-/*-----------------------------------------------------------------------------
-|  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
- *----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { randomUUID } from "crypto";
 
 import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";

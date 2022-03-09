@@ -1,6 +1,7 @@
-/*-----------------------------------------------------------------------------
-|  $Copyright: (c) 2021 Bentley Systems, Incorporated. All rights reserved. $
- *----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import * as Core from "@alicloud/pop-core";
 import { Container } from "inversify";
 
