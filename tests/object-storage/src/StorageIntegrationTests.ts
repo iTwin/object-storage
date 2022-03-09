@@ -56,7 +56,6 @@ export class StorageIntegrationTests extends Bindable {
 
     const mochaOptions: Mocha.MochaOptions = {
       timeout: 999999,
-      reporter: "@bentley/build-tools/mocha-reporter",
       color: true,
       reporterOptions: {
         mochaFile: "lib/test/junit_results.xml",
