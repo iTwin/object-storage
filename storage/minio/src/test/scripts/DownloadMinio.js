@@ -22,6 +22,9 @@ async function downloadMinioExecutable() {
   const { executableDownloadLink, targetFileDirectory, targetFilePath } =
     constants.resolveFileProperties();
 
+  if (fs.existsSync(targetFilePath))
+    return;
+
   if (!fs.existsSync(targetFileDirectory))
     fs.mkdirSync(targetFileDirectory, { recursive: true });
 
