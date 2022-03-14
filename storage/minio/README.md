@@ -10,5 +10,5 @@ This package contains implementations for object storage interfaces exposed by `
 
 Integration test scripts for this package setup the local environment before running the actual tests.
 Users can launch integration tests using the following scripts:
-- `npm run test:integration` will download the MinIO executable based on local operating system, then start the MinIO server and tests.
-- `test:integration:startMinioRunTests` will only start the MinIO server and tests (without the executable download). This is the script that is used by "MinIO Integration tests" `.vscode` configuration to reduce debugging session startup time so make sure that the executable is downloaded before launching the session. MinIO executable can be downloaded using the `npm run test:integration:downloadMinio` script.
+- `npm run test:integration` will download the MinIO executable based on local operating system, then start the MinIO server and tests. This script is used by "MinIO Integration tests (Environment setup and tests)" VS Code launch configuration.
+- `npm run test:integration:runTests` will only start the tests (without the executable download and MinIO server startup). This script is used by "MinIO Integration tests (Tests only)" VS Code launch configuration to reduce debugging session startup time so make sure that the MinIO server is running locally before launching the session.

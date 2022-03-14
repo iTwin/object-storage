@@ -23,9 +23,9 @@
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test": "",
-    "test:integration": "npm run test:integration:downloadMinio && npm run test:integration:startMinioRunTests",
-    "test:integration:startMinioRunTests": "npm-run-all -p -r test:integration:startMinio test:integration:runTests",
-    "test:integration:runTests": "wait-on tcp:9000 -t 30000 && node lib/test/RunIntegrationTests.js",
+    "test:integration": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:waitForMinioRunTests",
+    "test:integration:runTests": "node lib/test/RunIntegrationTests.js",
+    "test:integration:waitForMinioRunTests": "wait-on tcp:9000 -t 30000 && npm run test:integration:runTests",
     "test:integration:startMinio": "node src/test/scripts/StartMinio.js",
     "test:integration:downloadMinio": "node src/test/scripts/DownloadMinio.js"
   },
