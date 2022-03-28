@@ -17,3 +17,14 @@ This repository contains packages that expose a unified cloud-agnostic object st
 This repository also contains packages that are relevant only for development:
 - [`@itwin/object-storage-tests`](./tests/object-storage/README.md) contains integration tests that can be run using different storage implementations.
 - [`@itwin/object-storage-common-config`](./utils/common-config/README.md) is a collection of various configuration files shared across the packages in this monorepo.
+
+## Build Instructions
+
+1. Clone repository (first time) with `git clone` or pull updates to the repository (subsequent times) with `git pull`
+2. Install dependencies: `rush install`
+3. Clean: `rush clean`
+4. Rebuild source: `rush rebuild`
+
+### Running Tests
+- `rush test` command runs unit tests for all packages that have unit tests. The tests should pass with no additional setup.
+- `rush test:integration` command runs integration tests for packages that have them. Please see the `IntegrationTests.md` files for instructions specific to each package.
