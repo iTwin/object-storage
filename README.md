@@ -20,6 +20,8 @@ This repository also contains packages that are relevant only for development:
 
 ## Build Instructions
 
+Local development workflows mostly utilize `rush` commands which run a specific `npm` script for each package. For exact script definitions in each package see the corresponding `package.json` files.
+
 1. Clone repository (first time) with `git clone` or pull updates to the repository (subsequent times) with `git pull`
 2. Install dependencies: `rush install`
 3. Clean: `rush clean`
@@ -28,3 +30,15 @@ This repository also contains packages that are relevant only for development:
 ### Running Tests
 - `rush test` command runs unit tests for all packages that have unit tests. The tests should pass with no additional setup.
 - `rush test:integration` command runs integration tests for packages that have them. Please see the `IntegrationTests.md` files for instructions specific to each package.
+
+## Usage examples
+
+There are two main ways how to consume the storage packages in applications -
+  1. Loading them using the provided dependency injection mechanism. This option utilizes `inversify` framework and allows injecting configured storage classes into other application components.
+
+  [Integration test setup](tests/object-storage/src/StorageIntegrationTests.ts) also demonstrates this workflow
+
+
+  1. Using the provided classes/interfaces directly and managing their creation manually.
+
+

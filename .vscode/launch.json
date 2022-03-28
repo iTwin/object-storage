@@ -126,6 +126,41 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
-    }
+    },
+    {
+      "name": "-- Samples --"
+    },
+    {
+      "name": "Application with DI sample",
+      "cwd": "${workspaceFolder}/samples/lib",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "AppWithDI.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Application without DI sample",
+      "cwd": "${workspaceFolder}/samples/lib",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "AppWithoutDI.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
   ]
 }
