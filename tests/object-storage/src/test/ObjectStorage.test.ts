@@ -35,34 +35,34 @@ const downloadTestCases: {
   assertion: (response: TransferData, contentBuffer: Buffer) => Promise<void>;
   defineLocalPath: boolean;
 }[] = [
-    {
-      caseName: "Buffer",
-      transferType: "buffer",
-      assertion: async (response, contentBuffer) => {
-        expect(response instanceof Buffer).to.be.true;
-        expect(contentBuffer.equals(response as Buffer)).to.be.true;
-      },
-      defineLocalPath: false,
+  {
+    caseName: "Buffer",
+    transferType: "buffer",
+    assertion: async (response, contentBuffer) => {
+      expect(response instanceof Buffer).to.be.true;
+      expect(contentBuffer.equals(response as Buffer)).to.be.true;
     },
-    {
-      caseName: "Stream",
-      transferType: "stream",
-      assertion: async (response, contentBuffer) => {
-        expect(response instanceof Readable).to.be.true;
-        const downloadedBuffer = await streamToBuffer(response as Readable);
-        expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
-      },
-      defineLocalPath: false,
+    defineLocalPath: false,
+  },
+  {
+    caseName: "Stream",
+    transferType: "stream",
+    assertion: async (response, contentBuffer) => {
+      expect(response instanceof Readable).to.be.true;
+      const downloadedBuffer = await streamToBuffer(response as Readable);
+      expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
     },
-    {
-      caseName: "path",
-      transferType: "local",
-      assertion: async (response, contentBuffer) => {
-        expect(contentBuffer.equals(await promises.readFile(response as string)));
-      },
-      defineLocalPath: true,
+    defineLocalPath: false,
+  },
+  {
+    caseName: "path",
+    transferType: "local",
+    assertion: async (response, contentBuffer) => {
+      expect(contentBuffer.equals(await promises.readFile(response as string)));
     },
-  ];
+    defineLocalPath: true,
+  },
+];
 
 const testDirectoryManager = new TestDirectoryManager();
 
