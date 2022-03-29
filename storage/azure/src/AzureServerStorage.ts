@@ -8,6 +8,7 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
+  BaseDirectory,
   buildObjectKey,
   buildObjectReference,
   instanceOfObjectReference,
@@ -96,17 +97,15 @@ export class AzureServerStorage extends ServerStorage {
     ).uploadInMultipleParts(data, options);
   }
 
-  public async create(directory: ObjectDirectory): Promise<void> {
+  public async create(directory: BaseDirectory): Promise<void> {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
-    const { baseDirectory, relativeDirectory } = directory;
-    const containerClient = this._client.getContainerClient(baseDirectory);
-
-    const iter = containerClient.listBlobsFlat({
-      prefix: relativeDirectory,
-    });
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+    const containerClient = this._client.getContainerClient(
+      directory.baseDirectory
+    );
+    const iter = containerClient.listBlobsFlat();
 
     const names = Array<string>();
     for await (const item of iter) names.push(item.name);
@@ -122,7 +121,7 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async delete(
-    reference: ObjectDirectory | ObjectReference
+    reference: BaseDirectory | ObjectReference
   ): Promise<void> {
     try {
       if (instanceOfObjectReference(reference)) {
@@ -139,7 +138,7 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async exists(
-    reference: ObjectDirectory | ObjectReference
+    reference: BaseDirectory | ObjectReference
   ): Promise<boolean> {
     if (instanceOfObjectReference(reference)) {
       return this._client.getBlobClient(reference).exists();

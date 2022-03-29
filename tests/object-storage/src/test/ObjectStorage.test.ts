@@ -4,24 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import { randomUUID } from "crypto";
 import { createReadStream, promises } from "fs";
-import { Readable } from "stream";
 
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
 import {
+  BaseDirectory,
   ClientStorage,
-  ObjectDirectory,
   ObjectReference,
   ServerStorage,
-  streamToBuffer,
   TransferConfig,
-  TransferData,
-  TransferType,
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
-import { checkUploadedFileValidity, TestDirectoryManager } from "./Helpers";
+import { assertBuffer, assertLocalFile, assertStream, checkUploadedFileValidity, TestDirectoryManager } from "./Helpers";
 
 use(chaiAsPromised);
 
@@ -29,45 +25,10 @@ const { clientStorage, serverStorage } = config;
 
 const testDownloadFolder = "test-download";
 
-const downloadTestCases: {
-  caseName: string;
-  transferType: TransferType;
-  assertion: (response: TransferData, contentBuffer: Buffer) => Promise<void>;
-  defineLocalPath: boolean;
-}[] = [
-  {
-    caseName: "Buffer",
-    transferType: "buffer",
-    assertion: async (response, contentBuffer) => {
-      expect(response instanceof Buffer).to.be.true;
-      expect(contentBuffer.equals(response as Buffer)).to.be.true;
-    },
-    defineLocalPath: false,
-  },
-  {
-    caseName: "Stream",
-    transferType: "stream",
-    assertion: async (response, contentBuffer) => {
-      expect(response instanceof Readable).to.be.true;
-      const downloadedBuffer = await streamToBuffer(response as Readable);
-      expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
-    },
-    defineLocalPath: false,
-  },
-  {
-    caseName: "path",
-    transferType: "local",
-    assertion: async (response, contentBuffer) => {
-      expect(contentBuffer.equals(await promises.readFile(response as string)));
-    },
-    defineLocalPath: true,
-  },
-];
-
 const testDirectoryManager = new TestDirectoryManager();
 
 describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
-  let testDirectory: ObjectDirectory;
+  let testDirectory: BaseDirectory;
 
   const testUploadBufferFile = "test-upload-buffer.txt";
   const testUploadStreamFile = "test-upload-stream.txt";
@@ -91,7 +52,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.create.name}()`, () => {
     it("should create directory", async () => {
-      const directoryToCreate = {
+      const directoryToCreate: BaseDirectory = {
         baseDirectory: "test-create-directory",
       };
       try {
@@ -265,16 +226,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await expect(deletePromise).to.eventually.be.fulfilled;
     });
 
-    it("should not throw if relative directory does not exist", async () => {
-      const tempDirectory = await testDirectoryManager.createNewDirectory();
-      const deletePromise = serverStorage.delete({
-        baseDirectory: tempDirectory.baseDirectory,
-        relativeDirectory: randomUUID(),
-      });
-
-      await expect(deletePromise).to.eventually.be.fulfilled;
-    });
-
     it("should not throw if file does not exist", async () => {
       const tempDirectory = await testDirectoryManager.createNewDirectory();
       const deletePromise = serverStorage.delete({
@@ -310,9 +261,27 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.delete(reference);
     });
 
+    it("should return false if base directory does not exist", async () => {
+      const exists = await serverStorage.exists({
+        baseDirectory: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+
     it("should return false if file does not exist", async () => {
       const exists = await serverStorage.exists({
         ...testDirectory,
+        objectName: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+
+    it("should return false if the whole path does not exist", async () => {
+      const exists = await serverStorage.exists({
+        baseDirectory: randomUUID(),
+        relativeDirectory: randomUUID(),
         objectName: randomUUID(),
       });
 
@@ -332,17 +301,30 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.upload(reference, contentBuffer);
     });
 
-    for (const testCase of downloadTestCases) {
-      const { caseName, transferType, defineLocalPath, assertion } = testCase;
-      it(`should download a file to ${caseName}`, async () => {
-        const response = await serverStorage.download(
-          reference,
-          transferType,
-          defineLocalPath ? `${testDownloadFolder}/download.txt` : undefined
-        );
-        await assertion(response, contentBuffer);
-      });
-    }
+    it("should download a file to buffer", async () => {
+      const response = await serverStorage.download(
+        reference,
+        "buffer"
+      );
+      assertBuffer(response, contentBuffer);
+    });
+
+    it("should download a file to stream", async () => {
+      const response = await serverStorage.download(
+        reference,
+        "stream",
+      );
+      await assertStream(response, contentBuffer);
+    });
+
+    it("should download a file to path", async () => {
+      const response = await serverStorage.download(
+        reference,
+        "local",
+        `${testDownloadFolder}/download.txt`
+      );
+      await assertLocalFile(response, contentBuffer);
+    });
 
     after(async () => {
       await Promise.all([
@@ -419,7 +401,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 });
 
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
-  let testDirectory: ObjectDirectory;
+  let testDirectory: BaseDirectory;
 
   before(async () => {
     testDirectory = await testDirectoryManager.createNewDirectory();
@@ -513,22 +495,33 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         await serverStorage.upload(reference, contentBuffer);
       });
 
-      for (const testCase of downloadTestCases) {
-        const { caseName, transferType, defineLocalPath, assertion } = testCase;
-        it(`should download a file to ${caseName} from URL`, async () => {
-          const downloadUrl = await serverStorage.getDownloadUrl(reference);
-
-          const response = await clientStorage.download({
-            url: downloadUrl,
-            transferType,
-            localPath: defineLocalPath
-              ? `${testDownloadFolder}/download-url.txt`
-              : undefined,
-          });
-
-          await assertion(response, contentBuffer);
+      it(`should download a file to buffer from URL`, async () => {
+        const downloadUrl = await serverStorage.getDownloadUrl(reference);
+        const response = await clientStorage.download({
+          url: downloadUrl,
+          transferType: "buffer",
         });
-      }
+        assertBuffer(response, contentBuffer);
+      });
+
+      it(`should download a file to stream from URL`, async () => {
+        const downloadUrl = await serverStorage.getDownloadUrl(reference);
+        const response = await clientStorage.download({
+          url: downloadUrl,
+          transferType: "stream",
+        });
+        await assertStream(response, contentBuffer);
+      });
+
+      it(`should download a file to path from URL`, async () => {
+        const downloadUrl = await serverStorage.getDownloadUrl(reference);
+        const response = await clientStorage.download({
+          url: downloadUrl,
+          transferType: "local",
+          localPath: `${testDownloadFolder}/download-url.txt`
+        });
+        await assertLocalFile(response, contentBuffer);
+      });
 
       after(async () => {
         await Promise.all([
@@ -705,21 +698,33 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         });
       });
 
-      for (const testCase of downloadTestCases) {
-        const { caseName, transferType, defineLocalPath, assertion } = testCase;
-        it(`should download a file to ${caseName} using transfer config`, async () => {
-          const response = await clientStorage.download({
-            reference,
-            transferConfig: downloadConfig,
-            transferType,
-            localPath: defineLocalPath
-              ? `${testDownloadFolder}/download-config.txt`
-              : undefined,
-          });
-
-          await assertion(response, contentBuffer);
+      it(`should download a file to buffer using transfer config`, async () => {
+        const response = await clientStorage.download({
+          reference,
+          transferConfig: downloadConfig,
+          transferType: "buffer"
         });
-      }
+        assertBuffer(response, contentBuffer);
+      });
+
+      it(`should download a file to stream using transfer config`, async () => {
+        const response = await clientStorage.download({
+          reference,
+          transferConfig: downloadConfig,
+          transferType: "stream"
+        });
+        await assertStream(response, contentBuffer);
+      });
+
+      it(`should download a file to path using transfer config`, async () => {
+        const response = await clientStorage.download({
+          reference,
+          transferConfig: downloadConfig,
+          transferType: "local",
+          localPath: `${testDownloadFolder}/download-config.txt`
+        });
+        await assertLocalFile(response, contentBuffer);
+      });
 
       after(async () => {
         await Promise.all([

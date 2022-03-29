@@ -7,6 +7,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
+  BaseDirectory,
   instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
@@ -95,7 +96,7 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
-  public async create(directory: ObjectDirectory): Promise<void> {
+  public async create(directory: BaseDirectory): Promise<void> {
     return this.upload(
       {
         baseDirectory: directory.baseDirectory,
@@ -106,12 +107,12 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   /** Max 1000 objects */
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     return this._s3Client.list(directory);
   }
 
   public async delete(
-    reference: ObjectDirectory | ObjectReference
+    reference: BaseDirectory | ObjectReference
   ): Promise<void> {
     if (instanceOfObjectReference(reference)) {
       await this._s3Client.deleteObject(reference);
@@ -122,7 +123,7 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async exists(
-    reference: ObjectDirectory | ObjectReference
+    reference: BaseDirectory | ObjectReference
   ): Promise<boolean> {
     if (instanceOfObjectReference(reference))
       return this._s3Client.objectExists(reference);
@@ -184,7 +185,7 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   private async deleteObjectsWithPrefix(
-    directory: ObjectDirectory
+    directory: BaseDirectory
   ): Promise<void> {
     await Promise.all(
       (

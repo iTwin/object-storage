@@ -5,14 +5,18 @@
 import { randomUUID } from "crypto";
 
 import { expect } from "chai";
+import { promises } from "fs";
 
 import {
+  BaseDirectory,
   Metadata,
-  ObjectDirectory,
   ObjectReference,
+  streamToBuffer,
+  TransferData,
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
+import { Readable } from "stream";
 
 const { serverStorage } = config;
 
@@ -32,13 +36,27 @@ export async function checkUploadedFileValidity(
   expect(_metadata).to.eql(metadata);
 }
 
-export class TestDirectoryManager {
-  private _createdDirectories: ObjectDirectory[] = [];
+export function assertBuffer(response: TransferData, contentBuffer: Buffer): void {
+  expect(response instanceof Buffer).to.be.true;
+  expect(contentBuffer.equals(response as Buffer)).to.be.true;
+}
 
-  public async createNewDirectory(): Promise<ObjectDirectory> {
-    const newDirectory: ObjectDirectory = {
+export async function assertStream(response: TransferData, contentBuffer: Buffer): Promise<void> {
+  expect(response instanceof Readable).to.be.true;
+  const downloadedBuffer = await streamToBuffer(response as Readable);
+  expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
+}
+
+export async function assertLocalFile(response: TransferData, contentBuffer: Buffer): Promise<void> {
+  expect(contentBuffer.equals(await promises.readFile(response as string)));
+}
+
+export class TestDirectoryManager {
+  private _createdDirectories: BaseDirectory[] = [];
+
+  public async createNewDirectory(): Promise<BaseDirectory> {
+    const newDirectory: BaseDirectory = {
       baseDirectory: randomUUID(),
-      relativeDirectory: "foobar",
     };
     this._createdDirectories.push(newDirectory);
 

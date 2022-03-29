@@ -7,6 +7,7 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import {
+  BaseDirectory,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -15,7 +16,6 @@ import {
   ObjectReference,
   TransferConfig,
   TransferData,
-  TransferType,
 } from ".";
 
 @injectable()
@@ -38,12 +38,6 @@ export abstract class ServerStorage
     localPath?: string
   ): Promise<string>;
 
-  public abstract download(
-    reference: ObjectReference,
-    transferType: TransferType,
-    localPath?: string
-  ): Promise<TransferData>;
-
   public abstract upload(
     reference: ObjectReference,
     data: TransferData,
@@ -56,30 +50,41 @@ export abstract class ServerStorage
     options?: MultipartUploadOptions
   ): Promise<void>;
 
-  public abstract create(directory: ObjectDirectory): Promise<void>;
+  public abstract create(directory: BaseDirectory): Promise<void>;
 
-  public abstract list(directory: ObjectDirectory): Promise<ObjectReference[]>;
+  public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
 
   /**
-   * Deletes the specified resource which is either an object or a directory. Note
-   * that some storage providers (Azure, for example) do not immediately delete
-   * all associated resources and cleanup can take up to several minutes. To check
-   * if the resource has been deleted use the {@link exists} method.
-   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * Deletes the specified directory. Note that some storage providers (Azure,
+   * for example) do not immediately delete all associated resources and cleanup
+   * can take up to several minutes. To check if the resource has been deleted
+   * use the {@link exists} method.
+   * @param {BaseDirectory} directory directory reference
    * @returns {Promise<void>}
    */
-  public abstract delete(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<void>;
+  public abstract delete(directory: BaseDirectory): Promise<void>;
+  /**
+   * Deletes the specified object. Note that some storage providers (Azure, for
+   * example) do not immediately delete all associated resources and cleanup can
+   * take up to several minutes. To check if the resource has been deleted use
+   * the {@link exists} method.
+   * @param {ObjectReference} reference object reference
+   * @returns {Promise<void>}
+   */
+  public abstract delete(reference: ObjectReference): Promise<void>;
 
   /**
-   * Checks if the specified resource has been deleted.
-   * @param {ObjectDirectory | ObjectReference} reference object or directory reference
+   * Checks if the specified directory has been deleted.
+   * @param {BaseDirectory} directory directory reference
    * @returns `true` if the resource has not been deleted, `false` otherwise.
    */
-  public abstract exists(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<boolean>;
+  public abstract exists(directory: BaseDirectory): Promise<boolean>;
+  /**
+   * Checks if the specified object has been deleted.
+   * @param {ObjectReference} reference object reference
+   * @returns `true` if the resource has not been deleted, `false` otherwise.
+   */
+  public abstract exists(reference: ObjectReference): Promise<boolean>;
 
   public abstract updateMetadata(
     reference: ObjectReference,
@@ -141,7 +146,7 @@ export interface TransferConfigProvider {
 }
 
 export function instanceOfObjectReference(
-  reference: ObjectDirectory | ObjectReference
+  reference: BaseDirectory | ObjectReference
 ): reference is ObjectReference {
   return "objectName" in reference;
 }
