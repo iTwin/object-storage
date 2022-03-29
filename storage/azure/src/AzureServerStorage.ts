@@ -139,7 +139,6 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async exists(
-    // TODO: does it also throw?
     reference: ObjectDirectory | ObjectReference
   ): Promise<boolean> {
     if (instanceOfObjectReference(reference)) {
