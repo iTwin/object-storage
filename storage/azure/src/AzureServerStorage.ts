@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
+import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
@@ -123,12 +124,18 @@ export class AzureServerStorage extends ServerStorage {
   public async delete(
     reference: ObjectDirectory | ObjectReference
   ): Promise<void> {
-    if (instanceOfObjectReference(reference)) {
-      await this._client.getBlobClient(reference).delete();
-      return;
+    try {
+      if (instanceOfObjectReference(reference)) {
+        await this._client.getBlobClient(reference).delete();
+        return;
+      }
+      await this._client.getContainerClient(reference.baseDirectory).delete();
+    } catch (error: unknown) {
+      if (error instanceof RestError && error.statusCode === 404) {
+        return;
+      }
+      throw error;
     }
-
-    await this._client.getContainerClient(reference.baseDirectory).delete();
   }
 
   public async exists(
