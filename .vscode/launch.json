@@ -131,7 +131,7 @@
       "name": "-- Samples --"
     },
     {
-      "name": "Application with DI sample",
+      "name": "Client file download with DI sample",
       "cwd": "${workspaceFolder}/samples/lib",
       "type": "pwa-node",
       "request": "launch",
@@ -140,14 +140,15 @@
         "AppWithDI.js"
       ],
       "outFiles": [
-        "${workspaceFolder}/samples/lib/**/*.js"
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
       ],
       "skipFiles": [
         "<node_internals>/**"
       ]
     },
     {
-      "name": "Application without DI sample",
+      "name": "Client file download without DI sample",
       "cwd": "${workspaceFolder}/samples/lib",
       "type": "pwa-node",
       "request": "launch",
@@ -156,7 +157,8 @@
         "AppWithoutDI.js"
       ],
       "outFiles": [
-        "${workspaceFolder}/samples/lib/**/*.js"
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
       ],
       "skipFiles": [
         "<node_internals>/**"
