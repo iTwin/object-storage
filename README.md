@@ -28,6 +28,7 @@ Local development workflows mostly utilize `rush` commands which run a specific 
 4. Rebuild source: `rush rebuild`
 
 ### Running Tests
+
 - `rush test` command runs unit tests for all packages that have unit tests. The tests should pass with no additional setup.
 - `rush test:integration` command runs integration tests for packages that have them. Please see the `IntegrationTests.md` files for instructions specific to each package.
 
