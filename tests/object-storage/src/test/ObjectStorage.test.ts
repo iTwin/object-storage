@@ -35,34 +35,34 @@ const downloadTestCases: {
   assertion: (response: TransferData, contentBuffer: Buffer) => Promise<void>;
   defineLocalPath: boolean;
 }[] = [
-  {
-    caseName: "Buffer",
-    transferType: "buffer",
-    assertion: async (response, contentBuffer) => {
-      expect(response instanceof Buffer).to.be.true;
-      expect(contentBuffer.equals(response as Buffer)).to.be.true;
+    {
+      caseName: "Buffer",
+      transferType: "buffer",
+      assertion: async (response, contentBuffer) => {
+        expect(response instanceof Buffer).to.be.true;
+        expect(contentBuffer.equals(response as Buffer)).to.be.true;
+      },
+      defineLocalPath: false,
     },
-    defineLocalPath: false,
-  },
-  {
-    caseName: "Stream",
-    transferType: "stream",
-    assertion: async (response, contentBuffer) => {
-      expect(response instanceof Readable).to.be.true;
-      const downloadedBuffer = await streamToBuffer(response as Readable);
-      expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
+    {
+      caseName: "Stream",
+      transferType: "stream",
+      assertion: async (response, contentBuffer) => {
+        expect(response instanceof Readable).to.be.true;
+        const downloadedBuffer = await streamToBuffer(response as Readable);
+        expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
+      },
+      defineLocalPath: false,
     },
-    defineLocalPath: false,
-  },
-  {
-    caseName: "path",
-    transferType: "local",
-    assertion: async (response, contentBuffer) => {
-      expect(contentBuffer.equals(await promises.readFile(response as string)));
+    {
+      caseName: "path",
+      transferType: "local",
+      assertion: async (response, contentBuffer) => {
+        expect(contentBuffer.equals(await promises.readFile(response as string)));
+      },
+      defineLocalPath: true,
     },
-    defineLocalPath: true,
-  },
-];
+  ];
 
 const testDirectoryManager = new TestDirectoryManager();
 
@@ -236,6 +236,27 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await Promise.all(deletePromises);
     });
 
+    it("should delete directory with files", async () => {
+      const tempDirectory = await testDirectoryManager.createNewDirectory();
+      const tempFiles = ["temp-1", "temp-2", "temp-3"];
+
+      await Promise.all(
+        tempFiles.map(async (file) =>
+          serverStorage.upload(
+            { ...tempDirectory, objectName: file },
+            Buffer.from(file)
+          )
+        )
+      );
+
+      const deleteDirectoryPromise = serverStorage.delete(tempDirectory);
+
+      await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
+
+      const doesDirectoryExist = await serverStorage.exists(tempDirectory);
+      expect(doesDirectoryExist).to.be.equal(false);
+    });
+
     it("should not throw if base directory does not exist", async () => {
       const deletePromise = serverStorage.delete({
         baseDirectory: randomUUID(),
@@ -245,8 +266,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should not throw if relative directory does not exist", async () => {
+      const tempDirectory = await testDirectoryManager.createNewDirectory();
       const deletePromise = serverStorage.delete({
-        baseDirectory: testDirectory.baseDirectory,
+        baseDirectory: tempDirectory.baseDirectory,
         relativeDirectory: randomUUID(),
       });
 
@@ -254,8 +276,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should not throw if file does not exist", async () => {
+      const tempDirectory = await testDirectoryManager.createNewDirectory();
       const deletePromise = serverStorage.delete({
-        ...testDirectory,
+        ...tempDirectory,
         objectName: randomUUID(),
       });
 
@@ -287,36 +310,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.delete(reference);
     });
 
-    it("should return false if base directory does not exist", async () => {
-      const exists = await serverStorage.exists({
-        baseDirectory: randomUUID(),
-      });
-
-      expect(exists).to.be.false;
-    });
-
-    it("should return false if relative directory does not exist", async () => {
-      const exists = await serverStorage.exists({
-        baseDirectory: testDirectory.baseDirectory,
-        relativeDirectory: randomUUID(),
-      });
-
-      expect(exists).to.be.false;
-    });
-
     it("should return false if file does not exist", async () => {
       const exists = await serverStorage.exists({
         ...testDirectory,
-        objectName: randomUUID(),
-      });
-
-      expect(exists).to.be.false;
-    });
-
-    it("should return false if the whole path does not exist", async () => {
-      const exists = await serverStorage.exists({
-        baseDirectory: randomUUID(),
-        relativeDirectory: randomUUID(),
         objectName: randomUUID(),
       });
 
@@ -418,28 +414,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     after(async () => {
       await serverStorage.delete(reference);
-    });
-  });
-
-  describe(`${serverStorage.delete.name}`, () => {
-    it("should delete directory", async () => {
-      const tempFiles = ["temp-1", "temp-2", "temp-3"];
-
-      await Promise.all(
-        tempFiles.map(async (file) =>
-          serverStorage.upload(
-            { ...testDirectory, objectName: file },
-            Buffer.from(file)
-          )
-        )
-      );
-
-      const deleteDirectoryPromise = serverStorage.delete(testDirectory);
-
-      await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
-
-      const doesDirectoryExist = await serverStorage.exists(testDirectory);
-      expect(doesDirectoryExist).to.be.equal(false);
     });
   });
 });
