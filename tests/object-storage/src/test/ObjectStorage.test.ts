@@ -235,6 +235,42 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       await Promise.all(deletePromises);
     });
+
+    it("should not throw if base directory does not exist", async () => {
+      const deletePromise = serverStorage.delete({
+        baseDirectory: randomUUID(),
+      });
+
+      await expect(deletePromise).to.eventually.be.fulfilled;
+    });
+
+    it("should not throw if relative directory does not exist", async () => {
+      const deletePromise = serverStorage.delete({
+        baseDirectory: testDirectory.baseDirectory,
+        relativeDirectory: randomUUID(),
+      });
+
+      await expect(deletePromise).to.eventually.be.fulfilled;
+    });
+
+    it("should not throw if file does not exist", async () => {
+      const deletePromise = serverStorage.delete({
+        ...testDirectory,
+        objectName: randomUUID(),
+      });
+
+      await expect(deletePromise).to.eventually.be.fulfilled;
+    });
+
+    it("should not throw if the whole path does not exist", async () => {
+      const deletePromise = serverStorage.delete({
+        baseDirectory: randomUUID(),
+        relativeDirectory: randomUUID(),
+        objectName: randomUUID(),
+      });
+
+      await expect(deletePromise).to.eventually.be.fulfilled;
+    });
   });
 
   describe(`${serverStorage.exists.name}()`, () => {
@@ -251,9 +287,36 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.delete(reference);
     });
 
+    it("should return false if base directory does not exist", async () => {
+      const exists = await serverStorage.exists({
+        baseDirectory: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+
+    it("should return false if relative directory does not exist", async () => {
+      const exists = await serverStorage.exists({
+        baseDirectory: testDirectory.baseDirectory,
+        relativeDirectory: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+
     it("should return false if file does not exist", async () => {
       const exists = await serverStorage.exists({
         ...testDirectory,
+        objectName: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+
+    it("should return false if the whole path does not exist", async () => {
+      const exists = await serverStorage.exists({
+        baseDirectory: randomUUID(),
+        relativeDirectory: randomUUID(),
         objectName: randomUUID(),
       });
 
