@@ -8,7 +8,6 @@ import { inject, injectable } from "inversify";
 
 import {
   BaseDirectory,
-  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -111,24 +110,32 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.list(directory);
   }
 
-  public async delete(
-    reference: BaseDirectory | ObjectReference
+  public async deleteBaseDirectory(
+    directory: BaseDirectory
   ): Promise<void> {
-    if (instanceOfObjectReference(reference)) {
-      await this._s3Client.deleteObject(reference);
-      return;
-    }
-
-    await this.deleteObjectsWithPrefix(reference);
+    await Promise.all(
+      (
+        await this.list(directory)
+      ).map(async (file) => this._s3Client.deleteObject(file))
+    );
   }
 
-  public async exists(
-    reference: BaseDirectory | ObjectReference
-  ): Promise<boolean> {
-    if (instanceOfObjectReference(reference))
-      return this._s3Client.objectExists(reference);
+  public async deleteObject(
+    reference: ObjectReference
+  ): Promise<void> {
+    await this._s3Client.deleteObject(reference);
+  }
 
-    return this._s3Client.prefixExists(reference);
+  public async baseDirectoryExists(
+    directory: BaseDirectory
+  ): Promise<boolean> {
+    return this._s3Client.prefixExists(directory);
+  }
+
+  public async objectExists(
+    reference: ObjectReference
+  ): Promise<boolean> {
+    return this._s3Client.objectExists(reference);
   }
 
   public async updateMetadata(
@@ -181,16 +188,6 @@ export class S3ServerStorage extends ServerStorage {
     return this._transferConfigProvider.getUploadConfig(
       directory,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
-  }
-
-  private async deleteObjectsWithPrefix(
-    directory: BaseDirectory
-  ): Promise<void> {
-    await Promise.all(
-      (
-        await this.list(directory)
-      ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
 

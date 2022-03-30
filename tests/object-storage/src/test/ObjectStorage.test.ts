@@ -60,12 +60,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         const createDirectoryPromise = serverStorage.create(directoryToCreate);
         await expect(createDirectoryPromise).to.eventually.be.fulfilled;
 
-        const doesDirectoryExist = await serverStorage.exists(
+        const doesDirectoryExist = await serverStorage.baseDirectoryExists(
           directoryToCreate
         );
         expect(doesDirectoryExist).to.be.equal(true);
       } finally {
-        await serverStorage.delete(directoryToCreate);
+        await serverStorage.deleteBaseDirectory(directoryToCreate);
       }
     });
   });
@@ -183,21 +183,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.delete.name}()`, () => {
-    it("should delete objects from upload tests", async () => {
-      const deletePromises = remoteFiles.map(
-        (file) =>
-          expect(
-            serverStorage.delete({
-              ...testDirectory,
-              objectName: file,
-            })
-          ).to.eventually.be.fulfilled
-      );
-
-      await Promise.all(deletePromises);
-    });
-
+  describe(`${serverStorage.deleteBaseDirectory.name}()`, () => {
     it("should delete directory with files", async () => {
       const tempDirectory: ObjectDirectory = await testDirectoryManager.createNewDirectory();
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
@@ -211,25 +197,42 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         )
       );
 
-      const deleteDirectoryPromise = serverStorage.delete(tempDirectory);
+      const deleteDirectoryPromise = serverStorage.deleteBaseDirectory(tempDirectory);
 
       await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
-      const doesDirectoryExist = await serverStorage.exists(tempDirectory);
+      const doesDirectoryExist = await serverStorage.baseDirectoryExists(tempDirectory);
       expect(doesDirectoryExist).to.be.equal(false);
     });
 
     it("should not throw if base directory does not exist", async () => {
-      const deletePromise = serverStorage.delete({
+      const deletePromise = serverStorage.deleteBaseDirectory({
         baseDirectory: randomUUID(),
       });
 
       await expect(deletePromise).to.eventually.be.fulfilled;
     });
+  });
+
+  describe(`${serverStorage.deleteObject.name}()`, () => {
+    it("should delete objects from upload tests", async () => {
+      const deletePromises = remoteFiles.map(
+        (file) =>
+          expect(
+            serverStorage.deleteObject({
+              ...testDirectory,
+              objectName: file,
+            })
+          ).to.eventually.be.fulfilled
+      );
+
+      await Promise.all(deletePromises);
+    });
+
 
     it("should not throw if file does not exist", async () => {
       const tempDirectory = await testDirectoryManager.createNewDirectory();
-      const deletePromise = serverStorage.delete({
+      const deletePromise = serverStorage.deleteObject({
         ...tempDirectory,
         objectName: randomUUID(),
       });
@@ -238,7 +241,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should not throw if the whole path does not exist", async () => {
-      const deletePromise = serverStorage.delete({
+      const deletePromise = serverStorage.deleteObject({
         baseDirectory: randomUUID(),
         relativeDirectory: randomUUID(),
         objectName: randomUUID(),
@@ -248,7 +251,25 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.exists.name}()`, () => {
+  describe(`${serverStorage.baseDirectoryExists.name}()`, () => {
+    it("should return true if base directory exists", async () => {
+      const exists = await serverStorage.baseDirectoryExists({
+        baseDirectory: testDirectory.baseDirectory,
+      });
+
+      expect(exists).to.be.true;
+    });
+
+    it("should return false if base directory does not exist", async () => {
+      const exists = await serverStorage.baseDirectoryExists({
+        baseDirectory: randomUUID(),
+      });
+
+      expect(exists).to.be.false;
+    });
+  });
+
+  describe(`${serverStorage.objectExists.name}()`, () => {
     it("should return true if file exists", async () => {
       const reference = {
         ...testDirectory,
@@ -256,22 +277,14 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       };
       await serverStorage.upload(reference, Buffer.from("test-exists"));
 
-      const exists = await serverStorage.exists(reference);
+      const exists = await serverStorage.objectExists(reference);
       expect(exists).to.be.true;
 
-      await serverStorage.delete(reference);
-    });
-
-    it("should return false if base directory does not exist", async () => {
-      const exists = await serverStorage.exists({
-        baseDirectory: randomUUID(),
-      });
-
-      expect(exists).to.be.false;
+      await serverStorage.deleteObject(reference);
     });
 
     it("should return false if file does not exist", async () => {
-      const exists = await serverStorage.exists({
+      const exists = await serverStorage.objectExists({
         ...testDirectory,
         objectName: randomUUID(),
       });
@@ -280,7 +293,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should return false if the whole path does not exist", async () => {
-      const exists = await serverStorage.exists({
+      const exists = await serverStorage.objectExists({
         baseDirectory: randomUUID(),
         relativeDirectory: randomUUID(),
         objectName: randomUUID(),
@@ -329,7 +342,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     after(async () => {
       await Promise.all([
-        serverStorage.delete(reference),
+        serverStorage.deleteObject(reference),
         promises.rmdir(testDownloadFolder, { recursive: true }),
       ]);
     });
@@ -364,7 +377,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     after(async () => {
-      await serverStorage.delete(reference);
+      await serverStorage.deleteObject(reference);
     });
   });
 
@@ -396,7 +409,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     after(async () => {
-      await serverStorage.delete(reference);
+      await serverStorage.deleteObject(reference);
     });
   });
 });
@@ -472,7 +485,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           testUploadUrlBufferFile,
           testUploadUrlStreamFile,
         ].map(async (file) =>
-          serverStorage.delete({
+          serverStorage.deleteObject({
             ...testDirectory,
             objectName: file,
           })
@@ -527,7 +540,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
       after(async () => {
         await Promise.all([
-          serverStorage.delete(reference),
+          serverStorage.deleteObject(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });
@@ -599,7 +612,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           testUploadConfigBufferFile,
           testUploadConfigStreamFile,
         ].map(async (file) =>
-          serverStorage.delete({
+          serverStorage.deleteObject({
             ...testDirectory,
             objectName: file,
           })
@@ -671,7 +684,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           testMultipartUploadConfigLocalFile,
           testMultipartUploadConfigStreamFile,
         ].map(async (file) =>
-          serverStorage.delete({
+          serverStorage.deleteObject({
             ...testDirectory,
             objectName: file,
           })
@@ -730,7 +743,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
       after(async () => {
         await Promise.all([
-          serverStorage.delete(reference),
+          serverStorage.deleteObject(reference),
           promises.rmdir(testDownloadFolder, { recursive: true }),
         ]);
       });

@@ -11,7 +11,6 @@ import {
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
-  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -120,31 +119,32 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
-  public async delete(
-    reference: BaseDirectory | ObjectReference
+  public async deleteBaseDirectory(
+    directory: BaseDirectory
   ): Promise<void> {
-    try {
-      if (instanceOfObjectReference(reference)) {
-        await this._client.getBlobClient(reference).delete();
-        return;
-      }
-      await this._client.getContainerClient(reference.baseDirectory).delete();
-    } catch (error: unknown) {
-      if (error instanceof RestError && error.statusCode === 404) {
-        return;
-      }
-      throw error;
-    }
+    return this.handleNotFound(async () => {
+      await this._client.getContainerClient(directory.baseDirectory).delete();
+    });
   }
 
-  public async exists(
-    reference: BaseDirectory | ObjectReference
-  ): Promise<boolean> {
-    if (instanceOfObjectReference(reference)) {
-      return this._client.getBlobClient(reference).exists();
-    }
+  public async deleteObject(
+    reference: ObjectReference
+  ): Promise<void> {
+    return this.handleNotFound(async () => {
+      await this._client.getBlobClient(reference).delete();
+    });
+  }
 
-    return this._client.getContainerClient(reference.baseDirectory).exists();
+  public async baseDirectoryExists(
+    directory: BaseDirectory
+  ): Promise<boolean> {
+    return this._client.getContainerClient(directory.baseDirectory).exists();
+  }
+
+  public async objectExists(
+    reference: ObjectReference
+  ): Promise<boolean> {
+    return this._client.getBlobClient(reference).exists();
   }
 
   public async updateMetadata(
@@ -243,5 +243,18 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
+
+  private async handleNotFound(
+    operation: () => Promise<void>
+  ): Promise<void> {
+    try {
+      await operation();
+    } catch (error: unknown) {
+      if (error instanceof RestError && error.statusCode === 404) {
+        return;
+      }
+      throw error;
+    }
+  }
 }

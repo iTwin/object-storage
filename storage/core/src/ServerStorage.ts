@@ -20,8 +20,7 @@ import {
 
 @injectable()
 export abstract class ServerStorage
-  implements PresignedUrlProvider, TransferConfigProvider
-{
+  implements PresignedUrlProvider, TransferConfigProvider {
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"
@@ -62,7 +61,7 @@ export abstract class ServerStorage
    * @param {BaseDirectory} directory directory reference
    * @returns {Promise<void>}
    */
-  public abstract delete(directory: BaseDirectory): Promise<void>;
+  public abstract deleteBaseDirectory(directory: BaseDirectory): Promise<void>;
   /**
    * Deletes the specified object. Note that some storage providers (Azure, for
    * example) do not immediately delete all associated resources and cleanup can
@@ -71,20 +70,20 @@ export abstract class ServerStorage
    * @param {ObjectReference} reference object reference
    * @returns {Promise<void>}
    */
-  public abstract delete(reference: ObjectReference): Promise<void>;
+  public abstract deleteObject(reference: ObjectReference): Promise<void>;
 
   /**
    * Checks if the specified directory has been deleted.
    * @param {BaseDirectory} directory directory reference
    * @returns `true` if the resource has not been deleted, `false` otherwise.
    */
-  public abstract exists(directory: BaseDirectory): Promise<boolean>;
+  public abstract baseDirectoryExists(directory: BaseDirectory): Promise<boolean>;
   /**
    * Checks if the specified object has been deleted.
    * @param {ObjectReference} reference object reference
    * @returns `true` if the resource has not been deleted, `false` otherwise.
    */
-  public abstract exists(reference: ObjectReference): Promise<boolean>;
+  public abstract objectExists(reference: ObjectReference): Promise<boolean>;
 
   public abstract updateMetadata(
     reference: ObjectReference,
@@ -143,10 +142,4 @@ export interface TransferConfigProvider {
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig>;
-}
-
-export function instanceOfObjectReference(
-  reference: BaseDirectory | ObjectReference
-): reference is ObjectReference {
-  return "objectName" in reference;
 }

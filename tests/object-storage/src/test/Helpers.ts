@@ -26,7 +26,7 @@ export async function checkUploadedFileValidity(
   contentBuffer: Buffer,
   metadata: Metadata
 ): Promise<void> {
-  expect(await serverStorage.exists(reference)).to.be.true;
+  expect(await serverStorage.objectExists(reference)).to.be.true;
 
   const downloadedBuffer = await serverStorage.download(reference, "buffer");
   expect(downloadedBuffer.equals(contentBuffer)).to.be.true;
@@ -71,7 +71,7 @@ export class TestDirectoryManager {
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverStorage.delete(directoryToDelete);
+      await serverStorage.deleteBaseDirectory(directoryToDelete);
     this._createdDirectories = [];
   }
 }
