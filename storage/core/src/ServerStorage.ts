@@ -59,7 +59,7 @@ export abstract class ServerStorage
    * for example) do not immediately delete all associated resources and cleanup
    * can take up to several minutes. To check if the resource has been deleted
    * use the {@link exists} method.
-   * @param {BaseDirectory} directory directory reference
+   * @param {BaseDirectory} directory base directory
    * @returns {Promise<void>}
    */
   public abstract deleteBaseDirectory(directory: BaseDirectory): Promise<void>;
@@ -75,7 +75,7 @@ export abstract class ServerStorage
 
   /**
    * Checks if the specified directory has been deleted.
-   * @param {BaseDirectory} directory directory reference
+   * @param {BaseDirectory} directory base directory
    * @returns `true` if the resource has not been deleted, `false` otherwise.
    */
   public abstract baseDirectoryExists(
