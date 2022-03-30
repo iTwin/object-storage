@@ -131,13 +131,13 @@
       "name": "-- Samples --"
     },
     {
-      "name": "Client file download with DI sample",
-      "cwd": "${workspaceFolder}/samples/lib",
+      "name": "Client file download with `inversify` sample",
+      "cwd": "${workspaceFolder}/samples/lib/with-inversify",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "AppWithDI.js"
+        "Run.js"
       ],
       "outFiles": [
         "${workspaceFolder}/samples/lib/**/*.js",
@@ -148,13 +148,13 @@
       ]
     },
     {
-      "name": "Client file download without DI sample",
-      "cwd": "${workspaceFolder}/samples/lib",
+      "name": "Client file download without `inversify` sample",
+      "cwd": "${workspaceFolder}/samples/lib/without-inversify",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "AppWithoutDI.js"
+        "Run.js"
       ],
       "outFiles": [
         "${workspaceFolder}/samples/lib/**/*.js",
