@@ -11,6 +11,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import {
   BaseDirectory,
   ClientStorage,
+  ObjectDirectory,
   ObjectReference,
   ServerStorage,
   TransferConfig,
@@ -28,7 +29,7 @@ const testDownloadFolder = "test-download";
 const testDirectoryManager = new TestDirectoryManager();
 
 describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
-  let testDirectory: BaseDirectory;
+  let testDirectory: ObjectDirectory;
 
   const testUploadBufferFile = "test-upload-buffer.txt";
   const testUploadStreamFile = "test-upload-stream.txt";
@@ -198,7 +199,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should delete directory with files", async () => {
-      const tempDirectory = await testDirectoryManager.createNewDirectory();
+      const tempDirectory: ObjectDirectory = await testDirectoryManager.createNewDirectory();
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
 
       await Promise.all(
@@ -401,7 +402,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 });
 
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
-  let testDirectory: BaseDirectory;
+  let testDirectory: ObjectDirectory;
 
   before(async () => {
     testDirectory = await testDirectoryManager.createNewDirectory();
@@ -445,6 +446,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         it(`should upload a file from ${caseName} with metadata to URL`, async () => {
           const reference = {
             ...testDirectory,
+
             objectName,
           };
 

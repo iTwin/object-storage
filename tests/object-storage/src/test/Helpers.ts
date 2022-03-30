@@ -10,6 +10,7 @@ import { promises } from "fs";
 import {
   BaseDirectory,
   Metadata,
+  ObjectDirectory,
   ObjectReference,
   streamToBuffer,
   TransferData,
@@ -54,7 +55,7 @@ export async function assertLocalFile(response: TransferData, contentBuffer: Buf
 export class TestDirectoryManager {
   private _createdDirectories: BaseDirectory[] = [];
 
-  public async createNewDirectory(): Promise<BaseDirectory> {
+  public async createNewDirectory(): Promise<ObjectDirectory> {
     const newDirectory: BaseDirectory = {
       baseDirectory: randomUUID(),
     };
@@ -62,7 +63,10 @@ export class TestDirectoryManager {
 
     await serverStorage.create(newDirectory);
 
-    return newDirectory;
+    return {
+      ...newDirectory,
+      relativeDirectory: "foobar"
+    };
   }
 
   public async purgeCreatedDirectories(): Promise<void> {
