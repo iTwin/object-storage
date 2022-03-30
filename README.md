@@ -36,8 +36,8 @@ Local development workflows mostly utilize `rush` commands which run a specific 
 
 There are two main ways how to consume the storage packages in applications:
 1. Using the provided classes/interfaces directly and managing their creation manually.
-1. Loading them using the provided dependency injection mechanism. This option utilizes `inversify` framework and allows injecting configured storage classes into other application components.
+1. Loading them using the provided dependency injection configuration utilities. This option utilizes `inversify` framework and allows injecting configured storage classes into other application components.
 
 There are two samples of minimal applications that achieve the same thing (download a file using `ClientStorage`) and each demonstrate a different method for managing application components:
-1. Without dependency injection - [sample](./samples/src/client-file-download/AppWithoutDI.ts) (launch using "Client file download with DI sample" VS Code configuration). The application constructs classes directly.
-1. With dependency injection - [sample](./samples/src/client-file-download/AppWithDI.ts) (launch using "Client file download without DI sample" VS Code configuration). The application uses `inversify`\`s `Container` to manage component lifetime. Note that the advantages of dependency injection become more apparent when working with larger applications. This method is also used in [integration test setup](tests/object-storage/src/StorageIntegrationTests.ts).
+1. Without `inversify` - [sample](./samples/src/client-file-download/AppWithoutInversify.ts) (launch using "Client file download with DI sample" VS Code configuration). The application constructs classes directly.
+1. With `inversify` - [sample](./samples/src/client-file-download/AppWithInversify.ts) (launch using "Client file download without DI sample" VS Code configuration). The application uses `inversify`\`s `Container` to manage component lifetime. Note that the advantages of dependency injection become more apparent when working with larger applications. This method is also used in [integration test setup](tests/object-storage/src/StorageIntegrationTests.ts).

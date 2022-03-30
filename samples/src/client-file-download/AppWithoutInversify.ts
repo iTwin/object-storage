@@ -24,15 +24,19 @@ export class FileDownloader {
 
 /**
  * This minimal application demonstrates how storage components can be used and
- * managed without dependency injection.
+ * managed without `inversify`.
  */
 export class App {
+  private _fileDownloader: FileDownloader;
+
+  public constructor(storage: ClientStorage) { 
+    this._fileDownloader = new FileDownloader(storage);
+  }
+  
   public async start(): Promise<void> {
-    const azureClientStorage = new AzureClientStorage();
-    const fileDownloader = new FileDownloader(azureClientStorage);
-    await fileDownloader.downloadFile();
+    await this._fileDownloader.downloadFile();
   }
 }
 
-const app = new App();
+const app = new App(new AzureClientStorage());
 app.start().catch((err) => console.error(err));

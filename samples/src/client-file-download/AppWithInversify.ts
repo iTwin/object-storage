@@ -41,8 +41,8 @@ export class FileDownloader {
 
 /**
  * This minimal application demonstrates how storage components can be
- * configured using the provided dependency injection utilities. This
- * application uses `ClientStorage` to download a specific file and is
+ * configured using the provided `inversify` container configuration utilities.
+ * This application uses `ClientStorage` to download a specific file and is
  * configured so that `ClientStorage` would resolve to `AzureClientStorage`
  * (see {@link AzureClientStorageBindings}).
  */
