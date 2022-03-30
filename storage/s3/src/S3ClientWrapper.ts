@@ -18,13 +18,12 @@ import { Upload } from "@aws-sdk/lib-storage";
 import { inject, injectable } from "inversify";
 
 import {
-  buildObjectDirectoryString,
+  BaseDirectory,
   buildObjectKey,
   buildObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
-  ObjectDirectory,
   ObjectProperties,
   ObjectReference,
   streamToBuffer,
@@ -127,14 +126,14 @@ export class S3ClientWrapper {
   }
 
   public async list(
-    directory: ObjectDirectory,
+    directory: BaseDirectory,
     maxResults?: number
   ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
-        Prefix: buildObjectDirectoryString(directory),
+        Prefix: directory.baseDirectory,
         MaxKeys: maxResults,
       })
     );
@@ -205,7 +204,7 @@ export class S3ClientWrapper {
     }
   }
 
-  public async prefixExists(directory: ObjectDirectory): Promise<boolean> {
+  public async prefixExists(directory: BaseDirectory): Promise<boolean> {
     const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
     return filesWithPrefix.length !== 0;
   }

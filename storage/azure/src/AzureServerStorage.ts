@@ -8,9 +8,9 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
+  BaseDirectory,
   buildObjectKey,
   buildObjectReference,
-  instanceOfObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -96,17 +96,15 @@ export class AzureServerStorage extends ServerStorage {
     ).uploadInMultipleParts(data, options);
   }
 
-  public async create(directory: ObjectDirectory): Promise<void> {
+  public async create(directory: BaseDirectory): Promise<void> {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
-    const { baseDirectory, relativeDirectory } = directory;
-    const containerClient = this._client.getContainerClient(baseDirectory);
-
-    const iter = containerClient.listBlobsFlat({
-      prefix: relativeDirectory,
-    });
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+    const containerClient = this._client.getContainerClient(
+      directory.baseDirectory
+    );
+    const iter = containerClient.listBlobsFlat();
 
     const names = Array<string>();
     for await (const item of iter) names.push(item.name);
@@ -121,31 +119,24 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
-  public async delete(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<void> {
-    try {
-      if (instanceOfObjectReference(reference)) {
-        await this._client.getBlobClient(reference).delete();
-        return;
-      }
-      await this._client.getContainerClient(reference.baseDirectory).delete();
-    } catch (error: unknown) {
-      if (error instanceof RestError && error.statusCode === 404) {
-        return;
-      }
-      throw error;
-    }
+  public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
+    return this.handleNotFound(async () => {
+      await this._client.getContainerClient(directory.baseDirectory).delete();
+    });
   }
 
-  public async exists(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<boolean> {
-    if (instanceOfObjectReference(reference)) {
-      return this._client.getBlobClient(reference).exists();
-    }
+  public async deleteObject(reference: ObjectReference): Promise<void> {
+    return this.handleNotFound(async () => {
+      await this._client.getBlobClient(reference).delete();
+    });
+  }
 
-    return this._client.getContainerClient(reference.baseDirectory).exists();
+  public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
+    return this._client.getContainerClient(directory.baseDirectory).exists();
+  }
+
+  public async objectExists(reference: ObjectReference): Promise<boolean> {
+    return this._client.getBlobClient(reference).exists();
   }
 
   public async updateMetadata(
@@ -245,4 +236,15 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public releaseResources(): void {}
+
+  private async handleNotFound(operation: () => Promise<void>): Promise<void> {
+    try {
+      await operation();
+    } catch (error: unknown) {
+      if (error instanceof RestError && error.statusCode === 404) {
+        return;
+      }
+      throw error;
+    }
+  }
 }
