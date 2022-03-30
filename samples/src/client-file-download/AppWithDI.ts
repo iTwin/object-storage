@@ -80,7 +80,6 @@ export class App extends Bindable {
 
   private getDependenciesConfig(): DependenciesConfig {
     return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       ClientStorage: {
         dependencyName: "azure",
       },
@@ -89,5 +88,4 @@ export class App extends Bindable {
 }
 
 const app = new App();
-// eslint-disable-next-line no-console
 app.start().catch((err) => console.error(err));

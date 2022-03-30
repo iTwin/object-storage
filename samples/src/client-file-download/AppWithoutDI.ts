@@ -35,5 +35,4 @@ export class App {
 }
 
 const app = new App();
-// eslint-disable-next-line no-console
 app.start().catch((err) => console.error(err));

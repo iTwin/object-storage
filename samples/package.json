@@ -23,9 +23,6 @@
     "test:integration": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
-  "eslintConfig": {
-    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
-  },
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-azure": "workspace:*",
