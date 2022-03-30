@@ -110,9 +110,7 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.list(directory);
   }
 
-  public async deleteBaseDirectory(
-    directory: BaseDirectory
-  ): Promise<void> {
+  public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
         await this.list(directory)
@@ -120,21 +118,15 @@ export class S3ServerStorage extends ServerStorage {
     );
   }
 
-  public async deleteObject(
-    reference: ObjectReference
-  ): Promise<void> {
+  public async deleteObject(reference: ObjectReference): Promise<void> {
     await this._s3Client.deleteObject(reference);
   }
 
-  public async baseDirectoryExists(
-    directory: BaseDirectory
-  ): Promise<boolean> {
+  public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
     return this._s3Client.prefixExists(directory);
   }
 
-  public async objectExists(
-    reference: ObjectReference
-  ): Promise<boolean> {
+  public async objectExists(reference: ObjectReference): Promise<boolean> {
     return this._s3Client.objectExists(reference);
   }
 

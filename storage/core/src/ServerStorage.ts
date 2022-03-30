@@ -20,7 +20,8 @@ import {
 
 @injectable()
 export abstract class ServerStorage
-  implements PresignedUrlProvider, TransferConfigProvider {
+  implements PresignedUrlProvider, TransferConfigProvider
+{
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"
@@ -77,7 +78,9 @@ export abstract class ServerStorage
    * @param {BaseDirectory} directory directory reference
    * @returns `true` if the resource has not been deleted, `false` otherwise.
    */
-  public abstract baseDirectoryExists(directory: BaseDirectory): Promise<boolean>;
+  public abstract baseDirectoryExists(
+    directory: BaseDirectory
+  ): Promise<boolean>;
   /**
    * Checks if the specified object has been deleted.
    * @param {ObjectReference} reference object reference

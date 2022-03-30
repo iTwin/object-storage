@@ -119,31 +119,23 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
-  public async deleteBaseDirectory(
-    directory: BaseDirectory
-  ): Promise<void> {
+  public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     return this.handleNotFound(async () => {
       await this._client.getContainerClient(directory.baseDirectory).delete();
     });
   }
 
-  public async deleteObject(
-    reference: ObjectReference
-  ): Promise<void> {
+  public async deleteObject(reference: ObjectReference): Promise<void> {
     return this.handleNotFound(async () => {
       await this._client.getBlobClient(reference).delete();
     });
   }
 
-  public async baseDirectoryExists(
-    directory: BaseDirectory
-  ): Promise<boolean> {
+  public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
     return this._client.getContainerClient(directory.baseDirectory).exists();
   }
 
-  public async objectExists(
-    reference: ObjectReference
-  ): Promise<boolean> {
+  public async objectExists(reference: ObjectReference): Promise<boolean> {
     return this._client.getBlobClient(reference).exists();
   }
 
@@ -243,11 +235,9 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void { }
+  public releaseResources(): void {}
 
-  private async handleNotFound(
-    operation: () => Promise<void>
-  ): Promise<void> {
+  private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {
       await operation();
     } catch (error: unknown) {

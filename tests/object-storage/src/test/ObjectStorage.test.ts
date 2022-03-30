@@ -18,7 +18,13 @@ import {
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
-import { assertBuffer, assertLocalFile, assertStream, checkUploadedFileValidity, TestDirectoryManager } from "./Helpers";
+import {
+  assertBuffer,
+  assertLocalFile,
+  assertStream,
+  checkUploadedFileValidity,
+  TestDirectoryManager,
+} from "./Helpers";
 
 use(chaiAsPromised);
 
@@ -185,7 +191,8 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.deleteBaseDirectory.name}()`, () => {
     it("should delete directory with files", async () => {
-      const tempDirectory: ObjectDirectory = await testDirectoryManager.createNewDirectory();
+      const tempDirectory: ObjectDirectory =
+        await testDirectoryManager.createNewDirectory();
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
 
       await Promise.all(
@@ -197,11 +204,14 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         )
       );
 
-      const deleteDirectoryPromise = serverStorage.deleteBaseDirectory(tempDirectory);
+      const deleteDirectoryPromise =
+        serverStorage.deleteBaseDirectory(tempDirectory);
 
       await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
-      const doesDirectoryExist = await serverStorage.baseDirectoryExists(tempDirectory);
+      const doesDirectoryExist = await serverStorage.baseDirectoryExists(
+        tempDirectory
+      );
       expect(doesDirectoryExist).to.be.equal(false);
     });
 
@@ -228,7 +238,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       await Promise.all(deletePromises);
     });
-
 
     it("should not throw if file does not exist", async () => {
       const tempDirectory = await testDirectoryManager.createNewDirectory();
@@ -316,18 +325,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should download a file to buffer", async () => {
-      const response = await serverStorage.download(
-        reference,
-        "buffer"
-      );
+      const response = await serverStorage.download(reference, "buffer");
       assertBuffer(response, contentBuffer);
     });
 
     it("should download a file to stream", async () => {
-      const response = await serverStorage.download(
-        reference,
-        "stream",
-      );
+      const response = await serverStorage.download(reference, "stream");
       await assertStream(response, contentBuffer);
     });
 
@@ -533,7 +536,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const response = await clientStorage.download({
           url: downloadUrl,
           transferType: "local",
-          localPath: `${testDownloadFolder}/download-url.txt`
+          localPath: `${testDownloadFolder}/download-url.txt`,
         });
         await assertLocalFile(response, contentBuffer);
       });
@@ -717,7 +720,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const response = await clientStorage.download({
           reference,
           transferConfig: downloadConfig,
-          transferType: "buffer"
+          transferType: "buffer",
         });
         assertBuffer(response, contentBuffer);
       });
@@ -726,7 +729,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const response = await clientStorage.download({
           reference,
           transferConfig: downloadConfig,
-          transferType: "stream"
+          transferType: "stream",
         });
         await assertStream(response, contentBuffer);
       });
@@ -736,7 +739,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           reference,
           transferConfig: downloadConfig,
           transferType: "local",
-          localPath: `${testDownloadFolder}/download-config.txt`
+          localPath: `${testDownloadFolder}/download-config.txt`,
         });
         await assertLocalFile(response, contentBuffer);
       });
