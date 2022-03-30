@@ -13,8 +13,7 @@ import { FileDownloader } from "../FileDownloader";
  * is not dependent on any specific dependency injection framework.
  */
 export class App {
-  public constructor(private _clientStorage: ClientStorage) {
-  }
+  public constructor(private _clientStorage: ClientStorage) {}
 
   public async start(): Promise<void> {
     const fileDownloader = new FileDownloader(this._clientStorage);
