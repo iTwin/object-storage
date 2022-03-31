@@ -225,8 +225,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 
   describe(`${serverStorage.deleteObject.name}()`, () => {
-    const contentBuffer = Buffer.from("test-delete-object");
-
     it("should delete objects from upload tests", async () => {
       const deletePromises = remoteFiles.map(
         (file) =>
@@ -268,6 +266,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         ...tempDirectory,
         objectName: "test-delete-object.txt",
       };
+      const contentBuffer = Buffer.from("test-delete-object");
 
       await serverStorage.create(tempDirectory);
       await serverStorage.upload(testFileToUpload, contentBuffer);
