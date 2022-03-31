@@ -109,14 +109,17 @@ export class AzureServerStorage extends ServerStorage {
     const names = Array<string>();
     for await (const item of iter) names.push(item.name);
 
-    return names.map((name) =>
-      buildObjectReference(
+    const references: (ObjectReference | undefined)[] = names.map((name) =>
+      buildObjectReference( // TODO: weird conversion, back and forth
         buildObjectKey({
           ...directory,
           objectName: name,
         })
       )
     );
+    const result: ObjectReference[] = references.filter((reference): reference is ObjectReference => reference !== undefined); // TODO: refactor
+
+    return result;
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
@@ -235,7 +238,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

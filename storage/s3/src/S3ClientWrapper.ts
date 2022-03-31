@@ -139,7 +139,15 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    if (!Contents)
+      return [];
+
+    const references: (ObjectReference | undefined)[] = Contents
+      .map((object) => buildObjectReference(object.Key!));
+    const result: ObjectReference[] = references
+      .filter((reference): reference is ObjectReference => reference !== undefined);
+
+    return result;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
