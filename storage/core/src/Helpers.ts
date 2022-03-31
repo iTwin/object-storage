@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream, createWriteStream, promises } from "fs";
-import { dirname } from "path";
 import { Readable } from "stream";
 
 import axios from "axios";
@@ -21,20 +19,6 @@ import {
   TransferConfig,
   TransferData,
 } from "./StorageInterfaces";
-
-export async function streamToLocalFile(
-  stream: Readable,
-  destinationPath: string
-): Promise<void> {
-  await promises.mkdir(dirname(destinationPath), { recursive: true });
-
-  return new Promise<void>((resolve, reject) => {
-    const fileStream = createWriteStream(destinationPath);
-    stream.pipe(fileStream);
-    stream.on("error", reject);
-    fileStream.on("finish", resolve);
-  });
-}
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
@@ -95,10 +79,10 @@ export function getTransferTimeInSeconds(
   return seconds > maxTransferTime ? maxTransferTime : seconds;
 }
 
-export async function downloadFromUrl(
+export async function downloadFromUrlFrontendFriendly(
   input: UrlDownloadInput
 ): Promise<TransferData> {
-  const { transferType, localPath, url } = input;
+  const { transferType, url } = input;
 
   switch (transferType) {
     case "buffer":
@@ -113,17 +97,6 @@ export async function downloadFromUrl(
       });
       return streamResponse.data as Readable;
 
-    case "local":
-      if (!localPath) throw new Error("Specify localPath");
-
-      const localResponse = await axios.get(url, {
-        responseType: "stream",
-      });
-
-      await streamToLocalFile(localResponse.data, localPath);
-
-      return localPath;
-
     default:
       throw new Error(`Type '${transferType}' is not supported`);
   }
@@ -134,13 +107,9 @@ export async function uploadToUrl(
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
-  await axios.put(
-    url,
-    typeof data === "string" ? createReadStream(data) : data,
-    {
-      headers,
-    }
-  );
+  await axios.put(url, data, {
+    headers,
+  });
 }
 
 export function metadataToHeaders(

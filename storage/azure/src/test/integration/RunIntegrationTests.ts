@@ -8,6 +8,7 @@ import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { AzureClientStorageBindings } from "../../AzureClientStorageBindings";
 import { AzureServerStorageBindings } from "../../AzureServerStorageBindings";
+import { AzureFrontendStorageBindings } from "../../AzureFrontendStorageBindings";
 
 const dependencyName = "azure";
 
@@ -22,13 +23,14 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,
-  },
+  }
 };
 
 const tests = new StorageIntegrationTests(
   config,
   AzureServerStorageBindings,
-  AzureClientStorageBindings
+  AzureClientStorageBindings,
+  AzureFrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

@@ -15,9 +15,9 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
-import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
+import { FrontendBlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobUrlFromConfig } from "./Helpers";
 import {
   AzureConfigDownloadInput,
@@ -26,7 +26,13 @@ import {
 } from "./Interfaces";
 
 @injectable()
-export class AzureClientStorage extends ClientStorage {
+export class AzureFrontendStorage extends ClientStorage {
+  protected getBlockBlobClientWrapper(
+    blobClient: BlockBlobClient
+  ): FrontendBlockBlobClientWrapper {
+    return new FrontendBlockBlobClientWrapper(blobClient);
+  }
+
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "buffer";
@@ -55,7 +61,7 @@ export class AzureClientStorage extends ClientStorage {
         : buildBlobUrlFromConfig(input)
     );
 
-    return new BlockBlobClientWrapper(blobClient).download(
+    return this.getBlockBlobClientWrapper(blobClient).download(
       input.transferType,
       input.localPath
     );
@@ -70,7 +76,7 @@ export class AzureClientStorage extends ClientStorage {
         : buildBlobUrlFromConfig(input)
     );
 
-    return new BlockBlobClientWrapper(blobClient).upload(
+    return this.getBlockBlobClientWrapper(blobClient).upload(
       input.data,
       input.metadata
     );
@@ -81,7 +87,7 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     const blobClient = new BlockBlobClient(buildBlobUrlFromConfig(input));
 
-    return new BlockBlobClientWrapper(blobClient).uploadInMultipleParts(
+    return this.getBlockBlobClientWrapper(blobClient).uploadInMultipleParts(
       input.data,
       input.options
     );

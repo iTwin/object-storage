@@ -21,9 +21,10 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
+import { buildSASParameters } from "./BackendHelpers";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
-import { buildBlobName, buildExpiresOn, buildSASParameters } from "./Helpers";
+import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper.backend";
+import { buildBlobName, buildExpiresOn } from "./Helpers";
 import { AzureTransferConfig } from "./Interfaces";
 import { Types } from "./Types";
 

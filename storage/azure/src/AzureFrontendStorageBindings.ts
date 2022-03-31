@@ -9,12 +9,12 @@ import {
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { AzureClientStorage } from "./AzureClientStorage.backend";
+import { AzureFrontendStorage } from "./frontend";
 
-export class AzureClientStorageBindings extends ClientStorageDependency {
+export class AzureFrontendStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container.bind(ClientStorage).to(AzureClientStorage);
+    container.bind(ClientStorage).to(AzureFrontendStorage);
   }
 }

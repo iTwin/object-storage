@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { promises } from "fs";
-import { dirname } from "path";
 import { Readable } from "stream";
 
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
@@ -15,24 +13,16 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-export class BlockBlobClientWrapper {
-  constructor(private readonly _client: BlockBlobClient) {}
+export class FrontendBlockBlobClientWrapper {
+  constructor(protected readonly _client: BlockBlobClient) {}
 
   public async download(
     transferType: TransferType,
-    localPath?: string
+    _localPath?: string
   ): Promise<TransferData> {
     switch (transferType) {
       case "buffer":
         return this._client.downloadToBuffer();
-
-      case "local":
-        if (!localPath) throw new Error("Specify localPath");
-
-        await promises.mkdir(dirname(localPath), { recursive: true });
-        await this._client.downloadToFile(localPath);
-
-        return localPath;
 
       case "stream":
         return (await this._client.download()).readableStreamBody! as Readable;
@@ -44,7 +34,7 @@ export class BlockBlobClientWrapper {
 
   public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
     if (typeof data === "string") {
-      await this._client.uploadFile(data, { metadata });
+      throw new Error(`File uploads are not supported`);
     } else if (data instanceof Buffer) {
       await this._client.upload(data, data.byteLength, { metadata });
     } else {
@@ -59,11 +49,7 @@ export class BlockBlobClientWrapper {
     const { metadata, partSize, queueSize } = options ?? {};
 
     if (typeof data === "string") {
-      await this._client.uploadFile(data, {
-        metadata,
-        blockSize: partSize,
-        concurrency: queueSize,
-      });
+      throw new Error(`File uploads are not supported`);
     } else {
       await this._client.uploadStream(data, partSize, queueSize, {
         metadata,
