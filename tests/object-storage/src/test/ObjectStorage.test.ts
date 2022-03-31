@@ -225,6 +225,8 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 
   describe(`${serverStorage.deleteObject.name}()`, () => {
+    const contentBuffer = Buffer.from("test-delete-object");
+
     it("should delete objects from upload tests", async () => {
       const deletePromises = remoteFiles.map(
         (file) =>
@@ -258,11 +260,26 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       await expect(deletePromise).to.eventually.be.fulfilled;
     });
+
+    it("should retain the directory after all files from it have been deleted", async () => {
+      const tempDirectory: ObjectDirectory =
+        await testDirectoryManager.createNewDirectory();
+      const testFileToUpload: ObjectReference = {
+        ...tempDirectory,
+        objectName: "test-delete-object.txt",
+      };
+
+      await serverStorage.create(tempDirectory);
+      await serverStorage.upload(testFileToUpload, contentBuffer);
+      await serverStorage.deleteObject(testFileToUpload);
+
+      const exists = await serverStorage.baseDirectoryExists(tempDirectory);
+      expect(exists).to.be.true;
+    });
   });
 
   describe(`${serverStorage.baseDirectoryExists.name}()`, () => {
-    // TODO: enable in the next PR which fixes MinIO behavior
-    it.skip("should return true if base directory exists", async () => {
+    it("should return true if base directory exists", async () => {
       const exists = await serverStorage.baseDirectoryExists({
         baseDirectory: testDirectory.baseDirectory,
       });
