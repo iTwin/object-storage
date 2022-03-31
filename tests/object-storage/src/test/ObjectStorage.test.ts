@@ -262,14 +262,14 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     it("should retain the directory after all files from it have been deleted", async () => {
       const tempDirectory: ObjectDirectory =
         await testDirectoryManager.createNewDirectory();
+
       const testFileToUpload: ObjectReference = {
         ...tempDirectory,
         objectName: "test-delete-object.txt",
       };
       const contentBuffer = Buffer.from("test-delete-object");
-
-      await serverStorage.create(tempDirectory);
       await serverStorage.upload(testFileToUpload, contentBuffer);
+
       await serverStorage.deleteObject(testFileToUpload);
 
       const exists = await serverStorage.baseDirectoryExists(tempDirectory);
