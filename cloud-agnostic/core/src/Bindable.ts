@@ -33,8 +33,7 @@ export abstract class Bindable {
     factory.addDependency(dependencyBindings);
   }
 
-  // should be protected but is set public for tests
-  public bindDependencies(container: Container): void {
+  protected bindDependencies(container: Container): void {
     const config = container.get<DependenciesConfig>(Types.dependenciesConfig);
 
     this._dependencyFactories.forEach((factory) => {
