@@ -30,9 +30,13 @@ export class App extends Bindable {
   }
 
   /**
-   * `bindDependencies` is called right before using the configured classes to
-   * allow the caller of `App.start` to register all necessary bindings
-   * (see Run.ts file in this directory).
+   * `bindDependencies` executes all bindings registered by the `App.start`
+   * caller. The caller uses `Bindable.useBindings` method to register specific
+   * implementations for required dependencies (see Run.ts file in this
+   * directory). Delaying the actual binding execution until right before using
+   * the container to retrieve class instances allows the `App` class to rely on
+   * its caller to register bindings between constructing an instance of `App`
+   * and starting it.
    */
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
