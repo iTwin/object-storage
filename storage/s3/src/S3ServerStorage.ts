@@ -37,9 +37,9 @@ export interface S3ServerStorageConfig {
 
 @injectable()
 export class S3ServerStorage extends ServerStorage {
-  private readonly _s3Client: S3ClientWrapper;
   private readonly _presignedUrlProvider: PresignedUrlProvider;
   private readonly _transferConfigProvider: TransferConfigProvider;
+  protected readonly _s3Client: S3ClientWrapper;
 
   public constructor(
     s3Client: S3ClientWrapper,
