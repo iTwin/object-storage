@@ -10,7 +10,7 @@ import {
   S3ClientStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
-import { MinioClientStorage } from "./MinioClientStorage";
+import { MinioClientStorage } from "./MinioClientStorage.backend";
 
 export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override readonly dependencyName: string = "minio";

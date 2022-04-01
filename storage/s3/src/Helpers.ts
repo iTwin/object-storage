@@ -6,16 +6,17 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
+  assertTransferConfig,
+  TransferConfig,
+} from "@itwin/object-storage-core/lib/frontend";
+
+import {
   assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
-import {
-  assertTransferConfig,
-  TransferConfig,
-} from "@itwin/object-storage-core";
 
 import { S3TransferConfig } from "./Interfaces";
-import { S3ClientWrapper } from "./S3ClientWrapper";
+import { FrontendS3ClientWrapper } from "./S3ClientWrapper";
 
 function assertS3TransferConfig(
   transferConfig: TransferConfig | S3TransferConfig
@@ -50,16 +51,28 @@ function assertS3TransferConfig(
   assertPrimitiveType(transferConfig.region, "transferConfig.region", "string");
 }
 
-export function transferConfigToS3ClientWrapper(
+export function transferConfigToFrontendS3ClientWrapper(
   transferConfig: TransferConfig,
   bucket: string
-): S3ClientWrapper {
+): FrontendS3ClientWrapper {
+  return transferConfigToS3Wrapper(
+    transferConfig,
+    bucket,
+    FrontendS3ClientWrapper
+  );
+}
+
+export function transferConfigToS3Wrapper<T>(
+  transferConfig: TransferConfig,
+  bucket: string,
+  clientConstructor: new (client: S3Client, bucket: string) => T
+): T {
   assertS3TransferConfig(transferConfig);
 
   const { baseUrl, region, authentication } = transferConfig;
   const { accessKey, secretKey, sessionToken } = authentication;
 
-  return new S3ClientWrapper(
+  return new clientConstructor(
     createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),
     bucket
   );

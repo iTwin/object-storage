@@ -1,10 +1,16 @@
 import { promises } from "fs";
 import { dirname } from "path";
 
-import { MultipartUploadData, MultipartUploadOptions, TransferData, TransferType } from "@itwin/object-storage-core";
+import { Metadata } from "@azure/storage-blob";
+
+import {
+  MultipartUploadData,
+  MultipartUploadOptions,
+  TransferData,
+  TransferType,
+} from "@itwin/object-storage-core";
 
 import { FrontendBlockBlobClientWrapper } from "./BlockBlobClientWrapper";
-import { Metadata } from "@azure/storage-blob";
 
 export class BlockBlobClientWrapper extends FrontendBlockBlobClientWrapper {
   public override async download(
@@ -23,12 +29,13 @@ export class BlockBlobClientWrapper extends FrontendBlockBlobClientWrapper {
     return super.download(transferType, localPath);
   }
 
-  public override async upload(data: TransferData, metadata?: Metadata): Promise<void> {
-    if(typeof data === "string") {
+  public override async upload(
+    data: TransferData,
+    metadata?: Metadata
+  ): Promise<void> {
+    if (typeof data === "string") {
       await this._client.uploadFile(data, { metadata });
-    }
-    else
-      return super.upload(data, metadata);
+    } else return super.upload(data, metadata);
   }
 
   public override async uploadInMultipleParts(
@@ -41,8 +48,6 @@ export class BlockBlobClientWrapper extends FrontendBlockBlobClientWrapper {
         blockSize: options?.partSize,
         concurrency: options?.queueSize,
       });
-    }
-    else
-      return super.uploadInMultipleParts(data, options);
+    } else return super.uploadInMultipleParts(data, options);
   }
 }

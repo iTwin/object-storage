@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
@@ -28,15 +27,14 @@ import {
   ObjectProperties,
   ObjectReference,
   streamToBuffer,
-  streamToLocalFile,
   TransferData,
   TransferType,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import { Types } from "./Types";
 
 @injectable()
-export class S3ClientWrapper {
+export class FrontendS3ClientWrapper {
   private readonly _client;
   private readonly _bucket;
 
@@ -60,20 +58,20 @@ export class S3ClientWrapper {
     /* eslint-enable @typescript-eslint/naming-convention */
 
     const stream = Body! as Readable;
+    return this.streamToTransferType(stream, transferType, localPath);
+  }
 
+  protected async streamToTransferType(
+    stream: Readable,
+    transferType: TransferType,
+    _localPath?: string
+  ): Promise<TransferData> {
     switch (transferType) {
       case "buffer":
         return streamToBuffer(stream);
 
       case "stream":
         return stream;
-
-      case "local":
-        if (!localPath) throw new Error("Specify localPath");
-
-        await streamToLocalFile(stream, localPath);
-
-        return localPath;
 
       default:
         throw new Error(`Type '${transferType}' is not supported`);
@@ -85,7 +83,8 @@ export class S3ClientWrapper {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
-    if (typeof data === "string") data = createReadStream(data); // read from local file
+    if (typeof data === "string")
+      throw new Error("File uploads are not supported");
 
     /* eslint-disable @typescript-eslint/naming-convention */
     await this._client.send(
@@ -104,7 +103,8 @@ export class S3ClientWrapper {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
-    if (typeof data === "string") data = createReadStream(data); // read from local file
+    if (typeof data === "string")
+      throw new Error("File uploads are not supported");
 
     const { queueSize, partSize, metadata } = options ?? {};
 

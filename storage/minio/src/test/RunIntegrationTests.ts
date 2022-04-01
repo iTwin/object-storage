@@ -7,6 +7,7 @@ import "reflect-metadata";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { MinioClientStorageBindings, MinioServerStorageBindings } from "..";
+import { MinioFrontendStorageBindings } from "../MinioFrontendStorageBindings";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,7 +33,8 @@ const config = {
 const tests = new StorageIntegrationTests(
   config,
   MinioServerStorageBindings,
-  MinioClientStorageBindings
+  MinioClientStorageBindings,
+  MinioFrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

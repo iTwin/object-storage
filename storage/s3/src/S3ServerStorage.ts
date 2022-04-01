@@ -23,7 +23,7 @@ import {
   Types,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapper } from "./S3ClientWrapper.backend";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;

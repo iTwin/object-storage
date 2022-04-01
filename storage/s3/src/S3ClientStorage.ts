@@ -8,7 +8,7 @@ import { inject, injectable } from "inversify";
 
 import {
   ClientStorage,
-  downloadFromUrl,
+  downloadFromUrlFrontendFriendly,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
@@ -17,24 +17,23 @@ import {
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
-import { transferConfigToS3ClientWrapper } from "./Helpers";
+import { transferConfigToFrontendS3ClientWrapper } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
+import { FrontendS3ClientWrapper } from "./S3ClientWrapper";
 import { Types } from "./Types";
-
-import { S3ClientWrapper } from ".";
 
 export interface S3ClientStorageConfig {
   bucket: string;
 }
 
 @injectable()
-export class S3ClientStorage extends ClientStorage {
+export class S3FrontendStorage extends ClientStorage {
   private readonly _bucket: string;
 
   public constructor(
@@ -67,13 +66,14 @@ export class S3ClientStorage extends ClientStorage {
   public async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
+    if (instanceOfUrlDownloadInput(input))
+      return downloadFromUrlFrontendFriendly(input);
 
     const { transferType, localPath, reference, transferConfig } = input;
 
     return this.useClient(
       transferConfig,
-      async (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: FrontendS3ClientWrapper) =>
         clientWrapper.download(reference, transferType, localPath)
     );
   }
@@ -92,7 +92,7 @@ export class S3ClientStorage extends ClientStorage {
 
     return this.useClient(
       input.transferConfig,
-      async (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: FrontendS3ClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
   }
@@ -102,7 +102,7 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     return this.useClient(
       input.transferConfig,
-      async (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: FrontendS3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,
@@ -113,17 +113,21 @@ export class S3ClientStorage extends ClientStorage {
 
   private async useClient<T>(
     transferConfig: TransferConfig,
-    method: (clientWrapper: S3ClientWrapper) => Promise<T>
+    method: (clientWrapper: FrontendS3ClientWrapper) => Promise<T>
   ): Promise<T> {
-    const clientWrapper = transferConfigToS3ClientWrapper(
-      transferConfig,
-      this._bucket
-    );
+    const clientWrapper = this.getClientWrapper(transferConfig, this._bucket);
 
     try {
       return await method(clientWrapper);
     } finally {
       clientWrapper.releaseResources();
     }
+  }
+
+  protected getClientWrapper(
+    transferConfig: TransferConfig,
+    bucket: string
+  ): FrontendS3ClientWrapper {
+    return transferConfigToFrontendS3ClientWrapper(transferConfig, bucket);
   }
 }
