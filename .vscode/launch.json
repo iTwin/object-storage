@@ -126,6 +126,43 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
-    }
+    },
+    {
+      "name": "-- Samples --"
+    },
+    {
+      "name": "Client file download with `inversify` sample",
+      "cwd": "${workspaceFolder}/samples/lib/with-inversify",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "Run.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Client file download without `inversify` sample",
+      "cwd": "${workspaceFolder}/samples/lib/without-inversify",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "Run.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
   ]
 }
