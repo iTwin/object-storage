@@ -31,11 +31,11 @@ export class App extends Bindable {
   }
 
   /**
-   * `bindDependencies` executes all bindings registered by the `App.start`
-   * caller. Delaying the actual binding execution until right before using
-   * the container to retrieve class instances allows the `App` class to rely on
-   * its caller to register bindings between constructing an instance of `App`
-   * and starting it.
+   * For every dependency registered in `App` constructor, `bindDependencies`
+   * selects one set of bindings based on config and adds it to the dependency
+   * injection container. Delaying this `bindDependencies` call until the start
+   * method allows us to rebind config to a different value and to register
+   * additional implementations that `App` does not have access to.
    */
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
