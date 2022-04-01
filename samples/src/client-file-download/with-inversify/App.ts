@@ -11,9 +11,10 @@ import { FileDownloader } from "../FileDownloader";
 
 /**
  * This class is an example of a minimal application that depends on generic
- * `ClientStorage` class. It is not aware of any implementations which are
- * configured at runtime (see Run.ts file in this directory). It manages its
- * components using a container provided by `inversify`.
+ * `ClientStorage` class. It is not aware of any implementations of
+ * `ClientStorage` which are configured at runtime. The caller uses
+ * `Bindable.useBindings` method to register specific implementations for
+ * required dependencies (see Run.ts file in this directory). 
  */
 export class App extends Bindable {
   public container = new Container();
@@ -31,9 +32,7 @@ export class App extends Bindable {
 
   /**
    * `bindDependencies` executes all bindings registered by the `App.start`
-   * caller. The caller uses `Bindable.useBindings` method to register specific
-   * implementations for required dependencies (see Run.ts file in this
-   * directory). Delaying the actual binding execution until right before using
+   * caller. Delaying the actual binding execution until right before using
    * the container to retrieve class instances allows the `App` class to rely on
    * its caller to register bindings between constructing an instance of `App`
    * and starting it.
@@ -45,3 +44,5 @@ export class App extends Bindable {
     await fileDownloader.downloadFile();
   }
 }
+
+The caller uses Bindable.useBindings method to register specific implementations for required dependencies(see Run.ts file in this directory).
