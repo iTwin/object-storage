@@ -44,5 +44,3 @@ export class App extends Bindable {
     await fileDownloader.downloadFile();
   }
 }
-
-The caller uses Bindable.useBindings method to register specific implementations for required dependencies(see Run.ts file in this directory).
