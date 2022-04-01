@@ -70,7 +70,7 @@ export class TestDirectoryManager {
     };
     this._createdDirectories.push(newDirectory);
 
-    await serverStorage.create(newDirectory);
+    await serverStorage.createBaseDirectory(newDirectory);
 
     return {
       ...newDirectory,

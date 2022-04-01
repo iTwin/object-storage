@@ -95,7 +95,7 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
-  public async create(directory: BaseDirectory): Promise<void> {
+  public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
     return this.upload(
       {
         baseDirectory: directory.baseDirectory,

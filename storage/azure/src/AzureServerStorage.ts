@@ -96,7 +96,7 @@ export class AzureServerStorage extends ServerStorage {
     ).uploadInMultipleParts(data, options);
   }
 
-  public async create(directory: BaseDirectory): Promise<void> {
+  public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
