@@ -63,7 +63,8 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         baseDirectory: "test-create-directory",
       };
       try {
-        const createDirectoryPromise = serverStorage.createBaseDirectory(directoryToCreate);
+        const createDirectoryPromise =
+          serverStorage.createBaseDirectory(directoryToCreate);
         await expect(createDirectoryPromise).to.eventually.be.fulfilled;
 
         const doesDirectoryExist = await serverStorage.baseDirectoryExists(
