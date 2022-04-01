@@ -6,4 +6,5 @@ export * from "./Helpers";
 export * from "./MinioClientStorage";
 export * from "./MinioClientStorageBindings";
 export * from "./MinioPresignedUrlProvider";
+export * from "./MinioServerStorage";
 export * from "./MinioServerStorageBindings";

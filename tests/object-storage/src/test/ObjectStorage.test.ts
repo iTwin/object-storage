@@ -13,6 +13,7 @@ import {
   BaseDirectory,
   ClientStorage,
   Metadata,
+  ObjectDirectory,
   ObjectReference,
   ServerStorage,
 } from "@itwin/object-storage-core";
@@ -256,11 +257,27 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       await expect(deletePromise).to.eventually.be.fulfilled;
     });
+
+    it("should retain the directory after all files from it have been deleted", async () => {
+      const tempDirectory: ObjectDirectory =
+        (await testDirectoryManager.createNewDirectory()).baseDirectory;
+
+      const testFileToUpload: ObjectReference = {
+        ...tempDirectory,
+        objectName: "test-delete-object.txt",
+      };
+      const contentBuffer = Buffer.from("test-delete-object");
+      await serverStorage.upload(testFileToUpload, contentBuffer);
+
+      await serverStorage.deleteObject(testFileToUpload);
+
+      const exists = await serverStorage.baseDirectoryExists(tempDirectory);
+      expect(exists).to.be.true;
+    });
   });
 
   describe(`${serverStorage.baseDirectoryExists.name}()`, () => {
-    // TODO: enable in the next PR which fixes MinIO behavior
-    it.skip("should return true if base directory exists", async () => {
+    it("should return true if base directory exists", async () => {
       const testDirectory = (await testDirectoryManager.createNewDirectory()).baseDirectory;
       const exists = await serverStorage.baseDirectoryExists({
         baseDirectory: testDirectory.baseDirectory,
