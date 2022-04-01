@@ -29,7 +29,6 @@ async function run(): Promise<void> {
       },
     });
   app.useBindings(AzureClientStorageBindings);
-  app.bindDependencies(app.container);
 
   return app.start();
 }

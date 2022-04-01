@@ -29,7 +29,14 @@ export class App extends Bindable {
     this.container.bind(FileDownloader).toSelf().inSingletonScope();
   }
 
+  /**
+   * `bindDependencies` is called right before using the configured classes to
+   * allow the caller of `App.start` to register all necessary bindings
+   * (see Run.ts file in this directory).
+   */
   public async start(): Promise<void> {
+    this.bindDependencies(this.container);
+
     const fileDownloader = this.container.get(FileDownloader);
     await fileDownloader.downloadFile();
   }
