@@ -14,7 +14,7 @@ import { FileDownloader } from "../FileDownloader";
  * `ClientStorage` class. It is not aware of any implementations of
  * `ClientStorage` which are configured at runtime. The caller uses
  * `Bindable.useBindings` method to register specific implementations for
- * required dependencies (see Run.ts file in this directory). 
+ * required dependencies (see Run.ts file in this directory).
  */
 export class App extends Bindable {
   public container = new Container();
