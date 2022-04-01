@@ -49,15 +49,10 @@ export class AzureClientStorage extends ClientStorage {
   public async download(
     input: UrlDownloadInput | AzureConfigDownloadInput
   ): Promise<TransferData> {
-    let url = instanceOfUrlDownloadInput(input)
-      ? input.url
-      : buildBlobUrlFromConfig(input);
-
-    if (url.includes("file.core.windows.net")) {
-      url = url.replace("file.core.windows.net", "foo");
-    }
     const blobClient = new BlockBlobClient(
-      url
+      instanceOfUrlDownloadInput(input)
+        ? input.url
+        : buildBlobUrlFromConfig(input)
     );
 
     return new BlockBlobClientWrapper(blobClient).download(
