@@ -110,14 +110,17 @@ export class AzureServerStorage extends ServerStorage {
     for await (const item of iter) names.push(item.name);
 
     const references: (ObjectReference | undefined)[] = names.map((name) =>
-      buildObjectReference( // TODO: weird conversion, back and forth
+      buildObjectReference(
+        // TODO: weird conversion, back and forth
         buildObjectKey({
           ...directory,
           objectName: name,
         })
       )
     );
-    const result: ObjectReference[] = references.filter((reference): reference is ObjectReference => reference !== undefined); // TODO: refactor
+    const result: ObjectReference[] = references.filter(
+      (reference): reference is ObjectReference => reference !== undefined
+    ); // TODO: refactor
 
     return result;
   }
@@ -238,7 +241,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void { }
+  public releaseResources(): void {}
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

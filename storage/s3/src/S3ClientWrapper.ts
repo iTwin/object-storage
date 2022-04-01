@@ -6,6 +6,7 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
+  _Object,
   CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
@@ -129,23 +130,14 @@ export class S3ClientWrapper {
     directory: BaseDirectory,
     maxResults?: number
   ): Promise<ObjectReference[]> {
-    /* eslint-disable @typescript-eslint/naming-convention */
-    const { Contents } = await this._client.send(
-      new ListObjectsV2Command({
-        Bucket: this._bucket,
-        Prefix: directory.baseDirectory,
-        MaxKeys: maxResults,
-      })
+    const objects = await this.listInternal(directory, maxResults);
+
+    const references: (ObjectReference | undefined)[] = objects.map((object) =>
+      buildObjectReference(object.Key!)
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
-
-    if (!Contents)
-      return [];
-
-    const references: (ObjectReference | undefined)[] = Contents
-      .map((object) => buildObjectReference(object.Key!));
-    const result: ObjectReference[] = references
-      .filter((reference): reference is ObjectReference => reference !== undefined);
+    const result: ObjectReference[] = references.filter(
+      (reference): reference is ObjectReference => reference !== undefined
+    );
 
     return result;
   }
@@ -213,11 +205,28 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
+    const filesWithPrefix: _Object[] = await this.listInternal(directory, 1);
     return filesWithPrefix.length !== 0;
   }
 
   public releaseResources(): void {
     this._client.destroy();
+  }
+
+  private async listInternal(
+    directory: BaseDirectory,
+    maxResults?: number
+  ): Promise<_Object[]> {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const { Contents } = await this._client.send(
+      new ListObjectsV2Command({
+        Bucket: this._bucket,
+        Prefix: directory.baseDirectory,
+        MaxKeys: maxResults,
+      })
+    );
+    /* eslint-enable @typescript-eslint/naming-convention */
+
+    return Contents ?? [];
   }
 }

@@ -53,8 +53,9 @@ export function buildObjectKey(reference: {
   objectName: string;
 }): string {
   const { baseDirectory, relativeDirectory, objectName } = reference;
-  return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""
-    }/${objectName}`;
+  return `${baseDirectory}${
+    relativeDirectory ? `/${relativeDirectory}` : ""
+  }/${objectName}`;
 }
 
 export function buildObjectReference(
@@ -65,8 +66,7 @@ export function buildObjectReference(
   const lastIndex = parts.length - 1;
 
   const objectName = parts.length !== 1 ? parts[lastIndex] : "";
-  if (!objectName)
-    return undefined;
+  if (!objectName) return undefined;
 
   const result: ObjectReference = {
     baseDirectory: parts[0],
@@ -74,8 +74,7 @@ export function buildObjectReference(
   };
 
   const relativeDirectory = parts.slice(1, lastIndex).join("/");
-  if (relativeDirectory)
-    result.relativeDirectory = relativeDirectory;
+  if (relativeDirectory) result.relativeDirectory = relativeDirectory;
 
   return result;
 }

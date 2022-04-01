@@ -2,9 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import * as path from "path";
 import { randomUUID } from "crypto";
 import { existsSync, promises } from "fs";
+import * as path from "path";
 import { Readable } from "stream";
 
 import { expect } from "chai";
@@ -37,7 +37,9 @@ export async function checkUploadedFileValidity(
   expect(_metadata).to.eql(metadata);
 }
 
-export function uploadTestObjectReference(reference: ObjectReference): Promise<void> {
+export async function uploadTestObjectReference(
+  reference: ObjectReference
+): Promise<void> {
   return serverStorage.upload(
     reference,
     Buffer.from(`test file payload ${randomUUID()}`)
@@ -69,15 +71,17 @@ export async function assertLocalFile(
 }
 
 export class TestDirectory {
-  constructor(
-    public readonly baseDirectory: BaseDirectory
-  ) { }
+  constructor(public readonly baseDirectory: BaseDirectory) { }
 
-  public async uploadFile(reference: Pick<ObjectReference, "relativeDirectory" | "objectName">, content: Buffer, metadata: Metadata | undefined): Promise<ObjectReference> {
+  public async uploadFile(
+    reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
+    content: Buffer,
+    metadata: Metadata | undefined
+  ): Promise<ObjectReference> {
     const objectReference: ObjectReference = {
       baseDirectory: this.baseDirectory.baseDirectory,
       relativeDirectory: reference.relativeDirectory,
-      objectName: reference.objectName
+      objectName: reference.objectName,
     };
 
     await serverStorage.upload(objectReference, content, metadata);
@@ -88,10 +92,7 @@ export class TestDirectory {
 export class TestDirectoryManager {
   private _createdDirectories: BaseDirectory[] = [];
 
-
-
-  public async createNewDirectory(): Promise<TestDirectory> {
-    (Object.prototype as any).foo = "aa";
+  public async createNew(): Promise<TestDirectory> {
     const newDirectory: BaseDirectory = {
       baseDirectory: `integration-tests-${randomUUID()}`,
     };
@@ -100,7 +101,6 @@ export class TestDirectoryManager {
     await serverStorage.create(newDirectory);
     return new TestDirectory(newDirectory);
   }
-
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
@@ -112,22 +112,12 @@ export class TestDirectoryManager {
 export class TestLocalFileManager {
   private _createdFiles: string[] = [];
 
-  constructor(private readonly _rootDir: string) {
+  constructor(private readonly _rootDir: string) { }
 
-  }
-
-  public async createAndWriteFile(fileName: string, content: string): Promise<void> {
-    if (!existsSync(this._rootDir))
-      await promises.mkdir(this._rootDir, { recursive: true });
-
-    const filePath = path.join(this._rootDir, fileName);
-    this._createdFiles.push(filePath);
-
-    const contentBuffer = Buffer.from(content);
-    await promises.writeFile(filePath, contentBuffer);
-  }
-
-  public async createAndWriteFileBuffer(fileName: string, content: Buffer): Promise<string> { // TODO: overloads?
+  public async createAndWriteFile(
+    fileName: string,
+    content: Buffer
+  ): Promise<string> {
     if (!existsSync(this._rootDir))
       await promises.mkdir(this._rootDir, { recursive: true });
 
@@ -139,11 +129,11 @@ export class TestLocalFileManager {
   }
 
   public async purgeCreatedFiles(): Promise<void> {
-    for (const fileToDelete in this._createdFiles) {
-      if (existsSync(fileToDelete)) // TODO: looks stupid
+    for (const fileToDelete of this._createdFiles) {
+      if (existsSync(fileToDelete)) {
         await promises.unlink(fileToDelete);
+      }
     }
     this._createdFiles = [];
-
   }
 }
