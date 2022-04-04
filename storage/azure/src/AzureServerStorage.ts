@@ -111,7 +111,6 @@ export class AzureServerStorage extends ServerStorage {
 
     const references: (ObjectReference | undefined)[] = names.map((name) =>
       buildObjectReference(
-        // TODO: weird conversion, back and forth
         buildObjectKey({
           ...directory,
           objectName: name,
@@ -120,7 +119,7 @@ export class AzureServerStorage extends ServerStorage {
     );
     const result: ObjectReference[] = references.filter(
       (reference): reference is ObjectReference => reference !== undefined
-    ); // TODO: refactor
+    );
 
     return result;
   }
@@ -241,7 +240,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {
