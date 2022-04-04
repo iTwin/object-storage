@@ -12,45 +12,24 @@ import * as chaiAsPromised from "chai-as-promised";
 import {
   BaseDirectory,
   Metadata,
-  ObjectDirectory,
   ObjectReference,
   ServerStorage,
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
+import { testDirectoryManager, testLocalFileManager } from "./Global.test";
 import {
   assertBuffer,
   assertLocalFile,
   assertStream,
   checkUploadedFileValidity,
   queryAndAssertMetadata,
-  TestLocalFileManager,
-  TestRemoteDirectoryManager,
-  uploadTestObjectReference,
+  TestDirectory,
 } from "./Helpers";
 
 use(chaiAsPromised);
 
 const { serverStorage } = config;
-
-const testDirectoryManager = new TestRemoteDirectoryManager();
-const testLocalFileManager = new TestLocalFileManager(
-  path.join(process.cwd(), "lib", "tempFiles")
-);
-
-beforeEach(async () => {
-  await Promise.all([
-    testDirectoryManager.purgeCreatedDirectories(),
-    testLocalFileManager.purgeCreatedFiles(),
-  ]);
-});
-
-after(async () => {
-  await Promise.all([
-    testDirectoryManager.purgeCreatedDirectories(),
-    testLocalFileManager.purgeCreatedFiles(),
-  ]);
-});
 
 describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.createBaseDirectory.name}()`, () => {
@@ -89,14 +68,17 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     for (const testCase of uploadTestCases) {
       const { caseName, objectName, dataCallback } = testCase;
+
       it(`should upload a file from ${caseName}`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-test.txt",
-          contentBuffer
-        );
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-server-upload.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
           objectName,
         };
@@ -107,52 +89,54 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file with relative directory from ${caseName}`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-test.txt",
-          contentBuffer
-        );
-
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-server-upload-relative-dir.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
-          relativeDirectory: path.join("relative1, relative2"),
+          relativeDirectory: path.join("relative-1, relative-2"),
           objectName,
         };
-
-        const metadata = {
+        const metadata: Metadata = {
           test: "test-metadata",
         };
+
         await serverStorage.upload(
           reference,
           dataCallback(fileToUploadPath),
           metadata
         );
+
         await checkUploadedFileValidity(reference, contentBuffer);
       });
 
       it(`should upload a file from ${caseName} with metadata`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-test.txt",
-          contentBuffer
-        );
-
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-server-upload-metadata.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
           objectName,
         };
-
-        const metadata = {
+        const metadata: Metadata = {
           test: "test-metadata",
         };
-        const uploadPromise = serverStorage.upload(
+
+        await serverStorage.upload(
           reference,
           dataCallback(fileToUploadPath),
           metadata
         );
-        await expect(uploadPromise).to.eventually.be.fulfilled;
 
         await checkUploadedFileValidity(reference, contentBuffer);
         await queryAndAssertMetadata(reference, metadata);
@@ -177,14 +161,17 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     for (const testCase of uploadTestCases) {
       const { caseName, objectName, dataCallback } = testCase;
+
       it(`should upload a file from ${caseName}`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-multipart-test.txt",
-          contentBuffer
-        );
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-multipart-server-upload.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
           objectName,
         };
@@ -198,16 +185,17 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file with relative directory from ${caseName}`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-multipart-test.txt",
-          contentBuffer
-        );
-
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-multipart-server-upload-relative-dir.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
-          relativeDirectory: path.join("relative1", "relative2"),
+          relativeDirectory: path.join("relative-1", "relative-2"),
           objectName,
         };
 
@@ -220,27 +208,26 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file from ${caseName} with metadata`, async () => {
-        const testBaseDirectory = (await testDirectoryManager.createNew())
-          .baseDirectory;
-        const fileToUploadPath = await testLocalFileManager.createAndWriteFile(
-          "server-multipart-test.txt",
-          contentBuffer
-        );
-
-        const reference = {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-multipart-server-upload-metadata.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
           objectName,
         };
-
-        const metadata = {
+        const metadata: Metadata = {
           test: "test-metadata",
         };
+
         await serverStorage.uploadInMultipleParts(
           reference,
           dataCallback(fileToUploadPath),
-          {
-            metadata,
-          }
+          { metadata }
         );
 
         await checkUploadedFileValidity(reference, contentBuffer);
@@ -251,21 +238,22 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.list.name}()`, () => {
     it("should list objects", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
-      const reference1: ObjectReference = {
-        baseDirectory: testBaseDirectory.baseDirectory,
-        objectName: "reference1",
-      };
-      const reference2: ObjectReference = {
-        baseDirectory: testBaseDirectory.baseDirectory,
-        relativeDirectory: "relativeDir",
-        objectName: "reference2",
-      };
-      await uploadTestObjectReference(reference1);
-      await uploadTestObjectReference(reference2);
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const reference1: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "reference1" },
+        undefined,
+        undefined
+      );
+      const reference2: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "reference2" },
+        undefined,
+        undefined
+      );
 
-      const queriedReferences = await serverStorage.list(testBaseDirectory);
+      const queriedReferences = await serverStorage.list(
+        testDirectory.baseDirectory
+      );
 
       expect(queriedReferences.length).to.be.equal(2);
       const queriedReference1 = queriedReferences.find(
@@ -281,29 +269,26 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.deleteBaseDirectory.name}()`, () => {
     it("should delete directory with files", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
-
       await Promise.all(
         tempFiles.map(async (file) =>
-          serverStorage.upload(
-            {
-              baseDirectory: testBaseDirectory.baseDirectory,
-              objectName: file,
-            },
-            Buffer.from(file)
+          testDirectory.uploadFile(
+            { objectName: file },
+            Buffer.from(file),
+            undefined
           )
         )
       );
 
-      const deleteDirectoryPromise =
-        serverStorage.deleteBaseDirectory(testBaseDirectory);
-
+      const deleteDirectoryPromise = serverStorage.deleteBaseDirectory(
+        testDirectory.baseDirectory
+      );
       await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
       const doesDirectoryExist = await serverStorage.baseDirectoryExists(
-        testBaseDirectory
+        testDirectory.baseDirectory
       );
       expect(doesDirectoryExist).to.be.equal(false);
     });
@@ -319,14 +304,13 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.deleteObject.name}()`, () => {
     it("should delete object", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
-      const reference: ObjectReference = {
-        baseDirectory: testBaseDirectory.baseDirectory,
-        relativeDirectory: "relativeDir",
-        objectName: "test should delete object.txt",
-      };
-      await uploadTestObjectReference(reference);
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const reference: ObjectReference = await testDirectory.uploadFile(
+        { relativeDirectory: "relative", objectName: "test-delete.txt" },
+        undefined,
+        undefined
+      );
 
       await serverStorage.deleteObject(reference);
 
@@ -335,8 +319,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should not throw if file does not exist", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
+      const testBaseDirectory: BaseDirectory = (
+        await testDirectoryManager.createNew()
+      ).baseDirectory;
       const deletePromise = serverStorage.deleteObject({
         baseDirectory: testBaseDirectory.baseDirectory,
         objectName: randomUUID(),
@@ -356,10 +341,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should retain the directory after all files from it have been deleted", async () => {
-      const testBaseDirectory: ObjectDirectory = (
+      const testBaseDirectory: BaseDirectory = (
         await testDirectoryManager.createNew()
       ).baseDirectory;
-
       const testFileToUpload: ObjectReference = {
         baseDirectory: testBaseDirectory.baseDirectory,
         objectName: "test-delete-object.txt",
@@ -376,8 +360,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.baseDirectoryExists.name}()`, () => {
     it("should return true if base directory exists", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
+      const testBaseDirectory: BaseDirectory = (
+        await testDirectoryManager.createNew()
+      ).baseDirectory;
       const exists = await serverStorage.baseDirectoryExists({
         baseDirectory: testBaseDirectory.baseDirectory,
       });
@@ -396,23 +381,24 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.objectExists.name}()`, () => {
     it("should return true if file exists", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
-      const reference = {
-        baseDirectory: testBaseDirectory.baseDirectory,
-        objectName: "exists.txt",
-      };
-      await serverStorage.upload(reference, Buffer.from("test-exists"));
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const reference: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "test-exists.txt" },
+        undefined,
+        undefined
+      );
 
       const exists = await serverStorage.objectExists(reference);
-      expect(exists).to.be.true;
 
-      await serverStorage.deleteObject(reference);
+      expect(exists).to.be.true;
     });
 
     it("should return false if file does not exist", async () => {
-      const testBaseDirectory = (await testDirectoryManager.createNew())
-        .baseDirectory;
+      const testBaseDirectory: BaseDirectory = (
+        await testDirectoryManager.createNew()
+      ).baseDirectory;
+
       const exists = await serverStorage.objectExists({
         baseDirectory: testBaseDirectory.baseDirectory,
         objectName: randomUUID(),
@@ -436,43 +422,49 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     const contentBuffer = Buffer.from("test-download");
 
     it("should download a file to buffer", async () => {
-      const testDirectory = await testDirectoryManager.createNew();
-      const uploadedFile = await testDirectory.uploadFile(
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
         contentBuffer,
         undefined
       );
 
       const response = await serverStorage.download(uploadedFile, "buffer");
+
       assertBuffer(response, contentBuffer);
     });
 
     it("should download a file to stream", async () => {
-      const testDirectory = await testDirectoryManager.createNew();
-      const uploadedFile = await testDirectory.uploadFile(
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
         contentBuffer,
         undefined
       );
 
       const response = await serverStorage.download(uploadedFile, "stream");
+
       await assertStream(response, contentBuffer);
     });
 
     it("should download a file to path", async () => {
-      const testDirectory = await testDirectoryManager.createNew();
-      const uploadedFile = await testDirectory.uploadFile(
+      const testDownloadFolder = await testLocalFileManager.getDownloadsDir();
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
+      const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
         contentBuffer,
         undefined
       );
-      const testDownloadFolder = await testLocalFileManager.getDownloadsDir();
 
       const response = await serverStorage.download(
         uploadedFile,
         "local",
         path.join(testDownloadFolder, "download.txt")
       );
+
       await assertLocalFile(response, contentBuffer);
     });
   });
@@ -480,7 +472,8 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.getObjectProperties.name}()`, () => {
     it("should get correct object properties", async () => {
       const data = Buffer.from("test-properties");
-      const testDirectory = await testDirectoryManager.createNew();
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
       const uploadMetadata: Metadata = {
         test: "test-metadata",
       };
@@ -506,12 +499,13 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.updateMetadata.name}()`, () => {
     it("should update metadata", async () => {
-      const testDirectory = await testDirectoryManager.createNew();
+      const testDirectory: TestDirectory =
+        await testDirectoryManager.createNew();
       const initialMetadata: Metadata = {
         test1: "test-metadata-1",
         test2: "test-metadata-2",
       };
-      const uploadedFile = await testDirectory.uploadFile(
+      const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "update-metadata-test.txt" },
         Buffer.from("test-metadata"),
         initialMetadata

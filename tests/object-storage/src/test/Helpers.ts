@@ -39,15 +39,6 @@ export async function queryAndAssertMetadata(
   expect(metadata).to.deep.equal(expectedMetadata);
 }
 
-export async function uploadTestObjectReference(
-  reference: ObjectReference
-): Promise<void> {
-  return serverStorage.upload(
-    reference,
-    Buffer.from(`test file payload ${randomUUID()}`)
-  );
-}
-
 export function assertBuffer(
   response: TransferData,
   contentBuffer: Buffer
@@ -73,20 +64,21 @@ export async function assertLocalFile(
 }
 
 export class TestDirectory {
-  constructor(public readonly baseDirectory: BaseDirectory) {}
+  constructor(public readonly baseDirectory: BaseDirectory) { }
 
   public async uploadFile(
     reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
-    content: Buffer,
+    content: Buffer | undefined,
     metadata: Metadata | undefined
   ): Promise<ObjectReference> {
+    const contentToUpload: Buffer =
+      content ?? Buffer.from(`test file payload ${randomUUID()}`);
     const objectReference: ObjectReference = {
       baseDirectory: this.baseDirectory.baseDirectory,
-      relativeDirectory: reference.relativeDirectory,
-      objectName: reference.objectName,
+      ...reference,
     };
 
-    await serverStorage.upload(objectReference, content, metadata);
+    await serverStorage.upload(objectReference, contentToUpload, metadata);
     return objectReference;
   }
 }
