@@ -31,7 +31,10 @@ export async function checkUploadedFileValidity(
   expect(downloadedBuffer.equals(contentBuffer)).to.be.true;
 }
 
-export async function queryAndAssertMetadata(reference: ObjectReference, expectedMetadata: Metadata) {
+export async function queryAndAssertMetadata(
+  reference: ObjectReference,
+  expectedMetadata: Metadata
+): Promise<void> {
   const { metadata } = await serverStorage.getObjectProperties(reference);
   expect(metadata).to.deep.equal(expectedMetadata);
 }
@@ -70,7 +73,7 @@ export async function assertLocalFile(
 }
 
 export class TestDirectory {
-  constructor(public readonly baseDirectory: BaseDirectory) { }
+  constructor(public readonly baseDirectory: BaseDirectory) {}
 
   public async uploadFile(
     reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
@@ -101,7 +104,7 @@ export class TestRemoteDirectoryManager {
     return new TestDirectory(newDirectory);
   }
 
-  public addForDelete(directory: BaseDirectory) {
+  public addForDelete(directory: BaseDirectory): void {
     this._createdDirectories.push(directory);
   }
 
@@ -145,7 +148,7 @@ export class TestLocalFileManager {
     this.purgeDirectory(this._uploadsDir);
   }
 
-  private async purgeDirectory(directory: string): Promise<void> {
+  private purgeDirectory(directory: string): void {
     rmSync(directory, { recursive: true, force: true });
   }
 }
