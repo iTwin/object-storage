@@ -18,9 +18,12 @@ export interface MultipartUploadOptions {
   metadata?: Metadata;
 }
 
-export interface ObjectDirectory {
+export interface BaseDirectory {
   /** Container for Azure. First directory of a prefix for S3. */
   baseDirectory: string;
+}
+
+export interface ObjectDirectory extends BaseDirectory {
   /** Additional directories in the path to object. */
   relativeDirectory?: string;
 }

@@ -4,14 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import { randomUUID } from "crypto";
 import { promises } from "fs";
+import { Readable } from "stream";
 
 import { expect } from "chai";
 
 import {
-  ClientStorage,
+  BaseDirectory,
   Metadata,
   ObjectDirectory,
   ObjectReference,
+  streamToBuffer,
   TransferData,
 } from "@itwin/object-storage-core";
 
@@ -24,7 +26,7 @@ export async function checkUploadedFileValidity(
   contentBuffer: Buffer,
   metadata: Metadata
 ): Promise<void> {
-  expect(await serverStorage.exists(reference)).to.be.true;
+  expect(await serverStorage.objectExists(reference)).to.be.true;
 
   const downloadedBuffer = await serverStorage.download(reference, "buffer");
   expect(downloadedBuffer.equals(contentBuffer)).to.be.true;
@@ -35,84 +37,50 @@ export async function checkUploadedFileValidity(
   expect(_metadata).to.eql(metadata);
 }
 
-export function testPresignedUrlUpload(
-  contentBuffer: Buffer,
-  fileToUploadPath: string,
-  clientStorage: ClientStorage,
-  testDirectoryManager: TestDirectoryManager,
-  uploadTestCases: {
-    caseName: string;
-    objectName: string;
-    dataCallback: () => TransferData;
-    rejectedWith?: Parameters<Chai.PromisedThrow>;
-  }[]
+export function assertBuffer(
+  response: TransferData,
+  contentBuffer: Buffer
 ): void {
-  let testDirectory: ObjectDirectory;
+  expect(response instanceof Buffer).to.be.true;
+  expect(contentBuffer.equals(response as Buffer)).to.be.true;
+}
 
-  before(async () => {
-    testDirectory = await testDirectoryManager.createNewDirectory();
-    await promises.writeFile(fileToUploadPath, contentBuffer);
-  });
+export async function assertStream(
+  response: TransferData,
+  contentBuffer: Buffer
+): Promise<void> {
+  expect(response instanceof Readable).to.be.true;
+  const downloadedBuffer = await streamToBuffer(response as Readable);
+  expect(contentBuffer.equals(downloadedBuffer)).to.be.true;
+}
 
-  after(async () => {
-    const deletePromises = uploadTestCases.map(async (testCase) =>
-      serverStorage.delete({
-        ...testDirectory,
-        objectName: testCase.objectName,
-      })
-    );
-
-    await Promise.all([...deletePromises, promises.unlink(fileToUploadPath)]);
-  });
-
-  for (const testCase of uploadTestCases) {
-    const { caseName, objectName, dataCallback, rejectedWith } = testCase;
-    it(`should upload a file from ${caseName} with metadata to URL`, async () => {
-      const reference = {
-        ...testDirectory,
-        objectName,
-      };
-
-      const uploadUrl = await serverStorage.getUploadUrl(reference);
-
-      const metadata = {
-        test: "test-metadata",
-      };
-      const uploadPromise = clientStorage.upload({
-        url: uploadUrl,
-        data: dataCallback(),
-        metadata,
-      });
-
-      if (rejectedWith !== undefined)
-        await expect(uploadPromise).to.eventually.be.rejectedWith(
-          ...rejectedWith
-        );
-      else await expect(uploadPromise).to.eventually.be.fulfilled;
-
-      await checkUploadedFileValidity(reference, contentBuffer, metadata);
-    });
-  }
+export async function assertLocalFile(
+  response: TransferData,
+  contentBuffer: Buffer
+): Promise<void> {
+  expect(contentBuffer.equals(await promises.readFile(response as string)));
 }
 
 export class TestDirectoryManager {
-  private _createdDirectories: ObjectDirectory[] = [];
+  private _createdDirectories: BaseDirectory[] = [];
 
   public async createNewDirectory(): Promise<ObjectDirectory> {
-    const newDirectory: ObjectDirectory = {
+    const newDirectory: BaseDirectory = {
       baseDirectory: randomUUID(),
-      relativeDirectory: "foobar",
     };
     this._createdDirectories.push(newDirectory);
 
     await serverStorage.create(newDirectory);
 
-    return newDirectory;
+    return {
+      ...newDirectory,
+      relativeDirectory: "foobar",
+    };
   }
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverStorage.delete(directoryToDelete);
+      await serverStorage.deleteBaseDirectory(directoryToDelete);
     this._createdDirectories = [];
   }
 }

@@ -36,6 +36,35 @@ importers:
       sort-package-json: 1.53.1
       typescript: 4.3.5
 
+  ../../samples:
+    specifiers:
+      '@itwin/cloud-agnostic-core': workspace:*
+      '@itwin/object-storage-azure': workspace:*
+      '@itwin/object-storage-common-config': workspace:*
+      '@itwin/object-storage-core': workspace:*
+      '@types/node': ^14.14.41
+      cspell: ~5.18.5
+      eslint: ~7.32.0
+      inversify: ~5.0.1
+      reflect-metadata: ~0.1.13
+      rimraf: ^2.6.2
+      sort-package-json: ~1.53.1
+      typescript: ~4.3.0
+    dependencies:
+      '@itwin/cloud-agnostic-core': link:../cloud-agnostic/core
+      '@itwin/object-storage-azure': link:../storage/azure
+      '@itwin/object-storage-core': link:../storage/core
+      inversify: 5.0.5
+      reflect-metadata: 0.1.13
+    devDependencies:
+      '@itwin/object-storage-common-config': link:../utils/common-config
+      '@types/node': 14.18.12
+      cspell: 5.18.5
+      eslint: 7.32.0
+      rimraf: 2.7.1
+      sort-package-json: 1.53.1
+      typescript: 4.3.5
+
   ../../storage/azure:
     specifiers:
       '@azure/storage-blob': ~12.2.1

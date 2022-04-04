@@ -7,7 +7,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
-  instanceOfObjectReference,
+  BaseDirectory,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -37,9 +37,9 @@ export interface S3ServerStorageConfig {
 
 @injectable()
 export class S3ServerStorage extends ServerStorage {
-  private readonly _s3Client: S3ClientWrapper;
   private readonly _presignedUrlProvider: PresignedUrlProvider;
   private readonly _transferConfigProvider: TransferConfigProvider;
+  protected readonly _s3Client: S3ClientWrapper;
 
   public constructor(
     s3Client: S3ClientWrapper,
@@ -95,7 +95,7 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
-  public async create(directory: ObjectDirectory): Promise<void> {
+  public async create(directory: BaseDirectory): Promise<void> {
     return this.upload(
       {
         baseDirectory: directory.baseDirectory,
@@ -106,28 +106,28 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   /** Max 1000 objects */
-  public async list(directory: ObjectDirectory): Promise<ObjectReference[]> {
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     return this._s3Client.list(directory);
   }
 
-  public async delete(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<void> {
-    if (instanceOfObjectReference(reference)) {
-      await this._s3Client.deleteObject(reference);
-      return;
-    }
-
-    await this.deleteObjectsWithPrefix(reference);
+  public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
+    await Promise.all(
+      (
+        await this.list(directory)
+      ).map(async (file) => this._s3Client.deleteObject(file))
+    );
   }
 
-  public async exists(
-    reference: ObjectDirectory | ObjectReference
-  ): Promise<boolean> {
-    if (instanceOfObjectReference(reference))
-      return this._s3Client.objectExists(reference);
+  public async deleteObject(reference: ObjectReference): Promise<void> {
+    await this._s3Client.deleteObject(reference);
+  }
 
-    return this._s3Client.prefixExists(reference);
+  public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
+    return this._s3Client.prefixExists(directory);
+  }
+
+  public async objectExists(reference: ObjectReference): Promise<boolean> {
+    return this._s3Client.objectExists(reference);
   }
 
   public async updateMetadata(
@@ -180,16 +180,6 @@ export class S3ServerStorage extends ServerStorage {
     return this._transferConfigProvider.getUploadConfig(
       directory,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
-  }
-
-  private async deleteObjectsWithPrefix(
-    directory: ObjectDirectory
-  ): Promise<void> {
-    await Promise.all(
-      (
-        await this.list(directory)
-      ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
 
