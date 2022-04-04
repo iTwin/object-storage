@@ -64,7 +64,7 @@ export async function assertLocalFile(
 }
 
 export class TestDirectory {
-  constructor(public readonly baseDirectory: BaseDirectory) { }
+  constructor(public readonly baseDirectory: BaseDirectory) {}
 
   public async uploadFile(
     reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
