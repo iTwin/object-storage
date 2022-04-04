@@ -5,6 +5,7 @@ import {
   ClientStorage,
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
+
 import { S3ClientStorageConfig, S3FrontendStorage } from "./S3ClientStorage";
 import { Types } from "./Types";
 

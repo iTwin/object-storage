@@ -1,10 +1,11 @@
 import { Container } from "inversify";
 
-import { ClientStorage } from "@itwin/object-storage-core";
 import {
   S3ClientStorageBindingsConfig,
   S3FrontendStorageBindings,
 } from "@itwin/object-storage-s3/lib/frontend";
+
+import { ClientStorage } from "@itwin/object-storage-core";
 
 import { MinioFrontendStorage } from "./MinioClientStorage";
 
