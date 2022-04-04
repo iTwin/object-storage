@@ -35,7 +35,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.createBaseDirectory.name}()`, () => {
     it("should create directory", async () => {
       const testDirectory: BaseDirectory = {
-        baseDirectory: "test-create-directory",
+        baseDirectory: `test-create-directory-${randomUUID()}`,
       };
       testDirectoryManager.addForDelete(testDirectory);
 
@@ -282,10 +282,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         )
       );
 
-      const deleteDirectoryPromise = serverStorage.deleteBaseDirectory(
+      await serverStorage.deleteBaseDirectory(
         testDirectory.baseDirectory
       );
-      await expect(deleteDirectoryPromise).to.eventually.be.fulfilled;
 
       const doesDirectoryExist = await serverStorage.baseDirectoryExists(
         testDirectory.baseDirectory

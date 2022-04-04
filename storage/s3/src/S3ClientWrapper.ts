@@ -126,20 +126,42 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
+  /**
+   * Lists objects with specified prefix.
+   * @param {BaseDirectory} directory base directory
+   * @param options 
+   * @returns {Promise<ObjectReference[]>} array of objects with specified prefix. If no objects with such prefix exist an empty array is returned.
+   */
   public async list(
     directory: BaseDirectory,
-    maxResults?: number
+    options?: {
+      maxResults?: number,
+      includeEmptyFiles?: boolean
+    }
   ): Promise<ObjectReference[]> {
-    const objects = await this.listInternal(directory, maxResults);
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const { Contents } = await this._client.send(
+      new ListObjectsV2Command({
+        Bucket: this._bucket,
+        Prefix: directory.baseDirectory,
+        MaxKeys: options?.maxResults,
+      })
+    );
+    /* eslint-enable @typescript-eslint/naming-convention */
 
-    const references: (ObjectReference | undefined)[] = objects.map((object) =>
+    if (!Contents)
+      return [];
+
+    const references: ObjectReference[] = Contents.map((object) =>
       buildObjectReference(object.Key!)
     );
-    const result: ObjectReference[] = references.filter(
-      (reference): reference is ObjectReference => reference !== undefined
-    );
+    if (options?.includeEmptyFiles)
+      return references;
 
-    return result;
+    const filteredReferences: ObjectReference[] = references.filter(
+      (reference) => !!reference.objectName
+    );
+    return filteredReferences;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
@@ -205,28 +227,11 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: _Object[] = await this.listInternal(directory, 1);
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, { includeEmptyFiles: true, maxResults: 1 });
     return filesWithPrefix.length !== 0;
   }
 
   public releaseResources(): void {
     this._client.destroy();
-  }
-
-  private async listInternal(
-    directory: BaseDirectory,
-    maxResults?: number
-  ): Promise<_Object[]> {
-    /* eslint-disable @typescript-eslint/naming-convention */
-    const { Contents } = await this._client.send(
-      new ListObjectsV2Command({
-        Bucket: this._bucket,
-        Prefix: directory.baseDirectory,
-        MaxKeys: maxResults,
-      })
-    );
-    /* eslint-enable @typescript-eslint/naming-convention */
-
-    return Contents ?? [];
   }
 }
