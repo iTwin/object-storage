@@ -129,14 +129,14 @@ export class S3ClientWrapper {
   /**
    * Lists objects with specified prefix.
    * @param {BaseDirectory} directory base directory
-   * @param options 
+   * @param options
    * @returns {Promise<ObjectReference[]>} array of objects with specified prefix. If no objects with such prefix exist an empty array is returned.
    */
   public async list(
     directory: BaseDirectory,
     options?: {
-      maxResults?: number,
-      includeEmptyFiles?: boolean
+      maxResults?: number;
+      includeEmptyFiles?: boolean;
     }
   ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -149,14 +149,12 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    if (!Contents)
-      return [];
+    if (!Contents) return [];
 
     const references: ObjectReference[] = Contents.map((object) =>
       buildObjectReference(object.Key!)
     );
-    if (options?.includeEmptyFiles)
-      return references;
+    if (options?.includeEmptyFiles) return references;
 
     const filteredReferences: ObjectReference[] = references.filter(
       (reference) => !!reference.objectName
@@ -196,6 +194,7 @@ export class S3ClientWrapper {
     reference: ObjectReference
   ): Promise<ObjectProperties> {
     /* eslint-disable @typescript-eslint/naming-convention */
+    const key = buildObjectKey(reference);
     const {
       LastModified,
       ContentLength,
@@ -203,7 +202,7 @@ export class S3ClientWrapper {
     } = await this._client.send(
       new HeadObjectCommand({
         Bucket: this._bucket,
-        Key: buildObjectKey(reference),
+        Key: key,
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -227,7 +226,10 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, { includeEmptyFiles: true, maxResults: 1 });
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, {
+      includeEmptyFiles: true,
+      maxResults: 1,
+    });
     return filesWithPrefix.length !== 0;
   }
 
