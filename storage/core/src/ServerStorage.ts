@@ -50,7 +50,7 @@ export abstract class ServerStorage
     options?: MultipartUploadOptions
   ): Promise<void>;
 
-  public abstract create(directory: BaseDirectory): Promise<void>;
+  public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;
 
   public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
 

@@ -24,6 +24,6 @@ export class MinioServerStorage extends S3ServerStorage {
     await super.deleteObject(reference);
 
     if (!(await this.baseDirectoryExists(reference)))
-      await this.create(reference);
+      await this.createBaseDirectory(reference);
   }
 }
