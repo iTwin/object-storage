@@ -99,7 +99,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         ).baseDirectory;
         const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
-          relativeDirectory: path.join("relative-1, relative-2"),
+          relativeDirectory: "relative-1/relative-2",
           objectName,
         };
         const metadata: Metadata = {
@@ -195,7 +195,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         ).baseDirectory;
         const reference: ObjectReference = {
           baseDirectory: testBaseDirectory.baseDirectory,
-          relativeDirectory: path.join("relative-1", "relative-2"),
+          relativeDirectory: "relative-1/relative-2",
           objectName,
         };
 
@@ -282,9 +282,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         )
       );
 
-      await serverStorage.deleteBaseDirectory(
-        testDirectory.baseDirectory
-      );
+      await serverStorage.deleteBaseDirectory(testDirectory.baseDirectory);
 
       const doesDirectoryExist = await serverStorage.baseDirectoryExists(
         testDirectory.baseDirectory
@@ -301,12 +299,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.deleteObject.name}()`, () => {
+  describe(`${serverStorage.deleteObject.name}()`, async () => {
     it("should delete object", async () => {
       const testDirectory: TestDirectory =
         await testDirectoryManager.createNew();
       const reference: ObjectReference = await testDirectory.uploadFile(
-        { relativeDirectory: "relative", objectName: "test-delete.txt" },
+        { objectName: "test-delete.txt" },
         undefined,
         undefined
       );
@@ -340,19 +338,26 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should retain the directory after all files from it have been deleted", async () => {
+      console.log(1);
       const testBaseDirectory: BaseDirectory = (
         await testDirectoryManager.createNew()
       ).baseDirectory;
+      console.log(2);
       const testFileToUpload: ObjectReference = {
         baseDirectory: testBaseDirectory.baseDirectory,
         objectName: "test-delete-object.txt",
       };
+      console.log(3);
       const contentBuffer = Buffer.from("test-delete-object");
+      console.log(4);
       await serverStorage.upload(testFileToUpload, contentBuffer);
 
+      console.log(5);
       await serverStorage.deleteObject(testFileToUpload);
 
+      console.log(6);
       const exists = await serverStorage.baseDirectoryExists(testBaseDirectory);
+      console.log(7);
       expect(exists).to.be.true;
     });
   });

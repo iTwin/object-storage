@@ -88,7 +88,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             await testDirectoryManager.createNew();
           const reference: ObjectReference = {
             baseDirectory: testDirectory.baseDirectory.baseDirectory,
-            relativeDirectory: path.join("relative-1, relative-2"),
+            relativeDirectory: "relative-1/relative-2",
             objectName,
           };
 
@@ -222,6 +222,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
               "test-client-config-upload.txt",
               contentBuffer
             );
+
           const testBaseDirectory: BaseDirectory = (
             await testDirectoryManager.createNew()
           ).baseDirectory;
@@ -253,7 +254,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           ).baseDirectory;
           const reference: ObjectReference = {
             baseDirectory: testBaseDirectory.baseDirectory,
-            relativeDirectory: path.join("relative-1", "relative-2"),
+            relativeDirectory: "relative-1/relative-2",
             objectName,
           };
 
@@ -357,7 +358,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           ).baseDirectory;
           const reference: ObjectReference = {
             baseDirectory: testBaseDirectory.baseDirectory,
-            relativeDirectory: path.join("relative-1", "relative-2"),
+            relativeDirectory: "relative-1/relative-2",
             objectName,
           };
 

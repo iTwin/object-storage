@@ -64,7 +64,7 @@ export async function assertLocalFile(
 }
 
 export class TestDirectory {
-  constructor(public readonly baseDirectory: BaseDirectory) {}
+  constructor(public readonly baseDirectory: BaseDirectory) { }
 
   public async uploadFile(
     reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
@@ -91,7 +91,7 @@ export class TestRemoteDirectoryManager {
       baseDirectory: `integration-tests-${randomUUID()}`,
     };
     this.addForDelete(newDirectory);
-
+    console.log("createNew", JSON.stringify(newDirectory));
     await serverStorage.createBaseDirectory(newDirectory);
     return new TestDirectory(newDirectory);
   }
