@@ -435,13 +435,11 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 });
 
-(
-  [
-    [clientStorage, false],
-    [frontendStorage, true],
-  ] as [ClientStorage, boolean][]
-).forEach(([storage, isFrontend]) => {
-  describe(`${ClientStorage.name}: ${storage.constructor.name}`, () => {
+[
+  { clientStorage, isFrontend: false },
+  { clientStorage: frontendStorage, isFrontend: true },
+].forEach((storageTestCase) => {
+  describe(`${ClientStorage.name}: ${storageTestCase.clientStorage.constructor.name}`, () => {
     let testDirectory: ObjectDirectory;
 
     before(async () => {
@@ -451,7 +449,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     after(async () => testDirectoryManager.purgeCreatedDirectories());
 
     describe("PresignedUrlProvider", () => {
-      describe(`${storage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
+      describe(`${storageTestCase.clientStorage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
         const contentBuffer = Buffer.from("test-url-upload-content");
         const fileToUploadPath = "client-url-test.txt";
 
@@ -474,7 +472,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             caseName: "path",
             objectName: testUploadUrlLocalFile,
             dataCallback: () => fileToUploadPath,
-            shouldFailWith: isFrontend
+            shouldFailWith: storageTestCase.isFrontend
               ? "File uploads are not supported"
               : undefined,
           },
@@ -484,9 +482,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           await promises.writeFile(fileToUploadPath, contentBuffer);
         });
 
-        for (const testCase of uploadTestCases) {
+        for (const uploadTestCase of uploadTestCases) {
           const { caseName, objectName, dataCallback, shouldFailWith } =
-            testCase;
+            uploadTestCase;
           it(`should ${
             shouldFailWith ? "fail to " : ""
           }upload a file from ${caseName} with metadata to URL`, async () => {
@@ -501,7 +499,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             const metadata = {
               test: "test-metadata",
             };
-            const uploadPromise = storage.upload({
+            const uploadPromise = storageTestCase.clientStorage.upload({
               url: uploadUrl,
               data: dataCallback(),
               metadata,
@@ -555,7 +553,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
         it(`should download a file to buffer from URL`, async () => {
           const downloadUrl = await serverStorage.getDownloadUrl(reference);
-          const response = await storage.download({
+          const response = await storageTestCase.clientStorage.download({
             url: downloadUrl,
             transferType: "buffer",
           });
@@ -564,7 +562,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
         it(`should download a file to stream from URL`, async () => {
           const downloadUrl = await serverStorage.getDownloadUrl(reference);
-          const response = await storage.download({
+          const response = await storageTestCase.clientStorage.download({
             url: downloadUrl,
             transferType: "stream",
           });
@@ -572,15 +570,15 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
 
         it(`should ${
-          isFrontend ? "fail to " : ""
+          storageTestCase.isFrontend ? "fail to " : ""
         }download a file to path from URL`, async () => {
           const downloadUrl = await serverStorage.getDownloadUrl(reference);
-          const promise = storage.download({
+          const promise = storageTestCase.clientStorage.download({
             url: downloadUrl,
             transferType: "local",
             localPath: `${testDownloadFolder}/download-url.txt`,
           });
-          if (isFrontend)
+          if (storageTestCase.isFrontend)
             await expect(promise).to.eventually.be.rejectedWith(
               "Type 'local' is not supported"
             );
@@ -597,7 +595,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     describe("TransferConfigProvider", () => {
-      describe(`${storage.upload.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
+      describe(`${storageTestCase.clientStorage.upload.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
         const contentBuffer = Buffer.from("test-config-upload-content");
         const fileToUploadPath = "client-config-test.txt";
 
@@ -622,7 +620,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             caseName: "path",
             objectName: testUploadConfigLocalFile,
             dataCallback: () => fileToUploadPath,
-            shouldFailWith: isFrontend
+            shouldFailWith: storageTestCase.isFrontend
               ? "File uploads are not supported"
               : undefined,
           },
@@ -635,9 +633,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           });
         });
 
-        for (const testCase of uploadTestCases) {
+        for (const uploadTestCase of uploadTestCases) {
           const { caseName, objectName, dataCallback, shouldFailWith } =
-            testCase;
+            uploadTestCase;
           it(`should ${
             shouldFailWith ? "fail to " : ""
           }upload a file from ${caseName} with metadata using transfer config`, async () => {
@@ -649,7 +647,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             const metadata = {
               test: "test-metadata",
             };
-            const uploadPromise = storage.upload({
+            const uploadPromise = storageTestCase.clientStorage.upload({
               data: dataCallback(),
               reference,
               transferConfig: uploadConfig,
@@ -689,7 +687,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
       });
 
-      describe(`${storage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
+      describe(`${storageTestCase.clientStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
         const contentBuffer = Buffer.from(
           "test-config-multipart-upload-content"
         );
@@ -712,7 +710,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             caseName: "path",
             objectName: testMultipartUploadConfigLocalFile,
             dataCallback: () => fileToUploadPath,
-            shouldFailWith: isFrontend
+            shouldFailWith: storageTestCase.isFrontend
               ? "File uploads are not supported"
               : undefined,
           },
@@ -725,9 +723,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           });
         });
 
-        for (const testCase of uploadTestCases) {
+        for (const uploadTestCase of uploadTestCases) {
           const { caseName, objectName, dataCallback, shouldFailWith } =
-            testCase;
+            uploadTestCase;
           it(`should ${
             shouldFailWith ? "fail to " : ""
           }upload a file from ${caseName} with metadata using transfer config`, async () => {
@@ -739,12 +737,13 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
             const metadata = {
               test: "test-metadata",
             };
-            const multipartUploadPromise = storage.uploadInMultipleParts({
-              data: dataCallback(),
-              reference,
-              transferConfig: uploadConfig,
-              options: { metadata },
-            });
+            const multipartUploadPromise =
+              storageTestCase.clientStorage.uploadInMultipleParts({
+                data: dataCallback(),
+                reference,
+                transferConfig: uploadConfig,
+                options: { metadata },
+              });
             if (shouldFailWith !== undefined)
               await expect(
                 multipartUploadPromise
@@ -778,7 +777,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
       });
 
-      describe(`${storage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
+      describe(`${storageTestCase.clientStorage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
         let reference: ObjectReference;
         let downloadConfig: TransferConfig;
         const contentBuffer = Buffer.from("test-download-config");
@@ -795,7 +794,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
 
         it(`should download a file to buffer using transfer config`, async () => {
-          const response = await storage.download({
+          const response = await storageTestCase.clientStorage.download({
             reference,
             transferConfig: downloadConfig,
             transferType: "buffer",
@@ -804,7 +803,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
 
         it(`should download a file to stream using transfer config`, async () => {
-          const response = await storage.download({
+          const response = await storageTestCase.clientStorage.download({
             reference,
             transferConfig: downloadConfig,
             transferType: "stream",
@@ -813,15 +812,15 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         });
 
         it(`should ${
-          isFrontend ? "fail to " : ""
+          storageTestCase.isFrontend ? "fail to " : ""
         }download a file to path using transfer config`, async () => {
-          const promise = storage.download({
+          const promise = storageTestCase.clientStorage.download({
             reference,
             transferConfig: downloadConfig,
             transferType: "local",
             localPath: `${testDownloadFolder}/download-config.txt`,
           });
-          if (isFrontend)
+          if (storageTestCase.isFrontend)
             await expect(promise).to.eventually.be.rejectedWith(
               "Type 'local' is not supported"
             );
