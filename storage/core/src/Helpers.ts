@@ -107,6 +107,9 @@ export async function uploadToUrl(
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
+  if (typeof data === "string")
+    throw new Error("File uploads are not supported");
+
   await axios.put(url, data, {
     headers,
   });

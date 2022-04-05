@@ -1,3 +1,4 @@
+import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
@@ -6,10 +7,11 @@ import {
   TransferConfig,
   TransferData,
   UrlDownloadInput,
+  UrlUploadInput,
 } from "@itwin/object-storage-core";
 
 import { transferConfigToS3ClientWrapper } from "./BackendHelpers";
-import { S3ConfigDownloadInput } from "./Interfaces";
+import { S3ConfigDownloadInput, S3ConfigUploadInput } from "./Interfaces";
 import { S3FrontendStorage } from "./S3ClientStorage";
 import { FrontendS3ClientWrapper } from "./S3ClientWrapper";
 
@@ -42,5 +44,17 @@ export class S3ClientStorage extends S3FrontendStorage {
   ): Promise<TransferData> {
     if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
     return super.download(input as any); // eslint-disable-line @typescript-eslint/no-explicit-any -- Typescript wants to pick one overload instead of using the unified signature, and neither one fits.
+  }
+
+  public override async upload(
+    input: UrlUploadInput | S3ConfigUploadInput
+  ): Promise<void> {
+    return super.upload({
+      ...input,
+      data:
+        typeof input.data === "string"
+          ? createReadStream(input.data)
+          : input.data,
+    });
   }
 }
