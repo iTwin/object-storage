@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
@@ -43,7 +47,8 @@ export class S3ClientStorage extends S3FrontendStorage {
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
     if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
-    return super.download(input as any); // eslint-disable-line @typescript-eslint/no-explicit-any -- Typescript wants to pick one overload instead of using the unified signature, and neither one fits.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return super.download(input as any);
   }
 
   public override async upload(
