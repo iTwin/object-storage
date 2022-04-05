@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { promises, Stats } from "fs";
+import { createReadStream, promises, Stats } from "fs";
 import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
@@ -25,7 +25,6 @@ import {
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "./S3ClientWrapper";
-import { createReadStream } from "fs";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
@@ -90,10 +89,8 @@ export class S3ServerStorage extends ServerStorage {
     // the file is empty).
     if (typeof data === "string") {
       const fileStats: Stats = await promises.stat(data);
-      if (fileStats.size > 0)
-        data = createReadStream(data);
-      else
-        data = "";
+      if (fileStats.size > 0) data = createReadStream(data);
+      else data = "";
     }
 
     return this._s3Client.upload(reference, data, metadata);
