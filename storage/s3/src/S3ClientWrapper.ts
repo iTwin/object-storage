@@ -84,8 +84,6 @@ export class S3ClientWrapper {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
-    if (typeof data === "string") data = createReadStream(data); // read from local file
-
     /* eslint-disable @typescript-eslint/naming-convention */
     await this._client.send(
       new PutObjectCommand({
