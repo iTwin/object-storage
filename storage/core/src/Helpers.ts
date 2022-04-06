@@ -13,9 +13,6 @@ import {
 
 import { UrlDownloadInput } from "./ClientStorage";
 import {
-  FrontendMultipartUploadData,
-  FrontendTransferData,
-  FrontendTransferType,
   Metadata,
   MultipartUploadData,
   ObjectDirectory,
@@ -149,17 +146,13 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
     throw Error("Transfer config is expired");
 }
 
-export function assertFrontendTransferType(
-  type: TransferType
-): asserts type is FrontendTransferType {
+export function assertFrontendTransferType(type: TransferType): void {
   if (type === "local") {
     throw new Error(`Unsupported transfer type: ${type}`);
   }
 }
 
-export function assertFrontendTransferData(
-  data: TransferData
-): asserts data is FrontendTransferData {
+export function assertFrontendTransferData(data: TransferData): void {
   const dataType = typeof data;
   if (dataType === "string") {
     throw new Error(`Unsupported transfer data: ${dataType}`);
@@ -168,7 +161,7 @@ export function assertFrontendTransferData(
 
 export function assertFrontendMultipartUploadData(
   data: MultipartUploadData
-): asserts data is FrontendMultipartUploadData {
+): void {
   const dataType = typeof data;
   if (dataType === "string") {
     throw new Error(`Unsupported transfer data: ${dataType}`);

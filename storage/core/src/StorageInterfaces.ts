@@ -8,13 +8,6 @@ export type TransferType = "buffer" | "stream" | "local";
 export type TransferData = Buffer | Readable | string;
 export type MultipartUploadData = Readable | string;
 
-export type FrontendTransferType = Exclude<TransferType, "local">;
-export type FrontendTransferData = Exclude<TransferData, "string">;
-export type FrontendMultipartUploadData = Exclude<
-  MultipartUploadData,
-  "string"
->;
-
 export interface Metadata {
   [key: string]: string;
 }
