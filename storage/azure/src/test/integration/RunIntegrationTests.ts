@@ -7,6 +7,7 @@ import "reflect-metadata";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { AzureClientStorageBindings } from "../../AzureClientStorageBindings";
+import { AzureFrontendStorageBindings } from "../../AzureFrontendStorageBindings";
 import { AzureServerStorageBindings } from "../../AzureServerStorageBindings";
 
 const dependencyName = "azure";
@@ -28,7 +29,8 @@ const config = {
 const tests = new StorageIntegrationTests(
   config,
   AzureServerStorageBindings,
-  AzureClientStorageBindings
+  AzureClientStorageBindings,
+  AzureFrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;
