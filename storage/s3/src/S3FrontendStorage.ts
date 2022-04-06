@@ -19,13 +19,13 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
+import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 import { transferConfigToFrontendS3ClientWrapper } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 import { Types } from "./Types";
 
 export interface S3ClientStorageConfig {

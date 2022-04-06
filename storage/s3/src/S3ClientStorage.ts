@@ -15,9 +15,9 @@ import {
 } from "@itwin/object-storage-core";
 
 import { transferConfigToS3ClientWrapper } from "./BackendHelpers";
+import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 import { S3ConfigDownloadInput, S3ConfigUploadInput } from "./Interfaces";
 import { S3FrontendStorage } from "./S3FrontendStorage";
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 
 export class S3ClientStorage extends S3FrontendStorage {
   protected override getClientWrapper(
