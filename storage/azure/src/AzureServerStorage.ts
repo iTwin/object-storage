@@ -24,7 +24,7 @@ import {
 
 import { buildSASParameters } from "./BackendHelpers";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper.backend";
+import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobName, buildExpiresOn } from "./Helpers";
 import { AzureTransferConfig } from "./Interfaces";
 import { Types } from "./Types";

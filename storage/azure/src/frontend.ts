@@ -6,5 +6,5 @@ export * from "./Helpers";
 export * from "./BlobServiceClientWrapper";
 export * from "./Interfaces";
 export * from "./Types";
-export * from "./BlockBlobClientWrapper";
-export * from "./AzureClientStorage";
+export * from "./FrontendBlockBlobClientWrapper";
+export * from "./AzureFrontendStorage";

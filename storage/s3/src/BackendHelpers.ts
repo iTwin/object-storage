@@ -5,7 +5,7 @@
 import { TransferConfig } from "@itwin/object-storage-core";
 
 import { transferConfigToS3Wrapper } from "./Helpers";
-import { S3ClientWrapper } from "./S3ClientWrapper.backend";
+import { S3ClientWrapper } from "./S3ClientWrapper";
 
 export function transferConfigToS3ClientWrapper(
   transferConfig: TransferConfig,

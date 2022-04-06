@@ -16,7 +16,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 
 import { S3TransferConfig } from "./Interfaces";
-import { FrontendS3ClientWrapper } from "./S3ClientWrapper";
+import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 
 function assertS3TransferConfig(
   transferConfig: TransferConfig | S3TransferConfig

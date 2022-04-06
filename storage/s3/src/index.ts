@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./frontend";
 export * from "./BackendHelpers";
-export * from "./S3ClientStorage.backend";
+export * from "./S3ClientStorage";
 export * from "./S3ClientStorageBindings";
-export * from "./S3ClientWrapper.backend";
+export * from "./S3ClientWrapper";
 export * from "./S3ServerStorage";
 export * from "./S3ServerStorageBindings";
 export * from "./S3PresignedUrlProvider";

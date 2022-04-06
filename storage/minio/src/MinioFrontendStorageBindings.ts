@@ -11,7 +11,7 @@ import {
 
 import { ClientStorage } from "@itwin/object-storage-core";
 
-import { MinioFrontendStorage } from "./MinioClientStorage";
+import { MinioFrontendStorage } from "./MinioFrontendStorage";
 
 export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
   public override readonly dependencyName: string = "minio";

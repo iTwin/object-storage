@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./Helpers";
 export * from "./Interfaces";
-export * from "./S3ClientStorage";
-export * from "./S3ClientWrapper";
+export * from "./S3FrontendStorage";
+export * from "./FrontendS3ClientWrapper";
 export * from "./S3FrontendStorageBindings";
 export * from "./Types";

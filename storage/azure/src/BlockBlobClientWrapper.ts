@@ -2,9 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
+import { promises } from "fs";
+import { dirname } from "path";
 
-import { BlockBlobClient, Metadata } from "@azure/storage-blob";
+import { Metadata } from "@azure/storage-blob";
 
 import {
   MultipartUploadData,
@@ -13,47 +14,44 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-export class FrontendBlockBlobClientWrapper {
-  constructor(protected readonly _client: BlockBlobClient) {}
+import { FrontendBlockBlobClientWrapper } from "./FrontendBlockBlobClientWrapper";
 
-  public async download(
+export class BlockBlobClientWrapper extends FrontendBlockBlobClientWrapper {
+  public override async download(
     transferType: TransferType,
-    _localPath?: string
+    localPath?: string
   ): Promise<TransferData> {
-    switch (transferType) {
-      case "buffer":
-        return this._client.downloadToBuffer();
+    if (transferType === "local") {
+      if (!localPath) throw new Error("Specify localPath");
 
-      case "stream":
-        return (await this._client.download()).readableStreamBody! as Readable;
+      await promises.mkdir(dirname(localPath), { recursive: true });
+      await this._client.downloadToFile(localPath);
 
-      default:
-        throw new Error(`Type '${transferType}' is not supported`);
+      return localPath;
     }
+
+    return super.download(transferType, localPath);
   }
 
-  public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
+  public override async upload(
+    data: TransferData,
+    metadata?: Metadata
+  ): Promise<void> {
     if (typeof data === "string") {
-      throw new Error(`File uploads are not supported`);
-    } else if (data instanceof Buffer) {
-      await this._client.upload(data, data.byteLength, { metadata });
-    } else {
-      await this._client.uploadStream(data, undefined, undefined, { metadata });
-    }
+      await this._client.uploadFile(data, { metadata });
+    } else return super.upload(data, metadata);
   }
 
-  public async uploadInMultipleParts(
+  public override async uploadInMultipleParts(
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
-    const { metadata, partSize, queueSize } = options ?? {};
-
     if (typeof data === "string") {
-      throw new Error(`File uploads are not supported`);
-    } else {
-      await this._client.uploadStream(data, partSize, queueSize, {
-        metadata,
+      await this._client.uploadFile(data, {
+        metadata: options?.metadata,
+        blockSize: options?.partSize,
+        concurrency: options?.queueSize,
       });
-    }
+    } else return super.uploadInMultipleParts(data, options);
   }
 }
