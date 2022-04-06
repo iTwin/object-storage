@@ -13,11 +13,16 @@ import {
 
 import { UrlDownloadInput } from "./ClientStorage";
 import {
+  FrontendMultipartUploadData,
+  FrontendTransferData,
+  FrontendTransferType,
   Metadata,
+  MultipartUploadData,
   ObjectDirectory,
   ObjectReference,
   TransferConfig,
   TransferData,
+  TransferType,
 } from "./StorageInterfaces";
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -79,7 +84,7 @@ export function getTransferTimeInSeconds(
   return seconds > maxTransferTime ? maxTransferTime : seconds;
 }
 
-export async function downloadFromUrlFrontendFriendly(
+export async function downloadFromUrlFrontendFriendly( // TODO: use
   input: UrlDownloadInput
 ): Promise<TransferData> {
   const { transferType, url } = input;
@@ -142,6 +147,38 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
   );
   if (new Date() > transferConfig.expiration)
     throw Error("Transfer config is expired");
+}
+
+export function assertFrontendTransferType(
+  type: TransferType
+): asserts type is FrontendTransferType {
+  if (type === "local") {
+    throw new Error(`Unsupported transfer type: ${type}`);
+  }
+}
+
+export function assertFrontendTransferData(
+  data: TransferData
+): asserts data is FrontendTransferData {
+  const dataType = typeof data;
+  if (dataType === "string") {
+    throw new Error(`Unsupported transfer data: ${dataType}`);
+  }
+}
+
+export function assertFrontendMultipartUploadData(
+  data: MultipartUploadData
+): asserts data is FrontendMultipartUploadData {
+  const dataType = typeof data;
+  if (dataType === "string") {
+    throw new Error(`Unsupported transfer data: ${dataType}`);
+  }
+}
+
+export function isLocalUrlTransfer(transfer: {
+  localPath?: string;
+}): transfer is { localPath: string } {
+  return "localPath" in transfer;
 }
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB

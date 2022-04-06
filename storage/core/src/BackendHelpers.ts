@@ -45,3 +45,12 @@ export async function downloadFromUrl(
 
   return downloadFromUrlFrontendFriendly(input);
 }
+
+export async function assertUploadData(data: TransferData): Promise<void> {
+  if (typeof data === "string") {
+    const fileStats = await promises.stat(data);
+    if (fileStats.size === 0) {
+      throw new Error("Provided path is an empty file.");
+    }
+  }
+}
