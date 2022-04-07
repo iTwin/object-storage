@@ -7,7 +7,6 @@ import { dirname } from "path";
 import { Readable } from "stream";
 
 import {
-  assertFileNotEmpty,
   ClientStorage,
   isLocalUrlTransfer,
   TransferData,
@@ -64,8 +63,6 @@ export class AzureClientStorage extends ClientStorage {
   public async upload(
     input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
-    await assertFileNotEmpty(input.data);
-
     return this._clientWrapperFactory
       .create(input)
       .upload(input.data, input.metadata);
@@ -74,8 +71,6 @@ export class AzureClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
-    await assertFileNotEmpty(input.data);
-
     return this._clientWrapperFactory
       .create(input)
       .uploadInMultipleParts(input.data, input.options);
