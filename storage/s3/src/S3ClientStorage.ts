@@ -19,6 +19,7 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
+import { streamToTransferType } from "./BackendHelpers";
 import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,
@@ -57,12 +58,14 @@ export class S3ClientStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.download(
-          input.reference,
+      async (clientWrapper: S3ClientWrapper) => {
+        const downloadStream = await clientWrapper.download(input.reference);
+        return streamToTransferType(
+          downloadStream,
           input.transferType,
           input.localPath
-        )
+        );
+      }
     );
   }
 
@@ -72,9 +75,9 @@ export class S3ClientStorage extends ClientStorage {
     let { data } = input;
     const { metadata } = input;
 
-    if (instanceOfUrlUploadInput(input)) {
-      if (typeof data === "string") data = createReadStream(data);
+    if (typeof data === "string") data = createReadStream(data); // read from local file
 
+    if (instanceOfUrlUploadInput(input)) {
       return uploadToUrl(
         input.url,
         data,
@@ -92,6 +95,9 @@ export class S3ClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
+    if (typeof input.data === "string")
+      input.data = createReadStream(input.data); // read from local file
+
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>

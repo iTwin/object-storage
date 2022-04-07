@@ -20,20 +20,18 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { createAndUseClient } from "./Helpers";
+import { createAndUseClient, streamToTransferTypeFrontend } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
-import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
-import { S3FrontendClientWrapperFactory } from "./S3FrontendClientWrapperFactory";
+import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3FrontendStorage extends ClientStorage {
-  public constructor(
-    private _clientWRapperFactory: S3FrontendClientWrapperFactory
-  ) {
+  public constructor(private _clientWRapperFactory: S3ClientWrapperFactory) {
     super();
   }
 
@@ -66,12 +64,14 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3FrontendClientWrapper) =>
-        clientWrapper.download(
-          input.reference,
+      async (clientWrapper: S3ClientWrapper) => {
+        const downloadStream = await clientWrapper.download(input.reference);
+        return streamToTransferTypeFrontend(
+          downloadStream,
           input.transferType,
           input.localPath
-        )
+        );
+      }
     );
   }
 
@@ -91,7 +91,7 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3FrontendClientWrapper) =>
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
   }
@@ -103,7 +103,7 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3FrontendClientWrapper) =>
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,
