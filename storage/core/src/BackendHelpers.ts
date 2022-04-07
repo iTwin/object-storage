@@ -32,7 +32,7 @@ export async function downloadFromUrl(
   const { transferType, url, localPath } = input;
 
   if (transferType === "local") {
-    if (!localPath) throw new Error("Specify localPath");
+    assertLocalFile(localPath);
 
     const localResponse = await axios.get(url, {
       responseType: "stream",
@@ -44,4 +44,10 @@ export async function downloadFromUrl(
   }
 
   return downloadFromUrlFrontendFriendly(input);
+}
+
+export function assertLocalFile(
+  localPath: string | undefined
+): asserts localPath is string {
+  if (!localPath) throw new Error("Specify localPath");
 }

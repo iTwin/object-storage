@@ -9,6 +9,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { inject } from "inversify";
 
 import {
+  assertLocalFile,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -31,7 +32,7 @@ export class S3ClientWrapper extends S3FrontendClientWrapper {
     localPath?: string
   ): Promise<TransferData> {
     if (transferType === "local") {
-      if (!localPath) throw new Error("Specify localPath");
+      assertLocalFile(localPath);
 
       await streamToLocalFile(stream, localPath);
 
