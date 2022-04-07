@@ -81,7 +81,7 @@ export class AzureServerStorage extends ServerStorage {
       await promises.mkdir(dirname(localPath), { recursive: true });
     }
 
-    const downloadStream = await new BlockBlobClientWrapper( // factory???
+    const downloadStream = await new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).download();
 
