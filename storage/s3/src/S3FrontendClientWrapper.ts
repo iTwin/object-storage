@@ -33,7 +33,7 @@ import {
 import { Types } from "./Types";
 
 @injectable()
-export class FrontendS3ClientWrapper {
+export class S3FrontendClientWrapper {
   private readonly _client;
   private readonly _bucket;
 

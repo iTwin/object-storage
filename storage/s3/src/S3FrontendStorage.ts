@@ -20,7 +20,7 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
+import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,
@@ -66,7 +66,7 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: FrontendS3ClientWrapper) =>
+      async (clientWrapper: S3FrontendClientWrapper) =>
         clientWrapper.download(
           input.reference,
           input.transferType,
@@ -91,7 +91,7 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: FrontendS3ClientWrapper) =>
+      async (clientWrapper: S3FrontendClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
   }
@@ -103,7 +103,7 @@ export class S3FrontendStorage extends ClientStorage {
 
     return createAndUseClient(
       () => this._clientWRapperFactory.create(input.transferConfig),
-      async (clientWrapper: FrontendS3ClientWrapper) =>
+      async (clientWrapper: S3FrontendClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,

@@ -18,10 +18,10 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
+import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { Types } from "./Types";
 
-export class S3ClientWrapper extends FrontendS3ClientWrapper {
+export class S3ClientWrapper extends S3FrontendClientWrapper {
   public constructor(client: S3Client, @inject(Types.bucket) bucket: string) {
     super(client, bucket);
   }

@@ -15,7 +15,7 @@ import {
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
+import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { S3TransferConfig } from "./Interfaces";
 
 export function assertS3TransferConfig(
@@ -92,7 +92,7 @@ export function createStsClient(config: {
 }
 
 export async function createAndUseClient<
-  TClient extends FrontendS3ClientWrapper,
+  TClient extends S3FrontendClientWrapper,
   TResult
 >(
   clientFactory: () => TClient,
