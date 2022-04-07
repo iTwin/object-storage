@@ -10,32 +10,14 @@ import {
   MultipartUploadData,
   MultipartUploadOptions,
   TransferData,
-  TransferType,
 } from "@itwin/object-storage-core";
 
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
-  public async download(
-    transferType: TransferType,
-    localPath?: string
-  ): Promise<TransferData> {
-    switch (transferType) {
-      case "buffer":
-        return this._client.downloadToBuffer();
-
-      case "local":
-        if (!localPath) throw new Error("Specify localPath");
-        await this._client.downloadToFile(localPath);
-
-        return localPath;
-
-      case "stream":
-        return (await this._client.download()).readableStreamBody! as Readable;
-
-      default:
-        throw new Error(`Type '${transferType}' is not supported`);
-    }
+  public async download(): Promise<Readable> {
+    const downloadResponse = await this._client.download();
+    return downloadResponse.readableStreamBody! as Readable;
   }
 
   public async upload(data: TransferData, metadata?: Metadata): Promise<void> {

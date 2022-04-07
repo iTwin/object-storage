@@ -21,6 +21,7 @@ import {
   ObjectProperties,
   ObjectReference,
   ServerStorage,
+  streamToTransferType,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
@@ -80,9 +81,11 @@ export class AzureServerStorage extends ServerStorage {
       await promises.mkdir(dirname(localPath), { recursive: true });
     }
 
-    return new BlockBlobClientWrapper(
+    const downloadStream = await new BlockBlobClientWrapper( // factory???
       this._client.getBlockBlobClient(reference)
-    ).download(transferType, localPath);
+    ).download();
+
+    return streamToTransferType(downloadStream, transferType, localPath);
   }
 
   public async upload(

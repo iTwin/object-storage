@@ -17,6 +17,7 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
+  streamToTransferType,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
@@ -24,7 +25,6 @@ import {
   Types,
 } from "@itwin/object-storage-core";
 
-import { streamToTransferType } from "./BackendHelpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
 export interface S3ServerStorageConfig {

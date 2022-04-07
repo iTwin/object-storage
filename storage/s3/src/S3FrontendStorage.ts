@@ -14,13 +14,14 @@ import {
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
+  streamToTransferTypeFrontend,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { createAndUseClient, streamToTransferTypeFrontend } from "./Helpers";
+import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
@@ -66,11 +67,7 @@ export class S3FrontendStorage extends ClientStorage {
       () => this._clientWRapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) => {
         const downloadStream = await clientWrapper.download(input.reference);
-        return streamToTransferTypeFrontend(
-          downloadStream,
-          input.transferType,
-          input.localPath
-        );
+        return streamToTransferTypeFrontend(downloadStream, input.transferType);
       }
     );
   }

@@ -13,13 +13,13 @@ import {
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
+  streamToTransferType,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { streamToTransferType } from "./BackendHelpers";
 import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,

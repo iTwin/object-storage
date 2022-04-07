@@ -11,6 +11,7 @@ import { injectable } from "inversify";
 import {
   ClientStorage,
   isLocalUrlTransfer,
+  streamToTransferType,
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
@@ -56,9 +57,15 @@ export class AzureClientStorage extends ClientStorage {
     if (isLocalUrlTransfer(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
-    return this._clientWrapperFactory
+    const downloadStream = await this._clientWrapperFactory
       .create(input)
-      .download(input.transferType, input.localPath);
+      .download();
+
+    return streamToTransferType(
+      downloadStream,
+      input.transferType,
+      input.localPath
+    );
   }
 
   public async upload(

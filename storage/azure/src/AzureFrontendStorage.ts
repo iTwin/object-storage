@@ -10,6 +10,7 @@ import {
   assertFrontendTransferData,
   assertFrontendTransferType,
   ClientStorage,
+  streamToTransferTypeFrontend,
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
@@ -54,9 +55,11 @@ export class AzureFrontendStorage extends ClientStorage {
   ): Promise<TransferData> {
     assertFrontendTransferType(input.transferType);
 
-    return this._clientWrapperFactory
+    const downloadStream = await this._clientWrapperFactory
       .create(input)
-      .download(input.transferType, input.localPath);
+      .download();
+
+    return streamToTransferTypeFrontend(downloadStream, input.transferType);
   }
 
   public async upload(

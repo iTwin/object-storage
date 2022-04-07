@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
@@ -16,11 +14,6 @@ import {
   assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
-import {
-  streamToBuffer,
-  TransferData,
-  TransferType,
-} from "@itwin/object-storage-core";
 
 import { S3TransferConfig } from "./Interfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
@@ -96,23 +89,6 @@ export function createStsClient(config: {
       secretAccessKey: secretKey,
     },
   });
-}
-
-export async function streamToTransferTypeFrontend(
-  stream: Readable,
-  transferType: TransferType,
-  _localPath?: string
-): Promise<TransferData> {
-  switch (transferType) {
-    case "buffer":
-      return streamToBuffer(stream);
-
-    case "stream":
-      return stream;
-
-    default:
-      throw new Error(`Type '${transferType}' is not supported`);
-  }
 }
 
 export async function createAndUseClient<TResult>(

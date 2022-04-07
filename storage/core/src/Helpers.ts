@@ -103,6 +103,22 @@ export async function downloadFromUrlFrontendFriendly(
   }
 }
 
+export async function streamToTransferTypeFrontend(
+  stream: Readable,
+  transferType: TransferType
+): Promise<TransferData> {
+  switch (transferType) {
+    case "buffer":
+      return streamToBuffer(stream);
+
+    case "stream":
+      return stream;
+
+    default:
+      throw new Error(`Type '${transferType}' is not supported`);
+  }
+}
+
 export async function uploadToUrl(
   url: string,
   data: TransferData,
