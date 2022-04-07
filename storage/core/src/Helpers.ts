@@ -14,7 +14,6 @@ import {
 import { UrlDownloadInput } from "./ClientStorage";
 import {
   Metadata,
-  MultipartUploadData,
   ObjectDirectory,
   ObjectReference,
   TransferConfig,
@@ -81,7 +80,7 @@ export function getTransferTimeInSeconds(
   return seconds > maxTransferTime ? maxTransferTime : seconds;
 }
 
-export async function downloadFromUrlFrontendFriendly( // TODO: use
+export async function downloadFromUrlFrontendFriendly(
   input: UrlDownloadInput
 ): Promise<TransferData> {
   const { transferType, url } = input;
@@ -109,9 +108,6 @@ export async function uploadToUrl(
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
-  if (typeof data === "string")
-    throw new Error("File uploads are not supported");
-
   await axios.put(url, data, {
     headers,
   });
@@ -148,23 +144,14 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
 
 export function assertFrontendTransferType(type: TransferType): void {
   if (type === "local") {
-    throw new Error(`Unsupported transfer type: ${type}`);
+    throw new Error(`Type '${type}' is not supported`);
   }
 }
 
 export function assertFrontendTransferData(data: TransferData): void {
   const dataType = typeof data;
   if (dataType === "string") {
-    throw new Error(`Unsupported transfer data: ${dataType}`);
-  }
-}
-
-export function assertFrontendMultipartUploadData(
-  data: MultipartUploadData
-): void {
-  const dataType = typeof data;
-  if (dataType === "string") {
-    throw new Error(`Unsupported transfer data: ${dataType}`);
+    throw new Error("File uploads are not supported");
   }
 }
 

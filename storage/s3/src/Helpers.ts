@@ -18,7 +18,7 @@ import {
 import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 import { S3TransferConfig } from "./Interfaces";
 
-function assertS3TransferConfig(
+export function assertS3TransferConfig(
   transferConfig: TransferConfig | S3TransferConfig
 ): asserts transferConfig is S3TransferConfig {
   assertTransferConfig(transferConfig);
@@ -49,33 +49,6 @@ function assertS3TransferConfig(
   if (!("region" in transferConfig))
     throw new FalsyValueError("transferConfig.region");
   assertPrimitiveType(transferConfig.region, "transferConfig.region", "string");
-}
-
-export function transferConfigToFrontendS3ClientWrapper(
-  transferConfig: TransferConfig,
-  bucket: string
-): FrontendS3ClientWrapper {
-  return transferConfigToS3Wrapper(
-    transferConfig,
-    bucket,
-    FrontendS3ClientWrapper
-  );
-}
-
-export function transferConfigToS3Wrapper<T>(
-  transferConfig: TransferConfig,
-  bucket: string,
-  clientConstructor: new (client: S3Client, bucket: string) => T
-): T {
-  assertS3TransferConfig(transferConfig);
-
-  const { baseUrl, region, authentication } = transferConfig;
-  const { accessKey, secretKey, sessionToken } = authentication;
-
-  return new clientConstructor(
-    createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),
-    bucket
-  );
 }
 
 export function createS3Client(config: {
@@ -116,4 +89,20 @@ export function createStsClient(config: {
       secretAccessKey: secretKey,
     },
   });
+}
+
+export async function createAndUseClient<
+  TClient extends FrontendS3ClientWrapper,
+  TResult
+>(
+  clientFactory: () => TClient,
+  method: (clientWrapper: TClient) => Promise<TResult>
+): Promise<TResult> {
+  const clientWrapper = clientFactory();
+
+  try {
+    return await method(clientWrapper);
+  } finally {
+    clientWrapper.releaseResources();
+  }
 }

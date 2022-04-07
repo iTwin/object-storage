@@ -15,6 +15,7 @@ import {
   S3ClientStorage,
   S3ClientStorageBindingsConfig,
   S3ClientStorageConfig,
+  S3ClientWrapperFactory,
   Types,
 } from ".";
 
@@ -31,6 +32,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
     container
       .bind<S3ClientStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
+    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope();
     container.bind(ClientStorage).to(S3ClientStorage);
   }
 }

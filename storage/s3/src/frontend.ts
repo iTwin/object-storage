@@ -7,4 +7,6 @@ export * from "./Interfaces";
 export * from "./S3FrontendStorage";
 export * from "./FrontendS3ClientWrapper";
 export * from "./S3FrontendStorageBindings";
+export * from "./S3ClientStorageConfig";
+export * from "./S3FrontendClientWrapperFactory";
 export * from "./Types";

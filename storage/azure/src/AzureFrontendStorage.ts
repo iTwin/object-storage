@@ -7,7 +7,6 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import {
-  assertFrontendMultipartUploadData,
   assertFrontendTransferData,
   assertFrontendTransferType,
   ClientStorage,
@@ -73,7 +72,7 @@ export class AzureFrontendStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
-    assertFrontendMultipartUploadData(input.data);
+    assertFrontendTransferData(input.data);
 
     return this._clientWrapperFactory
       .create(input)

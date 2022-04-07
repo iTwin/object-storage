@@ -5,26 +5,33 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
+import { injectable } from "inversify";
+
 import {
+  ClientStorage,
   downloadFromUrl,
   instanceOfUrlDownloadInput,
-  TransferConfig,
+  instanceOfUrlUploadInput,
+  metadataToHeaders,
   TransferData,
+  uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { transferConfigToS3ClientWrapper } from "./BackendHelpers";
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
-import { S3ConfigDownloadInput, S3ConfigUploadInput } from "./Interfaces";
-import { S3FrontendStorage } from "./S3FrontendStorage";
+import { createAndUseClient } from "./Helpers";
+import {
+  S3ConfigDownloadInput,
+  S3ConfigUploadInput,
+  S3UploadInMultiplePartsInput,
+} from "./Interfaces";
+import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
-export class S3ClientStorage extends S3FrontendStorage {
-  protected override getClientWrapper(
-    transferConfig: TransferConfig,
-    bucket: string
-  ): FrontendS3ClientWrapper {
-    return transferConfigToS3ClientWrapper(transferConfig, bucket);
+@injectable()
+export class S3ClientStorage extends ClientStorage {
+  constructor(private _clientWRapperFactory: S3ClientWrapperFactory) {
+    super();
   }
 
   public override download(
@@ -47,19 +54,52 @@ export class S3ClientStorage extends S3FrontendStorage {
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
     if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return super.download(input as any);
+
+    return createAndUseClient(
+      () => this._clientWRapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.download(
+          input.reference,
+          input.transferType,
+          input.localPath
+        )
+    );
   }
 
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    return super.upload({
-      ...input,
-      data:
-        typeof input.data === "string"
-          ? createReadStream(input.data)
-          : input.data,
-    });
+    let { data } = input;
+    const { metadata } = input;
+
+    if (instanceOfUrlUploadInput(input)) {
+      if (typeof data === "string") data = createReadStream(data);
+
+      return uploadToUrl(
+        input.url,
+        data,
+        metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
+      );
+    }
+
+    return createAndUseClient(
+      () => this._clientWRapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.upload(input.reference, data, metadata)
+    );
+  }
+
+  public async uploadInMultipleParts(
+    input: S3UploadInMultiplePartsInput
+  ): Promise<void> {
+    return createAndUseClient(
+      () => this._clientWRapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.uploadInMultipleParts(
+          input.reference,
+          input.data,
+          input.options
+        )
+    );
   }
 }
