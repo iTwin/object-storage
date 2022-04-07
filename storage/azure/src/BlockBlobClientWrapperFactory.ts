@@ -9,6 +9,7 @@ import {
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
+import { injectable } from "inversify";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobUrlFromConfig } from "./Helpers";
@@ -25,6 +26,7 @@ type AnyAzureTransferInput =
   | AzureConfigDownloadInput
   | AzureUploadInMultiplePartsInput;
 
+@injectable()
 export class BlockBlobClientWrapperFactory {
   public create(input: AnyAzureTransferInput): BlockBlobClientWrapper {
     const blobClient = new BlockBlobClient(

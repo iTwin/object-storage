@@ -21,7 +21,9 @@ import {
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
 } from "./Interfaces";
+import { injectable } from "inversify";
 
+@injectable()
 export class AzureClientStorage extends ClientStorage {
   constructor(
     private readonly _clientWrapperFactory: BlockBlobClientWrapperFactory
