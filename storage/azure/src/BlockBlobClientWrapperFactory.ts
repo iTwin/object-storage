@@ -3,13 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlockBlobClient } from "@azure/storage-blob";
+import { injectable } from "inversify";
 
 import {
   instanceOfUrlInput,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
-import { injectable } from "inversify";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { buildBlobUrlFromConfig } from "./Helpers";

@@ -3,9 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { inject, injectable } from "inversify";
-import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
+
 import { S3ClientStorageConfig } from "./S3ClientStorageConfig";
 import { S3ClientWrapperFactoryBase } from "./S3ClientWrapperFactoryBase";
+import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { Types } from "./Types";
 
 @injectable()

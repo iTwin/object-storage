@@ -6,6 +6,8 @@ import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
+import { injectable } from "inversify";
+
 import {
   ClientStorage,
   isLocalUrlTransfer,
@@ -20,7 +22,6 @@ import {
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
 } from "./Interfaces";
-import { injectable } from "inversify";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {

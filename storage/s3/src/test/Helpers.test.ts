@@ -79,9 +79,7 @@ describe("Helper functions", () => {
     ].forEach((testCase) => {
       it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
         const testedFunction = () =>
-          assertS3TransferConfig(
-            testCase.transferConfig as S3TransferConfig
-          );
+          assertS3TransferConfig(testCase.transferConfig as S3TransferConfig);
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
@@ -98,8 +96,7 @@ describe("Helper functions", () => {
         },
         region: "testRegion",
       };
-      const testedFunction = () =>
-        assertS3TransferConfig(transferConfig);
+      const testedFunction = () => assertS3TransferConfig(transferConfig);
       expect(testedFunction).to.not.throw();
     });
   });

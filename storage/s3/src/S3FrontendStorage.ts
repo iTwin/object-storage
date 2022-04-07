@@ -20,13 +20,13 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
+import { S3FrontendClientWrapper } from "./S3FrontendClientWrapper";
 import { S3FrontendClientWrapperFactory } from "./S3FrontendClientWrapperFactory";
 
 @injectable()
