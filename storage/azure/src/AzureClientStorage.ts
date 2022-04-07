@@ -7,7 +7,7 @@ import { dirname } from "path";
 import { Readable } from "stream";
 
 import {
-  assertUploadData,
+  assertFileNotEmpty,
   ClientStorage,
   isLocalUrlTransfer,
   TransferData,
@@ -51,9 +51,8 @@ export class AzureClientStorage extends ClientStorage {
   public async download(
     input: UrlDownloadInput | AzureConfigDownloadInput
   ): Promise<TransferData> {
-    if (isLocalUrlTransfer(input)) {
+    if (isLocalUrlTransfer(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
-    }
 
     return this._clientWrapperFactory
       .create(input)
@@ -63,7 +62,7 @@ export class AzureClientStorage extends ClientStorage {
   public async upload(
     input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
-    await assertUploadData(input.data);
+    await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
@@ -73,7 +72,7 @@ export class AzureClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
-    await assertUploadData(input.data);
+    await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
