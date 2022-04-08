@@ -32,7 +32,7 @@ import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3FrontendStorage extends ClientStorage {
-  public constructor(private _clientWRapperFactory: S3ClientWrapperFactory) {
+  public constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
   }
 
@@ -64,7 +64,7 @@ export class S3FrontendStorage extends ClientStorage {
       return downloadFromUrlFrontendFriendly(input);
 
     return createAndUseClient(
-      () => this._clientWRapperFactory.create(input.transferConfig),
+      () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) => {
         const downloadStream = await clientWrapper.download(input.reference);
         return streamToTransferTypeFrontend(downloadStream, input.transferType);
@@ -87,7 +87,7 @@ export class S3FrontendStorage extends ClientStorage {
       );
 
     return createAndUseClient(
-      () => this._clientWRapperFactory.create(input.transferConfig),
+      () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
@@ -99,7 +99,7 @@ export class S3FrontendStorage extends ClientStorage {
     assertFrontendTransferData(input.data);
 
     return createAndUseClient(
-      () => this._clientWRapperFactory.create(input.transferConfig),
+      () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,

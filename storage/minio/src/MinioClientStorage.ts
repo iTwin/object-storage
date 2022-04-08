@@ -18,8 +18,8 @@ import {
 import { handleMinioUrlUpload } from "./MinioFrontendStorage";
 
 export class MinioClientStorage extends S3ClientStorage {
-  constructor(clientWRapperFactory: S3ClientWrapperFactory) {
-    super(clientWRapperFactory);
+  constructor(clientWrapperFactory: S3ClientWrapperFactory) {
+    super(clientWrapperFactory);
   }
 
   public override async upload(

@@ -46,8 +46,8 @@ export async function handleMinioUrlUpload(
 }
 
 export class MinioFrontendStorage extends S3FrontendStorage {
-  public constructor(clientWRapperFactory: S3ClientWrapperFactory) {
-    super(clientWRapperFactory);
+  public constructor(clientWrapperFactory: S3ClientWrapperFactory) {
+    super(clientWrapperFactory);
   }
 
   public override async upload(
