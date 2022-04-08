@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
@@ -16,6 +17,7 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
+  streamToTransferType,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
@@ -76,7 +78,8 @@ export class S3ServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
-    return this._s3Client.download(reference, transferType, localPath);
+    const downloadStream = await this._s3Client.download(reference);
+    return streamToTransferType(downloadStream, transferType, localPath);
   }
 
   public async upload(
@@ -84,6 +87,7 @@ export class S3ServerStorage extends ServerStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
+    if (typeof data === "string") data = createReadStream(data); // read from local file
     return this._s3Client.upload(reference, data, metadata);
   }
 
@@ -92,6 +96,7 @@ export class S3ServerStorage extends ServerStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    if (typeof data === "string") data = createReadStream(data); // read from local file
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 

@@ -5,6 +5,7 @@
 import { Readable } from "stream";
 
 import {
+  assertFrontendTransferData,
   instanceOfUrlUploadInput,
   metadataToHeaders,
   streamToBuffer,
@@ -12,6 +13,7 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
+  S3ClientWrapperFactory,
   S3ConfigUploadInput,
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
@@ -44,10 +46,15 @@ export async function handleMinioUrlUpload(
 }
 
 export class MinioFrontendStorage extends S3FrontendStorage {
+  public constructor(clientWrapperFactory: S3ClientWrapperFactory) {
+    super(clientWrapperFactory);
+  }
+
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
     if (instanceOfUrlUploadInput(input)) {
+      assertFrontendTransferData(input.data);
       return handleMinioUrlUpload(input);
     } else {
       return super.upload(input);

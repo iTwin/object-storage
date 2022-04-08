@@ -92,3 +92,9 @@ export function instanceOfUrlUploadInput(
 ): input is UrlUploadInput {
   return "url" in (input as UrlUploadInput);
 }
+
+export function instanceOfUrlInput(
+  input: unknown
+): input is UrlDownloadInput | UrlUploadInput {
+  return "url" in (input as UrlDownloadInput);
+}

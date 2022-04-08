@@ -9,8 +9,11 @@ import { Readable } from "stream";
 import axios from "axios";
 
 import { UrlDownloadInput } from "./ClientStorage";
-import { downloadFromUrlFrontendFriendly } from "./Helpers";
-import { TransferData } from "./StorageInterfaces";
+import {
+  downloadFromUrlFrontendFriendly,
+  streamToTransferTypeFrontend,
+} from "./Helpers";
+import { TransferData, TransferType } from "./StorageInterfaces";
 
 export async function streamToLocalFile(
   stream: Readable,
@@ -32,7 +35,7 @@ export async function downloadFromUrl(
   const { transferType, url, localPath } = input;
 
   if (transferType === "local") {
-    if (!localPath) throw new Error("Specify localPath");
+    assertLocalFile(localPath);
 
     const localResponse = await axios.get(url, {
       responseType: "stream",
@@ -44,4 +47,24 @@ export async function downloadFromUrl(
   }
 
   return downloadFromUrlFrontendFriendly(input);
+}
+
+export async function streamToTransferType(
+  stream: Readable,
+  transferType: TransferType,
+  localPath?: string
+): Promise<TransferData> {
+  if (transferType === "local") {
+    assertLocalFile(localPath);
+    await streamToLocalFile(stream, localPath);
+    return localPath;
+  }
+
+  return streamToTransferTypeFrontend(stream, transferType);
+}
+
+export function assertLocalFile(
+  localPath: string | undefined
+): asserts localPath is string {
+  if (!localPath) throw new Error("Specify localPath");
 }
