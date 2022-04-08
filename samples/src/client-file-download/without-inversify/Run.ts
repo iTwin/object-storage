@@ -14,9 +14,9 @@ import { App } from "./App";
  * `AzureClientStorage` which is passed to `App` constructor.
  */
 async function run(): Promise<void> {
-  const app = new App(
-    new AzureClientStorage(new BlockBlobClientWrapperFactory())
-  );
+  const blobClientWrapperFactory = new BlockBlobClientWrapperFactory();
+  const clientStorage = new AzureClientStorage(blobClientWrapperFactory);
+  const app = new App(clientStorage);
   return app.start();
 }
 
