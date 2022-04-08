@@ -97,6 +97,20 @@ export class FrontendS3ClientWrapper {
     /* eslint-enable @typescript-eslint/naming-convention */
   }
 
+  public async createBaseDir(
+    reference: ObjectReference
+  ): Promise<void> {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    await this._client.send(
+      new PutObjectCommand({
+        Bucket: this._bucket,
+        Key: buildObjectKey(reference),
+        Body: "",
+      })
+    );
+    /* eslint-enable @typescript-eslint/naming-convention */
+  }
+
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
@@ -127,19 +141,34 @@ export class FrontendS3ClientWrapper {
 
   public async list(
     directory: BaseDirectory,
-    maxResults?: number
+    options?: {
+      maxResults?: number,
+      includeEmptyFiles?: boolean
+    }
   ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
         Prefix: directory.baseDirectory,
-        MaxKeys: maxResults,
+        MaxKeys: options?.maxResults,
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    if (!Contents)
+      return [];
+
+    const references: ObjectReference[] = Contents.map((object) =>
+      buildObjectReference(object.Key!)
+    );
+    if (options?.includeEmptyFiles)
+      return references;
+
+    const filteredReferences: ObjectReference[] = references.filter(
+      (reference) => !!reference.objectName
+    );
+    return filteredReferences;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
@@ -205,7 +234,7 @@ export class FrontendS3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, { maxResults: 1, includeEmptyFiles: true });
     return filesWithPrefix.length !== 0;
   }
 

@@ -96,12 +96,11 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
-    return this.upload(
+    return this._s3Client.createBaseDir(
       {
         baseDirectory: directory.baseDirectory,
         objectName: "",
-      },
-      Buffer.from("")
+      }
     );
   }
 
