@@ -7,7 +7,7 @@ import {
   ConfigUploadInput,
   TransferConfig,
   UploadInMultiplePartsInput,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 export interface S3Credentials {
   accessKey: string;

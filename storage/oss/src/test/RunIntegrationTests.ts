@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
+import {
+  S3ClientStorageBindings,
+  S3FrontendStorageBindings,
+} from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { OssServerStorageBindings } from "../OssServerStorageBindings";
@@ -33,7 +36,8 @@ const config = {
 const tests = new StorageIntegrationTests(
   config,
   OssServerStorageBindings,
-  S3ClientStorageBindings
+  S3ClientStorageBindings,
+  S3FrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;
