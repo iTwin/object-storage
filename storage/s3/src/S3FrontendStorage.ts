@@ -4,44 +4,36 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 import {
+  assertFrontendTransferData,
+  assertFrontendTransferType,
   ClientStorage,
   downloadFromUrlFrontendFriendly,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
-  TransferConfig,
+  streamToTransferTypeFrontend,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
-import { transferConfigToFrontendS3ClientWrapper } from "./Helpers";
+import { createAndUseClient } from "./Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./Interfaces";
-import { Types } from "./Types";
-
-export interface S3ClientStorageConfig {
-  bucket: string;
-}
+import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3FrontendStorage extends ClientStorage {
-  private readonly _bucket: string;
-
-  public constructor(
-    @inject(Types.S3Server.config) config: S3ClientStorageConfig
-  ) {
+  public constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
-
-    this._bucket = config.bucket;
   }
 
   public download(
@@ -66,21 +58,25 @@ export class S3FrontendStorage extends ClientStorage {
   public async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
+    assertFrontendTransferType(input.transferType);
+
     if (instanceOfUrlDownloadInput(input))
       return downloadFromUrlFrontendFriendly(input);
 
-    const { transferType, localPath, reference, transferConfig } = input;
-
-    return this.useClient(
-      transferConfig,
-      async (clientWrapper: FrontendS3ClientWrapper) =>
-        clientWrapper.download(reference, transferType, localPath)
+    return createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) => {
+        const downloadStream = await clientWrapper.download(input.reference);
+        return streamToTransferTypeFrontend(downloadStream, input.transferType);
+      }
     );
   }
 
   public async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
+    assertFrontendTransferData(input.data);
+
     const { data, metadata } = input;
 
     if (instanceOfUrlUploadInput(input))
@@ -90,9 +86,9 @@ export class S3FrontendStorage extends ClientStorage {
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
 
-    return this.useClient(
-      input.transferConfig,
-      async (clientWrapper: FrontendS3ClientWrapper) =>
+    return createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.upload(input.reference, data, metadata)
     );
   }
@@ -100,34 +96,16 @@ export class S3FrontendStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
-    return this.useClient(
-      input.transferConfig,
-      async (clientWrapper: FrontendS3ClientWrapper) =>
+    assertFrontendTransferData(input.data);
+
+    return createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,
           input.options
         )
     );
-  }
-
-  private async useClient<T>(
-    transferConfig: TransferConfig,
-    method: (clientWrapper: FrontendS3ClientWrapper) => Promise<T>
-  ): Promise<T> {
-    const clientWrapper = this.getClientWrapper(transferConfig, this._bucket);
-
-    try {
-      return await method(clientWrapper);
-    } finally {
-      clientWrapper.releaseResources();
-    }
-  }
-
-  protected getClientWrapper(
-    transferConfig: TransferConfig,
-    bucket: string
-  ): FrontendS3ClientWrapper {
-    return transferConfigToFrontendS3ClientWrapper(transferConfig, bucket);
   }
 }

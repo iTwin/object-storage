@@ -10,7 +10,9 @@ import {
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { S3ClientStorageConfig, S3FrontendStorage } from "./S3FrontendStorage";
+import { S3ClientStorageConfig } from "./S3ClientStorageConfig";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+import { S3FrontendStorage } from "./S3FrontendStorage";
 import { Types } from "./Types";
 
 export type S3ClientStorageBindingsConfig = S3ClientStorageConfig &
@@ -29,6 +31,7 @@ export class S3FrontendStorageBindings extends ClientStorageDependency {
     container
       .bind<S3ClientStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
+    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope();
     container.bind(ClientStorage).to(S3FrontendStorage);
   }
 }

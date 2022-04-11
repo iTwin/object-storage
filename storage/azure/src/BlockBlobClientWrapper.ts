@@ -2,56 +2,50 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { promises } from "fs";
-import { dirname } from "path";
+import { Readable } from "stream";
 
-import { Metadata } from "@azure/storage-blob";
+import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import {
   MultipartUploadData,
   MultipartUploadOptions,
   TransferData,
-  TransferType,
 } from "@itwin/object-storage-core";
 
-import { FrontendBlockBlobClientWrapper } from "./FrontendBlockBlobClientWrapper";
+export class BlockBlobClientWrapper {
+  constructor(private readonly _client: BlockBlobClient) {}
 
-export class BlockBlobClientWrapper extends FrontendBlockBlobClientWrapper {
-  public override async download(
-    transferType: TransferType,
-    localPath?: string
-  ): Promise<TransferData> {
-    if (transferType === "local") {
-      if (!localPath) throw new Error("Specify localPath");
-
-      await promises.mkdir(dirname(localPath), { recursive: true });
-      await this._client.downloadToFile(localPath);
-
-      return localPath;
-    }
-
-    return super.download(transferType, localPath);
+  public async download(): Promise<Readable> {
+    const downloadResponse = await this._client.download();
+    return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public override async upload(
-    data: TransferData,
-    metadata?: Metadata
-  ): Promise<void> {
+  public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
     if (typeof data === "string") {
       await this._client.uploadFile(data, { metadata });
-    } else return super.upload(data, metadata);
+    } else if (data instanceof Buffer) {
+      await this._client.upload(data, data.byteLength, { metadata });
+    } else {
+      await this._client.uploadStream(data, undefined, undefined, { metadata });
+    }
   }
 
-  public override async uploadInMultipleParts(
+  public async uploadInMultipleParts(
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    const { metadata, partSize, queueSize } = options ?? {};
+
     if (typeof data === "string") {
       await this._client.uploadFile(data, {
-        metadata: options?.metadata,
-        blockSize: options?.partSize,
-        concurrency: options?.queueSize,
+        metadata,
+        blockSize: partSize,
+        concurrency: queueSize,
       });
-    } else return super.uploadInMultipleParts(data, options);
+    } else {
+      await this._client.uploadStream(data, partSize, queueSize, {
+        metadata,
+      });
+    }
   }
 }

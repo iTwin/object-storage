@@ -7,13 +7,13 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "@itwin/object-storage-core";
 
-import { transferConfigToS3ClientWrapper } from "..";
+import { assertS3TransferConfig } from "..";
 import { S3TransferConfig } from "../Interfaces";
 
 use(chaiAsPromised);
 
 describe("Helper functions", () => {
-  describe(`${transferConfigToS3ClientWrapper.name}()`, () => {
+  describe(`${assertS3TransferConfig.name}()`, () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "http://foo.bar",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
@@ -79,10 +79,7 @@ describe("Helper functions", () => {
     ].forEach((testCase) => {
       it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
         const testedFunction = () =>
-          transferConfigToS3ClientWrapper(
-            testCase.transferConfig as S3TransferConfig,
-            "testBucket"
-          );
+          assertS3TransferConfig(testCase.transferConfig as S3TransferConfig);
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
@@ -99,8 +96,7 @@ describe("Helper functions", () => {
         },
         region: "testRegion",
       };
-      const testedFunction = () =>
-        transferConfigToS3ClientWrapper(transferConfig, "testBucket");
+      const testedFunction = () => assertS3TransferConfig(transferConfig);
       expect(testedFunction).to.not.throw();
     });
   });

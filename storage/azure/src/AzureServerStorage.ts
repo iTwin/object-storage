@@ -2,12 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { promises } from "fs";
+import { dirname } from "path";
 import { Readable } from "stream";
 
 import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
+  assertLocalFile,
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
@@ -18,6 +21,7 @@ import {
   ObjectProperties,
   ObjectReference,
   ServerStorage,
+  streamToTransferType,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
@@ -72,9 +76,16 @@ export class AzureServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
-    return new BlockBlobClientWrapper(
+    if (transferType === "local") {
+      assertLocalFile(localPath);
+      await promises.mkdir(dirname(localPath), { recursive: true });
+    }
+
+    const downloadStream = await new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).download(transferType, localPath);
+    ).download();
+
+    return streamToTransferType(downloadStream, transferType, localPath);
   }
 
   public async upload(

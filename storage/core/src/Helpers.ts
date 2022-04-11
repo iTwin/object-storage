@@ -18,6 +18,7 @@ import {
   ObjectReference,
   TransferConfig,
   TransferData,
+  TransferType,
 } from "./StorageInterfaces";
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -106,14 +107,27 @@ export async function downloadFromUrlFrontendFriendly(
   }
 }
 
+export async function streamToTransferTypeFrontend(
+  stream: Readable,
+  transferType: TransferType
+): Promise<TransferData> {
+  switch (transferType) {
+    case "buffer":
+      return streamToBuffer(stream);
+
+    case "stream":
+      return stream;
+
+    default:
+      throw new Error(`Type '${transferType}' is not supported`);
+  }
+}
+
 export async function uploadToUrl(
   url: string,
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
-  if (typeof data === "string")
-    throw new Error("File uploads are not supported");
-
   await axios.put(url, data, {
     headers,
   });
@@ -146,6 +160,25 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
   );
   if (new Date() > transferConfig.expiration)
     throw Error("Transfer config is expired");
+}
+
+export function assertFrontendTransferType(type: TransferType): void {
+  if (type === "local") {
+    throw new Error(`Type '${type}' is not supported`);
+  }
+}
+
+export function assertFrontendTransferData(data: TransferData): void {
+  const dataType = typeof data;
+  if (dataType === "string") {
+    throw new Error("File uploads are not supported");
+  }
+}
+
+export function isLocalUrlTransfer(transfer: {
+  localPath?: string;
+}): transfer is { localPath: string } {
+  return "localPath" in transfer;
 }
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB
