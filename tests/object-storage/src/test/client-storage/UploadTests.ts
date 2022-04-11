@@ -19,7 +19,7 @@ import { testDirectoryManager } from "../Global.test";
 import {
   checkUploadedFileValidity,
   queryAndAssertMetadata,
-  TestDirectory,
+  TestRemoteDirectory,
 } from "../utils";
 
 const { serverStorage } = config;
@@ -140,7 +140,7 @@ export async function testUploadToUrlWithMetadata(
   dataToUpload: TransferData,
   dataToAssert: Buffer
 ): Promise<void> {
-  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
   const reference: ObjectReference = {
     baseDirectory: testDirectory.baseDirectory.baseDirectory,
     objectName: "test-upload-to-url-metadata",

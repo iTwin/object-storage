@@ -43,7 +43,7 @@ import {
 } from "./client-storage/UploadTests";
 import { config } from "./Config";
 import { testDirectoryManager, testLocalFileManager } from "./Global.test";
-import { assertLocalFile, TestDirectory } from "./utils";
+import { assertLocalFile, TestRemoteDirectory } from "./utils";
 
 
 use(chaiAsPromised);
@@ -129,7 +129,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const contentBuffer = Buffer.from("test-download-from-url-to-path");
         const testDownloasPath: string =
           await testLocalFileManager.getDownloadsDir();
-        const testDirectory: TestDirectory =
+        const testDirectory: TestRemoteDirectory =
           await testDirectoryManager.createNew();
         const uploadedFile: ObjectReference = await testDirectory.uploadFile(
           { objectName: "file-to-download-from-url.txt" },
@@ -291,7 +291,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const contentBuffer = Buffer.from("test-download-to-path-with-config");
         const testDownloasPath: string =
           await testLocalFileManager.getDownloadsDir();
-        const testDirectory: TestDirectory =
+        const testDirectory: TestRemoteDirectory =
           await testDirectoryManager.createNew();
         const uploadedFile: ObjectReference = await testDirectory.uploadFile(
           { objectName: "file-to-download-with-config.txt" },

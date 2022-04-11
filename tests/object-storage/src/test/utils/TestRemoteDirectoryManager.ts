@@ -5,20 +5,20 @@
 import { BaseDirectory } from "@itwin/object-storage-core";
 import { randomUUID } from "crypto";
 import { config } from "../Config";
-import { TestDirectory } from "./TestDirectory";
+import { TestRemoteDirectory } from "./TestRemoteDirectory";
 
 const { serverStorage } = config;
 
 export class TestRemoteDirectoryManager {
   private _createdDirectories: BaseDirectory[] = [];
 
-  public async createNew(): Promise<TestDirectory> {
+  public async createNew(): Promise<TestRemoteDirectory> {
     const newDirectory: BaseDirectory = {
       baseDirectory: `integration-tests-${randomUUID()}`,
     };
     this.addForDelete(newDirectory);
     await serverStorage.createBaseDirectory(newDirectory);
-    return new TestDirectory(newDirectory);
+    return new TestRemoteDirectory(newDirectory);
   }
 
   public addForDelete(directory: BaseDirectory): void {

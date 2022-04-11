@@ -24,7 +24,7 @@ import {
   assertStream,
   checkUploadedFileValidity,
   queryAndAssertMetadata,
-  TestDirectory,
+  TestRemoteDirectory,
 } from "./utils";
 
 use(chaiAsPromised);
@@ -238,7 +238,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.list.name}()`, () => {
     it("should list objects", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const reference1: ObjectReference = await testDirectory.uploadFile(
         { objectName: "reference1" },
@@ -269,7 +269,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.deleteBaseDirectory.name}()`, () => {
     it("should delete directory with files", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const tempFiles = ["temp-1", "temp-2", "temp-3"];
       await Promise.all(
@@ -301,7 +301,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.deleteObject.name}()`, async () => {
     it("should delete object", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const reference: ObjectReference = await testDirectory.uploadFile(
         { objectName: "test-delete.txt" },
@@ -378,7 +378,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.objectExists.name}()`, () => {
     it("should return true if file exists", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const reference: ObjectReference = await testDirectory.uploadFile(
         { objectName: "test-exists.txt" },
@@ -419,7 +419,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     const contentBuffer = Buffer.from("test-download");
 
     it("should download a file to buffer", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
@@ -433,7 +433,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should download a file to stream", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
@@ -448,7 +448,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     it("should download a file to path", async () => {
       const testDownloadFolder = await testLocalFileManager.getDownloadsDir();
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const uploadedFile: ObjectReference = await testDirectory.uploadFile(
         { objectName: "file-to-download.txt" },
@@ -469,7 +469,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.getObjectProperties.name}()`, () => {
     it("should get correct object properties", async () => {
       const data = Buffer.from("test-properties");
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const uploadMetadata: Metadata = {
         test: "test-metadata",
@@ -496,7 +496,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.updateMetadata.name}()`, () => {
     it("should update metadata", async () => {
-      const testDirectory: TestDirectory =
+      const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const initialMetadata: Metadata = {
         test1: "test-metadata-1",

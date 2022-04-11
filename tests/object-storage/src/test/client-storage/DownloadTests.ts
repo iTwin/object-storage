@@ -6,7 +6,7 @@ import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
 
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
-import { assertBuffer, assertStream, TestDirectory } from "../utils";
+import { assertBuffer, assertStream, TestRemoteDirectory } from "../utils";
 
 const { serverStorage } = config;
 
@@ -14,7 +14,7 @@ export async function testDownloadFromUrlToBuffer(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-buffer");
-  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-from-url.txt" },
     contentBuffer,
@@ -34,7 +34,7 @@ export async function testDownloadFromUrlToStream(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-stream");
-  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-from-url.txt" },
     contentBuffer,
@@ -54,7 +54,7 @@ export async function testDownloadToBufferWithConfig(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-buffer-with-config");
-  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-with-config.txt" },
     contentBuffer,
@@ -77,7 +77,7 @@ export async function testDownloadToStreamWithConfig(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-stream-with-config");
-  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-with-config.txt" },
     contentBuffer,

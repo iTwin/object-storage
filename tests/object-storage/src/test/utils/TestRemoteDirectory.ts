@@ -14,7 +14,7 @@ import { config } from "../Config";
 
 const { serverStorage } = config;
 
-export class TestDirectory {
+export class TestRemoteDirectory {
   constructor(public readonly baseDirectory: BaseDirectory) { }
 
   public async uploadFile(

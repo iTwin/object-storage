@@ -3,6 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./Helpers";
-export * from "./TestDirectory";
+export * from "./TestRemoteDirectory";
 export * from "./TestLocalFileManager";
 export * from "./TestRemoteDirectoryManager";
