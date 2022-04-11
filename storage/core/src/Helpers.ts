@@ -11,7 +11,6 @@ import {
   assertPrimitiveType,
 } from "@itwin/cloud-agnostic-core";
 
-import { UrlDownloadInput } from "./ClientStorage";
 import {
   Metadata,
   ObjectDirectory,
@@ -19,6 +18,7 @@ import {
   TransferConfig,
   TransferData,
   TransferType,
+  UrlDownloadInput,
 } from "./StorageInterfaces";
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {

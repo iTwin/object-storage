@@ -13,3 +13,8 @@ export abstract class ClientStorageDependency extends Dependency {
   public static readonly dependencyType = "ClientStorage";
   public readonly dependencyType = ClientStorageDependency.dependencyType;
 }
+
+export abstract class FrontendStorageDependency extends Dependency {
+  public static readonly dependencyType = "FrontendStorage";
+  public readonly dependencyType = FrontendStorageDependency.dependencyType;
+}

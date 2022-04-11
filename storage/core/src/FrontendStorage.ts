@@ -10,15 +10,15 @@ import { injectable } from "inversify";
 
 import {
   ConfigDownloadInput,
-  ConfigUploadInput,
-  UploadInMultiplePartsInput,
+  FrontendConfigUploadInput,
+  FrontendUploadInMultiplePartsInput,
+  FrontendUrlUploadInput,
   UrlDownloadInput,
-  UrlUploadInput,
 } from ".";
 import { BaseFrontendStorage } from "./BaseFrontendStorage";
 
 @injectable()
-export abstract class ClientStorage implements BaseFrontendStorage {
+export abstract class FrontendStorage implements BaseFrontendStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
   ): Promise<Buffer>;
@@ -27,18 +27,11 @@ export abstract class ClientStorage implements BaseFrontendStorage {
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
   ): Promise<Readable>;
 
-  public abstract download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & {
-      transferType: "local";
-      localPath: string;
-    }
-  ): Promise<string>;
-
   public abstract upload(
-    input: UrlUploadInput | ConfigUploadInput
+    input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void>;
 
   public abstract uploadInMultipleParts(
-    input: UploadInMultiplePartsInput
+    input: FrontendUploadInMultiplePartsInput
   ): Promise<void>;
 }

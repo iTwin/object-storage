@@ -5,6 +5,7 @@
 export * from "./ClientStorage";
 export * from "./Dependencies";
 export * from "./Helpers";
+export * from "./FrontendStorage";
 export * from "./ServerStorage";
 export * from "./StorageInterfaces";
 export * from "./Types";

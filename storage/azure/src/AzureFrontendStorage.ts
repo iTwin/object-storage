@@ -9,22 +9,22 @@ import { injectable } from "inversify";
 import {
   assertFrontendTransferData,
   assertFrontendTransferType,
-  ClientStorage,
+  FrontendStorage,
+  FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
   TransferData,
-  UrlDownloadInput,
-  UrlUploadInput,
+  FrontendUrlDownloadInput
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import {
-  AzureConfigDownloadInput,
-  AzureConfigUploadInput,
-  AzureUploadInMultiplePartsInput,
+  FrontendAzureConfigDownloadInput,
+  FrontendAzureConfigUploadInput,
+  FrontendAzureUploadInMultiplePartsInput,
 } from "./Interfaces";
 
 @injectable()
-export class AzureFrontendStorage extends ClientStorage {
+export class AzureFrontendStorage extends FrontendStorage {
   constructor(
     private readonly _clientWrapperFactory: BlockBlobClientWrapperFactory
   ) {
@@ -32,26 +32,19 @@ export class AzureFrontendStorage extends ClientStorage {
   }
 
   public download(
-    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
+    input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "buffer";
     }
   ): Promise<Buffer>;
 
   public download(
-    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
+    input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "stream";
     }
   ): Promise<Readable>;
 
-  public download(
-    input: (UrlDownloadInput | AzureConfigDownloadInput) & {
-      transferType: "local";
-      localPath: string;
-    }
-  ): Promise<string>;
-
   public async download(
-    input: UrlDownloadInput | AzureConfigDownloadInput
+    input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
   ): Promise<TransferData> {
     assertFrontendTransferType(input.transferType);
 
@@ -63,7 +56,7 @@ export class AzureFrontendStorage extends ClientStorage {
   }
 
   public async upload(
-    input: UrlUploadInput | AzureConfigUploadInput
+    input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput
   ): Promise<void> {
     assertFrontendTransferData(input.data);
 
@@ -73,7 +66,7 @@ export class AzureFrontendStorage extends ClientStorage {
   }
 
   public async uploadInMultipleParts(
-    input: AzureUploadInMultiplePartsInput
+    input: FrontendAzureUploadInMultiplePartsInput
   ): Promise<void> {
     assertFrontendTransferData(input.data);
 

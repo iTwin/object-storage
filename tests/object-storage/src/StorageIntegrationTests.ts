@@ -18,68 +18,42 @@ import {
   ClientStorageDependency,
   ServerStorage,
   ServerStorageDependency,
+  FrontendStorage,
+  FrontendStorageDependency
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
 
-class StoragePair extends Bindable {
+export class StorageIntegrationTests extends Bindable {
   public readonly container = new Container();
 
   constructor(
     config: DependenciesConfig,
     serverStorageDependency: new () => ServerStorageDependency,
-    clientStorageDependency: new () => ClientStorageDependency
+    clientStorageDependency: new () => ClientStorageDependency,
+    frontendStorageDependency: new () => FrontendStorageDependency
   ) {
     super();
 
     this.requireDependency(ServerStorageDependency.dependencyType);
     this.requireDependency(ClientStorageDependency.dependencyType);
+    this.requireDependency(FrontendStorageDependency.dependencyType);
 
     this.useBindings(serverStorageDependency);
     this.useBindings(clientStorageDependency);
+    this.useBindings(frontendStorageDependency);
 
     this.container
       .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
       .toConstantValue(config);
-
-    this.bindDependencies(this.container);
-  }
-
-  public get server() {
-    return this.container.get(ServerStorage);
-  }
-
-  public get client() {
-    return this.container.get(ClientStorage);
-  }
-}
-
-export class StorageIntegrationTests {
-  private readonly _nodePair: StoragePair;
-  private readonly _browserPair: StoragePair;
-
-  constructor(
-    config: DependenciesConfig,
-    serverStorageDependency: new () => ServerStorageDependency,
-    clientStorageDependency: new () => ClientStorageDependency,
-    frontendStorageDependency: new () => ClientStorageDependency
-  ) {
-    this._nodePair = new StoragePair(
-      config,
-      serverStorageDependency,
-      clientStorageDependency
-    );
-    this._browserPair = new StoragePair(
-      config,
-      serverStorageDependency,
-      frontendStorageDependency
-    );
   }
 
   public async start(): Promise<void> {
-    const serverStorage = this._nodePair.server;
-    const clientStorage = this._nodePair.client;
-    const frontendStorage = this._browserPair.client;
+    this.bindDependencies(this.container);
+
+    const serverStorage = this.container.get(ServerStorage);
+    const clientStorage = this.container.get(ClientStorage);
+    const frontendStorage = this.container.get(FrontendStorage);
 
     setOptions({
       serverStorage,
