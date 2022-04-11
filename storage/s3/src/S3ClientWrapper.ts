@@ -113,7 +113,12 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? []; // TODO: empty files...
+    const references = Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    if (options?.includeEmptyFiles)
+      return references;
+
+    const nonEmptyReferences = references.filter(ref => !!ref.objectName);
+    return nonEmptyReferences;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
