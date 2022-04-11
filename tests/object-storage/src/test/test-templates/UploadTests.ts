@@ -144,7 +144,8 @@ export async function testUploadToUrlWithMetadata(
   dataToUpload: TransferData,
   dataToAssert: Buffer
 ): Promise<void> {
-  const testDirectory: TestRemoteDirectory = await testDirectoryManager.createNew();
+  const testDirectory: TestRemoteDirectory =
+    await testDirectoryManager.createNew();
   const reference: ObjectReference = {
     baseDirectory: testDirectory.baseDirectory.baseDirectory,
     objectName: "test-upload-to-url-metadata",

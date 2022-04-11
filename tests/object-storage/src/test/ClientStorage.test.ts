@@ -4,17 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
-import { use } from "chai";
+import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
 import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
 
+import { config } from "./Config";
+import { testDirectoryManager, testLocalFileManager } from "./Global.test";
 import {
   testDownloadFromUrlToBuffer,
   testDownloadFromUrlToStream,
   testDownloadToBufferWithConfig,
   testDownloadToStreamWithConfig,
-} from "./client-storage/DownloadTests";
+} from "./test-templates/DownloadTests";
 import {
   testMultipartUpload,
   testMultipartUploadFromStream,
@@ -40,11 +42,8 @@ import {
   testUploadWithRelativeDirFromStreamToUrl,
   testUploadWithRelativeDirFromStreamWithConfig,
   testUploadWithRelativeDirWithConfig,
-} from "./client-storage/UploadTests";
-import { config } from "./Config";
-import { testDirectoryManager, testLocalFileManager } from "./Global.test";
+} from "./test-templates/UploadTests";
 import { assertLocalFile, TestRemoteDirectory } from "./utils";
-
 
 use(chaiAsPromised);
 
@@ -53,6 +52,21 @@ const { clientStorage, serverStorage } = config;
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   describe("PresignedUrlProvider", () => {
     describe(`${clientStorage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
+      it("should fail to upload to URL if specified path contains empty file", async () => {
+        const emptyFilePath: string =
+          await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+
+        const uploadPromise = clientStorage.upload({
+          url: "test-url",
+          data: emptyFilePath,
+        });
+
+        await expect(uploadPromise).to.eventually.be.rejectedWith(
+          Error,
+          "Provided path is an empty file."
+        );
+      });
+
       it("should upload a file from buffer to URL", async () => {
         await testUploadFromBufferToUrl(clientStorage);
       });
@@ -151,6 +165,28 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
   describe("TransferConfigProvider", () => {
     describe(`${clientStorage.upload.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
+      it("should fail to upload with config if specified path contains empty file", async () => {
+        const emptyFilePath: string =
+          await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+
+        const uploadPromise = clientStorage.upload({
+          data: emptyFilePath,
+          reference: {
+            baseDirectory: "test-directory",
+            objectName: "test-object-name",
+          },
+          transferConfig: {
+            baseUrl: "test-url",
+            expiration: new Date(),
+          },
+        });
+
+        await expect(uploadPromise).to.eventually.be.rejectedWith(
+          Error,
+          "Provided path is an empty file."
+        );
+      });
+
       it(`should upload a file from buffer using transfer config`, async () => {
         await testUploadFromBufferWithConfig(clientStorage);
       });
@@ -221,6 +257,28 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
     });
 
     describe(`${clientStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
+      it("should fail to upload in multiple parts if specified path contains empty file", async () => {
+        const emptyFilePath: string =
+          await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+
+        const uploadPromise = clientStorage.uploadInMultipleParts({
+          data: emptyFilePath,
+          reference: {
+            baseDirectory: "test-directory",
+            objectName: "test-object-name",
+          },
+          transferConfig: {
+            baseUrl: "test-url",
+            expiration: new Date(),
+          },
+        });
+
+        await expect(uploadPromise).to.eventually.be.rejectedWith(
+          Error,
+          "Provided path is an empty file."
+        );
+      });
+
       it(`should upload a file from stream in multiple parts`, async () => {
         await testMultipartUploadFromStream(clientStorage);
       });

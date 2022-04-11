@@ -4,12 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import { ClientStorage } from "@itwin/object-storage-core";
 
+import { config } from "./Config";
 import {
   testDownloadFromUrlToBuffer,
   testDownloadFromUrlToStream,
   testDownloadToBufferWithConfig,
   testDownloadToStreamWithConfig,
-} from "./client-storage/DownloadTests";
+} from "./test-templates/DownloadTests";
 import {
   testMultipartUploadFromStream,
   testMultipartUploadWithMetadataFromStream,
@@ -26,8 +27,7 @@ import {
   testUploadWithRelativeDirFromBufferWithConfig,
   testUploadWithRelativeDirFromStreamToUrl,
   testUploadWithRelativeDirFromStreamWithConfig,
-} from "./client-storage/UploadTests";
-import { config } from "./Config";
+} from "./test-templates/UploadTests";
 
 const { frontendStorage, serverStorage } = config;
 

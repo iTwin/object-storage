@@ -113,11 +113,11 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    const references = Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
-    if (options?.includeEmptyFiles)
-      return references;
+    const references =
+      Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    if (options?.includeEmptyFiles) return references;
 
-    const nonEmptyReferences = references.filter(ref => !!ref.objectName);
+    const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
     return nonEmptyReferences;
   }
 

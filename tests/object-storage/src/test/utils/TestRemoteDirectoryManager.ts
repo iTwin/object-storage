@@ -2,9 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { BaseDirectory } from "@itwin/object-storage-core";
 import { randomUUID } from "crypto";
+
+import { BaseDirectory } from "@itwin/object-storage-core";
+
 import { config } from "../Config";
+
 import { TestRemoteDirectory } from "./TestRemoteDirectory";
 
 const { serverStorage } = config;

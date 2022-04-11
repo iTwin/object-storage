@@ -142,6 +142,24 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         await queryAndAssertMetadata(reference, metadata);
       });
     }
+
+    it("should fail to upload if specified path contains empty file", async () => {
+      const emptyFilePath: string =
+        await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+
+      const uploadPromise = serverStorage.upload(
+        {
+          baseDirectory: "test-directory",
+          objectName: "test-object-name",
+        },
+        emptyFilePath
+      );
+
+      await expect(uploadPromise).to.eventually.be.rejectedWith(
+        Error,
+        "Provided path is an empty file."
+      );
+    });
   });
 
   describe(`${serverStorage.uploadInMultipleParts.name}()`, function () {
@@ -234,6 +252,24 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         await queryAndAssertMetadata(reference, metadata);
       });
     }
+
+    it("should fail to upload in multiple parts if specified path contains empty file", async () => {
+      const emptyFilePath: string =
+        await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+
+      const uploadPromise = serverStorage.uploadInMultipleParts(
+        {
+          baseDirectory: "test-directory",
+          objectName: "test-object-name",
+        },
+        emptyFilePath
+      );
+
+      await expect(uploadPromise).to.eventually.be.rejectedWith(
+        Error,
+        "Provided path is an empty file."
+      );
+    });
   });
 
   describe(`${serverStorage.list.name}()`, () => {

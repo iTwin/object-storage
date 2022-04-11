@@ -23,13 +23,13 @@ export class TestLocalFileManager {
 
   public async createAndWriteFile(
     fileName: string,
-    content: Buffer
+    content?: Buffer
   ): Promise<string> {
     if (!existsSync(this._uploadsDir))
       await promises.mkdir(this._uploadsDir, { recursive: true });
 
     const filePath = path.join(this._uploadsDir, fileName);
-    await promises.writeFile(filePath, content);
+    await promises.writeFile(filePath, content ?? "");
     return filePath;
   }
 
