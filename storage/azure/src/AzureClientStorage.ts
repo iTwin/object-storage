@@ -9,6 +9,7 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import {
+  assertFileNotEmpty,
   ClientStorage,
   isLocalUrlTransfer,
   streamToTransferType,
@@ -71,6 +72,8 @@ export class AzureClientStorage extends ClientStorage {
   public async upload(
     input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
+    await assertFileNotEmpty(input.data);
+
     return this._clientWrapperFactory
       .create(input)
       .upload(input.data, input.metadata);
@@ -79,6 +82,8 @@ export class AzureClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
+    await assertFileNotEmpty(input.data);
+
     return this._clientWrapperFactory
       .create(input)
       .uploadInMultipleParts(input.data, input.options);
