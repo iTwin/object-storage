@@ -99,8 +99,8 @@ export class S3ClientWrapper {
   public async list(
     directory: BaseDirectory,
     options?: {
-      maxResults?: number
-      includeEmptyFiles?: boolean
+      maxResults?: number;
+      includeEmptyFiles?: boolean;
     }
   ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -179,7 +179,10 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, { maxResults: 1, includeEmptyFiles: true });
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, {
+      maxResults: 1,
+      includeEmptyFiles: true,
+    });
     return filesWithPrefix.length !== 0;
   }
 

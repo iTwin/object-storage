@@ -3,16 +3,18 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
-import { assertBuffer, assertStream, TestDirectory } from "../Helpers";
-import { testDirectoryManager } from "../Global.test";
+
 import { config } from "../Config";
+import { testDirectoryManager } from "../Global.test";
+import { assertBuffer, assertStream, TestDirectory } from "../Helpers";
 
 const { serverStorage } = config;
 
-export async function testDownloadFromUrlToBuffer(storageUnderTest: ClientStorage): Promise<void> {
+export async function testDownloadFromUrlToBuffer(
+  storageUnderTest: ClientStorage
+): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-buffer");
-  const testDirectory: TestDirectory =
-    await testDirectoryManager.createNew();
+  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-from-url.txt" },
     contentBuffer,
@@ -28,10 +30,11 @@ export async function testDownloadFromUrlToBuffer(storageUnderTest: ClientStorag
   assertBuffer(response, contentBuffer);
 }
 
-export async function testDownloadFromUrlToStream(storageUnderTest: ClientStorage): Promise<void> {
+export async function testDownloadFromUrlToStream(
+  storageUnderTest: ClientStorage
+): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-stream");
-  const testDirectory: TestDirectory =
-    await testDirectoryManager.createNew();
+  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-from-url.txt" },
     contentBuffer,
@@ -47,10 +50,11 @@ export async function testDownloadFromUrlToStream(storageUnderTest: ClientStorag
   await assertStream(response, contentBuffer);
 }
 
-export async function testDownloadToBufferWithConfig(storageUnderTest: ClientStorage): Promise<void> {
+export async function testDownloadToBufferWithConfig(
+  storageUnderTest: ClientStorage
+): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-buffer-with-config");
-  const testDirectory: TestDirectory =
-    await testDirectoryManager.createNew();
+  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-with-config.txt" },
     contentBuffer,
@@ -69,10 +73,11 @@ export async function testDownloadToBufferWithConfig(storageUnderTest: ClientSto
   assertBuffer(response, contentBuffer);
 }
 
-export async function testDownloadToStreamWithConfig(storageUnderTest: ClientStorage): Promise<void> {
+export async function testDownloadToStreamWithConfig(
+  storageUnderTest: ClientStorage
+): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-stream-with-config");
-  const testDirectory: TestDirectory =
-    await testDirectoryManager.createNew();
+  const testDirectory: TestDirectory = await testDirectoryManager.createNew();
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "file-to-download-with-config.txt" },
     contentBuffer,
@@ -90,5 +95,3 @@ export async function testDownloadToStreamWithConfig(storageUnderTest: ClientSto
 
   await assertStream(response, contentBuffer);
 }
-
-

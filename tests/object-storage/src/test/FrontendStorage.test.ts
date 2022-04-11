@@ -3,13 +3,36 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ClientStorage } from "@itwin/object-storage-core";
-import { testDownloadFromUrlToBuffer, testDownloadFromUrlToStream, testDownloadToBufferWithConfig, testDownloadToStreamWithConfig } from "./client-storage/DownloadTests";
-import { testMultipartUploadFromStream, testMultipartUploadWithMetadataFromStream, testMultipartUploadWithRelativeDirFromStream, testUploadFromBufferToUrl, testUploadFromBufferWithConfig, testUploadFromStreamToUrl, testUploadFromStreamWithConfig, testUploadWithMetadataFromBufferToUrl, testUploadWithMetadataFromBufferWithConfig, testUploadWithMetadataFromStreamToUrl, testUploadWithMetadataFromStreamWithConfig, testUploadWithRelativeDirFromBufferToUrl, testUploadWithRelativeDirFromBufferWithConfig, testUploadWithRelativeDirFromStreamToUrl, testUploadWithRelativeDirFromStreamWithConfig } from "./client-storage/UploadTests";
+
+import {
+  testDownloadFromUrlToBuffer,
+  testDownloadFromUrlToStream,
+  testDownloadToBufferWithConfig,
+  testDownloadToStreamWithConfig,
+} from "./client-storage/DownloadTests";
+import {
+  testMultipartUploadFromStream,
+  testMultipartUploadWithMetadataFromStream,
+  testMultipartUploadWithRelativeDirFromStream,
+  testUploadFromBufferToUrl,
+  testUploadFromBufferWithConfig,
+  testUploadFromStreamToUrl,
+  testUploadFromStreamWithConfig,
+  testUploadWithMetadataFromBufferToUrl,
+  testUploadWithMetadataFromBufferWithConfig,
+  testUploadWithMetadataFromStreamToUrl,
+  testUploadWithMetadataFromStreamWithConfig,
+  testUploadWithRelativeDirFromBufferToUrl,
+  testUploadWithRelativeDirFromBufferWithConfig,
+  testUploadWithRelativeDirFromStreamToUrl,
+  testUploadWithRelativeDirFromStreamWithConfig,
+} from "./client-storage/UploadTests";
 import { config } from "./Config";
 
 const { frontendStorage, serverStorage } = config;
 
-describe(`${ClientStorage.name}: ${frontendStorage.constructor.name}`, () => { // TODO: ClientStorage.name
+describe(`${ClientStorage.name}: ${frontendStorage.constructor.name}`, () => {
+  // TODO: ClientStorage.name
   describe("PresignedUrlProvider", () => {
     describe(`${frontendStorage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
       it("should upload a file from buffer to URL", async () => {

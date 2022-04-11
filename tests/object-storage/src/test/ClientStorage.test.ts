@@ -7,24 +7,47 @@ import * as path from "path";
 import { use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import {
-  ClientStorage,
-  ObjectReference,
-} from "@itwin/object-storage-core";
+import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
 
+import {
+  testDownloadFromUrlToBuffer,
+  testDownloadFromUrlToStream,
+  testDownloadToBufferWithConfig,
+  testDownloadToStreamWithConfig,
+} from "./client-storage/DownloadTests";
+import {
+  testMultipartUpload,
+  testMultipartUploadFromStream,
+  testMultipartUploadWithMetadata,
+  testMultipartUploadWithMetadataFromStream,
+  testMultipartUploadWithRelativeDir,
+  testMultipartUploadWithRelativeDirFromStream,
+  testUploadFromBufferToUrl,
+  testUploadFromBufferWithConfig,
+  testUploadFromStreamToUrl,
+  testUploadFromStreamWithConfig,
+  testUploadToUrl,
+  testUploadToUrlWithMetadata,
+  testUploadToUrlWithRelativeDir,
+  testUploadWithConfig,
+  testUploadWithMetadataFromBufferToUrl,
+  testUploadWithMetadataFromBufferWithConfig,
+  testUploadWithMetadataFromStreamToUrl,
+  testUploadWithMetadataFromStreamWithConfig,
+  testUploadWithMetadataWithConfig,
+  testUploadWithRelativeDirFromBufferToUrl,
+  testUploadWithRelativeDirFromBufferWithConfig,
+  testUploadWithRelativeDirFromStreamToUrl,
+  testUploadWithRelativeDirFromStreamWithConfig,
+  testUploadWithRelativeDirWithConfig,
+} from "./client-storage/UploadTests";
 import { config } from "./Config";
 import { testDirectoryManager, testLocalFileManager } from "./Global.test";
-import {
-  assertLocalFile,
-  TestDirectory,
-} from "./Helpers";
-import { testUploadFromBufferToUrl, testUploadFromStreamToUrl, testUploadWithRelativeDirFromBufferToUrl, testUploadWithRelativeDirFromStreamToUrl, testUploadWithMetadataFromBufferToUrl, testUploadWithMetadataFromStreamToUrl, testUploadToUrl, testUploadToUrlWithRelativeDir, testUploadToUrlWithMetadata, testUploadFromBufferWithConfig, testUploadFromStreamWithConfig, testUploadWithRelativeDirFromBufferWithConfig, testUploadWithRelativeDirFromStreamWithConfig, testUploadWithMetadataFromBufferWithConfig, testUploadWithMetadataFromStreamWithConfig, testUploadWithConfig, testUploadWithRelativeDirWithConfig, testUploadWithMetadataWithConfig, testMultipartUploadFromStream, testMultipartUploadWithRelativeDirFromStream, testMultipartUploadWithMetadataFromStream, testMultipartUpload, testMultipartUploadWithRelativeDir, testMultipartUploadWithMetadata } from "./client-storage/UploadTests";
-import { testDownloadFromUrlToBuffer, testDownloadFromUrlToStream, testDownloadToBufferWithConfig, testDownloadToStreamWithConfig } from "./client-storage/DownloadTests";
+import { assertLocalFile, TestDirectory } from "./Helpers";
 
 use(chaiAsPromised);
 
 const { clientStorage, serverStorage } = config;
-
 
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   describe("PresignedUrlProvider", () => {
@@ -62,7 +85,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             contentBuffer
           );
-        await testUploadToUrlWithRelativeDir(clientStorage, fileToUploadPath, contentBuffer);
+        await testUploadToUrlWithRelativeDir(
+          clientStorage,
+          fileToUploadPath,
+          contentBuffer
+        );
       });
 
       it("should upload a file with metadata from buffer to URL", async () => {
@@ -80,7 +107,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             contentBuffer
           );
-        await testUploadToUrlWithMetadata(clientStorage, fileToUploadPath, contentBuffer);
+        await testUploadToUrlWithMetadata(
+          clientStorage,
+          fileToUploadPath,
+          contentBuffer
+        );
       });
     });
 
@@ -128,7 +159,9 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file from path using transfer config`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-upload-with-from-file-with-config`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-upload-with-from-file-with-config`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-url-upload-metadata.txt",
@@ -146,13 +179,19 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file with relative directory from path using transfer config`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-upload-with-relative-dir-with-from-file-with-config`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-upload-with-relative-dir-with-from-file-with-config`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-url-upload-metadata.txt",
             buffer
           );
-        await testUploadWithRelativeDirWithConfig(clientStorage, fileToUploadPath, buffer);
+        await testUploadWithRelativeDirWithConfig(
+          clientStorage,
+          fileToUploadPath,
+          buffer
+        );
       });
 
       it(`should upload a file from buffer with metadata using transfer config`, async () => {
@@ -164,13 +203,19 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file from path with metadata using transfer config`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-upload-with-metadata-with-from-file-with-config`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-upload-with-metadata-with-from-file-with-config`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-url-upload-metadata.txt",
             buffer
           );
-        await testUploadWithMetadataWithConfig(clientStorage, fileToUploadPath, buffer);
+        await testUploadWithMetadataWithConfig(
+          clientStorage,
+          fileToUploadPath,
+          buffer
+        );
       });
     });
 
@@ -180,7 +225,9 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file from path in multiple parts`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-multipart-upload-from-file`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-multipart-upload-from-file`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-config-multipart-upload.txt",
@@ -194,13 +241,19 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file with relative directory from path in multiple parts`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-multipart-upload-with-relative-dir-from-file`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-multipart-upload-with-relative-dir-from-file`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-config-multipart-upload-relative-dir.txt",
             buffer
           );
-        await testMultipartUploadWithRelativeDir(clientStorage, fileToUploadPath, buffer);
+        await testMultipartUploadWithRelativeDir(
+          clientStorage,
+          fileToUploadPath,
+          buffer
+        );
       });
 
       it(`should upload a file from stream with metadata in multiple parts`, async () => {
@@ -208,18 +261,23 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
 
       it(`should upload a file from path with metadata in multiple parts`, async () => {
-        const buffer = Buffer.from(`${clientStorage.constructor.name}-test-multipart-upload-with-metadata-from-file`);
+        const buffer = Buffer.from(
+          `${clientStorage.constructor.name}-test-multipart-upload-with-metadata-from-file`
+        );
         const fileToUploadPath: string =
           await testLocalFileManager.createAndWriteFile(
             "test-client-config-multipart-upload-metadata.txt",
             buffer
           );
-        await testMultipartUploadWithMetadata(clientStorage, fileToUploadPath, buffer);
+        await testMultipartUploadWithMetadata(
+          clientStorage,
+          fileToUploadPath,
+          buffer
+        );
       });
     });
 
     describe(`${clientStorage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
-
       it(`should download a file to buffer using transfer config`, async () => {
         await testDownloadToBufferWithConfig(clientStorage);
       });
