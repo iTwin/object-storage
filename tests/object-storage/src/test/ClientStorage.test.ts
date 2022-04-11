@@ -141,7 +141,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
       it(`should download a file to path from URL`, async () => {
         const contentBuffer = Buffer.from("test-download-from-url-to-path");
-        const testDownloasPath: string =
+        const testDownloadPath: string =
           await testLocalFileManager.getDownloadsDir();
         const testDirectory: TestRemoteDirectory =
           await testDirectoryManager.createNew();
@@ -155,7 +155,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const response = await clientStorage.download({
           url: downloadUrl,
           transferType: "local",
-          localPath: `${testDownloasPath}/download-url.txt`,
+          localPath: `${testDownloadPath}/download-url.txt`,
         });
 
         await assertLocalFile(response, contentBuffer);
@@ -347,7 +347,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
       it(`should download a file to path using transfer config`, async () => {
         const contentBuffer = Buffer.from("test-download-to-path-with-config");
-        const testDownloasPath: string =
+        const testDownloadPath: string =
           await testLocalFileManager.getDownloadsDir();
         const testDirectory: TestRemoteDirectory =
           await testDirectoryManager.createNew();
@@ -364,7 +364,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           reference: uploadedFile,
           transferConfig: downloadConfig,
           transferType: "local",
-          localPath: path.join(testDownloasPath, "download-config.txt"),
+          localPath: path.join(testDownloadPath, "download-config.txt"),
         });
 
         await assertLocalFile(response, contentBuffer);
