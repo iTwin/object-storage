@@ -338,26 +338,19 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
 
     it("should retain the directory after all files from it have been deleted", async () => {
-      console.log(1);
       const testBaseDirectory: BaseDirectory = (
         await testDirectoryManager.createNew()
       ).baseDirectory;
-      console.log(2);
       const testFileToUpload: ObjectReference = {
         baseDirectory: testBaseDirectory.baseDirectory,
         objectName: "test-delete-object.txt",
       };
-      console.log(3);
       const contentBuffer = Buffer.from("test-delete-object");
-      console.log(4);
       await serverStorage.upload(testFileToUpload, contentBuffer);
 
-      console.log(5);
       await serverStorage.deleteObject(testFileToUpload);
 
-      console.log(6);
       const exists = await serverStorage.baseDirectoryExists(testBaseDirectory);
-      console.log(7);
       expect(exists).to.be.true;
     });
   });

@@ -91,7 +91,6 @@ export class TestRemoteDirectoryManager {
       baseDirectory: `integration-tests-${randomUUID()}`,
     };
     this.addForDelete(newDirectory);
-    console.log("createNew", JSON.stringify(newDirectory));
     await serverStorage.createBaseDirectory(newDirectory);
     return new TestDirectory(newDirectory);
   }

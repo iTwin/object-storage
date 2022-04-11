@@ -98,19 +98,22 @@ export class S3ClientWrapper {
 
   public async list(
     directory: BaseDirectory,
-    maxResults?: number
+    options?: {
+      maxResults?: number
+      includeEmptyFiles?: boolean
+    }
   ): Promise<ObjectReference[]> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
         Prefix: directory.baseDirectory,
-        MaxKeys: maxResults,
+        MaxKeys: options?.maxResults,
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
+    return Contents?.map((object) => buildObjectReference(object.Key!)) ?? []; // TODO: empty files...
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
@@ -176,7 +179,7 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, 1);
+    const filesWithPrefix: ObjectReference[] = await this.list(directory, { maxResults: 1, includeEmptyFiles: true });
     return filesWithPrefix.length !== 0;
   }
 
