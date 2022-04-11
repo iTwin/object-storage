@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream, writeFileSync } from "fs";
+import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
@@ -15,7 +15,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { config } from "../Config";
-import { testDirectoryManager } from "../Global.test";
+import { testDirectoryManager, testLocalFileManager } from "../Global.test";
 import {
   checkUploadedFileValidity,
   queryAndAssertMetadata,
@@ -24,10 +24,14 @@ import {
 
 const { serverStorage } = config;
 
-function getTestStream(data: string): Readable {
-  // TODO
-  const path = "C:\\Users\\austeja.kalpakovaite\\Desktop\\foo.txt";
-  writeFileSync(path, data);
+async function getTestStream(data: string): Promise<Readable> {
+  // TODO: there are more simple ways to create a test stream than to write the
+  // data to a file and then read from it. Currently the `streamToBuffer` method
+  // does not work with streams created any other way.
+  const path = await testLocalFileManager.createAndWriteFile(
+    "temp-stream.txt",
+    Buffer.from(data)
+  );
   return createReadStream(path);
 }
 
@@ -44,7 +48,7 @@ export async function testUploadFromStreamToUrl(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-from-stream-to-url`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadToUrl(storageUnderTest, stream, Buffer.from(data));
 }
 
@@ -61,7 +65,7 @@ export async function testUploadWithRelativeDirFromStreamToUrl(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-from-stream-to-url-relative-dir`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadToUrlWithRelativeDir(
     storageUnderTest,
     stream,
@@ -82,7 +86,7 @@ export async function testUploadWithMetadataFromStreamToUrl(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-from-stream-to-url-metadata`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadToUrlWithMetadata(
     storageUnderTest,
     stream,
@@ -173,7 +177,7 @@ export async function testUploadFromStreamWithConfig(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadWithConfig(storageUnderTest, stream, Buffer.from(data));
 }
 
@@ -190,7 +194,7 @@ export async function testUploadWithRelativeDirFromStreamWithConfig(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadWithRelativeDirWithConfig(
     storageUnderTest,
     stream,
@@ -211,7 +215,7 @@ export async function testUploadWithMetadataFromStreamWithConfig(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-with-metadata-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testUploadWithMetadataWithConfig(
     storageUnderTest,
     stream,
@@ -304,7 +308,7 @@ export async function testMultipartUploadFromStream(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testMultipartUpload(storageUnderTest, stream, Buffer.from(data));
 }
 
@@ -312,7 +316,7 @@ export async function testMultipartUploadWithRelativeDirFromStream(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testMultipartUploadWithRelativeDir(
     storageUnderTest,
     stream,
@@ -324,7 +328,7 @@ export async function testMultipartUploadWithMetadataFromStream(
   storageUnderTest: ClientStorage
 ): Promise<void> {
   const data = `${storageUnderTest.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
-  const stream = getTestStream(data);
+  const stream = await getTestStream(data);
   return testMultipartUploadWithMetadata(
     storageUnderTest,
     stream,
