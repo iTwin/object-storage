@@ -10,6 +10,7 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
+  assertFileNotEmpty,
   assertLocalFile,
   BaseDirectory,
   buildObjectKey,
@@ -93,6 +94,8 @@ export class AzureServerStorage extends ServerStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
+    await assertFileNotEmpty(data);
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).upload(data, metadata);
@@ -103,6 +106,8 @@ export class AzureServerStorage extends ServerStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    await assertFileNotEmpty(data);
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).uploadInMultipleParts(data, options);
