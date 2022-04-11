@@ -25,7 +25,7 @@ import {
   checkUploadedFileValidity,
   queryAndAssertMetadata,
   TestDirectory,
-} from "./Helpers";
+} from "./utils";
 
 use(chaiAsPromised);
 

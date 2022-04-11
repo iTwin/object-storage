@@ -6,7 +6,7 @@ import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
 
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
-import { assertBuffer, assertStream, TestDirectory } from "../Helpers";
+import { assertBuffer, assertStream, TestDirectory } from "../utils";
 
 const { serverStorage } = config;
 

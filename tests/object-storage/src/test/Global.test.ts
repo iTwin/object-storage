@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
-import { TestLocalFileManager, TestRemoteDirectoryManager } from "./Helpers";
+import { TestLocalFileManager, TestRemoteDirectoryManager } from "./utils";
 
 export const testDirectoryManager = new TestRemoteDirectoryManager();
 export const testLocalFileManager = new TestLocalFileManager(

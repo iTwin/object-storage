@@ -20,7 +20,7 @@ import {
   checkUploadedFileValidity,
   queryAndAssertMetadata,
   TestDirectory,
-} from "../Helpers";
+} from "../utils";
 
 const { serverStorage } = config;
 

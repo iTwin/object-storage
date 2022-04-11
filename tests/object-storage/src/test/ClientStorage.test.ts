@@ -43,7 +43,8 @@ import {
 } from "./client-storage/UploadTests";
 import { config } from "./Config";
 import { testDirectoryManager, testLocalFileManager } from "./Global.test";
-import { assertLocalFile, TestDirectory } from "./Helpers";
+import { assertLocalFile, TestDirectory } from "./utils";
+
 
 use(chaiAsPromised);
 
