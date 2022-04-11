@@ -8,6 +8,7 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import {
+  assertFileNotEmpty,
   ClientStorage,
   downloadFromUrl,
   instanceOfUrlDownloadInput,
@@ -75,6 +76,8 @@ export class S3ClientStorage extends ClientStorage {
     let { data } = input;
     const { metadata } = input;
 
+    await assertFileNotEmpty(input.data);
+
     if (typeof data === "string") data = createReadStream(data); // read from local file
 
     if (instanceOfUrlUploadInput(input)) {
@@ -95,6 +98,8 @@ export class S3ClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
+    await assertFileNotEmpty(input.data);
+
     if (typeof input.data === "string")
       input.data = createReadStream(input.data); // read from local file
 

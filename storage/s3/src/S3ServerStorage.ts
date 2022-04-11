@@ -8,6 +8,7 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
+  assertFileNotEmpty,
   BaseDirectory,
   Metadata,
   MultipartUploadData,
@@ -87,6 +88,8 @@ export class S3ServerStorage extends ServerStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
+    await assertFileNotEmpty(data);
+
     if (typeof data === "string") data = createReadStream(data); // read from local file
     return this._s3Client.upload(reference, data, metadata);
   }
@@ -96,17 +99,19 @@ export class S3ServerStorage extends ServerStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    await assertFileNotEmpty(data);
+
     if (typeof data === "string") data = createReadStream(data); // read from local file
     return this._s3Client.uploadInMultipleParts(reference, data, options);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
-    return this.upload(
+    return this._s3Client.upload(
       {
         baseDirectory: directory.baseDirectory,
         objectName: "",
       },
-      Buffer.from("")
+      ""
     );
   }
 
@@ -118,7 +123,7 @@ export class S3ServerStorage extends ServerStorage {
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
-        await this.list(directory)
+        await this._s3Client.list(directory, { includeEmptyFiles: true })
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }

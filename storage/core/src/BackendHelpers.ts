@@ -67,3 +67,12 @@ export function assertLocalFile(
 ): asserts localPath is string {
   if (!localPath) throw new Error("Specify localPath");
 }
+
+export async function assertFileNotEmpty(data: TransferData): Promise<void> {
+  if (typeof data === "string") {
+    const fileStats = await promises.stat(data);
+    if (fileStats.size === 0) {
+      throw new Error("Provided path is an empty file.");
+    }
+  }
+}

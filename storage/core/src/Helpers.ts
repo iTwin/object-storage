@@ -50,11 +50,15 @@ export function buildObjectReference(
   const parts = objectKey.split(separator).filter((key) => key);
   const lastIndex = parts.length - 1;
 
-  return {
+  const result: ObjectReference = {
     baseDirectory: parts[0],
-    relativeDirectory: parts.slice(1, lastIndex).join("/"),
     objectName: parts.length !== 1 ? parts[lastIndex] : "",
   };
+
+  const relativeDirectory = parts.slice(1, lastIndex).join("/");
+  if (relativeDirectory) result.relativeDirectory = relativeDirectory;
+
+  return result;
 }
 
 export function buildObjectDirectoryString(directory: ObjectDirectory): string {
