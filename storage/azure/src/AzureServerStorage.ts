@@ -126,7 +126,7 @@ export class AzureServerStorage extends ServerStorage {
     const names = Array<string>();
     for await (const item of iter) names.push(item.name);
 
-    const references: (ObjectReference | undefined)[] = names.map((name) =>
+    return names.map((name) =>
       buildObjectReference(
         buildObjectKey({
           ...directory,
@@ -134,11 +134,6 @@ export class AzureServerStorage extends ServerStorage {
         })
       )
     );
-    const result: ObjectReference[] = references.filter(
-      (reference): reference is ObjectReference => reference !== undefined
-    );
-
-    return result;
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
