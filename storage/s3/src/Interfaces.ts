@@ -5,6 +5,9 @@
 import {
   ConfigDownloadInput,
   ConfigUploadInput,
+  FrontendConfigDownloadInput,
+  FrontendConfigUploadInput,
+  FrontendUploadInMultiplePartsInput,
   TransferConfig,
   UploadInMultiplePartsInput,
 } from "@itwin/object-storage-core/lib/frontend";
@@ -23,11 +26,24 @@ export interface S3TransferConfig extends TransferConfig {
   region: string;
 }
 
+export interface FrontendS3ConfigDownloadInput extends FrontendConfigDownloadInput {
+  transferConfig: S3TransferConfig;
+}
+
 export interface S3ConfigDownloadInput extends ConfigDownloadInput {
   transferConfig: S3TransferConfig;
 }
 
+export interface FrontendS3ConfigUploadInput extends FrontendConfigUploadInput {
+  transferConfig: S3TransferConfig;
+}
+
 export interface S3ConfigUploadInput extends ConfigUploadInput {
+  transferConfig: S3TransferConfig;
+}
+
+export interface FrontendS3UploadInMultiplePartsInput
+  extends FrontendUploadInMultiplePartsInput {
   transferConfig: S3TransferConfig;
 }
 

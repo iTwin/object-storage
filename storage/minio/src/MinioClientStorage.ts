@@ -6,6 +6,7 @@ import { createReadStream } from "fs";
 
 import {
   assertFileNotEmpty,
+  FrontendTransferData,
   instanceOfUrlUploadInput,
   streamToBuffer,
   UrlUploadInput,
@@ -28,14 +29,12 @@ export class MinioClientStorage extends S3ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    if (typeof input.data === "string")
-      input = {
-        ...input,
-        data: await streamToBuffer(createReadStream(input.data)),
-      };
+    const dataToUpload: FrontendTransferData = typeof input.data === "string"
+      ? await streamToBuffer(createReadStream(input.data))
+      : input.data;
 
     if (instanceOfUrlUploadInput(input)) {
-      return handleMinioUrlUpload(input);
+      return handleMinioUrlUpload({ ...input, data: dataToUpload });
     } else {
       return super.upload(input);
     }

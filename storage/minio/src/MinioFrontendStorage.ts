@@ -6,22 +6,23 @@ import { Readable } from "stream";
 
 import {
   assertFrontendTransferData,
+  FrontendConfigUploadInput,
+  FrontendUrlUploadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
   streamToBuffer,
   uploadToUrl,
-  UrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
   S3ClientWrapperFactory,
-  S3ConfigUploadInput,
+
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
 
 export async function handleMinioUrlUpload(
-  input: UrlUploadInput
+  input: FrontendUrlUploadInput
 ): Promise<void> {
-  if (typeof input.data === "string")
+  if (typeof input.data === "string") // TODO
     throw new Error("File uploads are not supported");
   // minio responds with 411 error if Content-Length header is not present
   // used streamToBuffer to get the length before uploading for streams
@@ -51,7 +52,7 @@ export class MinioFrontendStorage extends S3FrontendStorage {
   }
 
   public override async upload(
-    input: UrlUploadInput | S3ConfigUploadInput
+    input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void> {
     if (instanceOfUrlUploadInput(input)) {
       assertFrontendTransferData(input.data);

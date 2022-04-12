@@ -9,7 +9,7 @@ import {
   S3FrontendStorageBindings,
 } from "@itwin/object-storage-s3/lib/frontend";
 
-import { ClientStorage } from "@itwin/object-storage-core";
+import { FrontendStorage } from "@itwin/object-storage-core";
 
 import { MinioFrontendStorage } from "./MinioFrontendStorage";
 
@@ -18,10 +18,10 @@ export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
 
   public override register(
     container: Container,
-    config: S3ClientStorageBindingsConfig
+    config: S3ClientStorageBindingsConfig // TODO: client config? maybe rename
   ): void {
     super.register(container, config);
 
-    container.rebind(ClientStorage).to(MinioFrontendStorage);
+    container.rebind(FrontendStorage).to(MinioFrontendStorage);
   }
 }

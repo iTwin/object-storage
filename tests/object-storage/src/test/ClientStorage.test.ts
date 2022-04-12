@@ -82,7 +82,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             contentBuffer
           );
-        await testUploadToUrl(clientStorage, fileToUploadPath, contentBuffer);
+        await testUploadToUrl({ storageUnderTest: clientStorage, dataToUpload: fileToUploadPath, dataToAssert: contentBuffer });
       });
 
       it("should upload a file with relative dir from buffer to URL", async () => {
@@ -100,10 +100,12 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             contentBuffer
           );
-        await testUploadToUrlWithRelativeDir(
-          clientStorage,
-          fileToUploadPath,
-          contentBuffer
+        await testUploadToUrlWithRelativeDir({
+          storageUnderTest: clientStorage,
+          dataToUpload: fileToUploadPath,
+          dataToAssert: contentBuffer
+        }
+
         );
       });
 
@@ -122,10 +124,12 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             contentBuffer
           );
-        await testUploadToUrlWithMetadata(
-          clientStorage,
-          fileToUploadPath,
-          contentBuffer
+        await testUploadToUrlWithMetadata({
+          storageUnderTest: clientStorage,
+          dataToUpload: fileToUploadPath,
+          dataToAssert: contentBuffer
+        }
+
         );
       });
     });
@@ -204,7 +208,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             buffer
           );
-        await testUploadWithConfig(clientStorage, fileToUploadPath, buffer);
+        await testUploadWithConfig({ storageUnderTest: clientStorage, dataToUpload: fileToUploadPath, dataToAssert: buffer });
       });
 
       it(`should upload a file with relative directory from buffer using transfer config`, async () => {
@@ -224,11 +228,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             buffer
           );
-        await testUploadWithRelativeDirWithConfig(
-          clientStorage,
-          fileToUploadPath,
-          buffer
-        );
+        await testUploadWithRelativeDirWithConfig({
+          storageUnderTest: clientStorage,
+          dataToUpload: fileToUploadPath,
+          dataToAssert: buffer
+        });
       });
 
       it(`should upload a file from buffer with metadata using transfer config`, async () => {
@@ -248,11 +252,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-url-upload-metadata.txt",
             buffer
           );
-        await testUploadWithMetadataWithConfig(
-          clientStorage,
-          fileToUploadPath,
-          buffer
-        );
+        await testUploadWithMetadataWithConfig({
+          storageUnderTest: clientStorage,
+          dataToUpload: fileToUploadPath,
+          dataToAssert: buffer
+        });
       });
     });
 
@@ -292,7 +296,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-config-multipart-upload.txt",
             buffer
           );
-        await testMultipartUpload(clientStorage, fileToUploadPath, buffer);
+        await testMultipartUpload({ storageUnderTest: clientStorage, dataToUpload: fileToUploadPath, dataToAssert: buffer });
       });
 
       it(`should upload a file with relative directory from stream in multiple parts`, async () => {
@@ -308,11 +312,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-config-multipart-upload-relative-dir.txt",
             buffer
           );
-        await testMultipartUploadWithRelativeDir(
-          clientStorage,
-          fileToUploadPath,
-          buffer
-        );
+        await testMultipartUploadWithRelativeDir({
+          storageUnderTest: clientStorage,
+          dataToUpload: fileToUploadPath,
+          dataToAssert: buffer
+        });
       });
 
       it(`should upload a file from stream with metadata in multiple parts`, async () => {
@@ -328,11 +332,11 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             "test-client-config-multipart-upload-metadata.txt",
             buffer
           );
-        await testMultipartUploadWithMetadata(
-          clientStorage,
-          fileToUploadPath,
-          buffer
-        );
+        await testMultipartUploadWithMetadata({
+         storageUnderTest: clientStorage,
+         dataToUpload: fileToUploadPath,
+         dataToAssert: buffer
+        });
       });
     });
 

@@ -15,9 +15,9 @@ import {
   S3ClientStorage,
   S3ClientStorageBindingsConfig,
   S3ClientStorageConfig,
-  S3ClientWrapperFactory,
   Types,
 } from ".";
+import { CommonBindings } from "./CommonBindings";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";
@@ -29,10 +29,11 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
     if (!config.bucket)
       throw new ConfigError<S3ClientStorageBindingsConfig>("bucket");
 
+    CommonBindings.register(container);
+
     container
       .bind<S3ClientStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
-    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope();
     container.bind(ClientStorage).to(S3ClientStorage);
   }
 }

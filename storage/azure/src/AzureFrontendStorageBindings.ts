@@ -9,14 +9,14 @@ import {
   FrontendStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import { AzureFrontendStorage } from "./frontend";
+import { CommonBindings } from "./CommonBindings";
 
 export class AzureFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container.bind(BlockBlobClientWrapperFactory).toSelf().inSingletonScope();
+    CommonBindings.register(container);
     container.bind(FrontendStorage).to(AzureFrontendStorage);
   }
 }

@@ -31,6 +31,10 @@ const config = {
     dependencyName: "s3",
     bucket,
   },
+  FrontendStorage: {
+    dependencyName: "s3",
+    bucket,
+  },
 };
 
 const tests = new StorageIntegrationTests(

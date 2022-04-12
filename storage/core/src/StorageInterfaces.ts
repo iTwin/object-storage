@@ -103,18 +103,18 @@ export interface UploadInMultiplePartsInput extends Omit<FrontendUploadInMultipl
 
 export function instanceOfUrlDownloadInput(
   input: unknown
-): input is UrlDownloadInput {
+): input is FrontendUrlDownloadInput | UrlDownloadInput {
   return "url" in (input as UrlDownloadInput);
 }
 
 export function instanceOfUrlUploadInput(
   input: unknown
-): input is UrlUploadInput {
+): input is FrontendUrlUploadInput | UrlUploadInput {
   return "url" in (input as UrlUploadInput);
 }
 
 export function instanceOfUrlInput(
   input: unknown
-): input is UrlDownloadInput | UrlUploadInput {
+): input is FrontendUrlDownloadInput | UrlDownloadInput | FrontendUrlUploadInput | UrlUploadInput { // TODO: very many assertions that to the same
   return "url" in (input as UrlDownloadInput);
 }

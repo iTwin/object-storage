@@ -24,6 +24,9 @@ const config = {
   ClientStorage: {
     dependencyName,
   },
+  FrontendStorage: {
+    dependencyName,
+  },
 };
 
 const tests = new StorageIntegrationTests(

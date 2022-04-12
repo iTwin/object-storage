@@ -9,11 +9,13 @@ import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 import { MinioClientStorageBindings, MinioServerStorageBindings } from "..";
 import { MinioFrontendStorageBindings } from "../MinioFrontendStorageBindings";
 
+const dependencyName = "minio";
+const bucket = "integration-test";
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName: "minio",
-    bucket: "integration-test",
+    dependencyName,
+    bucket,
     // cspell:disable-next-line
     accessKey: "minioadmin",
     // cspell:disable-next-line
@@ -25,8 +27,12 @@ const config = {
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName: "minio",
-    bucket: "integration-test",
+    dependencyName,
+    bucket,
+  },
+  FrontendStorage: {
+    dependencyName,
+    bucket,
   },
 };
 
