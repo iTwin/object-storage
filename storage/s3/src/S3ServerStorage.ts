@@ -123,7 +123,7 @@ export class S3ServerStorage extends ServerStorage {
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
-        await this.list(directory)
+        await this._s3Client.list(directory, { includeEmptyFiles: true })
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
