@@ -39,7 +39,6 @@ export class TestLocalFileManager {
   }
 
   private purgeDirectory(directory: string): void {
-    if (existsSync(directory))
-      rmSync(directory, { recursive: true, force: true });
+    rmSync(directory, { recursive: true, force: true });
   }
 }
