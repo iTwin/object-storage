@@ -10,10 +10,10 @@ import {
   assertFrontendTransferData,
   assertFrontendTransferType,
   FrontendStorage,
+  FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
   TransferData,
-  FrontendUrlDownloadInput
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";

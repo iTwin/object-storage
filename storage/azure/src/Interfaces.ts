@@ -5,18 +5,19 @@
 import {
   ConfigDownloadInput,
   ConfigUploadInput,
-  TransferConfig,
-  UploadInMultiplePartsInput,
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
-  FrontendUploadInMultiplePartsInput
+  FrontendUploadInMultiplePartsInput,
+  TransferConfig,
+  UploadInMultiplePartsInput,
 } from "@itwin/object-storage-core";
 
 export interface AzureTransferConfig extends TransferConfig {
   authentication: string;
 }
 
-export interface FrontendAzureConfigDownloadInput extends FrontendConfigDownloadInput {
+export interface FrontendAzureConfigDownloadInput
+  extends FrontendConfigDownloadInput {
   transferConfig: AzureTransferConfig;
 }
 
@@ -24,7 +25,8 @@ export interface AzureConfigDownloadInput extends ConfigDownloadInput {
   transferConfig: AzureTransferConfig;
 }
 
-export interface FrontendAzureConfigUploadInput extends FrontendConfigUploadInput {
+export interface FrontendAzureConfigUploadInput
+  extends FrontendConfigUploadInput {
   transferConfig: AzureTransferConfig;
 }
 

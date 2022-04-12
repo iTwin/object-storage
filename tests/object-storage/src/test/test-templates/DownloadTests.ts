@@ -2,7 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ClientStorage,FrontendStorage, ObjectReference } from "@itwin/object-storage-core";
+import {
+  ClientStorage,
+  FrontendStorage,
+  ObjectReference,
+} from "@itwin/object-storage-core";
 
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";

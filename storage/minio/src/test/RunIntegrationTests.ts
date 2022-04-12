@@ -30,6 +30,7 @@ const config = {
     dependencyName,
     bucket,
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName,
     bucket,

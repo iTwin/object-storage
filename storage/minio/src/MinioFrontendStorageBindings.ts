@@ -5,8 +5,8 @@
 import { Container } from "inversify";
 
 import {
-  S3FrontendStorageBindingsConfig,
   S3FrontendStorageBindings,
+  S3FrontendStorageBindingsConfig,
 } from "@itwin/object-storage-s3/lib/frontend";
 
 import { FrontendStorage } from "@itwin/object-storage-core";

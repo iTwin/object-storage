@@ -26,7 +26,8 @@ export interface S3TransferConfig extends TransferConfig {
   region: string;
 }
 
-export interface FrontendS3ConfigDownloadInput extends FrontendConfigDownloadInput {
+export interface FrontendS3ConfigDownloadInput
+  extends FrontendConfigDownloadInput {
   transferConfig: S3TransferConfig;
 }
 

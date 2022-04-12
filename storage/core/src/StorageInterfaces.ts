@@ -53,7 +53,8 @@ export interface FrontendUrlDownloadInput {
   transferType: FrontendTransferType;
 }
 
-export interface UrlDownloadInput extends Omit<FrontendUrlDownloadInput, "transferType"> {
+export interface UrlDownloadInput
+  extends Omit<FrontendUrlDownloadInput, "transferType"> {
   transferType: TransferType;
   localPath?: string;
 }
@@ -75,7 +76,8 @@ export interface FrontendConfigDownloadInput {
   localPath?: string;
 }
 
-export interface ConfigDownloadInput extends Omit<FrontendConfigDownloadInput, "transferType"> {
+export interface ConfigDownloadInput
+  extends Omit<FrontendConfigDownloadInput, "transferType"> {
   transferType: TransferType;
 }
 
@@ -86,7 +88,8 @@ export interface FrontendConfigUploadInput {
   metadata?: Metadata;
 }
 
-export interface ConfigUploadInput extends Omit<FrontendConfigUploadInput, "data"> {
+export interface ConfigUploadInput
+  extends Omit<FrontendConfigUploadInput, "data"> {
   data: TransferData;
 }
 
@@ -97,7 +100,8 @@ export interface FrontendUploadInMultiplePartsInput {
   options?: MultipartUploadOptions;
 }
 
-export interface UploadInMultiplePartsInput extends Omit<FrontendUploadInMultiplePartsInput, "data"> {
+export interface UploadInMultiplePartsInput
+  extends Omit<FrontendUploadInMultiplePartsInput, "data"> {
   data: MultipartUploadData;
 }
 
@@ -115,6 +119,11 @@ export function instanceOfUrlUploadInput(
 
 export function instanceOfUrlInput(
   input: unknown
-): input is FrontendUrlDownloadInput | UrlDownloadInput | FrontendUrlUploadInput | UrlUploadInput { // TODO: very many assertions that to the same
+): input is
+  | FrontendUrlDownloadInput
+  | UrlDownloadInput
+  | FrontendUrlUploadInput
+  | UrlUploadInput {
+  // TODO: very many assertions that to the same
   return "url" in (input as UrlDownloadInput);
 }

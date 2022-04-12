@@ -24,6 +24,7 @@ const config = {
   ClientStorage: {
     dependencyName,
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName,
   },

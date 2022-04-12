@@ -12,7 +12,11 @@ import {
   downloadFromUrlFrontendFriendly,
   streamToTransferTypeFrontend,
 } from "./Helpers";
-import { TransferData, TransferType, UrlDownloadInput } from "./StorageInterfaces";
+import {
+  TransferData,
+  TransferType,
+  UrlDownloadInput,
+} from "./StorageInterfaces";
 
 export async function streamToLocalFile(
   stream: Readable,

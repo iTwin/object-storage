@@ -29,9 +29,10 @@ export class MinioClientStorage extends S3ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData = typeof input.data === "string"
-      ? await streamToBuffer(createReadStream(input.data))
-      : input.data;
+    const dataToUpload: FrontendTransferData =
+      typeof input.data === "string"
+        ? await streamToBuffer(createReadStream(input.data))
+        : input.data;
 
     if (instanceOfUrlUploadInput(input)) {
       return handleMinioUrlUpload({ ...input, data: dataToUpload });

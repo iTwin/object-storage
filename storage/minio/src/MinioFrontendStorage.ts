@@ -15,14 +15,14 @@ import {
 } from "@itwin/object-storage-core/lib/frontend";
 import {
   S3ClientWrapperFactory,
-
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
 
 export async function handleMinioUrlUpload(
   input: FrontendUrlUploadInput
 ): Promise<void> {
-  if (typeof input.data === "string") // TODO
+  if (typeof input.data === "string")
+    // TODO
     throw new Error("File uploads are not supported");
   // minio responds with 411 error if Content-Length header is not present
   // used streamToBuffer to get the length before uploading for streams

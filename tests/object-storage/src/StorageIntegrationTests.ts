@@ -16,10 +16,10 @@ import {
 import {
   ClientStorage,
   ClientStorageDependency,
+  FrontendStorage,
+  FrontendStorageDependency,
   ServerStorage,
   ServerStorageDependency,
-  FrontendStorage,
-  FrontendStorageDependency
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";

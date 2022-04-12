@@ -9,8 +9,12 @@ import { injectable } from "inversify";
 import {
   assertFrontendTransferData,
   assertFrontendTransferType,
-  FrontendStorage,
   downloadFromUrlFrontendFriendly,
+  FrontendConfigUploadInput,
+  FrontendStorage,
+  FrontendUploadInMultiplePartsInput,
+  FrontendUrlDownloadInput,
+  FrontendUrlUploadInput,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
@@ -18,16 +22,10 @@ import {
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
-  FrontendConfigUploadInput,
-  FrontendUrlUploadInput,
-  FrontendUploadInMultiplePartsInput,
-  FrontendUrlDownloadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { createAndUseClient } from "./Helpers";
-import {
-  FrontendS3ConfigDownloadInput,
-} from "./Interfaces";
+import { FrontendS3ConfigDownloadInput } from "./Interfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
