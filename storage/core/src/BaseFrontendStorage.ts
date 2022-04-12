@@ -10,7 +10,7 @@ import {
   FrontendUploadInMultiplePartsInput,
   FrontendUrlUploadInput,
   UrlDownloadInput,
-} from ".";
+} from "./StorageInterfaces";
 
 export interface BaseFrontendStorage {
   download(

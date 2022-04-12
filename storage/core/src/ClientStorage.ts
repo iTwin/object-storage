@@ -9,14 +9,13 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import { BaseFrontendStorage } from "./BaseFrontendStorage";
-
 import {
   ConfigDownloadInput,
   ConfigUploadInput,
   UploadInMultiplePartsInput,
   UrlDownloadInput,
   UrlUploadInput,
-} from ".";
+} from "./StorageInterfaces";
 
 @injectable()
 export abstract class ClientStorage implements BaseFrontendStorage {

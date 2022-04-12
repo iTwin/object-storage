@@ -12,8 +12,7 @@ import {
 } from "@itwin/object-storage-s3";
 
 import { createCore } from "./Helpers";
-
-import { OssTransferConfigProvider } from ".";
+import { OssTransferConfigProvider } from "./OssTransferConfigProvider";
 
 export class OssServerStorageBindings extends S3ServerStorageBindings {
   public override readonly dependencyName: string = "oss";

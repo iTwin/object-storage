@@ -12,13 +12,10 @@ import {
 import { ConfigError } from "@itwin/cloud-agnostic-core";
 
 import { CommonBindings } from "./CommonBindings";
-
-import {
-  S3ClientStorage,
-  S3FrontendStorageBindingsConfig,
-  S3FrontendStorageConfig,
-  Types,
-} from ".";
+import { S3ClientStorage } from "./S3ClientStorage";
+import { S3FrontendStorageBindingsConfig } from "./S3FrontendStorageBindings";
+import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
+import { Types } from "./Types";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";

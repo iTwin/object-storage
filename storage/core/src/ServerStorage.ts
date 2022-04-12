@@ -16,7 +16,7 @@ import {
   ObjectReference,
   TransferConfig,
   TransferData,
-} from ".";
+} from "./StorageInterfaces";
 
 @injectable()
 export abstract class ServerStorage

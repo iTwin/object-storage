@@ -17,7 +17,7 @@ import {
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 
-import { AzureTransferConfig } from ".";
+import { AzureTransferConfig } from "./Interfaces";
 
 export function assertAzureTransferConfig(
   transferConfig: TransferConfig | AzureTransferConfig

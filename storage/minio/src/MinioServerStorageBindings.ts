@@ -11,7 +11,8 @@ import {
   S3ServerStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
-import { createClient, MinioPresignedUrlProvider } from ".";
+import { createClient } from "./Helpers";
+import { MinioPresignedUrlProvider } from "./MinioPresignedUrlProvider";
 
 export class MinioServerStorageBindings extends S3ServerStorageBindings {
   public override readonly dependencyName: string = "minio";
