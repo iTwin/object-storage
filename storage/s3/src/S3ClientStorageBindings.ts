@@ -13,8 +13,8 @@ import { ConfigError } from "@itwin/cloud-agnostic-core";
 
 import {
   S3ClientStorage,
-  S3ClientStorageBindingsConfig,
-  S3ClientStorageConfig,
+  S3FrontendStorageBindingsConfig,
+  S3FrontendStorageConfig,
   Types,
 } from ".";
 import { CommonBindings } from "./CommonBindings";
@@ -24,15 +24,15 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
 
   public override register(
     container: Container,
-    config: S3ClientStorageBindingsConfig
+    config: S3FrontendStorageBindingsConfig
   ): void {
     if (!config.bucket)
-      throw new ConfigError<S3ClientStorageBindingsConfig>("bucket");
+      throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
 
     CommonBindings.register(container);
 
     container
-      .bind<S3ClientStorageConfig>(Types.S3Client.config)
+      .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
     container.bind(ClientStorage).to(S3ClientStorage);
   }

@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
 
 import { assertS3TransferConfig, createS3Client } from "./Helpers";
-import { S3ClientStorageConfig } from "./S3ClientStorageConfig";
+import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 import { Types } from "./Types";
 
@@ -12,7 +12,7 @@ export abstract class S3ClientWrapperFactory {
   private readonly _bucket: string;
 
   public constructor(
-    @inject(Types.S3Server.config) config: S3ClientStorageConfig
+    @inject(Types.S3Server.config) config: S3FrontendStorageConfig
   ) {
     this._bucket = config.bucket;
   }

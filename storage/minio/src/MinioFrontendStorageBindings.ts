@@ -5,7 +5,7 @@
 import { Container } from "inversify";
 
 import {
-  S3ClientStorageBindingsConfig,
+  S3FrontendStorageBindingsConfig,
   S3FrontendStorageBindings,
 } from "@itwin/object-storage-s3/lib/frontend";
 
@@ -18,7 +18,7 @@ export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
 
   public override register(
     container: Container,
-    config: S3ClientStorageBindingsConfig // TODO: client config? maybe rename
+    config: S3FrontendStorageBindingsConfig
   ): void {
     super.register(container, config);
 
