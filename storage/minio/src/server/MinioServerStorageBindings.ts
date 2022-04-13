@@ -5,7 +5,7 @@
 import { Container } from "inversify";
 import { Client } from "minio";
 
-import { PresignedUrlProvider, Types } from "@itwin/object-storage-core";
+import { PresignedUrlProvider, ServerStorage, Types } from "@itwin/object-storage-core";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,
@@ -13,6 +13,7 @@ import {
 
 import { createClient } from "./Helpers";
 import { MinioPresignedUrlProvider } from "./MinioPresignedUrlProvider";
+import { MinioServerStorage } from "./MinioServerStorage";
 
 export class MinioServerStorageBindings extends S3ServerStorageBindings {
   public override readonly dependencyName: string = "minio";
@@ -28,5 +29,6 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
       .to(MinioPresignedUrlProvider);
 
     container.bind(Client).toConstantValue(createClient(config));
+    container.rebind(ServerStorage).to(MinioServerStorage);
   }
 }
