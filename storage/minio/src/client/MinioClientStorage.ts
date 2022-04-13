@@ -17,7 +17,7 @@ import {
   S3ConfigUploadInput,
 } from "@itwin/object-storage-s3";
 
-import { handleMinioUrlUpload } from "../frontend/MinioFrontendStorage";
+import { handleMinioUrlUpload } from "../frontend";
 
 export class MinioClientStorage extends S3ClientStorage {
   constructor(clientWrapperFactory: S3ClientWrapperFactory) {

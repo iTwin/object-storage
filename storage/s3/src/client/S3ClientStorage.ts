@@ -22,9 +22,11 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapper } from "../frontend";
-import { createAndUseClient } from "../frontend/Helpers";
-import { S3ClientWrapperFactory } from "../frontend/S3ClientWrapperFactory";
+import {
+  createAndUseClient,
+  S3ClientWrapper,
+  S3ClientWrapperFactory,
+} from "../frontend";
 
 import {
   S3ConfigDownloadInput,

@@ -15,8 +15,7 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapper } from "../frontend";
-import { createS3Client, createStsClient } from "../frontend/Helpers";
+import { createS3Client, createStsClient, S3ClientWrapper } from "../frontend";
 import { Types } from "../Types";
 
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";

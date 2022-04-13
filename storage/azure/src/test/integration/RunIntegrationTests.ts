@@ -6,9 +6,9 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { AzureClientStorageBindings } from "../../client/AzureClientStorageBindings";
-import { AzureFrontendStorageBindings } from "../../frontend/AzureFrontendStorageBindings";
-import { AzureServerStorageBindings } from "../../server/AzureServerStorageBindings";
+import { AzureClientStorageBindings } from "../../client";
+import { AzureFrontendStorageBindings } from "../../frontend";
+import { AzureServerStorageBindings } from "../../server";
 
 const dependencyName = "azure";
 

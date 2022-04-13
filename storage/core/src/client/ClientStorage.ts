@@ -8,7 +8,7 @@ import { Readable } from "stream";
 
 import { injectable } from "inversify";
 
-import { BaseFrontendStorage } from "../frontend/BaseFrontendStorage";
+import { BaseFrontendStorage } from "../frontend";
 
 import {
   ConfigDownloadInput,
