@@ -21,6 +21,7 @@ export interface UrlUploadInput extends Omit<FrontendUrlUploadInput, "data"> {
 export interface ConfigDownloadInput
   extends Omit<FrontendConfigDownloadInput, "transferType"> {
   transferType: TransferType;
+  localPath?: string;
 }
 
 export interface ConfigUploadInput

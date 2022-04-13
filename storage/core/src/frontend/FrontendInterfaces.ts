@@ -64,7 +64,6 @@ export interface FrontendConfigTransferInput {
 
 export interface FrontendConfigDownloadInput extends FrontendConfigTransferInput {
   transferType: FrontendTransferType;
-  localPath?: string;// TODO;
 }
 
 export interface FrontendConfigUploadInput extends FrontendConfigTransferInput{
