@@ -19,7 +19,7 @@ import {
   AzureServerStorageConfig,
 } from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { Types } from "./Types";
+import { Types } from "../Types";
 
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;

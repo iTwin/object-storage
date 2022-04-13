@@ -7,7 +7,7 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig, TransferType } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig, buildBlobUrlFromConfig } from "../..";
+import { AzureTransferConfig, buildBlobUrlFromConfig } from "../../frontend";
 
 use(chaiAsPromised);
 

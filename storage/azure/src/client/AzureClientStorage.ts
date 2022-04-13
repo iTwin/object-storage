@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { promises } from "fs";
+import { createReadStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
@@ -11,6 +11,7 @@ import { injectable } from "inversify";
 import {
   assertFileNotEmpty,
   ClientStorage,
+  FrontendTransferData,
   isLocalUrlTransfer,
   streamToTransferType,
   TransferData,
@@ -18,12 +19,12 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
+import { BlockBlobClientWrapperFactory } from "../frontend";
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
-} from "./Interfaces";
+} from "./ClientInterfaces";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
@@ -74,9 +75,13 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
+    const dataToUpload: FrontendTransferData = typeof input.data === "string"
+      ? createReadStream(input.data)
+      : input.data;
+
     return this._clientWrapperFactory
       .create(input)
-      .upload(input.data, input.metadata);
+      .upload(dataToUpload, input.metadata);
   }
 
   public async uploadInMultipleParts(
@@ -84,8 +89,12 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
+    const dataToUpload: FrontendTransferData = typeof input.data === "string"
+      ? createReadStream(input.data)
+      : input.data;
+
     return this._clientWrapperFactory
       .create(input)
-      .uploadInMultipleParts(input.data, input.options);
+      .uploadInMultipleParts(dataToUpload, input.options);
   }
 }

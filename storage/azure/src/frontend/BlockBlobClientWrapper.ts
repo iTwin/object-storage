@@ -7,23 +7,25 @@ import { Readable } from "stream";
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import {
-  MultipartUploadData,
+  FrontendMultipartUploadData,
   MultipartUploadOptions,
-  TransferData,
+  FrontendTransferData,
 } from "@itwin/object-storage-core";
 
 export class BlockBlobClientWrapper {
-  constructor(private readonly _client: BlockBlobClient) {}
+  constructor(private readonly _client: BlockBlobClient) { }
 
   public async download(): Promise<Readable> {
+    // TODO: update behavior as per documentation
     const downloadResponse = await this._client.download();
     return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
-    if (typeof data === "string") {
-      await this._client.uploadFile(data, { metadata });
-    } else if (data instanceof Buffer) {
+  public async upload(data: FrontendTransferData, metadata?: Metadata): Promise<void> {
+    // if (typeof data === "string") { // TODO
+    //   await this._client.uploadFile(data, { metadata });
+    if (data instanceof Buffer) {
+      // TODO: update behavior as per documentation
       await this._client.upload(data, data.byteLength, { metadata });
     } else {
       await this._client.uploadStream(data, undefined, undefined, { metadata });
@@ -31,7 +33,7 @@ export class BlockBlobClientWrapper {
   }
 
   public async uploadInMultipleParts(
-    data: MultipartUploadData,
+    data: FrontendMultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { metadata, partSize, queueSize } = options ?? {};

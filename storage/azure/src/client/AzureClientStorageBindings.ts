@@ -5,18 +5,18 @@
 import { Container } from "inversify";
 
 import {
-  FrontendStorage,
-  FrontendStorageDependency,
+  ClientStorage,
+  ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { CommonBindings } from "./CommonBindings";
-import { AzureFrontendStorage } from "./frontend";
+import { AzureClientStorage } from "./AzureClientStorage";
+import { CommonBindings } from "../frontend";
 
-export class AzureFrontendStorageBindings extends FrontendStorageDependency {
+export class AzureClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
     CommonBindings.register(container);
-    container.bind(FrontendStorage).to(AzureFrontendStorage);
+    container.bind(ClientStorage).to(AzureClientStorage);
   }
 }

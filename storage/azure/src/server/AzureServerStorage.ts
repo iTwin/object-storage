@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { promises } from "fs";
+import { createReadStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
@@ -15,6 +15,7 @@ import {
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
+  FrontendTransferData,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -29,10 +30,10 @@ import {
 
 import { buildSASParameters } from "./BackendHelpers";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
-import { buildBlobName, buildExpiresOn } from "./Helpers";
-import { AzureTransferConfig } from "./Interfaces";
-import { Types } from "./Types";
+import { BlockBlobClientWrapper } from "../frontend/BlockBlobClientWrapper";
+import { buildBlobName, buildExpiresOn } from "../frontend/Helpers";
+import { AzureTransferConfig } from "../frontend";
+import { Types } from "../Types";
 
 export interface AzureServerStorageConfig {
   accountName: string;
@@ -96,9 +97,13 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
+    const dataToUpload: FrontendTransferData = typeof data === "string"
+      ? createReadStream(data)
+      : data;
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).upload(data, metadata);
+    ).upload(dataToUpload, metadata);
   }
 
   public async uploadInMultipleParts(
@@ -108,9 +113,13 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
+    const dataToUpload: FrontendTransferData = typeof data === "string"
+      ? createReadStream(data)
+      : data;
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).uploadInMultipleParts(data, options);
+    ).uploadInMultipleParts(dataToUpload, options);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
@@ -252,7 +261,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

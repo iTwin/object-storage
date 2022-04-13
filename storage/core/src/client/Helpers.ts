@@ -16,14 +16,3 @@ export function instanceOfUrlUploadInput(
   return "url" in (input as UrlUploadInput);
 }
 
-export function instanceOfUrlInput(
-  input: unknown
-): input is
-  | UrlDownloadInput
-  // | UrlDownloadInput // TODO
-  | UrlUploadInput
-// | UrlUploadInput
-{
-  // TODO: very many assertions that to the same
-  return "url" in (input as any); // TODO: ANY
-}

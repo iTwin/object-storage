@@ -6,8 +6,8 @@
 import {
   assertTransferConfig,
   buildObjectKey,
-  ConfigDownloadInput,
-  ConfigUploadInput,
+  FrontendUrlDownloadInput,
+  FrontendUrlUploadInput,
   ObjectReference,
   TransferConfig,
 } from "@itwin/object-storage-core/lib/frontend";
@@ -17,7 +17,7 @@ import {
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 
-import { AzureTransferConfig } from "./Interfaces";
+import { AzureTransferConfig } from "./FrontendInterfaces";
 
 export function assertAzureTransferConfig(
   transferConfig: TransferConfig | AzureTransferConfig
@@ -33,8 +33,9 @@ export function assertAzureTransferConfig(
   );
 }
 
+export type TransferConfigAndReference = { transferConfig: AzureTransferConfig, reference: ObjectReference }; // TODO
 export function buildBlobUrlFromConfig(
-  input: ConfigDownloadInput | ConfigUploadInput
+  input: TransferConfigAndReference
 ): string {
   const { transferConfig, reference } = input;
 
@@ -53,4 +54,12 @@ export function buildExpiresOn(expiresInSeconds: number): Date {
   const expiresOn = new Date();
   expiresOn.setSeconds(expiresOn.getSeconds() + expiresInSeconds);
   return expiresOn;
+}
+
+export function instanceOfUrlInput(
+  input: unknown
+): input is FrontendUrlUploadInput | FrontendUrlDownloadInput
+{
+  // TODO: very many assertions that to the same
+  return "url" in (input as any); // TODO: ANY
 }
