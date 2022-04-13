@@ -12,8 +12,7 @@ import {
   ClientStorage,
   downloadFromUrl,
   FrontendTransferData,
-  instanceOfUrlDownloadInput,
-  instanceOfUrlUploadInput,
+  instanceOfUrlInput,
   metadataToHeaders,
   streamToTransferType,
   TransferData,
@@ -59,7 +58,7 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    if (instanceOfUrlDownloadInput(input)) return downloadFromUrl(input);
+    if (instanceOfUrlInput(input)) return downloadFromUrl(input);
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -85,7 +84,7 @@ export class S3ClientStorage extends ClientStorage {
     const dataToUpload: FrontendTransferData =
       typeof data === "string" ? createReadStream(data) : data;
 
-    if (instanceOfUrlUploadInput(input)) {
+    if (instanceOfUrlInput(input)) {
       return uploadToUrl(
         input.url,
         dataToUpload,

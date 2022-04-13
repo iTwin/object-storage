@@ -7,7 +7,7 @@ import { createReadStream } from "fs";
 import {
   assertFileNotEmpty,
   FrontendTransferData,
-  instanceOfUrlUploadInput,
+  instanceOfUrlInput,
   streamToBuffer,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
@@ -34,7 +34,7 @@ export class MinioClientStorage extends S3ClientStorage {
         ? await streamToBuffer(createReadStream(input.data))
         : input.data;
 
-    if (instanceOfUrlUploadInput(input)) {
+    if (instanceOfUrlInput(input)) {
       return handleMinioUrlUpload({ ...input, data: dataToUpload });
     } else {
       return super.upload(input);
