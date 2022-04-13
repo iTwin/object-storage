@@ -14,12 +14,13 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
+import { Types } from "../Types";
+
 import {
   AzureServerStorage,
   AzureServerStorageConfig,
 } from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { Types } from "../Types";
 
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;

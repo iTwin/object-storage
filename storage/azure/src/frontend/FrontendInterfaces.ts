@@ -17,8 +17,11 @@ export interface AzureTransferConfigInput {
   transferConfig: AzureTransferConfig;
 }
 
-export type FrontendAzureConfigDownloadInput = FrontendConfigDownloadInput & AzureTransferConfigInput;
+export type FrontendAzureConfigDownloadInput = FrontendConfigDownloadInput &
+  AzureTransferConfigInput;
 
-export type FrontendAzureConfigUploadInput = FrontendConfigUploadInput & AzureTransferConfigInput;
+export type FrontendAzureConfigUploadInput = FrontendConfigUploadInput &
+  AzureTransferConfigInput;
 
-export type FrontendAzureUploadInMultiplePartsInput = FrontendUploadInMultiplePartsInput & AzureTransferConfigInput;
+export type FrontendAzureUploadInMultiplePartsInput =
+  FrontendUploadInMultiplePartsInput & AzureTransferConfigInput;

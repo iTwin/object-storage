@@ -28,12 +28,13 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import { buildSASParameters } from "./BackendHelpers";
-import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
+import { AzureTransferConfig } from "../frontend";
 import { BlockBlobClientWrapper } from "../frontend/BlockBlobClientWrapper";
 import { buildBlobName, buildExpiresOn } from "../frontend/Helpers";
-import { AzureTransferConfig } from "../frontend";
 import { Types } from "../Types";
+
+import { buildSASParameters } from "./BackendHelpers";
+import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 
 export interface AzureServerStorageConfig {
   accountName: string;
@@ -97,9 +98,8 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
-    const dataToUpload: FrontendTransferData = typeof data === "string"
-      ? createReadStream(data)
-      : data;
+    const dataToUpload: FrontendTransferData =
+      typeof data === "string" ? createReadStream(data) : data;
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
@@ -113,9 +113,8 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
-    const dataToUpload: FrontendTransferData = typeof data === "string"
-      ? createReadStream(data)
-      : data;
+    const dataToUpload: FrontendTransferData =
+      typeof data === "string" ? createReadStream(data) : data;
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
@@ -261,7 +260,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void { }
+  public releaseResources(): void {}
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

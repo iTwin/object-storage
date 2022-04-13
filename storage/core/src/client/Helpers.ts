@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { UrlDownloadInput, UrlUploadInput } from "./ClientInterfaces"; 
+import { UrlDownloadInput, UrlUploadInput } from "./ClientInterfaces";
 
 export function instanceOfUrlDownloadInput(
   input: unknown
@@ -15,4 +15,3 @@ export function instanceOfUrlUploadInput(
 ): input is UrlUploadInput {
   return "url" in (input as UrlUploadInput);
 }
-

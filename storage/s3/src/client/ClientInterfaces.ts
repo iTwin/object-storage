@@ -2,7 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ConfigDownloadInput, ConfigUploadInput, UploadInMultiplePartsInput } from "@itwin/object-storage-core";
+import {
+  ConfigDownloadInput,
+  ConfigUploadInput,
+  UploadInMultiplePartsInput,
+} from "@itwin/object-storage-core";
+
 import { S3TransferConfig } from "../frontend";
 
 export interface S3ConfigDownloadInput extends ConfigDownloadInput {

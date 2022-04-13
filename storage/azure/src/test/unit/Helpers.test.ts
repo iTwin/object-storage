@@ -43,7 +43,11 @@ describe("Helper functions", () => {
           baseDirectory: "testBaseDirectory",
           objectName: "testObjectName",
         };
-        const testedFunction = () => buildBlobUrlFromConfig(testCase.transferConfig as unknown as AzureTransferConfig, reference);
+        const testedFunction = () =>
+          buildBlobUrlFromConfig(
+            testCase.transferConfig as unknown as AzureTransferConfig,
+            reference
+          );
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
@@ -59,7 +63,8 @@ describe("Helper functions", () => {
         baseDirectory: "testBaseDirectory",
         objectName: "testObjectName",
       };
-      const testedFunction = () => buildBlobUrlFromConfig(transferConfig, reference);
+      const testedFunction = () =>
+        buildBlobUrlFromConfig(transferConfig, reference);
       expect(testedFunction).to.not.throw();
     });
   });

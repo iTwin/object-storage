@@ -9,8 +9,9 @@ import {
   FrontendStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { CommonBindings } from "./CommonBindings";
 import { AzureFrontendStorage } from "../frontend";
+
+import { CommonBindings } from "./CommonBindings";
 
 export class AzureFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "azure";

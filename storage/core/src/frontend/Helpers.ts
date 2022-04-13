@@ -20,7 +20,6 @@ import {
   ObjectDirectory,
   ObjectReference,
   TransferConfig,
-
 } from "./FrontendInterfaces";
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -40,8 +39,9 @@ export function buildObjectKey(reference: {
   objectName: string;
 }): string {
   const { baseDirectory, relativeDirectory, objectName } = reference;
-  return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""
-    }/${objectName}`;
+  return `${baseDirectory}${
+    relativeDirectory ? `/${relativeDirectory}` : ""
+  }/${objectName}`;
 }
 
 export function buildObjectReference(
@@ -171,10 +171,8 @@ export function isLocalUrlTransfer(transfer: {
 
 export function instanceOfUrlInput(
   input: unknown
-): input is FrontendUrlTransferInput
-{
+): input is FrontendUrlTransferInput {
   return "url" in (input as FrontendUrlTransferInput);
 }
-
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB

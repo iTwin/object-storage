@@ -20,11 +20,15 @@ import {
 @injectable()
 export abstract class FrontendStorage implements BaseFrontendStorage {
   public abstract download(
-    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "buffer" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   public abstract download(
-    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "stream" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   public abstract upload(

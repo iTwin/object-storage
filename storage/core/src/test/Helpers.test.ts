@@ -7,7 +7,6 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { assertTransferConfig, TransferConfig } from "../frontend";
 
-
 use(chaiAsPromised);
 
 describe("Helper functions", () => {

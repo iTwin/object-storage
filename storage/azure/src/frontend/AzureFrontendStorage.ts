@@ -8,10 +8,10 @@ import { injectable } from "inversify";
 
 import {
   FrontendStorage,
+  FrontendTransferData,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
-  FrontendTransferData,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";

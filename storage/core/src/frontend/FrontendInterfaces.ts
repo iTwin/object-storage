@@ -62,11 +62,12 @@ export interface FrontendConfigTransferInput {
   transferConfig: TransferConfig;
 }
 
-export interface FrontendConfigDownloadInput extends FrontendConfigTransferInput {
+export interface FrontendConfigDownloadInput
+  extends FrontendConfigTransferInput {
   transferType: FrontendTransferType;
 }
 
-export interface FrontendConfigUploadInput extends FrontendConfigTransferInput{
+export interface FrontendConfigUploadInput extends FrontendConfigTransferInput {
   data: FrontendTransferData;
   metadata?: Metadata;
 }

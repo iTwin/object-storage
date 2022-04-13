@@ -8,12 +8,12 @@ import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import {
   FrontendMultipartUploadData,
-  MultipartUploadOptions,
   FrontendTransferData,
+  MultipartUploadOptions,
 } from "@itwin/object-storage-core";
 
 export class BlockBlobClientWrapper {
-  constructor(private readonly _client: BlockBlobClient) { }
+  constructor(private readonly _client: BlockBlobClient) {}
 
   public async download(): Promise<Readable> {
     // TODO: update behavior as per documentation
@@ -21,7 +21,10 @@ export class BlockBlobClientWrapper {
     return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public async upload(data: FrontendTransferData, metadata?: Metadata): Promise<void> {
+  public async upload(
+    data: FrontendTransferData,
+    metadata?: Metadata
+  ): Promise<void> {
     if (data instanceof Buffer) {
       // TODO: update behavior as per documentation
       await this._client.upload(data, data.byteLength, { metadata });

@@ -20,8 +20,8 @@ import {
   uploadToUrl,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { createAndUseClient } from "./Helpers";
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
+import { createAndUseClient } from "./Helpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 

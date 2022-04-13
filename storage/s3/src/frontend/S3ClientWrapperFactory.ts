@@ -2,10 +2,11 @@ import { inject, injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
 
+import { Types } from "../Types";
+
 import { assertS3TransferConfig, createS3Client } from "./Helpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
-import { Types } from "../Types";
 
 @injectable()
 export abstract class S3ClientWrapperFactory {

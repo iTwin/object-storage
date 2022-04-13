@@ -15,12 +15,13 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { createS3Client, createStsClient } from "../frontend/Helpers";
 import { S3ClientWrapper } from "../frontend";
+import { createS3Client, createStsClient } from "../frontend/Helpers";
+import { Types } from "../Types";
+
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
 import { S3TransferConfigProvider } from "./S3TransferConfigProvider";
-import { Types } from "../Types";
 
 export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
   DependencyConfig;

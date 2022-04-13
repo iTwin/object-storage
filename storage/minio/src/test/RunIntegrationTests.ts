@@ -6,7 +6,11 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { MinioClientStorageBindings, MinioServerStorageBindings, MinioFrontendStorageBindings } from "..";
+import {
+  MinioClientStorageBindings,
+  MinioFrontendStorageBindings,
+  MinioServerStorageBindings,
+} from "..";
 
 const dependencyName = "minio";
 const bucket = "integration-test";

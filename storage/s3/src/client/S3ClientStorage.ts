@@ -22,14 +22,15 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
+import { S3ClientWrapper } from "../frontend";
 import { createAndUseClient } from "../frontend/Helpers";
+import { S3ClientWrapperFactory } from "../frontend/S3ClientWrapperFactory";
+
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./ClientInterfaces";
-import { S3ClientWrapper } from "../frontend"
-import { S3ClientWrapperFactory } from "../frontend/S3ClientWrapperFactory";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -74,15 +75,13 @@ export class S3ClientStorage extends ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    let { data } = input;
+    const { data } = input;
     const { metadata } = input;
 
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData = typeof data === "string"
-      ? createReadStream(data)
-      : data;
-
+    const dataToUpload: FrontendTransferData =
+      typeof data === "string" ? createReadStream(data) : data;
 
     if (instanceOfUrlUploadInput(input)) {
       return uploadToUrl(
@@ -104,9 +103,10 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData = typeof input.data === "string"
-      ? createReadStream(input.data)
-      : input.data;
+    const dataToUpload: FrontendTransferData =
+      typeof input.data === "string"
+        ? createReadStream(input.data)
+        : input.data;
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),

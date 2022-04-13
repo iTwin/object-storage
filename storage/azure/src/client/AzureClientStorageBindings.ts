@@ -9,8 +9,9 @@ import {
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { AzureClientStorage } from "./AzureClientStorage";
 import { CommonBindings } from "../frontend";
+
+import { AzureClientStorage } from "./AzureClientStorage";
 
 export class AzureClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";

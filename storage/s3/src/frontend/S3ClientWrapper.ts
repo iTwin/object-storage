@@ -26,7 +26,6 @@ import {
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
-
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { Types } from "../Types";

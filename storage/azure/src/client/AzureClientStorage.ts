@@ -20,6 +20,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
+
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
@@ -75,9 +76,10 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData = typeof input.data === "string"
-      ? createReadStream(input.data)
-      : input.data;
+    const dataToUpload: FrontendTransferData =
+      typeof input.data === "string"
+        ? createReadStream(input.data)
+        : input.data;
 
     return this._clientWrapperFactory
       .create(input)
@@ -89,9 +91,10 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData = typeof input.data === "string"
-      ? createReadStream(input.data)
-      : input.data;
+    const dataToUpload: FrontendTransferData =
+      typeof input.data === "string"
+        ? createReadStream(input.data)
+        : input.data;
 
     return this._clientWrapperFactory
       .create(input)

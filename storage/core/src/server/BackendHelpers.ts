@@ -8,16 +8,17 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
+import { TransferData, TransferType, UrlDownloadInput } from "../client";
 import {
   downloadFromUrlFrontendFriendly,
-  streamToTransferTypeFrontend,
   FrontendUrlDownloadInput,
+  streamToTransferTypeFrontend,
 } from "../frontend";
 
-import { UrlDownloadInput, TransferData, TransferType } from "../client";
-
-function isFrontendDownloadInput(input: UrlDownloadInput): input is FrontendUrlDownloadInput {
-  return input.transferType !== "local"
+function isFrontendDownloadInput(
+  input: UrlDownloadInput
+): input is FrontendUrlDownloadInput {
+  return input.transferType !== "local";
 }
 
 export async function streamToLocalFile(
@@ -37,11 +38,10 @@ export async function streamToLocalFile(
 export async function downloadFromUrl(
   input: UrlDownloadInput
 ): Promise<TransferData> {
-
   if (isFrontendDownloadInput(input))
     return downloadFromUrlFrontendFriendly(input);
 
-  const {  url, localPath } = input;
+  const { url, localPath } = input;
   assertLocalFile(localPath);
 
   const localResponse = await axios.get(url, {

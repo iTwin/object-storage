@@ -14,11 +14,15 @@ import {
 
 export interface BaseFrontendStorage {
   download(
-    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "buffer" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   download(
-    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "stream" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   upload(
