@@ -4,28 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
-
-import {
-  FrontendUrlUploadInput,
-  FrontendUrlDownloadInput,
-} from "@itwin/object-storage-core";
-
+import { instanceOfUrlInput } from "@itwin/object-storage-core";
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
-import { buildBlobUrlFromConfig, TransferConfigAndReference, instanceOfUrlInput } from "./Helpers";
+import { buildBlobUrlFromConfig, TransferConfigAndReference } from "./Helpers";
 import {
   AzureTransferConfig,
-  FrontendAzureConfigDownloadInput,
-  FrontendAzureConfigUploadInput,
-  FrontendAzureUploadInMultiplePartsInput,
 } from "./FrontendInterfaces";
-
-export type AnyAzureTransferInput = // TODO
-  | FrontendUrlUploadInput
-  | FrontendUrlDownloadInput
-  | FrontendAzureConfigDownloadInput
-  | FrontendAzureConfigUploadInput
-  | FrontendAzureUploadInMultiplePartsInput;
-
 
 @injectable()
 export class BlockBlobClientWrapperFactory {

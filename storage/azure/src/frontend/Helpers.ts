@@ -6,8 +6,6 @@
 import {
   assertTransferConfig,
   buildObjectKey,
-  FrontendUrlDownloadInput,
-  FrontendUrlUploadInput,
   ObjectReference,
   TransferConfig,
 } from "@itwin/object-storage-core/lib/frontend";
@@ -54,12 +52,4 @@ export function buildExpiresOn(expiresInSeconds: number): Date {
   const expiresOn = new Date();
   expiresOn.setSeconds(expiresOn.getSeconds() + expiresInSeconds);
   return expiresOn;
-}
-
-export function instanceOfUrlInput(
-  input: unknown
-): input is FrontendUrlUploadInput | FrontendUrlDownloadInput
-{
-  // TODO: very many assertions that to the same
-  return "url" in (input as any); // TODO: ANY
 }

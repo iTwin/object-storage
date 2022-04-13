@@ -22,8 +22,6 @@ export class BlockBlobClientWrapper {
   }
 
   public async upload(data: FrontendTransferData, metadata?: Metadata): Promise<void> {
-    // if (typeof data === "string") { // TODO
-    //   await this._client.uploadFile(data, { metadata });
     if (data instanceof Buffer) {
       // TODO: update behavior as per documentation
       await this._client.upload(data, data.byteLength, { metadata });

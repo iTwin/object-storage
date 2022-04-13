@@ -168,28 +168,12 @@ export function isLocalUrlTransfer(transfer: {
 }): transfer is { localPath: string } {
   return "localPath" in transfer;
 }
-export function instanceOfFrontendUrlDownloadInput(
-  input: unknown
-): input is FrontendUrlDownloadInput {
-  return "url" in (input as FrontendUrlDownloadInput);
-}
 
-export function instanceOfFrontendUrlUploadInput(
+export function instanceOfUrlInput(
   input: unknown
-): input is FrontendUrlUploadInput {
-  return "url" in (input as FrontendUrlUploadInput);
-}
-
-export function instanceOfFrontendUrlInput(
-  input: unknown
-): input is
-  | FrontendUrlDownloadInput
-  // | UrlDownloadInput
-  | FrontendUrlUploadInput
-// | UrlUploadInput
+): input is FrontendUrlUploadInput | FrontendUrlDownloadInput
 {
-  // TODO: very many assertions that to the same
-  return "url" in (input as any); // TODO: ANY
+  return "url" in (input as FrontendUrlUploadInput);
 }
 
 
