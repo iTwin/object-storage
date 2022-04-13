@@ -17,7 +17,7 @@ import {
 import { UrlDownloadInput, TransferData, TransferType } from "../client";
 
 function isFrontendDownloadInput(input: UrlDownloadInput): input is FrontendUrlDownloadInput {
-  return input.transferType === "local"
+  return input.transferType !== "local"
 }
 
 export async function streamToLocalFile(
