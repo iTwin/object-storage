@@ -7,25 +7,22 @@ import { Readable } from "stream";
 import { injectable } from "inversify";
 
 import {
-  assertFrontendTransferData,
-  assertFrontendTransferType,
   downloadFromUrlFrontendFriendly,
   FrontendConfigUploadInput,
   FrontendStorage,
+  FrontendTransferData,
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  instanceOfUrlDownloadInput,
-  instanceOfUrlUploadInput,
+  instanceOfFrontendUrlDownloadInput,
+  instanceOfFrontendUrlUploadInput,
   metadataToHeaders,
   streamToTransferTypeFrontend,
-  TransferData,
   uploadToUrl,
-  UrlDownloadInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { createAndUseClient } from "./Helpers";
-import { FrontendS3ConfigDownloadInput } from "./Interfaces";
+import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
@@ -36,23 +33,21 @@ export class S3FrontendStorage extends FrontendStorage {
   }
 
   public download(
-    input: (UrlDownloadInput | FrontendS3ConfigDownloadInput) & {
+    input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "buffer";
     }
   ): Promise<Buffer>;
 
   public download(
-    input: (UrlDownloadInput | FrontendS3ConfigDownloadInput) & {
+    input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "stream";
     }
   ): Promise<Readable>;
 
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
-  ): Promise<TransferData> {
-    assertFrontendTransferType(input.transferType);
-
-    if (instanceOfUrlDownloadInput(input))
+  ): Promise<FrontendTransferData> {
+    if (instanceOfFrontendUrlDownloadInput(input))
       return downloadFromUrlFrontendFriendly(input);
 
     return createAndUseClient(
@@ -67,11 +62,9 @@ export class S3FrontendStorage extends FrontendStorage {
   public async upload(
     input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void> {
-    assertFrontendTransferData(input.data);
-
     const { data, metadata } = input;
 
-    if (instanceOfUrlUploadInput(input))
+    if (instanceOfFrontendUrlUploadInput(input))
       return uploadToUrl(
         input.url,
         data,
@@ -88,8 +81,6 @@ export class S3FrontendStorage extends FrontendStorage {
   public async uploadInMultipleParts(
     input: FrontendUploadInMultiplePartsInput
   ): Promise<void> {
-    assertFrontendTransferData(input.data);
-
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>

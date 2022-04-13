@@ -11,6 +11,7 @@ import {
   assertFileNotEmpty,
   ClientStorage,
   downloadFromUrl,
+  FrontendTransferData,
   instanceOfUrlDownloadInput,
   instanceOfUrlUploadInput,
   metadataToHeaders,
@@ -21,14 +22,14 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { createAndUseClient } from "./Helpers";
+import { createAndUseClient } from "../frontend/Helpers";
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
-} from "./Interfaces";
-import { S3ClientWrapper } from "./S3ClientWrapper";
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+} from "./ClientInterfaces";
+import { S3ClientWrapper } from "../frontend"
+import { S3ClientWrapperFactory } from "../frontend/S3ClientWrapperFactory";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -78,12 +79,15 @@ export class S3ClientStorage extends ClientStorage {
 
     await assertFileNotEmpty(input.data);
 
-    if (typeof data === "string") data = createReadStream(data); // read from local file
+    const dataToUpload: FrontendTransferData = typeof data === "string"
+      ? createReadStream(data)
+      : data;
+
 
     if (instanceOfUrlUploadInput(input)) {
       return uploadToUrl(
         input.url,
-        data,
+        dataToUpload,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
     }
@@ -91,7 +95,7 @@ export class S3ClientStorage extends ClientStorage {
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.upload(input.reference, data, metadata)
+        clientWrapper.upload(input.reference, dataToUpload, metadata)
     );
   }
 
@@ -100,15 +104,16 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     await assertFileNotEmpty(input.data);
 
-    if (typeof input.data === "string")
-      input.data = createReadStream(input.data); // read from local file
+    const dataToUpload: FrontendTransferData = typeof input.data === "string"
+      ? createReadStream(input.data)
+      : input.data;
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
-          input.data,
+          dataToUpload,
           input.options
         )
     );

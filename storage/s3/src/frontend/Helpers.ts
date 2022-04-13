@@ -15,7 +15,7 @@ import {
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
 
-import { S3TransferConfig } from "./Interfaces";
+import { S3TransferConfig } from "./FrontendInterfaces";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
 export function assertS3TransferConfig(

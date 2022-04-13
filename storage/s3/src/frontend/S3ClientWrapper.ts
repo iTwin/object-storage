@@ -20,15 +20,16 @@ import {
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
+  FrontendMultipartUploadData,
+  FrontendTransferData,
   Metadata,
-  MultipartUploadData,
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
-  TransferData,
+
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "./Types";
+import { Types } from "../Types";
 
 @injectable()
 export class S3ClientWrapper {
@@ -56,7 +57,7 @@ export class S3ClientWrapper {
 
   public async upload(
     reference: ObjectReference,
-    data: TransferData,
+    data: FrontendTransferData | string, // TODO,
     metadata?: Metadata
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -73,7 +74,7 @@ export class S3ClientWrapper {
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
-    data: MultipartUploadData,
+    data: FrontendMultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { queueSize, partSize, metadata } = options ?? {};

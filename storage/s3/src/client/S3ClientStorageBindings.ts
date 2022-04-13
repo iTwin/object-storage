@@ -4,18 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import {
-  ClientStorage,
-  ClientStorageDependency,
-} from "@itwin/object-storage-core/lib/frontend";
-
 import { ConfigError } from "@itwin/cloud-agnostic-core";
 
-import { CommonBindings } from "./CommonBindings";
+import { S3FrontendStorageConfig, S3FrontendStorageBindingsConfig, CommonBindings } from "../frontend";
 import { S3ClientStorage } from "./S3ClientStorage";
-import { S3FrontendStorageBindingsConfig } from "./S3FrontendStorageBindings";
-import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
-import { Types } from "./Types";
+import { Types } from "../Types";
+import { ClientStorage, ClientStorageDependency } from "@itwin/object-storage-core";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";

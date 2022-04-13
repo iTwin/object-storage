@@ -13,9 +13,9 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { S3TransferConfig } from "./Interfaces";
+import { S3TransferConfig } from "../frontend";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
-import { Types } from "./Types";
+import { Types } from "../Types";
 
 @injectable()
 export class S3TransferConfigProvider implements TransferConfigProvider {

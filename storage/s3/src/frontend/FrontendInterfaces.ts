@@ -3,13 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ConfigDownloadInput,
-  ConfigUploadInput,
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
   FrontendUploadInMultiplePartsInput,
   TransferConfig,
-  UploadInMultiplePartsInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
 export interface S3Credentials {
@@ -31,24 +28,11 @@ export interface FrontendS3ConfigDownloadInput
   transferConfig: S3TransferConfig;
 }
 
-export interface S3ConfigDownloadInput extends ConfigDownloadInput {
-  transferConfig: S3TransferConfig;
-}
-
 export interface FrontendS3ConfigUploadInput extends FrontendConfigUploadInput {
-  transferConfig: S3TransferConfig;
-}
-
-export interface S3ConfigUploadInput extends ConfigUploadInput {
   transferConfig: S3TransferConfig;
 }
 
 export interface FrontendS3UploadInMultiplePartsInput
   extends FrontendUploadInMultiplePartsInput {
-  transferConfig: S3TransferConfig;
-}
-
-export interface S3UploadInMultiplePartsInput
-  extends UploadInMultiplePartsInput {
   transferConfig: S3TransferConfig;
 }

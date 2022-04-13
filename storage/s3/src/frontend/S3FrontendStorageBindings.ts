@@ -13,7 +13,7 @@ import {
 import { CommonBindings } from "./CommonBindings";
 import { S3FrontendStorage } from "./S3FrontendStorage";
 import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
-import { Types } from "./Types";
+import { Types } from "../Types";
 
 export type S3FrontendStorageBindingsConfig = S3FrontendStorageConfig &
   DependencyConfig;

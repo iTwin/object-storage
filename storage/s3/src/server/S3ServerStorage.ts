@@ -26,7 +26,7 @@ import {
   Types,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapper } from "../frontend";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
