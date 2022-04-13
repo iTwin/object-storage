@@ -15,7 +15,7 @@ import {
   FrontendTransferData,
   FrontendTransferType,
   FrontendUrlDownloadInput,
-  FrontendUrlUploadInput,
+  FrontendUrlTransferInput,
   Metadata,
   ObjectDirectory,
   ObjectReference,
@@ -171,9 +171,9 @@ export function isLocalUrlTransfer(transfer: {
 
 export function instanceOfUrlInput(
   input: unknown
-): input is FrontendUrlUploadInput | FrontendUrlDownloadInput
+): input is FrontendUrlTransferInput
 {
-  return "url" in (input as FrontendUrlUploadInput);
+  return "url" in (input as FrontendUrlTransferInput);
 }
 
 

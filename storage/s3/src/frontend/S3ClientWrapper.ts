@@ -57,7 +57,7 @@ export class S3ClientWrapper {
 
   public async upload(
     reference: ObjectReference,
-    data: FrontendTransferData | string, // TODO,
+    data: FrontendTransferData | string,
     metadata?: Metadata
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */

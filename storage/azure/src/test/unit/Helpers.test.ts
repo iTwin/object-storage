@@ -5,7 +5,7 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { TransferConfig, TransferType } from "@itwin/object-storage-core";
+import { TransferConfig } from "@itwin/object-storage-core";
 
 import { AzureTransferConfig, buildBlobUrlFromConfig } from "../../frontend";
 
@@ -39,17 +39,11 @@ describe("Helper functions", () => {
       },
     ].forEach((testCase) => {
       it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
-        const transferType: TransferType = "buffer";
-        const input = {
-          reference: {
-            baseDirectory: "testBaseDirectory",
-            objectName: "testObjectName",
-          },
-          transferType,
-          transferConfig:
-            testCase.transferConfig as unknown as AzureTransferConfig,
+        const reference = {
+          baseDirectory: "testBaseDirectory",
+          objectName: "testObjectName",
         };
-        const testedFunction = () => buildBlobUrlFromConfig(input);
+        const testedFunction = () => buildBlobUrlFromConfig(testCase.transferConfig as unknown as AzureTransferConfig, reference);
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
@@ -57,19 +51,15 @@ describe("Helper functions", () => {
     });
 
     it("should not throw if transfer config is valid", () => {
-      const transferType: TransferType = "buffer";
-      const input = {
-        reference: {
-          baseDirectory: "testBaseDirectory",
-          objectName: "testObjectName",
-        },
-        transferType,
-        transferConfig: {
-          ...validBaseTransferConfig,
-          authentication: "testAuthentication",
-        },
+      const transferConfig: AzureTransferConfig = {
+        ...validBaseTransferConfig,
+        authentication: "testAuthentication",
       };
-      const testedFunction = () => buildBlobUrlFromConfig(input);
+      const reference = {
+        baseDirectory: "testBaseDirectory",
+        objectName: "testObjectName",
+      };
+      const testedFunction = () => buildBlobUrlFromConfig(transferConfig, reference);
       expect(testedFunction).to.not.throw();
     });
   });

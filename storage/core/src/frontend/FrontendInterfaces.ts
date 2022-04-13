@@ -44,30 +44,34 @@ export interface ObjectProperties {
   metadata?: Metadata;
 }
 
-export interface FrontendUrlDownloadInput {
+export interface FrontendUrlTransferInput {
   url: string;
+}
+
+export interface FrontendUrlDownloadInput extends FrontendUrlTransferInput {
   transferType: FrontendTransferType;
 }
 
-export interface FrontendUrlUploadInput {
-  url: string;
+export interface FrontendUrlUploadInput extends FrontendUrlTransferInput {
   data: FrontendTransferData;
   metadata?: Metadata;
 }
 
-export interface FrontendConfigDownloadInput {
+export interface FrontendConfigTransferInput {
   reference: ObjectReference;
-  transferType: FrontendTransferType;
   transferConfig: TransferConfig;
-  localPath?: string;
 }
 
-export interface FrontendConfigUploadInput {
-  reference: ObjectReference;
+export interface FrontendConfigDownloadInput extends FrontendConfigTransferInput {
+  transferType: FrontendTransferType;
+  localPath?: string;// TODO;
+}
+
+export interface FrontendConfigUploadInput extends FrontendConfigTransferInput{
   data: FrontendTransferData;
-  transferConfig: TransferConfig;
   metadata?: Metadata;
 }
+
 export interface FrontendUploadInMultiplePartsInput {
   reference: ObjectReference;
   data: FrontendMultipartUploadData;

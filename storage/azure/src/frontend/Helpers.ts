@@ -31,12 +31,10 @@ export function assertAzureTransferConfig(
   );
 }
 
-export type TransferConfigAndReference = { transferConfig: AzureTransferConfig, reference: ObjectReference }; // TODO
 export function buildBlobUrlFromConfig(
-  input: TransferConfigAndReference
+  transferConfig: AzureTransferConfig,
+  reference: ObjectReference
 ): string {
-  const { transferConfig, reference } = input;
-
   assertAzureTransferConfig(transferConfig);
   const { authentication, baseUrl } = transferConfig;
 

@@ -13,18 +13,12 @@ export interface AzureTransferConfig extends TransferConfig {
   authentication: string;
 }
 
-export interface FrontendAzureConfigDownloadInput
-  extends FrontendConfigDownloadInput {
+export interface AzureTransferConfigInput {
   transferConfig: AzureTransferConfig;
 }
 
-export interface FrontendAzureConfigUploadInput
-  extends FrontendConfigUploadInput {
-  transferConfig: AzureTransferConfig;
-}
+export type FrontendAzureConfigDownloadInput = FrontendConfigDownloadInput & AzureTransferConfigInput;
 
+export type FrontendAzureConfigUploadInput = FrontendConfigUploadInput & AzureTransferConfigInput;
 
-export interface FrontendAzureUploadInMultiplePartsInput
-  extends FrontendUploadInMultiplePartsInput {
-  transferConfig: AzureTransferConfig;
-}
+export type FrontendAzureUploadInMultiplePartsInput = FrontendUploadInMultiplePartsInput & AzureTransferConfigInput;
