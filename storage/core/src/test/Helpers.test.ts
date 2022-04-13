@@ -5,8 +5,8 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { assertTransferConfig } from "../Helpers";
-import { TransferConfig } from "../StorageInterfaces";
+import { assertTransferConfig, TransferConfig } from "../frontend";
+
 
 use(chaiAsPromised);
 

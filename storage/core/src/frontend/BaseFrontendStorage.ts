@@ -5,20 +5,20 @@
 import { Readable } from "stream";
 
 import {
-  ConfigDownloadInput,
+  FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
   FrontendUploadInMultiplePartsInput,
+  FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  UrlDownloadInput,
-} from "./StorageInterfaces";
+} from "./FrontendInterfaces";
 
 export interface BaseFrontendStorage {
   download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "buffer" }
   ): Promise<Buffer>;
 
   download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+    input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & { transferType: "stream" }
   ): Promise<Readable>;
 
   upload(

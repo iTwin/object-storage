@@ -12,14 +12,16 @@ import {
 } from "@itwin/cloud-agnostic-core";
 
 import {
+  FrontendTransferData,
+  FrontendTransferType,
+  FrontendUrlDownloadInput,
+  FrontendUrlUploadInput,
   Metadata,
   ObjectDirectory,
   ObjectReference,
   TransferConfig,
-  TransferData,
-  TransferType,
-  UrlDownloadInput,
-} from "./StorageInterfaces";
+
+} from "./FrontendInterfaces";
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
@@ -38,9 +40,8 @@ export function buildObjectKey(reference: {
   objectName: string;
 }): string {
   const { baseDirectory, relativeDirectory, objectName } = reference;
-  return `${baseDirectory}${
-    relativeDirectory ? `/${relativeDirectory}` : ""
-  }/${objectName}`;
+  return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""
+    }/${objectName}`;
 }
 
 export function buildObjectReference(
@@ -85,8 +86,8 @@ export function getTransferTimeInSeconds(
 }
 
 export async function downloadFromUrlFrontendFriendly(
-  input: UrlDownloadInput
-): Promise<TransferData> {
+  input: FrontendUrlDownloadInput
+): Promise<FrontendTransferData> {
   const { transferType, url } = input;
 
   switch (transferType) {
@@ -109,8 +110,8 @@ export async function downloadFromUrlFrontendFriendly(
 
 export async function streamToTransferTypeFrontend(
   stream: Readable,
-  transferType: TransferType
-): Promise<TransferData> {
+  transferType: FrontendTransferType
+): Promise<FrontendTransferData> {
   switch (transferType) {
     case "buffer":
       return streamToBuffer(stream);
@@ -125,7 +126,7 @@ export async function streamToTransferTypeFrontend(
 
 export async function uploadToUrl(
   url: string,
-  data: TransferData,
+  data: FrontendTransferData,
   headers?: Record<string, string>
 ): Promise<void> {
   await axios.put(url, data, {
@@ -162,23 +163,34 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
     throw Error("Transfer config is expired");
 }
 
-export function assertFrontendTransferType(type: TransferType): void {
-  if (type === "local") {
-    throw new Error(`Type '${type}' is not supported`);
-  }
-}
-
-export function assertFrontendTransferData(data: TransferData): void {
-  const dataType = typeof data;
-  if (dataType === "string") {
-    throw new Error("File uploads are not supported");
-  }
-}
-
 export function isLocalUrlTransfer(transfer: {
   localPath?: string;
 }): transfer is { localPath: string } {
   return "localPath" in transfer;
 }
+export function instanceOfFrontendUrlDownloadInput(
+  input: unknown
+): input is FrontendUrlDownloadInput {
+  return "url" in (input as FrontendUrlDownloadInput);
+}
+
+export function instanceOfFrontendUrlUploadInput(
+  input: unknown
+): input is FrontendUrlUploadInput {
+  return "url" in (input as FrontendUrlUploadInput);
+}
+
+export function instanceOfFrontendUrlInput(
+  input: unknown
+): input is
+  | FrontendUrlDownloadInput
+  // | UrlDownloadInput
+  | FrontendUrlUploadInput
+// | UrlUploadInput
+{
+  // TODO: very many assertions that to the same
+  return "url" in (input as any); // TODO: ANY
+}
+
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB

@@ -6,17 +6,8 @@ import { Readable } from "stream";
 
 import { injectable } from "inversify";
 
-import {
-  BaseDirectory,
-  Metadata,
-  MultipartUploadData,
-  MultipartUploadOptions,
-  ObjectDirectory,
-  ObjectProperties,
-  ObjectReference,
-  TransferConfig,
-  TransferData,
-} from "./StorageInterfaces";
+import { BaseDirectory, Metadata, MultipartUploadOptions, ObjectDirectory, ObjectProperties, ObjectReference, TransferConfig } from "../frontend";
+import { MultipartUploadData, TransferData } from "../client";
 
 @injectable()
 export abstract class ServerStorage

@@ -2,7 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from "./frontend";
-export * from "./client";
-export * from "./server";
-export * from "./Types"; // TODO: should it be here
+export * from "./BaseFrontendStorage";
+export * from "./FrontendInterfaces";
+export * from "./FrontendStorage";
+export * from "./FrontendStorageDependency";
+export * from "./Helpers";

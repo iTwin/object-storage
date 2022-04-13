@@ -11,12 +11,10 @@ import axios from "axios";
 import {
   downloadFromUrlFrontendFriendly,
   streamToTransferTypeFrontend,
-} from "./Helpers";
-import {
-  TransferData,
-  TransferType,
-  UrlDownloadInput,
-} from "./StorageInterfaces";
+  FrontendUrlDownloadInput
+} from "../frontend";
+
+import { UrlDownloadInput, TransferData, TransferType } from "../client";
 
 export async function streamToLocalFile(
   stream: Readable,
@@ -49,7 +47,7 @@ export async function downloadFromUrl(
     return localPath;
   }
 
-  return downloadFromUrlFrontendFriendly(input);
+  return downloadFromUrlFrontendFriendly(input as FrontendUrlDownloadInput); // TODO
 }
 
 export async function streamToTransferType(

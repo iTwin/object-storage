@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from "./frontend";
-export * from "./client";
-export * from "./server";
-export * from "./Types"; // TODO: should it be here
+import { Dependency } from "@itwin/cloud-agnostic-core";
+
+export abstract class FrontendStorageDependency extends Dependency {
+  public static readonly dependencyType = "FrontendStorage";
+  public readonly dependencyType = FrontendStorageDependency.dependencyType;
+}
