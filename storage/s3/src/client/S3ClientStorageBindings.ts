@@ -34,7 +34,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
       .to(S3ClientWrapperFactory)
       .inSingletonScope();
     container
-      .bind<S3FrontendStorageConfig>(Types.S3Client.config)
+      .bind<S3FrontendStorageConfig>(Types.S3Frontend.config)
       .toConstantValue(config);
     container.bind(ClientStorage).to(S3ClientStorage);
   }
