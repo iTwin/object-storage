@@ -10,7 +10,7 @@ import {
 } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { OssServerStorageBindings } from "../OssServerStorageBindings";
+import { OssServerStorageBindings } from "../server";
 
 const bucket = process.env.TEST_OSS_BUCKET;
 
@@ -28,6 +28,11 @@ const config = {
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
+    dependencyName: "s3",
+    bucket,
+  },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  FrontendStorage: {
     dependencyName: "s3",
     bucket,
   },

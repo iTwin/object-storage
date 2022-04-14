@@ -2,7 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
+import {
+  ClientStorage,
+  FrontendStorage,
+  ObjectReference,
+} from "@itwin/object-storage-core";
 
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
@@ -11,7 +15,7 @@ import { assertBuffer, assertStream, TestRemoteDirectory } from "../utils";
 const { serverStorage } = config;
 
 export async function testDownloadFromUrlToBuffer(
-  storageUnderTest: ClientStorage
+  storageUnderTest: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-buffer");
   const testDirectory: TestRemoteDirectory =
@@ -32,7 +36,7 @@ export async function testDownloadFromUrlToBuffer(
 }
 
 export async function testDownloadFromUrlToStream(
-  storageUnderTest: ClientStorage
+  storageUnderTest: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-stream");
   const testDirectory: TestRemoteDirectory =
@@ -53,7 +57,7 @@ export async function testDownloadFromUrlToStream(
 }
 
 export async function testDownloadToBufferWithConfig(
-  storageUnderTest: ClientStorage
+  storageUnderTest: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-buffer-with-config");
   const testDirectory: TestRemoteDirectory =
@@ -77,7 +81,7 @@ export async function testDownloadToBufferWithConfig(
 }
 
 export async function testDownloadToStreamWithConfig(
-  storageUnderTest: ClientStorage
+  storageUnderTest: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-stream-with-config");
   const testDirectory: TestRemoteDirectory =

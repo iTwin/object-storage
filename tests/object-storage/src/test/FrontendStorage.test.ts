@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ClientStorage } from "@itwin/object-storage-core";
+import { FrontendStorage } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 import {
@@ -31,7 +31,7 @@ import {
 
 const { frontendStorage, serverStorage } = config;
 
-describe(`${ClientStorage.name}: ${frontendStorage.constructor.name}`, () => {
+describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
   describe("PresignedUrlProvider", () => {
     describe(`${frontendStorage.upload.name}() & ${serverStorage.getUploadUrl.name}()`, () => {
       it("should upload a file from buffer to URL", async () => {
