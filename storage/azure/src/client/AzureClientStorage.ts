@@ -6,7 +6,7 @@ import { createReadStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
+import { injectable, named } from "inversify";
 
 import {
   assertFileNotEmpty,
@@ -17,6 +17,7 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
+  clientBindingTag
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
@@ -29,7 +30,7 @@ import {
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
-  constructor(private _clientWrapperFactory: BlockBlobClientWrapperFactory) {
+  constructor(@named(clientBindingTag) private _clientWrapperFactory: BlockBlobClientWrapperFactory) {
     super();
   }
 

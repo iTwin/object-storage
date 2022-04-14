@@ -8,6 +8,7 @@ import { ConfigError } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
+  clientBindingTag
 } from "@itwin/object-storage-core";
 
 import {
@@ -29,7 +30,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
     if (!config.bucket)
       throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
 
-    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope();
+    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope().whenTargetNamed(clientBindingTag);
     container
       .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);

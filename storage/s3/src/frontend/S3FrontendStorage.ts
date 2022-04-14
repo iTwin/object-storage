@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
+import { injectable, named } from "inversify";
 
 import {
   downloadFromUrlFrontendFriendly,
@@ -18,6 +18,7 @@ import {
   metadataToHeaders,
   streamToTransferTypeFrontend,
   uploadToUrl,
+  frontendBindingTag
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
@@ -27,7 +28,7 @@ import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
-  public constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
+  public constructor(@named(frontendBindingTag) private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
   }
 

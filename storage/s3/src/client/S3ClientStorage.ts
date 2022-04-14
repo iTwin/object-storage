@@ -5,7 +5,7 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
+import { injectable, named } from "inversify";
 
 import {
   assertFileNotEmpty,
@@ -19,6 +19,7 @@ import {
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
+  clientBindingTag
 } from "@itwin/object-storage-core";
 
 import {
@@ -35,7 +36,7 @@ import {
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
-  constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
+  constructor(@named(clientBindingTag) private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
   }
 
