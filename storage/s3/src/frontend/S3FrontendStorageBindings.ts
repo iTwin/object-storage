@@ -12,7 +12,7 @@ import {
 
 import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 
-import { Types } from "../Types";
+import { Types } from "../common";
 
 import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 import { S3FrontendStorage } from "./S3FrontendStorage";

@@ -13,8 +13,8 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
+import { Types } from "../common";
 import { S3TransferConfig } from "../frontend";
-import { Types } from "../Types";
 
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 

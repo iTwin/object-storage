@@ -11,12 +11,12 @@ import {
   Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
+import { Types } from "../common";
 import {
   S3ClientWrapperFactory,
   S3FrontendStorageBindingsConfig,
   S3FrontendStorageConfig,
 } from "../frontend";
-import { Types } from "../Types";
 
 import { S3ClientStorage } from "./S3ClientStorage";
 
