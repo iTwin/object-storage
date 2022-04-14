@@ -7,7 +7,7 @@ import { Container } from "inversify";
 import {
   ClientStorage,
   ClientStorageDependency,
-  ClientTypes
+  ClientTypes,
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";

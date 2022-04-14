@@ -7,7 +7,7 @@ import { Container } from "inversify";
 import {
   FrontendStorage,
   FrontendStorageDependency,
-  FrontendTypes
+  FrontendTypes,
 } from "@itwin/object-storage-core";
 
 import {

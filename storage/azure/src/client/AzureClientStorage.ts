@@ -11,17 +11,16 @@ import { inject, injectable } from "inversify";
 import {
   assertFileNotEmpty,
   ClientStorage,
+  ClientTypes,
   FrontendTransferData,
   isLocalUrlTransfer,
   streamToTransferType,
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
-  ClientTypes
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
-import {  } from "../Types";
 
 import {
   AzureConfigDownloadInput,

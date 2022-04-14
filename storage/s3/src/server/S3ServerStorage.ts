@@ -18,12 +18,12 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
+  ServerTypes,
   streamToTransferType,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
   TransferType,
-  ServerTypes,
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "../frontend";

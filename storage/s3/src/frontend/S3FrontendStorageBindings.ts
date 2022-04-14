@@ -4,12 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   FrontendStorage,
   FrontendStorageDependency,
-  FrontendTypes
+  FrontendTypes,
 } from "@itwin/object-storage-core/lib/frontend";
+
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 
 import { Types } from "../Types";
 

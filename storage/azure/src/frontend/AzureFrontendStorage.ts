@@ -9,13 +9,13 @@ import { inject, injectable } from "inversify";
 import {
   FrontendStorage,
   FrontendTransferData,
+  FrontendTypes,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
-  FrontendTypes
 } from "@itwin/object-storage-core/lib/frontend";
 
-import {  } from "../Types";
+import {} from "../Types";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import {

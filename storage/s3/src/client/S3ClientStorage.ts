@@ -10,6 +10,7 @@ import { inject, injectable } from "inversify";
 import {
   assertFileNotEmpty,
   ClientStorage,
+  ClientTypes,
   downloadFromUrl,
   FrontendTransferData,
   instanceOfUrlInput,
@@ -19,7 +20,6 @@ import {
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
-  ClientTypes,
 } from "@itwin/object-storage-core";
 
 import {

@@ -11,6 +11,7 @@ import {
   FrontendConfigUploadInput,
   FrontendStorage,
   FrontendTransferData,
+  FrontendTypes,
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
@@ -18,7 +19,6 @@ import {
   metadataToHeaders,
   streamToTransferTypeFrontend,
   uploadToUrl,
-  FrontendTypes
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
