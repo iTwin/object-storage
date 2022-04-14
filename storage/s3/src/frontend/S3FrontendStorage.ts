@@ -18,9 +18,8 @@ import {
   metadataToHeaders,
   streamToTransferTypeFrontend,
   uploadToUrl,
+  FrontendTypes
 } from "@itwin/object-storage-core/lib/frontend";
-
-import { Types } from "../Types";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClient } from "./Helpers";
@@ -30,7 +29,7 @@ import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
-    @inject(Types.S3Frontend.s3ClientWrapperFactory)
+    @inject(FrontendTypes.clientWrapperFactory)
     private _clientWrapperFactory: S3ClientWrapperFactory
   ) {
     super();

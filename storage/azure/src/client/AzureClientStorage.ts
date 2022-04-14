@@ -17,10 +17,11 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
+  ClientTypes
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
-import { Types } from "../Types";
+import {  } from "../Types";
 
 import {
   AzureConfigDownloadInput,
@@ -31,7 +32,7 @@ import {
 @injectable()
 export class AzureClientStorage extends ClientStorage {
   constructor(
-    @inject(Types.AzureClient.blockBlobClientWrapperFactory)
+    @inject(ClientTypes.clientWrapperFactory)
     private _clientWrapperFactory: BlockBlobClientWrapperFactory
   ) {
     super();

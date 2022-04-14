@@ -6,4 +6,5 @@ export * from "./BaseFrontendStorage";
 export * from "./FrontendInterfaces";
 export * from "./FrontendStorage";
 export * from "./FrontendStorageDependency";
+export * from "./FrontendTypes";
 export * from "./Helpers";

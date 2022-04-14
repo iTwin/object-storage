@@ -12,9 +12,10 @@ import {
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
+  FrontendTypes
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "../Types";
+import {  } from "../Types";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import {
@@ -26,7 +27,7 @@ import {
 @injectable()
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
-    @inject(Types.AzureFrontend.blockBlobClientWrapperFactory)
+    @inject(FrontendTypes.clientWrapperFactory)
     private _clientWrapperFactory: BlockBlobClientWrapperFactory
   ) {
     super();

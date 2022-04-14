@@ -23,7 +23,7 @@ import {
   TransferConfigProvider,
   TransferData,
   TransferType,
-  Types,
+  ServerTypes,
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "../frontend";
@@ -46,9 +46,9 @@ export class S3ServerStorage extends ServerStorage {
 
   public constructor(
     s3Client: S3ClientWrapper,
-    @inject(Types.Server.presignedUrlProvider)
+    @inject(ServerTypes.presignedUrlProvider)
     presignedUrlProvider: PresignedUrlProvider,
-    @inject(Types.Server.transferConfigProvider)
+    @inject(ServerTypes.transferConfigProvider)
     transferConfigProvider: TransferConfigProvider
   ) {
     super();

@@ -5,7 +5,7 @@
 import * as Core from "@alicloud/pop-core";
 import { Container } from "inversify";
 
-import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
+import { TransferConfigProvider, ServerTypes } from "@itwin/object-storage-core";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,
@@ -24,7 +24,7 @@ export class OssServerStorageBindings extends S3ServerStorageBindings {
     super.register(container, config);
 
     container
-      .rebind<TransferConfigProvider>(Types.Server.transferConfigProvider)
+      .rebind<TransferConfigProvider>(ServerTypes.transferConfigProvider)
       .to(OssTransferConfigProvider);
     container.bind(Core).toConstantValue(createCore(config));
   }

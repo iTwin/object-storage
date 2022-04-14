@@ -11,7 +11,7 @@ import {
   PresignedUrlProvider,
   ServerStorage,
   ServerStorageDependency,
-  Types as StorageTypes,
+  ServerTypes,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
@@ -59,10 +59,10 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
     container.bind(S3ClientWrapper).toSelf();
 
     container
-      .bind<PresignedUrlProvider>(StorageTypes.Server.presignedUrlProvider)
+      .bind<PresignedUrlProvider>(ServerTypes.presignedUrlProvider)
       .to(S3PresignedUrlProvider);
     container
-      .bind<TransferConfigProvider>(StorageTypes.Server.transferConfigProvider)
+      .bind<TransferConfigProvider>(ServerTypes.transferConfigProvider)
       .to(S3TransferConfigProvider);
   }
 }

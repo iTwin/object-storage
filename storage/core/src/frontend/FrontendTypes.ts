@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from "./ClientInterfaces";
-export * from "./ClientStorage";
-export * from "./ClientStorageDependency";
-export * from "./ClientTypes";
+/* eslint-disable @typescript-eslint/naming-convention */
+
+const types = {
+  clientWrapperFactory: Symbol.for("ClientTypes.ClientWrapperFactory"),
+};
+
+export { types as FrontendTypes };

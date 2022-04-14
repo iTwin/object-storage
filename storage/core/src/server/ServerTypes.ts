@@ -5,10 +5,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
-  Server: {
-    presignedUrlProvider: Symbol.for("Types.Server.PresignedUrlProvider"),
-    transferConfigProvider: Symbol.for("Types.Server.TransferConfigProvider"),
-  },
+  presignedUrlProvider: Symbol.for("ServerTypes.PresignedUrlProvider"),
+  transferConfigProvider: Symbol.for("ServerTypes.TransferConfigProvider"),
 };
 
-export { types as Types };
+export { types as ServerTypes };
