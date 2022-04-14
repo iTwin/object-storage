@@ -5,9 +5,9 @@
 import { Container } from "inversify";
 
 import {
+  clientBindingTag,
   ClientStorage,
   ClientStorageDependency,
-  clientBindingTag
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
@@ -18,7 +18,11 @@ export class AzureClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container.bind(BlockBlobClientWrapperFactory).toSelf().inSingletonScope().whenTargetNamed(clientBindingTag);
+    container
+      .bind(BlockBlobClientWrapperFactory)
+      .toSelf()
+      .inSingletonScope()
+      .whenTargetNamed(clientBindingTag);
     container.bind(ClientStorage).to(AzureClientStorage);
   }
 }

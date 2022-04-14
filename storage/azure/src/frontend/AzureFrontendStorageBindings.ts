@@ -5,9 +5,9 @@
 import { Container } from "inversify";
 
 import {
+  frontendBindingTag,
   FrontendStorage,
   FrontendStorageDependency,
-  frontendBindingTag
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {
@@ -19,7 +19,11 @@ export class AzureFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container.bind(BlockBlobClientWrapperFactory).toSelf().inSingletonScope().whenTargetNamed(frontendBindingTag);
+    container
+      .bind(BlockBlobClientWrapperFactory)
+      .toSelf()
+      .inSingletonScope()
+      .whenTargetNamed(frontendBindingTag);
     container.bind(FrontendStorage).to(AzureFrontendStorage);
   }
 }

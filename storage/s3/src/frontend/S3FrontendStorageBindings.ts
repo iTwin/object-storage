@@ -4,12 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
+  frontendBindingTag,
   FrontendStorage,
   FrontendStorageDependency,
-  frontendBindingTag
 } from "@itwin/object-storage-core/lib/frontend";
+
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 
 import { Types } from "../Types";
 
@@ -30,7 +31,11 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
     if (!config.bucket)
       throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
 
-    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope().whenTargetNamed(frontendBindingTag);
+    container
+      .bind(S3ClientWrapperFactory)
+      .toSelf()
+      .inSingletonScope()
+      .whenTargetNamed(frontendBindingTag);
     container
       .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);

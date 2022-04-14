@@ -10,6 +10,7 @@ import { injectable, named } from "inversify";
 
 import {
   assertFileNotEmpty,
+  clientBindingTag,
   ClientStorage,
   FrontendTransferData,
   isLocalUrlTransfer,
@@ -17,7 +18,6 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
-  clientBindingTag
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
@@ -30,7 +30,10 @@ import {
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
-  constructor(@named(clientBindingTag) private _clientWrapperFactory: BlockBlobClientWrapperFactory) {
+  constructor(
+    @named(clientBindingTag)
+    private _clientWrapperFactory: BlockBlobClientWrapperFactory
+  ) {
     super();
   }
 
