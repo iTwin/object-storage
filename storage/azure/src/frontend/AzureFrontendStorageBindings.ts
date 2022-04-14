@@ -4,11 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
+import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   FrontendStorage,
   FrontendStorageDependency,
-  FrontendTypes,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import {
   AzureFrontendStorage,
@@ -20,7 +20,7 @@ export class AzureFrontendStorageBindings extends FrontendStorageDependency {
 
   public override register(container: Container): void {
     container
-      .bind(FrontendTypes.clientWrapperFactory)
+      .bind(Types.Frontend.clientWrapperFactory)
       .to(BlockBlobClientWrapperFactory)
       .inSingletonScope();
     container.bind(FrontendStorage).to(AzureFrontendStorage);

@@ -11,11 +11,11 @@ import { inject, injectable } from "inversify";
 import {
   assertFileNotEmpty,
   ClientStorage,
-  ClientTypes,
   FrontendTransferData,
   isLocalUrlTransfer,
   streamToTransferType,
   TransferData,
+  Types,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
@@ -31,7 +31,7 @@ import {
 @injectable()
 export class AzureClientStorage extends ClientStorage {
   constructor(
-    @inject(ClientTypes.clientWrapperFactory)
+    @inject(Types.Client.clientWrapperFactory)
     private _clientWrapperFactory: BlockBlobClientWrapperFactory
   ) {
     super();

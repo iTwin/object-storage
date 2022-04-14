@@ -10,13 +10,13 @@ import { inject, injectable } from "inversify";
 import {
   assertFileNotEmpty,
   ClientStorage,
-  ClientTypes,
   downloadFromUrl,
   FrontendTransferData,
   instanceOfUrlInput,
   metadataToHeaders,
   streamToTransferType,
   TransferData,
+  Types,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
@@ -37,7 +37,7 @@ import {
 @injectable()
 export class S3ClientStorage extends ClientStorage {
   constructor(
-    @inject(ClientTypes.clientWrapperFactory)
+    @inject(Types.Client.clientWrapperFactory)
     private _clientWrapperFactory: S3ClientWrapperFactory
   ) {
     super();

@@ -3,5 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./client";
+export * from "./common";
 export * from "./frontend";
 export * from "./server";
