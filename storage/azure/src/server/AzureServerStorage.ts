@@ -51,7 +51,7 @@ export class AzureServerStorage extends ServerStorage {
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
-    @inject(Types.Server.config)
+    @inject(Types.AzureServer.config)
     config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {

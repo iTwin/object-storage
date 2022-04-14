@@ -40,7 +40,7 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
       config.baseUrl = `https://${config.accountName}.blob.core.windows.net`;
 
     container
-      .bind<AzureServerStorageConfig>(Types.Server.config)
+      .bind<AzureServerStorageConfig>(Types.AzureServer.config)
       .toConstantValue(config);
 
     container.bind(ServerStorage).to(AzureServerStorage);

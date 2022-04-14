@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
 import {
   FrontendStorage,
@@ -13,6 +13,8 @@ import {
   FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
+
+import { Types } from "../Types";
 
 import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import {
@@ -24,7 +26,8 @@ import {
 @injectable()
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
-    private readonly _clientWrapperFactory: BlockBlobClientWrapperFactory
+    @inject(Types.AzureFrontend.blockBlobClientWrapperFactory)
+    private _clientWrapperFactory: BlockBlobClientWrapperFactory
   ) {
     super();
   }

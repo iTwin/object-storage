@@ -12,7 +12,7 @@ import {
 
 import { Types } from "../Types";
 
-import { CommonBindings } from "./CommonBindings";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 import { S3FrontendStorage } from "./S3FrontendStorage";
 import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
 
@@ -29,8 +29,10 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
     if (!config.bucket)
       throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
 
-    CommonBindings.register(container);
-
+    container
+      .bind(Types.S3Frontend.s3ClientWrapperFactory)
+      .to(S3ClientWrapperFactory)
+      .inSingletonScope();
     container
       .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
