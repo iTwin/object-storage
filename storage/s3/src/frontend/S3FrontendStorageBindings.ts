@@ -37,7 +37,7 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
       .inSingletonScope()
       .whenTargetNamed(frontendBindingTag);
     container
-      .bind<S3FrontendStorageConfig>(Types.S3Client.config)
+      .bind<S3FrontendStorageConfig>(Types.S3Frontend.config)
       .toConstantValue(config);
     container.bind(FrontendStorage).to(S3FrontendStorage);
   }
