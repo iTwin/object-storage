@@ -5,7 +5,7 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 import {
   assertFileNotEmpty,
@@ -26,7 +26,6 @@ import {
   S3ClientWrapper,
   S3ClientWrapperFactory,
 } from "../frontend";
-import { Types } from "../Types";
 
 import {
   S3ConfigDownloadInput,
@@ -36,10 +35,7 @@ import {
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
-  constructor(
-    @inject(Types.S3Client.s3ClientWrapperFactory)
-    private _clientWrapperFactory: S3ClientWrapperFactory
-  ) {
+  constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
   }
 

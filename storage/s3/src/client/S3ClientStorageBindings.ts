@@ -29,10 +29,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
     if (!config.bucket)
       throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
 
-    container
-      .bind(Types.S3Client.s3ClientWrapperFactory)
-      .to(S3ClientWrapperFactory)
-      .inSingletonScope();
+    container.bind(S3ClientWrapperFactory).toSelf().inSingletonScope();
     container
       .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);

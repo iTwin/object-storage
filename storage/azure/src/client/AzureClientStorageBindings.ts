@@ -10,7 +10,6 @@ import {
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
-import { Types } from "../Types";
 
 import { AzureClientStorage } from "./AzureClientStorage";
 
@@ -18,10 +17,7 @@ export class AzureClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container
-      .bind(Types.AzureClient.blockBlobClientWrapperFactory)
-      .to(BlockBlobClientWrapperFactory)
-      .inSingletonScope();
+    container.bind(BlockBlobClientWrapperFactory).toSelf().inSingletonScope();
     container.bind(ClientStorage).to(AzureClientStorage);
   }
 }

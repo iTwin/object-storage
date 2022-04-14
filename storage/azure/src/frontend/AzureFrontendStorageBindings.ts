@@ -13,16 +13,12 @@ import {
   AzureFrontendStorage,
   BlockBlobClientWrapperFactory,
 } from "../frontend";
-import { Types } from "../Types";
 
 export class AzureFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(container: Container): void {
-    container
-      .bind(Types.AzureFrontend.blockBlobClientWrapperFactory)
-      .to(BlockBlobClientWrapperFactory)
-      .inSingletonScope();
+    container.bind(BlockBlobClientWrapperFactory).toSelf().inSingletonScope();
     container.bind(FrontendStorage).to(AzureFrontendStorage);
   }
 }
