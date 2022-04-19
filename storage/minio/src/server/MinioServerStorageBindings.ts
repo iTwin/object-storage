@@ -8,7 +8,7 @@ import { Client } from "minio";
 import {
   PresignedUrlProvider,
   ServerStorage,
-  ServerTypes,
+  Types,
 } from "@itwin/object-storage-core";
 import {
   S3ServerStorageBindings,
@@ -29,7 +29,7 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
     super.register(container, config);
 
     container
-      .rebind<PresignedUrlProvider>(ServerTypes.presignedUrlProvider)
+      .rebind<PresignedUrlProvider>(Types.Server.presignedUrlProvider)
       .to(MinioPresignedUrlProvider);
 
     container.bind(Client).toConstantValue(createClient(config));
