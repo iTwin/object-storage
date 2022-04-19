@@ -5,6 +5,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
+  Client: {
+    clientWrapperFactory: Symbol.for("Types.Client.clientWrapperFactory"),
+  },
+  Frontend: {
+    clientWrapperFactory: Symbol.for("Types.Frontend.clientWrapperFactory"),
+  },
   Server: {
     presignedUrlProvider: Symbol.for("Types.Server.PresignedUrlProvider"),
     transferConfigProvider: Symbol.for("Types.Server.TransferConfigProvider"),

@@ -14,7 +14,7 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../Types";
+import { Types } from "../common";
 
 import {
   AzureServerStorage,

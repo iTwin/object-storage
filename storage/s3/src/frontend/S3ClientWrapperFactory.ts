@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "../Types";
+import { Types } from "../common";
 
 import { assertS3TransferConfig, createS3Client } from "./Helpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";

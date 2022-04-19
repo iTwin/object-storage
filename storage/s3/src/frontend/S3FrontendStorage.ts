@@ -6,6 +6,7 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
+import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   downloadFromUrlFrontendFriendly,
   FrontendConfigUploadInput,
@@ -20,8 +21,6 @@ import {
   uploadToUrl,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "../Types";
-
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClient } from "./Helpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";
@@ -30,7 +29,7 @@ import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
-    @inject(Types.S3Frontend.s3ClientWrapperFactory)
+    @inject(Types.Frontend.clientWrapperFactory)
     private _clientWrapperFactory: S3ClientWrapperFactory
   ) {
     super();

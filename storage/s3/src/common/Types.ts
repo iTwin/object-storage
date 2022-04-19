@@ -5,18 +5,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
-  AzureClient: {
-    blockBlobClientWrapperFactory: Symbol.for(
-      "Types.AzureClient.BlockBlobClientWrapperFactory"
-    ),
+  bucket: Symbol.for("Types.Bucket"),
+  S3Frontend: {
+    config: Symbol.for("Types.S3Frontend.Config"),
   },
-  AzureFrontend: {
-    blockBlobClientWrapperFactory: Symbol.for(
-      "Types.AzureFrontend.BlockBlobClientWrapperFactory"
-    ),
-  },
-  AzureServer: {
-    config: Symbol.for("Types.AzureServer.Config"),
+  S3Server: {
+    config: Symbol.for("Types.S3Server.Config"),
   },
 };
 

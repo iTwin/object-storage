@@ -8,15 +8,15 @@ import { Container } from "inversify";
 
 import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
+  Types as CoreTypes,
   PresignedUrlProvider,
   ServerStorage,
   ServerStorageDependency,
-  Types as StorageTypes,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
+import { Types } from "../common";
 import { createS3Client, createStsClient, S3ClientWrapper } from "../frontend";
-import { Types } from "../Types";
 
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
@@ -59,10 +59,10 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
     container.bind(S3ClientWrapper).toSelf();
 
     container
-      .bind<PresignedUrlProvider>(StorageTypes.Server.presignedUrlProvider)
+      .bind<PresignedUrlProvider>(CoreTypes.Server.presignedUrlProvider)
       .to(S3PresignedUrlProvider);
     container
-      .bind<TransferConfigProvider>(StorageTypes.Server.transferConfigProvider)
+      .bind<TransferConfigProvider>(CoreTypes.Server.transferConfigProvider)
       .to(S3TransferConfigProvider);
   }
 }

@@ -28,7 +28,7 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "../Types";
+import { Types } from "../common";
 
 @injectable()
 export class S3ClientWrapper {

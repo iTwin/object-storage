@@ -16,7 +16,7 @@ import {
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../Types";
+import { Types } from "../common";
 
 @injectable()
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
