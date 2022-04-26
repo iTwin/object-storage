@@ -31,6 +31,8 @@ function isGetTestDownloadUrlRequest(
 
 export class BackendStorageServer extends Bindable {
   public readonly container = new Container();
+  private _createdDirectories: BaseDirectory[] = [];
+
   constructor() {
     super();
     this.requireDependency(ServerStorageDependency.dependencyType);
@@ -40,17 +42,20 @@ export class BackendStorageServer extends Bindable {
     this.bindDependencies(this.container);
     const serverStorage = this.container.get(ServerStorage);
 
-    const server = express();
+    const expressInstance = express();
 
     const publicDir = path.resolve(__dirname, "..", "public");
-    server.use(express.static(publicDir));
+    expressInstance.use(express.static(publicDir));
 
-    server.use(express.json());
-    server.post("/download-url", async (request: Request, response: Response) =>
+    expressInstance.use(express.json());
+    expressInstance.post("/download-url", async (request: Request, response: Response) =>
       this.handlePostDownloadUrl(serverStorage, request, response)
     );
+    expressInstance.post("/cleanup", async (_request: Request, response: Response) =>
+      this.handlePostCleanup(serverStorage, response)
+    );
 
-    server.listen(Constants.port, () => {
+    expressInstance.listen(Constants.port, () => {
       // eslint-disable-next-line no-console
       console.log(
         `Test storage server started at http://localhost:${Constants.port}`
@@ -65,15 +70,36 @@ export class BackendStorageServer extends Bindable {
   ): Promise<void> {
     return this.handleFailure(response, async () => {
       if (isGetTestDownloadUrlRequest(request.body)) {
-        const reference = await this.uploadTestFile(
-          serverStorage,
-          request.body.filePayload
-        );
+        const baseDirectory: BaseDirectory = { baseDirectory: `base-dir-${randomUUID()}` };
+        await serverStorage.createBaseDirectory(baseDirectory);
+        this._createdDirectories.push(baseDirectory);
+
+        const reference: ObjectReference = {
+          ...baseDirectory,
+          objectName: `file-${randomUUID()}`,
+        };
+        await serverStorage.upload(reference, Buffer.from(request.body.filePayload));
+
         const downloadUrl = await serverStorage.getDownloadUrl(reference, 30);
-        response.send({ downloadUrl });
+
+        response.status(201).send({ downloadUrl });
       } else {
         response.status(400).send();
       }
+    });
+  }
+
+  private async handlePostCleanup(
+    serverStorage: ServerStorage,
+    response: Response
+  ): Promise<void> {
+    return this.handleFailure(response, async () => {
+      for (const createdDirectory of this._createdDirectories) {
+        if (await serverStorage.baseDirectoryExists(createdDirectory))
+          await serverStorage.deleteBaseDirectory(createdDirectory);
+      }
+      this._createdDirectories = [];
+      response.status(204).send();
     });
   }
 
@@ -83,24 +109,9 @@ export class BackendStorageServer extends Bindable {
   ): Promise<void> {
     try {
       await action();
-    } catch {
+    } catch (error: unknown) {
+      console.error(JSON.stringify(error));
       response.status(500).send();
     }
-  }
-
-  private async uploadTestFile(
-    serverStorage: ServerStorage,
-    filePayload: string
-  ): Promise<ObjectReference> {
-    const baseDirectory: BaseDirectory = { baseDirectory: "foo" };
-    if (!(await serverStorage.baseDirectoryExists(baseDirectory)))
-      await serverStorage.createBaseDirectory(baseDirectory);
-
-    const reference: ObjectReference = {
-      ...baseDirectory,
-      objectName: `foo-${randomUUID()}`,
-    };
-    await serverStorage.upload(reference, Buffer.from(filePayload));
-    return reference;
   }
 }

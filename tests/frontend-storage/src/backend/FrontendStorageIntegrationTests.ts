@@ -30,6 +30,7 @@ export class FrontendStorageIntegrationTests {
         supportFile: supportFileTargetPath,
         pluginsFile: false,
         fixturesFolder: false,
+        defaultCommandTimeout: 30000,
       },
     });
   }

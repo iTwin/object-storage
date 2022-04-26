@@ -92,6 +92,23 @@
       ]
     },
     {
+      "name": "Azure Integration tests - Frontend (Server only)",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend:startServer"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
       "name": "OSS Integration tests",
       "cwd": "${workspaceFolder}/storage/oss",
       "type": "pwa-node",

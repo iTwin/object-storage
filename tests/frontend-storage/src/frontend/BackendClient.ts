@@ -23,7 +23,7 @@ export class BackendClient {
 
   public readonly entrypoint = `${this._baseUrl}/index.html`;
 
-  constructor(private _restClient: RestClient) {}
+  constructor(private _restClient: RestClient) { }
 
   public async getTestDownloadUrl(filePayload: string): Promise<string> {
     const url = `${this._baseUrl}/download-url`;
@@ -35,5 +35,14 @@ export class BackendClient {
         headers: this._headers,
       });
     return response.downloadUrl;
+  }
+
+  public async cleanup(): Promise<void> {
+    const url = `${this._baseUrl}/cleanup`;
+    await this._restClient.sendPostRequest<void>({
+      url,
+      body: {},
+      headers: this._headers,
+    });
   }
 }
