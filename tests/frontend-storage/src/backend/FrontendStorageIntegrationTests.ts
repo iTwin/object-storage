@@ -11,7 +11,7 @@ export class FrontendStorageIntegrationTests {
   constructor(private readonly _supportFileSourcePath: string) { }
 
   public async start(): Promise<void> {
-    const supportDir = path.resolve(__dirname, "../", "cypress", "support");
+    const supportDir = path.resolve(__dirname, "..", "cypress", "support");
     if (!fs.existsSync(supportDir))
       fs.mkdirSync(supportDir, { recursive: true });
 
@@ -19,7 +19,7 @@ export class FrontendStorageIntegrationTests {
     const supportFileTargetPath = path.join(supportDir, supportFileName);
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
-    const currentProjectRootAbsolutePath = path.resolve(__dirname, "../");
+    const currentProjectRootAbsolutePath = path.resolve(__dirname, "..");
     await cypress.run({
       browser: "chrome",
       project: currentProjectRootAbsolutePath,
