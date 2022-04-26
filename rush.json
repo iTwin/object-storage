@@ -51,6 +51,11 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@itwin/object-storage-tests-frontend",
+      "projectFolder": "tests/frontend-storage",
+      "shouldPublish": false
+    },
+    {
       "packageName": "@itwin/object-storage-common-config",
       "projectFolder": "utils/common-config",
       "shouldPublish": false

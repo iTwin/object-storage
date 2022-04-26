@@ -1,0 +1,20 @@
+{
+  "extends": "../node_modules/@itwin/object-storage-common-config/tsconfig.json",
+  "include": [
+    "../integration/**/*.ts",
+    "../src/frontend/BackendClient.ts"
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "lib": [
+      "es5",
+      "dom"
+    ],
+    "types": [
+      "cypress",
+      "node"
+    ],
+    "moduleResolution": "node"
+  }
+}

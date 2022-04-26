@@ -1,0 +1,55 @@
+{
+  "name": "@itwin/object-storage-tests-frontend",
+  "version": "0.1.0-dev.1",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "Tests"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "https://www.bentley.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc --p backend.tsconfig.json 1>&2",
+    "clean": "rimraf lib && rimraf cypress/support",
+    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
+    "test": "cypress run --browser chrome --spec **/*.spec.js",
+    "test2": "cross-env CYPRESS_REMOTE_DEBUGGING_PORT=9222 cypress open --browser chrome",
+    "test3": "node lib/FrontendStorageIntegrationTests.js",
+    "test:integration": ""
+  },
+  "prettier": "@itwin/object-storage-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
+  },
+  "dependencies": {
+    "@itwin/cloud-agnostic-core": "workspace:*",
+    "@itwin/object-storage-core": "workspace:*",
+    "cypress": "~9.5.4",
+    "inversify": "~5.0.1"
+  },
+  "devDependencies": {
+    "@itwin/object-storage-common-config": "workspace:*",
+    "@types/express": "~4.17.13",
+    "@types/node": "^14.14.41",
+    "axios": "~0.24.0",
+    "cross-env": "~7.0.3",
+    "cspell": "~5.18.5",
+    "eslint": "~7.32.0",
+    "express": "~4.18.0",
+    "rimraf": "^2.6.2",
+    "sort-package-json": "~1.53.1",
+    "typescript": "~4.3.0"
+  },
+  "engines": {
+    "node": ">=12.20 <17.0.0"
+  }
+}

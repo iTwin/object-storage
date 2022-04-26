@@ -10,15 +10,15 @@ import { AzureClientStorageBindings } from "../../client";
 import { AzureFrontendStorageBindings } from "../../frontend";
 import { AzureServerStorageBindings } from "../../server";
 
+import { TestAzureServerStorageConfig } from "./TestAzureServerStorageConfig";
+
 const dependencyName = "azure";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName,
-    accountName: process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME,
-    accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY,
-    baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL,
+    ...new TestAzureServerStorageConfig().get(),
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {

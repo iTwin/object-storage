@@ -76,6 +76,24 @@
       "envFile": "${workspaceFolder}/storage/azure/src/test/integration/.env"
     },
     {
+      "name": "Azure Integration tests - Frontend",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+      // "envFile": "${workspaceFolder}/storage/azure/src/test/integration/.env"
+    },
+    {
       "name": "OSS Integration tests",
       "cwd": "${workspaceFolder}/storage/oss",
       "type": "pwa-node",
@@ -92,6 +110,18 @@
         "<node_internals>/**"
       ],
       "envFile": "${workspaceFolder}/storage/oss/src/test/.env"
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Cypress Chrome",
+      "port": 9222,
+      "urlFilter": "http://localhost*",
+      "webRoot": "${workspaceFolder}/storage/azure-cypress",
+      "sourceMaps": true,
+      // "skipFiles": [
+      //   "cypress_runner.js",
+      // ],
     },
     {
       "name": "MinIO Integration tests (Environment setup and tests)",
