@@ -15,8 +15,8 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
     cy.visit(backendClient.entrypoint);
   });
 
-  it("should download fule from url", async () => {
-    const testFilePayoload = "test payload";
+  it("should download file from url", async () => {
+    const testFilePayload = "test payload";
     const downloadUrl: string = await backendClient.getTestDownloadUrl(testFilePayoload);
     expect(downloadUrl).to.not.be.empty;
 
