@@ -17,7 +17,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
 
   it("should download file from url", async () => {
     const testFilePayload = "test payload";
-    const downloadUrl: string = await backendClient.getTestDownloadUrl(testFilePayoload);
+    const downloadUrl: string = await backendClient.getTestDownloadUrl(testFilePayload);
     expect(downloadUrl).to.not.be.empty;
 
     // TODO: add correct assertions
