@@ -37,12 +37,3 @@ steps:
   - script: npm run test:integration
     displayName: npm run test:integration (MinIO integration tests)
     workingDirectory: storage/minio
-
-  - script: node common/scripts/install-run-rush.js publish --pack --include-all --publish
-    displayName: rush publish (into .tgz)
-
-  - task: PublishBuildArtifacts@1
-    displayName: publish .tgz as build artifacts
-    inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/common/temp/artifacts/packages'
-      ArtifactName: packages
