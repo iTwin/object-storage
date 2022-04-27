@@ -6,35 +6,28 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { MinioClientStorageBindings } from "../client";
-import { MinioFrontendStorageBindings } from "../frontend";
-import { MinioServerStorageBindings } from "../server";
+import { MinioClientStorageBindings } from "../../client";
+import { MinioFrontendStorageBindings } from "../../frontend";
+import { MinioServerStorageBindings } from "../../server";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const dependencyName = "minio";
-const bucket = "integration-test";
+const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName,
-    bucket,
-    // cspell:disable-next-line
-    accessKey: "minioadmin",
-    // cspell:disable-next-line
-    secretKey: "minioadmin",
-    baseUrl: "http://127.0.0.1:9000",
-    region: "us-east-1",
-    roleArn: "<role-arn>",
-    stsBaseUrl: "http://127.0.0.1:9000",
+    ...serverStorageConfig
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,
-    bucket,
+    bucket: serverStorageConfig.bucket,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName,
-    bucket,
+    bucket: serverStorageConfig.bucket,
   },
 };
 

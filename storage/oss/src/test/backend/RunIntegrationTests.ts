@@ -11,25 +11,24 @@ import {
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
 import { OssServerStorageBindings } from "../../server";
-import { TestConfigProvider } from "../TestConfigProvider";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-
-const configProvider = new TestConfigProvider();
+const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName: "oss",
-    ...configProvider.getServerStorageConfig()
+    ...serverStorageConfig
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName: "s3",
-    ...configProvider.getFrontendStorageConfig()
+    bucket: serverStorageConfig.bucket
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "s3",
-    ...configProvider.getFrontendStorageConfig()
+    bucket: serverStorageConfig.bucket
   },
 };
 

@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 import * as dotenv from "dotenv";
-import { S3FrontendStorageConfig, S3ServerStorageConfig } from "@itwin/object-storage-s3";
+import { S3ServerStorageConfig } from "@itwin/object-storage-s3";
 
-export class TestConfigProvider {
-  constructor() {
+export class ServerStorageConfigProvider {
+  public get(): S3ServerStorageConfig {
     const envFilePath = path.resolve(
       __dirname,
       "..",
@@ -17,16 +17,7 @@ export class TestConfigProvider {
       ".env"
     );
     dotenv.config({ path: envFilePath });
-  }
 
-  public getFrontendStorageConfig(): S3FrontendStorageConfig {
-    const config: S3FrontendStorageConfig = {
-      bucket: process.env.TEST_OSS_BUCKET!,
-    };
-    return config;
-  }
-
-  public getServerStorageConfig(): S3ServerStorageConfig {
     const config: S3ServerStorageConfig = {
       bucket: process.env.TEST_OSS_BUCKET!,
       accessKey: process.env.TEST_OSS_ACCESS_KEY!,
