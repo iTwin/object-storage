@@ -12,10 +12,8 @@ export class TestConfigProvider {
       __dirname,
       "..",
       "..",
-      "..",
       "src",
       "test",
-      "integration",
       ".env"
     );
     dotenv.config({ path: envFilePath });

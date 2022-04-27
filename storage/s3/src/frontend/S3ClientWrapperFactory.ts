@@ -13,7 +13,7 @@ export class S3ClientWrapperFactory {
   private readonly _bucket: string;
 
   public constructor(
-    @inject(Types.S3Server.config) config: S3FrontendStorageConfig
+    @inject(Types.S3Frontend.config) config: S3FrontendStorageConfig
   ) {
     this._bucket = config.bucket;
   }
