@@ -8,9 +8,9 @@ import {
 } from "@itwin/cloud-agnostic-core";
 import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
 
-import { AzureServerStorageBindings } from "../../server";
+import { AzureServerStorageBindings } from "../../../server";
 
-import { TestAzureServerStorageConfig } from "./TestAzureServerStorageConfig";
+import { TestAzureServerStorageConfig } from "../TestAzureServerStorageConfig";
 
 async function run(): Promise<void> {
   const backendServer = new BackendStorageServer();

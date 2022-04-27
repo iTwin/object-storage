@@ -5,7 +5,7 @@
 import {
   AzureFrontendStorage,
   BlockBlobClientWrapperFactory,
-} from "../../frontend";
+} from "../../../frontend";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).frontendStorage = new AzureFrontendStorage(

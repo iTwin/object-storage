@@ -15,7 +15,7 @@ const webpackConfig = {
     minimize: false
   },
   entry: {
-    app: path.resolve(__dirname, "lib", "test", "integration", setStorageScriptFileName)
+    app: path.resolve(__dirname, "lib", "test", "integration", "frontend", setStorageScriptFileName)
   },
   output: {
     filename: bundledScriptFileName,
