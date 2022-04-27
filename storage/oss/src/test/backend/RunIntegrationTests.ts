@@ -10,31 +10,26 @@ import {
 } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests";
 
-import { OssServerStorageBindings } from "../server";
+import { OssServerStorageBindings } from "../../server";
+import { TestConfigProvider } from "../TestConfigProvider";
 
-const bucket = process.env.TEST_OSS_BUCKET;
 
+const configProvider = new TestConfigProvider();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName: "oss",
-    bucket,
-    accessKey: process.env.TEST_OSS_ACCESS_KEY,
-    secretKey: process.env.TEST_OSS_SECRET_KEY,
-    baseUrl: process.env.TEST_OSS_BASE_URL,
-    region: process.env.TEST_OSS_REGION,
-    roleArn: process.env.TEST_OSS_ROLE_ARN,
-    stsBaseUrl: process.env.TEST_OSS_STS_BASE_URL,
+    ...configProvider.getServerStorageConfig()
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName: "s3",
-    bucket,
+    ...configProvider.getFrontendStorageConfig()
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "s3",
-    bucket,
+    ...configProvider.getFrontendStorageConfig()
   },
 };
 
