@@ -18,17 +18,17 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName: "oss",
-    ...serverStorageConfig
+    ...serverStorageConfig,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName: "s3",
-    bucket: serverStorageConfig.bucket
+    bucket: serverStorageConfig.bucket,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "s3",
-    bucket: serverStorageConfig.bucket
+    bucket: serverStorageConfig.bucket,
   },
 };
 

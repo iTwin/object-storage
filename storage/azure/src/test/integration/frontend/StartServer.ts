@@ -9,8 +9,7 @@ import {
 import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
 
 import { AzureServerStorageBindings } from "../../../server";
-
-import { TestAzureServerStorageConfig } from "../TestAzureServerStorageConfig";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 async function run(): Promise<void> {
   const backendServer = new BackendStorageServer();
@@ -21,7 +20,7 @@ async function run(): Promise<void> {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
         dependencyName: "azure",
-        ...new TestAzureServerStorageConfig().get(),
+        ...new ServerStorageConfigProvider().get(),
       },
     });
   backendServer.useBindings(AzureServerStorageBindings);

@@ -4,12 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
+import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
 import {
   S3FrontendStorageBindings,
   S3FrontendStorageBindingsConfig,
 } from "@itwin/object-storage-s3/lib/frontend";
-
-import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
 
 import { MinioFrontendStorage } from "./MinioFrontendStorage";
 

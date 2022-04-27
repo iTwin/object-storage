@@ -7,7 +7,13 @@ import * as path from "path";
 import { FrontendStorageIntegrationTests } from "@itwin/object-storage-tests-frontend";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { bundledScriptFileName } = require(path.resolve(__dirname, "..", "..", "..", "webpack.config.js"));
+const { bundledScriptFileName } = require(path.resolve(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "webpack.config.js"
+));
 const bundledSetupScript = path.resolve(
   __dirname,
   "..",

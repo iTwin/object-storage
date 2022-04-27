@@ -48,11 +48,15 @@ export class BackendStorageServer extends Bindable {
     expressInstance.use(express.static(publicDir));
 
     expressInstance.use(express.json());
-    expressInstance.post("/download-url", async (request: Request, response: Response) =>
-      this.handlePostDownloadUrl(serverStorage, request, response)
+    expressInstance.post(
+      "/download-url",
+      async (request: Request, response: Response) =>
+        this.handlePostDownloadUrl(serverStorage, request, response)
     );
-    expressInstance.post("/cleanup", async (_request: Request, response: Response) =>
-      this.handlePostCleanup(serverStorage, response)
+    expressInstance.post(
+      "/cleanup",
+      async (_request: Request, response: Response) =>
+        this.handlePostCleanup(serverStorage, response)
     );
 
     expressInstance.listen(Constants.port, () => {
@@ -70,7 +74,9 @@ export class BackendStorageServer extends Bindable {
   ): Promise<void> {
     return this.handleFailure(response, async () => {
       if (isGetTestDownloadUrlRequest(request.body)) {
-        const baseDirectory: BaseDirectory = { baseDirectory: `base-dir-${randomUUID()}` };
+        const baseDirectory: BaseDirectory = {
+          baseDirectory: `base-dir-${randomUUID()}`,
+        };
         await serverStorage.createBaseDirectory(baseDirectory);
         this._createdDirectories.push(baseDirectory);
 
@@ -78,7 +84,10 @@ export class BackendStorageServer extends Bindable {
           ...baseDirectory,
           objectName: `file-${randomUUID()}`,
         };
-        await serverStorage.upload(reference, Buffer.from(request.body.filePayload));
+        await serverStorage.upload(
+          reference,
+          Buffer.from(request.body.filePayload)
+        );
 
         const downloadUrl = await serverStorage.getDownloadUrl(reference, 30);
 
@@ -110,6 +119,7 @@ export class BackendStorageServer extends Bindable {
     try {
       await action();
     } catch (error: unknown) {
+      // eslint-disable-next-line no-console
       console.error(JSON.stringify(error));
       response.status(500).send();
     }

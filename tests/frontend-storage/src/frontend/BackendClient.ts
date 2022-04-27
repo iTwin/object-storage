@@ -23,7 +23,7 @@ export class BackendClient {
 
   public readonly entrypoint = `${this._baseUrl}/index.html`;
 
-  constructor(private _restClient: RestClient) { }
+  constructor(private _restClient: RestClient) {}
 
   public async getTestDownloadUrl(filePayload: string): Promise<string> {
     const url = `${this._baseUrl}/download-url`;

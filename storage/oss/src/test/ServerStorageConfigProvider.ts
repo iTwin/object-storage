@@ -3,7 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
+
 import * as dotenv from "dotenv";
+
 import { S3ServerStorageConfig } from "@itwin/object-storage-s3";
 
 export class ServerStorageConfigProvider {

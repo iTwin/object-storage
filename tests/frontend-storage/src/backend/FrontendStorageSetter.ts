@@ -2,9 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Bindable, DependenciesConfig, Types as DependencyTypes } from "@itwin/cloud-agnostic-core";
-import { FrontendStorageDependency, FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
 import { Container } from "inversify";
+
+import {
+  FrontendStorage,
+  FrontendStorageDependency,
+} from "@itwin/object-storage-core/lib/frontend";
+
+import {
+  Bindable,
+  DependenciesConfig,
+  Types as DependencyTypes,
+} from "@itwin/cloud-agnostic-core";
 
 export class FrontendStorageSetter extends Bindable {
   public readonly container = new Container();
@@ -23,10 +32,11 @@ export class FrontendStorageSetter extends Bindable {
       .toConstantValue(config);
   }
 
-  public async setStorageOnWindow(): Promise<void> {
+  public setStorageOnWindow(): void {
     this.bindDependencies(this.container);
 
     const frontendStorage = this.container.get(FrontendStorage);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).frontendStorage = frontendStorage;
   }
 }

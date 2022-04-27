@@ -8,7 +8,7 @@ import * as dotenv from "dotenv";
 
 import { AzureServerStorageConfig } from "../../server";
 
-export class TestAzureServerStorageConfig {
+export class ServerStorageConfigProvider {
   public get(): AzureServerStorageConfig {
     const envFilePath = path.resolve(
       __dirname,
@@ -27,7 +27,6 @@ export class TestAzureServerStorageConfig {
       accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY!,
       baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL!,
     };
-
     return config;
   }
 }
