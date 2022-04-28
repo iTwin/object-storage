@@ -58,7 +58,7 @@
       "name": "-- Integration Tests --"
     },
     {
-      "name": "Azure Integration tests",
+      "name": "Backend Azure Integration tests",
       "cwd": "${workspaceFolder}/storage/azure",
       "type": "pwa-node",
       "request": "launch",
@@ -66,6 +66,23 @@
       "runtimeArgs": [
         "run",
         "test:integration:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Frontend Azure Integration tests",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
