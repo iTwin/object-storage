@@ -21,6 +21,8 @@ Test launch workflow:
     1. Copies the bundled storage setting script into a location that `cypress` can access.
     1. Launches cypress with a specific configuration.
 
+The tests communicate with the server launched on `http://localhost:{SOME_PORT}`. The server supports several operations that create resources in cloud storage and return access information. After the test run `POST /cleanup` request must be issued to delete all created resources.
+
 ### TS compiler configuration files
 
 ```

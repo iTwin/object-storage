@@ -2,7 +2,7 @@
 
 ## Setup
 
-Integration tests require an bucket in OSS Storage Service that will be used to perform actual file operations. Users can create it using [OSS Console](https://oss.console.aliyun.com/).
+Integration tests require a bucket in OSS Storage Service that will be used to perform actual file operations. Users can create it using [OSS Console](https://oss.console.aliyun.com/).
 
 To configure both backend and frontend tests create a `.env` file in `storage/oss/src/test` directory and define values for the following variables:
 - `TEST_OSS_BUCKET` - test bucket name.
@@ -18,7 +18,7 @@ To configure both backend and frontend tests create a `.env` file in `storage/os
 Backend tests test `ClientStorage` and `ServerStorage` provided by this package.
 
 To run them:
-- Run `npm run test:integration:backend` command.
+- Run the `npm run test:integration:backend` command.
 - Launch the "OSS Integration tests" configuration using VS Code.
 
 ## Frontend tests
@@ -26,4 +26,4 @@ To run them:
 Frontend tests test `FrontendStorage` provided by this package.
 
 To run them:
-- Run `npm run test:integration:frontend` command. For more specifics on how the frontend tests are setup see the [frontend tests documentation](../../../../tests/frontend-storage/README.md).
+- Run the `npm run test:integration:frontend` command. For more specifics on how the frontend tests are setup see the [frontend tests documentation](../../../../tests/frontend-storage/README.md).

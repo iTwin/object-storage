@@ -14,7 +14,7 @@ To configure both backend and frontend tests create a `.env` file in `storage/az
 Backend tests test `ClientStorage` and `ServerStorage` provided by this package.
 
 To run them:
-- Run `npm run test:integration:backend` command.
+- Run the `npm run test:integration:backend` command.
 - Launch the "Azure Integration tests" configuration using VS Code.
 
 ## Frontend tests
@@ -22,4 +22,4 @@ To run them:
 Frontend tests test `FrontendStorage` provided by this package.
 
 To run them:
-- Run `npm run test:integration:frontend` command. For more specifics on how the frontend tests are setup see the [frontend tests documentation](../../../../../tests/frontend-storage/README.md).
+- Run the `npm run test:integration:frontend` command. For more specifics on how the frontend tests are setup see the [frontend tests documentation](../../../../../tests/frontend-storage/README.md).
