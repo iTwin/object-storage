@@ -1,5 +1,8 @@
 {
   "extends": "../node_modules/@itwin/object-storage-common-config/tsconfig.json",
+  "include": [
+    "./integration/**/*.ts",
+  ],
   "compilerOptions": {
     "module": "esnext",
     "target": "es5",
