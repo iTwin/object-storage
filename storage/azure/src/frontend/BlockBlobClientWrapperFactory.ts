@@ -9,7 +9,7 @@ import {
   FrontendUrlTransferInput,
   instanceOfUrlInput,
   ObjectReference,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 import { AzureTransferConfigInput } from "./FrontendInterfaces";

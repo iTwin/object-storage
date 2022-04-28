@@ -65,15 +65,14 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:integration"
+        "test:integration:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
       ],
       "skipFiles": [
         "<node_internals>/**"
-      ],
-      "envFile": "${workspaceFolder}/storage/azure/src/test/integration/.env"
+      ]
     },
     {
       "name": "OSS Integration tests",
@@ -83,7 +82,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:integration"
+        "test:integration:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
@@ -101,7 +100,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:integration"
+        "test:integration:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"

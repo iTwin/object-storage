@@ -13,7 +13,7 @@ import {
   uploadToUrl,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
-  S3ClientWrapperFactory,
+  S3FrontendClientWrapperFactory,
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
 
@@ -43,7 +43,7 @@ export async function handleMinioUrlUpload(
 }
 
 export class MinioFrontendStorage extends S3FrontendStorage {
-  public constructor(clientWrapperFactory: S3ClientWrapperFactory) {
+  public constructor(clientWrapperFactory: S3FrontendClientWrapperFactory) {
     super(clientWrapperFactory);
   }
 

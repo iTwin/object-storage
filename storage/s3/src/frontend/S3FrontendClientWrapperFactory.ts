@@ -9,11 +9,11 @@ import { S3ClientWrapper } from "./S3ClientWrapper";
 import { S3FrontendStorageConfig } from "./S3FrontendStorageConfig";
 
 @injectable()
-export class S3ClientWrapperFactory {
+export class S3FrontendClientWrapperFactory {
   private readonly _bucket: string;
 
   public constructor(
-    @inject(Types.S3Server.config) config: S3FrontendStorageConfig
+    @inject(Types.S3Frontend.config) config: S3FrontendStorageConfig
   ) {
     this._bucket = config.bucket;
   }

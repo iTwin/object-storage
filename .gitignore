@@ -1,4 +1,5 @@
 lib/
+dist/
 
 *.env
 
@@ -13,3 +14,5 @@ common/deploy/
 common/temp/
 common/autoinstallers/*/.npmrc
 **/.rush/temp/
+
+**/cypress/support

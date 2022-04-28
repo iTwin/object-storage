@@ -10,7 +10,7 @@ import {
   FrontendMultipartUploadData,
   FrontendTransferData,
   MultipartUploadOptions,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}

@@ -4,45 +4,39 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import {
+  S3ClientStorageBindings,
+  S3FrontendStorageBindings,
+} from "@itwin/object-storage-s3";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
-import { MinioClientStorageBindings } from "../client";
-import { MinioFrontendStorageBindings } from "../frontend";
-import { MinioServerStorageBindings } from "../server";
+import { OssServerStorageBindings } from "../../server";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-const dependencyName = "minio";
-const bucket = "integration-test";
+const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName,
-    bucket,
-    // cspell:disable-next-line
-    accessKey: "minioadmin",
-    // cspell:disable-next-line
-    secretKey: "minioadmin",
-    baseUrl: "http://127.0.0.1:9000",
-    region: "us-east-1",
-    roleArn: "<role-arn>",
-    stsBaseUrl: "http://127.0.0.1:9000",
+    dependencyName: "oss",
+    ...serverStorageConfig,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName,
-    bucket,
+    dependencyName: "s3",
+    bucket: serverStorageConfig.bucket,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName,
-    bucket,
+    dependencyName: "s3",
+    bucket: serverStorageConfig.bucket,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  MinioServerStorageBindings,
-  MinioClientStorageBindings,
-  MinioFrontendStorageBindings
+  OssServerStorageBindings,
+  S3ClientStorageBindings,
+  S3FrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

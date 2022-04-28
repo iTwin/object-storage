@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/object-storage-tests",
+  "name": "@itwin/object-storage-tests-backend",
   "version": "0.1.0-dev.1",
   "description": "Tests for generic storage packages",
   "keywords": [
@@ -23,7 +23,8 @@
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test": "",
-    "test:integration": ""
+    "test:integration:backend": "",
+    "test:integration:frontend": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

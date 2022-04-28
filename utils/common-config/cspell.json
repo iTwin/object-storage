@@ -5,9 +5,11 @@
     "node_modules/**",
     "src/assets/**",
     "lib/**",
+    "dist/**",
     "*.log",
     "tsconfig.json",
-    "package.json"
+    "package.json",
+    "**/cypress/support/**"
   ],
   "words": [
     "itwin",

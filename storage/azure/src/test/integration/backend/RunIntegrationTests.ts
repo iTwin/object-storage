@@ -4,11 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
-import { AzureClientStorageBindings } from "../../client";
-import { AzureFrontendStorageBindings } from "../../frontend";
-import { AzureServerStorageBindings } from "../../server";
+import { AzureClientStorageBindings } from "../../../client";
+import { AzureFrontendStorageBindings } from "../../../frontend";
+import { AzureServerStorageBindings } from "../../../server";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const dependencyName = "azure";
 
@@ -16,9 +17,7 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName,
-    accountName: process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME,
-    accountKey: process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY,
-    baseUrl: process.env.TEST_AZURE_STORAGE_BASE_URL,
+    ...new ServerStorageConfigProvider().get(),
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {

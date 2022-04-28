@@ -4,45 +4,38 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import {
-  S3ClientStorageBindings,
-  S3FrontendStorageBindings,
-} from "@itwin/object-storage-s3";
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
-import { OssServerStorageBindings } from "../server";
+import { MinioClientStorageBindings } from "../../client";
+import { MinioFrontendStorageBindings } from "../../frontend";
+import { MinioServerStorageBindings } from "../../server";
+import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-const bucket = process.env.TEST_OSS_BUCKET;
-
+const dependencyName = "minio";
+const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName: "oss",
-    bucket,
-    accessKey: process.env.TEST_OSS_ACCESS_KEY,
-    secretKey: process.env.TEST_OSS_SECRET_KEY,
-    baseUrl: process.env.TEST_OSS_BASE_URL,
-    region: process.env.TEST_OSS_REGION,
-    roleArn: process.env.TEST_OSS_ROLE_ARN,
-    stsBaseUrl: process.env.TEST_OSS_STS_BASE_URL,
+    dependencyName,
+    ...serverStorageConfig,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName: "s3",
-    bucket,
+    dependencyName,
+    bucket: serverStorageConfig.bucket,
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName: "s3",
-    bucket,
+    dependencyName,
+    bucket: serverStorageConfig.bucket,
   },
 };
 
 const tests = new StorageIntegrationTests(
   config,
-  OssServerStorageBindings,
-  S3ClientStorageBindings,
-  S3FrontendStorageBindings
+  MinioServerStorageBindings,
+  MinioClientStorageBindings,
+  MinioFrontendStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;
