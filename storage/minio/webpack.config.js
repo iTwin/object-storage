@@ -6,8 +6,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
-const setStorageScriptFileName = "SetMinioFrontendStorage.js";
-const bundledScriptFileName = setStorageScriptFileName;
+const setupScriptFileName = "MinioFrontendTestSetup.js";
+const bundledScriptFileName = setupScriptFileName;
 
 const webpackConfig = {
   mode: "development",
@@ -15,7 +15,7 @@ const webpackConfig = {
     minimize: false
   },
   entry: {
-    app: path.resolve(__dirname, "lib", "test", "frontend", setStorageScriptFileName)
+    app: path.resolve(__dirname, "lib", "test", "frontend", setupScriptFileName)
   },
   output: {
     filename: bundledScriptFileName,
