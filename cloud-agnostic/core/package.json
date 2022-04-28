@@ -25,7 +25,8 @@
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test": "mocha lib/**/*.test.js",
-    "test:integration": ""
+    "test:integration": "",
+    "test:integration:frontend": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

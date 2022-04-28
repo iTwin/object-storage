@@ -21,7 +21,7 @@ steps:
     displayName: rush test
 
   - script: npm run test:integration
-    displayName: npm run test:integration (OSS integration tests)
+    displayName: npm run test:integration (OSS)
     workingDirectory: storage/oss
     env:
       TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
@@ -29,11 +29,29 @@ steps:
       TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
 
   - script: npm run test:integration
-    displayName: npm run test:integration (Azure integration tests)
+    displayName: npm run test:integration (Azure)
     workingDirectory: storage/azure
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
 
   - script: npm run test:integration
-    displayName: npm run test:integration (MinIO integration tests)
+    displayName: npm run test:integration (MinIO)
+    workingDirectory: storage/minio
+
+  - script: npm run test:integration:frontend
+    displayName: npm run test:integration:frontend (OSS)
+    workingDirectory: storage/oss
+    env:
+      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
+      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
+      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
+
+  - script: npm run test:integration:frontend
+    displayName: npm run test:integration:frontend (Azure)
+    workingDirectory: storage/azure
+    env:
+      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+
+  - script: npm run test:integration:frontend
+    displayName: npm run test:integration:frontend (MinIO)
     workingDirectory: storage/minio

@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FrontendStorageSetter } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageSetter";
+import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
 
 import { MinioFrontendStorageBindings } from "../../frontend";
 
@@ -13,8 +13,9 @@ const config = {
     bucket: "foo", // TODO: pass correct bucket
   },
 };
-const storageSetter = new FrontendStorageSetter(
+const setup = new FrontendStorageTestSetup(
   config,
-  MinioFrontendStorageBindings
+  MinioFrontendStorageBindings,
+  "http://localhost:1222"
 );
-storageSetter.setStorageOnWindow();
+setup.setGlobals();

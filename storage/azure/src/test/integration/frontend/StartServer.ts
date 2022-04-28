@@ -24,7 +24,7 @@ async function run(): Promise<void> {
       },
     });
   backendServer.useBindings(AzureServerStorageBindings);
-  return backendServer.start();
+  return backendServer.start({ port: 1221 });
 }
 
 // eslint-disable-next-line

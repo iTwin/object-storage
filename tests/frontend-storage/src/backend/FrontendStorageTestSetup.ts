@@ -15,12 +15,13 @@ import {
   Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
 
-export class FrontendStorageSetter extends Bindable {
+export class FrontendStorageTestSetup extends Bindable {
   public readonly container = new Container();
 
   constructor(
     config: DependenciesConfig,
-    frontendStorageDependency: new () => FrontendStorageDependency
+    frontendStorageDependency: new () => FrontendStorageDependency,
+    private readonly _serverBaseUrl: string
   ) {
     super();
 
@@ -32,11 +33,13 @@ export class FrontendStorageSetter extends Bindable {
       .toConstantValue(config);
   }
 
-  public setStorageOnWindow(): void {
+  public setGlobals(): void {
     this.bindDependencies(this.container);
-
     const frontendStorage = this.container.get(FrontendStorage);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).frontendStorage = frontendStorage;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).serverBaseUrl = this._serverBaseUrl;
   }
 }

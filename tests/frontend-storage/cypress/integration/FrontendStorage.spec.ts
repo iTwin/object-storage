@@ -6,10 +6,12 @@ import { FrontendStorage } from "@itwin/object-storage-core";
 import { BackendClient } from "../../src/frontend/BackendClient";
 import { RestClient } from "../../src/frontend/RestClient";
 
+const serverBaseUrl = (window as any).serverBaseUrl;
 const frontendStorage = (window as any).frontendStorage;
 
 describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
-  const backendClient = new BackendClient(new RestClient());
+
+  const backendClient = new BackendClient(serverBaseUrl, new RestClient());
 
   before(() => {
     cy.visit(backendClient.entrypoint);

@@ -24,7 +24,7 @@ async function run(): Promise<void> {
       },
     });
   backendServer.useBindings(MinioServerStorageBindings);
-  return backendServer.start();
+  return backendServer.start({ port: 1222 });
 }
 
 // eslint-disable-next-line

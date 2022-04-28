@@ -24,6 +24,7 @@ export class FrontendStorageIntegrationTests {
       browser: "chrome",
       project: currentProjectRootAbsolutePath,
       configFile: false,
+      noExit: false,
       config: {
         video: false,
         screenshotOnRunFailure: false,

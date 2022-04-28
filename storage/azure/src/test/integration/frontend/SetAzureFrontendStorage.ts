@@ -2,12 +2,19 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  AzureFrontendStorage,
-  BlockBlobClientWrapperFactory,
-} from "../../../frontend";
+import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(window as any).frontendStorage = new AzureFrontendStorage(
-  new BlockBlobClientWrapperFactory()
+import { AzureFrontendStorageBindings } from "../../../frontend";
+
+const config = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  FrontendStorage: {
+    dependencyName: "azure",
+  },
+};
+const setup = new FrontendStorageTestSetup(
+  config,
+  AzureFrontendStorageBindings,
+  "http://localhost:1221"
 );
+setup.setGlobals();

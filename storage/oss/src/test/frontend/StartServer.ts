@@ -24,7 +24,7 @@ async function run(): Promise<void> {
       },
     });
   backendServer.useBindings(OssServerStorageBindings);
-  return backendServer.start();
+  return backendServer.start({ port: 1223 });
 }
 
 // eslint-disable-next-line

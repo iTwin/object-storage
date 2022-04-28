@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Constants } from "../backend/Constants";
-
 import { RestClient } from "./RestClient";
 
 interface GetTestDownloadUrlRequestBody {
@@ -15,18 +13,22 @@ interface GetTestDownloadUrlResponseBody {
 }
 
 export class BackendClient {
-  private readonly _baseUrl = `http://localhost:${Constants.port}`;
   private readonly _headers = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     "Content-Type": "application/json",
   };
 
-  public readonly entrypoint = `${this._baseUrl}/index.html`;
+  public readonly entrypoint: string;
 
-  constructor(private _restClient: RestClient) {}
+  constructor(
+    private readonly _serverBaseUrl: string,
+    private readonly _restClient: RestClient
+  ) {
+    this.entrypoint = `${this._serverBaseUrl}/index.html`;
+  }
 
   public async getTestDownloadUrl(filePayload: string): Promise<string> {
-    const url = `${this._baseUrl}/download-url`;
+    const url = `${this._serverBaseUrl}/download-url`;
     const body: GetTestDownloadUrlRequestBody = { filePayload };
     const response =
       await this._restClient.sendPostRequest<GetTestDownloadUrlResponseBody>({
@@ -38,7 +40,7 @@ export class BackendClient {
   }
 
   public async cleanup(): Promise<void> {
-    const url = `${this._baseUrl}/cleanup`;
+    const url = `${this._serverBaseUrl}/cleanup`;
     await this._restClient.sendPostRequest<void>({
       url,
       body: {},

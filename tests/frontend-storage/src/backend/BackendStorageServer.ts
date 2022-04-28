@@ -17,8 +17,6 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { Constants } from "./Constants";
-
 interface GetTestDownloadUrlRequest {
   filePayload: string;
 }
@@ -38,7 +36,7 @@ export class BackendStorageServer extends Bindable {
     this.requireDependency(ServerStorageDependency.dependencyType);
   }
 
-  public start(): void {
+  public start(config: { port: number }): void {
     this.bindDependencies(this.container);
     const serverStorage = this.container.get(ServerStorage);
 
@@ -59,10 +57,10 @@ export class BackendStorageServer extends Bindable {
         this.handlePostCleanup(serverStorage, response)
     );
 
-    expressInstance.listen(Constants.port, () => {
+    expressInstance.listen(config.port, () => {
       // eslint-disable-next-line no-console
       console.log(
-        `Test storage server started at http://localhost:${Constants.port}`
+        `Test storage server started at http://localhost:${config.port}`
       );
     });
   }

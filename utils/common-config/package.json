@@ -18,7 +18,8 @@
     "lint-fix": "sort-package-json",
     "spell-check": "cspell ** --config ./cspell.json",
     "test": "",
-    "test:integration": ""
+    "test:integration": "",
+    "test:integration:frontend": ""
   },
   "devDependencies": {
     "@itwin/eslint-plugin": "^3.0.0",
