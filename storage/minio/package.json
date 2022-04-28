@@ -23,11 +23,11 @@
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test": "",
-    "test:integration": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:waitForMinioRunTests",
+    "test:integration:backend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:waitForMinioRunTests",
     "test:integration:downloadMinio": "node src/test/scripts/DownloadMinio.js",
     "test:integration:startMinio": "node src/test/scripts/StartMinio.js",
     "test:integration:waitForMinioRunTests": "wait-on tcp:9000 -t 30000 && npm run test:integration:runTests",
-    "test:integration:runTests": "node lib/test/RunIntegrationTests.js",
+    "test:integration:runTests": "node lib/test/backend/RunIntegrationTests.js",
     "test:integration:frontend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:frontend:startServer test:integration:frontend:runTests ",
     "test:integration:frontend:runTests": "wait-on tcp:1222 -t 30000 && node lib/test/frontend/RunIntegrationTests.js",
     "test:integration:frontend:startServer": "wait-on tcp:9000 -t 30000 && node lib/test/frontend/StartServer.js"

@@ -18,7 +18,7 @@
     "lint-fix": "sort-package-json",
     "spell-check": "cspell ** --config ./cspell.json",
     "test": "",
-    "test:integration": "",
+    "test:integration:backend": "",
     "test:integration:frontend": ""
   },
   "devDependencies": {
