@@ -29,12 +29,12 @@ The tests communicate with the server launched on `http://localhost:{SOME_PORT}`
 .
 |-- cypress
 |   |-- tsconfig.json (1)
-|-- backend.tsconfig.json (2)
+|-- tools.tsconfig.json (2)
 |-- tsconfig.json (3)
 ```
 
 1. `tsconfig.json` in `cypress` directory is used by `cypress` framework to transpile test and test helper files when running tests.
-1. `backend.tsconfig.json` is used to transpile test running utilities that are imported by other CommonJS modules (storage packages).
+1. `tools.tsconfig.json` is used to transpile test running utilities that are imported by other CommonJS modules (storage packages).
 1. `tsconfig.json` in root directory is only used to reference typings so that VS Code would not highlight the code as incorrect.
 
 ### Useful links:

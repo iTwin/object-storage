@@ -16,7 +16,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --p backend.tsconfig.json 1>&2",
+    "build": "tsc --p tools.tsconfig.json 1>&2",
     "clean": "rimraf lib && rimraf cypress/support",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
