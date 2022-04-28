@@ -3,8 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { inject } from "inversify";
+
 import { Types } from "../common";
-import { S3FrontendClientWrapperFactory, S3FrontendStorageConfig } from "../frontend";
+import {
+  S3FrontendClientWrapperFactory,
+  S3FrontendStorageConfig,
+} from "../frontend";
 
 export class S3ClientWrapperFactory extends S3FrontendClientWrapperFactory {
   public constructor(
