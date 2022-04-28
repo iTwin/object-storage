@@ -13,12 +13,12 @@ import {
 
 import { Types } from "../common";
 import {
-  S3ClientWrapperFactory,
   S3FrontendStorageBindingsConfig,
   S3FrontendStorageConfig,
 } from "../frontend";
 
 import { S3ClientStorage } from "./S3ClientStorage";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";
@@ -35,7 +35,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
       .to(S3ClientWrapperFactory)
       .inSingletonScope();
     container
-      .bind<S3FrontendStorageConfig>(Types.S3Frontend.config)
+      .bind<S3FrontendStorageConfig>(Types.S3Client.config)
       .toConstantValue(config);
     container.bind(ClientStorage).to(S3ClientStorage);
   }

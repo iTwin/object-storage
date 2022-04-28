@@ -25,7 +25,6 @@ import {
 import {
   createAndUseClient,
   S3ClientWrapper,
-  S3ClientWrapperFactory,
 } from "../frontend";
 
 import {
@@ -33,6 +32,7 @@ import {
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./ClientInterfaces";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {

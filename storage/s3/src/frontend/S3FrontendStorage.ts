@@ -24,13 +24,13 @@ import {
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClient } from "./Helpers";
 import { S3ClientWrapper } from "./S3ClientWrapper";
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+import { S3FrontendClientWrapperFactory } from "./S3FrontendClientWrapperFactory";
 
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
     @inject(Types.Frontend.clientWrapperFactory)
-    private _clientWrapperFactory: S3ClientWrapperFactory
+    private _clientWrapperFactory: S3FrontendClientWrapperFactory
   ) {
     super();
   }
