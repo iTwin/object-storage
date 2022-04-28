@@ -8,7 +8,7 @@ import {
   S3ClientStorageBindings,
   S3FrontendStorageBindings,
 } from "@itwin/object-storage-s3";
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { OssServerStorageBindings } from "../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";

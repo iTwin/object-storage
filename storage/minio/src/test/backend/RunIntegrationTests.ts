@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { MinioClientStorageBindings } from "../../client";
 import { MinioFrontendStorageBindings } from "../../frontend";

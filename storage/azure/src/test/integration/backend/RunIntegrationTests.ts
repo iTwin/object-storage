@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageIntegrationTests } from "@itwin/object-storage-tests";
+import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { AzureClientStorageBindings } from "../../../client";
 import { AzureFrontendStorageBindings } from "../../../frontend";

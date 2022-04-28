@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/object-storage-tests",
+  "name": "@itwin/object-storage-tests-backend",
   "version": "0.1.0-dev.1",
   "description": "Tests for generic storage packages",
   "keywords": [
