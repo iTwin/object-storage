@@ -23,4 +23,3 @@ To run them:
   - Find the test source file. Test source files can be found under `webpack://cypress/integration` directory.
   - Place the breakpoint in the test file using Chrome.
   - Refresh the Chrome page to run the test again and the new breakpoint should be hit.
-
