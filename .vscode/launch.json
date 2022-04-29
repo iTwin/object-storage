@@ -55,7 +55,7 @@
       ]
     },
     {
-      "name": "-- Integration Tests --"
+      "name": "-- Backend Integration Tests --"
     },
     {
       "name": "Backend Azure Integration tests",
@@ -75,24 +75,7 @@
       ]
     },
     {
-      "name": "Frontend Azure Integration tests",
-      "cwd": "${workspaceFolder}/storage/azure",
-      "type": "pwa-node",
-      "request": "launch",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run",
-        "test:integration:frontend"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/*/*/lib/**/*.js"
-      ],
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
-    },
-    {
-      "name": "OSS Integration tests",
+      "name": "Backend OSS Integration tests",
       "cwd": "${workspaceFolder}/storage/oss",
       "type": "pwa-node",
       "request": "launch",
@@ -110,7 +93,7 @@
       "envFile": "${workspaceFolder}/storage/oss/src/test/.env"
     },
     {
-      "name": "MinIO Integration tests (Environment setup and tests)",
+      "name": "Backend MinIO Integration tests (Environment setup and tests)",
       "cwd": "${workspaceFolder}/storage/minio",
       "type": "pwa-node",
       "request": "launch",
@@ -127,14 +110,14 @@
       ]
     },
     {
-      "name": "MinIO Integration tests (Tests only)",
+      "name": "Backend MinIO Integration tests (Tests only)",
       "cwd": "${workspaceFolder}/storage/minio",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:integration:runTests"
+        "test:integration:backend:runTests"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
@@ -142,6 +125,65 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "name": "-- Frontend Integration Tests --"
+    },
+    {
+      "name": "Frontend Azure Integration tests",
+      "cwd": "${workspaceFolder}/storage/azure",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
+      "env": {
+        "DEBUG": "1"
+      }
+    },
+    {
+      "name": "Frontend OSS Integration tests",
+      "cwd": "${workspaceFolder}/storage/oss",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
+      "env": {
+        "DEBUG": "1"
+      }
+    },
+    {
+      "name": "Frontend Minio Integration tests (Environment setup and tests)",
+      "cwd": "${workspaceFolder}/storage/minio",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
+      "env": {
+        "DEBUG": "1"
+      }
+    },
+    {
+      "name": "Frontend Minio Integration tests (Tests only)",
+      "cwd": "${workspaceFolder}/storage/minio",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend:startServerRunTests"
+      ],
+      "env": {
+        "DEBUG": "1"
+      }
     },
     {
       "name": "-- Samples --"

@@ -8,7 +8,7 @@ import * as path from "path";
 import * as cypress from "cypress";
 
 export class FrontendStorageIntegrationTests {
-  constructor(private readonly _supportFileSourcePath: string) {}
+  constructor(private readonly _supportFileSourcePath: string) { }
 
   public async start(): Promise<void> {
     const supportDir = path.resolve(__dirname, "..", "cypress", "support");
@@ -20,7 +20,7 @@ export class FrontendStorageIntegrationTests {
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
     const currentProjectRootAbsolutePath = path.resolve(__dirname, "..");
-    await cypress.open({
+    const cypressConfig: Partial<CypressCommandLine.CypressRunOptions> & Partial<CypressCommandLine.CypressOpenOptions> = {
       browser: "chrome",
       project: currentProjectRootAbsolutePath,
       configFile: false,
@@ -32,6 +32,11 @@ export class FrontendStorageIntegrationTests {
         fixturesFolder: false,
         defaultCommandTimeout: 30000,
       },
-    });
+    };
+
+    if (process.env.DEBUG)
+      await cypress.open(cypressConfig);
+    else
+      await cypress.run(cypressConfig);
   }
 }
