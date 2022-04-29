@@ -5,4 +5,3 @@
 export * from "./ClientInterfaces";
 export * from "./S3ClientStorage";
 export * from "./S3ClientStorageBindings";
-export * from "./S3ClientWrapperFactory";

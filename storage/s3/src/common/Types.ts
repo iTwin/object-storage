@@ -5,13 +5,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const types = {
-  bucket: Symbol.for("Types.Bucket"),
-  S3Frontend: {
-    config: Symbol.for("Types.S3Frontend.Config"),
-  },
-  S3Client: {
-    config: Symbol.for("Types.S3Client.Config"),
-  },
+  bucket: Symbol.for("Types.Bucket"), // TODO: what's up with that
   S3Server: {
     config: Symbol.for("Types.S3Server.Config"),
   },

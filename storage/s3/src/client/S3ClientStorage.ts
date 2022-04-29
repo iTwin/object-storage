@@ -22,14 +22,13 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { createAndUseClient, S3ClientWrapper } from "../frontend";
+import { createAndUseClient, S3ClientWrapper, S3ClientWrapperFactory } from "../frontend";
 
 import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./ClientInterfaces";
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
