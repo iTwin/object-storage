@@ -20,7 +20,8 @@ export class FrontendStorageIntegrationTests {
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
     const currentProjectRootAbsolutePath = path.resolve(__dirname, "..");
-    await cypress.run({
+    const cypressConfig: Partial<CypressCommandLine.CypressRunOptions> &
+      Partial<CypressCommandLine.CypressOpenOptions> = {
       browser: "chrome",
       project: currentProjectRootAbsolutePath,
       configFile: false,
@@ -32,6 +33,9 @@ export class FrontendStorageIntegrationTests {
         fixturesFolder: false,
         defaultCommandTimeout: 30000,
       },
-    });
+    };
+
+    if (process.env.DEBUG) await cypress.open(cypressConfig);
+    else await cypress.run(cypressConfig);
   }
 }

@@ -17,6 +17,7 @@
     "minio",
     "alicloud",
     "kbps",
-    "presigner"
+    "presigner",
+    "iframes"
   ]
 }

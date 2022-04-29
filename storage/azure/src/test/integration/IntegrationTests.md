@@ -15,7 +15,7 @@ Backend tests test `ClientStorage` and `ServerStorage` provided by this package.
 
 To run them:
 - Run the `npm run test:integration:backend` command.
-- Launch the "Azure Integration tests" configuration using VS Code.
+- Launch the "Backend Azure Integration tests" configuration using VS Code.
 
 ## Frontend tests
 
@@ -23,3 +23,12 @@ Frontend tests test `FrontendStorage` provided by this package.
 
 To run them:
 - Run the `npm run test:integration:frontend` command. For more specifics on how the frontend tests are setup see the [frontend tests documentation](../../../../../tests/frontend-storage/README.md).
+- Launch the "Frontend Azure Integration tests" configuration using VS Code. This will allow to debug test tools using VS Code and the tests using Chrome.
+  - After Cypress runner opens select the test file you want to debug.
+  - Wait for the initial test run to finish.
+  - Select "Sources" tab in Chrome Developer Tools
+  - Expand `Your spec: '/__cypress/iframes/...'` directory.
+  - Find the test source file. Test source files can be found under `webpack://cypress/integration` directory.
+  - Place the breakpoint in the test file using Chrome.
+  - Refresh the Chrome page to run the test again and the new breakpoint should be hit.
+
