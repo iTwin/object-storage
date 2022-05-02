@@ -9,7 +9,6 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "s3",
-    bucket: "foo", // TODO: pass correct bucket
   },
 };
 const setup = new FrontendStorageTestSetup(
