@@ -49,6 +49,10 @@ export function assertS3TransferConfig(
   if (!("region" in transferConfig))
     throw new FalsyValueError("transferConfig.region");
   assertPrimitiveType(transferConfig.region, "transferConfig.region", "string");
+
+  if (!("bucket" in transferConfig))
+    throw new FalsyValueError("transferConfig.bucket");
+  assertPrimitiveType(transferConfig.bucket, "transferConfig.bucket", "string");
 }
 
 export function createS3Client(config: {
