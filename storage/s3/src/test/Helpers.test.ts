@@ -106,7 +106,7 @@ describe("Helper functions", () => {
           sessionToken: "testSessionToken",
         },
         region: "testRegion",
-        bucket: "testBucket"
+        bucket: "testBucket",
       };
       const testedFunction = () => assertS3TransferConfig(transferConfig);
       expect(testedFunction).to.not.throw();

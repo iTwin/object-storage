@@ -11,7 +11,6 @@ import { S3ClientWrapper } from "./S3ClientWrapper";
 
 @injectable()
 export class S3ClientWrapperFactory {
-
   public create(transferConfig: TransferConfig): S3ClientWrapper {
     assertS3TransferConfig(transferConfig);
 

@@ -35,7 +35,7 @@ export class S3ClientWrapper {
   public constructor(
     private readonly _client: S3Client,
     @inject(Types.bucket) private readonly _bucket: string
-  ) { }
+  ) {}
 
   public async download(reference: ObjectReference): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */
