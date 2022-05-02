@@ -21,6 +21,7 @@ export interface TemporaryS3Credentials extends S3Credentials {
 export interface S3TransferConfig extends TransferConfig {
   authentication: TemporaryS3Credentials;
   region: string;
+  bucket: string;
 }
 
 export interface FrontendS3ConfigDownloadInput

@@ -75,6 +75,18 @@ describe("Helper functions", () => {
         },
         expectedErrorMessage: "transferConfig.region is falsy",
       },
+      {
+        transferConfig: {
+          ...validBaseTransferConfig,
+          authentication: {
+            accessKey: "testAccessKey",
+            secretKey: "testSecretKey",
+            sessionToken: "testSessionToken",
+          },
+          region: "testRegion",
+        },
+        expectedErrorMessage: "transferConfig.bucket is falsy",
+      },
     ].forEach((testCase) => {
       it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
         const testedFunction = () =>
@@ -94,6 +106,7 @@ describe("Helper functions", () => {
           sessionToken: "testSessionToken",
         },
         region: "testRegion",
+        bucket: "testBucket",
       };
       const testedFunction = () => assertS3TransferConfig(transferConfig);
       expect(testedFunction).to.not.throw();

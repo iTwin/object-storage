@@ -10,7 +10,6 @@ const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "minio",
-    bucket: "foo", // TODO: pass correct bucket
   },
 };
 const setup = new FrontendStorageTestSetup(

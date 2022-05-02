@@ -32,13 +32,10 @@ import { Types } from "../common";
 
 @injectable()
 export class S3ClientWrapper {
-  private readonly _client;
-  private readonly _bucket;
-
-  public constructor(client: S3Client, @inject(Types.bucket) bucket: string) {
-    this._client = client;
-    this._bucket = bucket;
-  }
+  public constructor(
+    private readonly _client: S3Client,
+    @inject(Types.bucket) private readonly _bucket: string
+  ) {}
 
   public async download(reference: ObjectReference): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */

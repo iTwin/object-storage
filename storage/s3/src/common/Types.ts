@@ -6,12 +6,6 @@
 
 const types = {
   bucket: Symbol.for("Types.Bucket"),
-  S3Frontend: {
-    config: Symbol.for("Types.S3Frontend.Config"),
-  },
-  S3Client: {
-    config: Symbol.for("Types.S3Client.Config"),
-  },
   S3Server: {
     config: Symbol.for("Types.S3Server.Config"),
   },
