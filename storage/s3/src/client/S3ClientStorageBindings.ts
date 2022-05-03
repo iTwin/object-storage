@@ -4,30 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ConfigError } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
   Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
-import {
-  S3ClientWrapperFactory,
-  S3FrontendStorageBindingsConfig,
-} from "../frontend";
+import { S3ClientWrapperFactory } from "../frontend";
 
 import { S3ClientStorage } from "./S3ClientStorage";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";
 
-  public override register(
-    container: Container,
-    config: S3FrontendStorageBindingsConfig
-  ): void {
-    if (!config.bucket)
-      throw new ConfigError<S3FrontendStorageBindingsConfig>("bucket");
-
+  public override register(container: Container): void {
     container
       .bind(CoreTypes.Client.clientWrapperFactory)
       .to(S3ClientWrapperFactory)

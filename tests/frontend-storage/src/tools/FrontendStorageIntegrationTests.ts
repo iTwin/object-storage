@@ -8,7 +8,7 @@ import * as path from "path";
 import * as cypress from "cypress";
 
 export class FrontendStorageIntegrationTests {
-  constructor(private readonly _supportFileSourcePath: string) { }
+  constructor(private readonly _supportFileSourcePath: string) {}
 
   public async start(): Promise<void> {
     const supportDir = path.resolve(__dirname, "..", "cypress", "support");
@@ -40,7 +40,7 @@ export class FrontendStorageIntegrationTests {
       const result = await cypress.run(cypressConfig);
       const cypressLaunchFail = result.status === "failed";
       const testsFailed = result.status === "finished" && result.totalFailed;
-      if (cypressLaunchFail || testsFailed) throw new Error("Test run failed.")
+      if (cypressLaunchFail || testsFailed) throw new Error("Test run failed.");
     }
   }
 }

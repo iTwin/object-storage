@@ -8,4 +8,3 @@ export * from "./S3ClientWrapper";
 export * from "./S3ClientWrapperFactory";
 export * from "./S3FrontendStorage";
 export * from "./S3FrontendStorageBindings";
-export * from "./S3FrontendStorageConfig";

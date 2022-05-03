@@ -5,21 +5,15 @@
 import { Container } from "inversify";
 
 import { ClientStorage } from "@itwin/object-storage-core";
-import {
-  S3ClientStorageBindings,
-  S3FrontendStorageBindingsConfig,
-} from "@itwin/object-storage-s3";
+import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
 
 import { MinioClientStorage } from "./MinioClientStorage";
 
 export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override readonly dependencyName: string = "minio";
 
-  public override register(
-    container: Container,
-    config: S3FrontendStorageBindingsConfig
-  ): void {
-    super.register(container, config);
+  public override register(container: Container): void {
+    super.register(container);
 
     container.rebind(ClientStorage).to(MinioClientStorage);
   }
