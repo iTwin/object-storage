@@ -6,9 +6,9 @@ import "reflect-metadata";
 
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
-import { MinioClientStorageBindings } from "../../client";
-import { MinioFrontendStorageBindings } from "../../frontend";
-import { MinioServerStorageBindings } from "../../server";
+import { MinioClientStorageBindings } from "../../../client";
+import { MinioFrontendStorageBindings } from "../../../frontend";
+import { MinioServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const dependencyName = "minio";

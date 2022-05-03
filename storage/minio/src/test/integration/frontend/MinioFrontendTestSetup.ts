@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
 
-import { MinioFrontendStorageBindings } from "../../frontend";
+import { MinioFrontendStorageBindings } from "../../../frontend";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention

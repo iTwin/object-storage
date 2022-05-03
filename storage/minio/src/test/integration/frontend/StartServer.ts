@@ -8,7 +8,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
 
-import { MinioServerStorageBindings } from "../../server";
+import { MinioServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 async function run(): Promise<void> {
