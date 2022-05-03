@@ -32,8 +32,4 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
     //   url: downloadUrl
     // }));
   });
-
-  it("should fail", () => {
-    expect(false).to.be.equal(true);
-  });
 });
