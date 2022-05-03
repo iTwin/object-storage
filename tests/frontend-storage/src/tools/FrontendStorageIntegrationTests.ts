@@ -36,6 +36,12 @@ export class FrontendStorageIntegrationTests {
     };
 
     if (process.env.DEBUG) await cypress.open(cypressConfig);
-    else await cypress.run(cypressConfig);
+    else {
+      const result = await cypress.run(cypressConfig);
+      const cypressLaunchFailed = result.status === "failed";
+      const testsFailed = result.status === "finished" && result.totalFailed;
+      if (cypressLaunchFailed || testsFailed)
+        throw new Error("Test run failed.");
+    }
   }
 }
