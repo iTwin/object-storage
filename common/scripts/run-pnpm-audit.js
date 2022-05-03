@@ -14,7 +14,7 @@ const { directOutputToConsole } = require(path.join(
 ));
 
 function runPnpmAudit() {
-  const rushCommonDir = path.join(__dirname, "..");
+  const rushCommonDir = path.resolve(__dirname, "..");
   const pnpmBinaryPath = path.join(rushCommonDir, "temp", "pnpm-local", "node_modules", ".bin", "pnpm");
   const pnpmLockFileDir = path.join(rushCommonDir, "config", "rush");
 
