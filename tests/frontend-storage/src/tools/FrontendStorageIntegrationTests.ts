@@ -40,7 +40,8 @@ export class FrontendStorageIntegrationTests {
       const result = await cypress.run(cypressConfig);
       const cypressLaunchFailed = result.status === "failed";
       const testsFailed = result.status === "finished" && result.totalFailed;
-      if (cypressLaunchFailed || testsFailed) throw new Error("Test run failed.");
+      if (cypressLaunchFailed || testsFailed)
+        throw new Error("Test run failed.");
     }
   }
 }
