@@ -38,13 +38,13 @@ steps:
     displayName: npm run test:integration:backend (MinIO)
     workingDirectory: storage/minio
 
-  - script: npm run test:integration:frontend
-    displayName: npm run test:integration:frontend (OSS)
-    workingDirectory: storage/oss
-    env:
-      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
-      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
-      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
+  # - script: npm run test:integration:frontend
+  #   displayName: npm run test:integration:frontend (OSS)
+  #   workingDirectory: storage/oss
+  #   env:
+  #     TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
+  #     TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
+  #     TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
 
   - script: npm run test:integration:frontend
     displayName: npm run test:integration:frontend (Azure)
