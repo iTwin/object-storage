@@ -18,6 +18,10 @@ function runPnpmAudit() {
   const pnpmBinaryPath = path.join(rushCommonDir, "temp", "pnpm-local", "node_modules", ".bin", "pnpm");
   const pnpmLockFileDir = path.join(rushCommonDir, "config", "rush");
 
+  console.log("rushCommonDir", rushCommonDir);
+  console.log("pnpmBinaryPath", pnpmBinaryPath);
+  console.log("pnpmLockFileDir", pnpmLockFileDir);
+
   const childProcess = child_process.spawn(
     pnpmBinaryPath,
     [
