@@ -13,8 +13,8 @@ const { directOutputToConsole } = require(path.join(
   "Common.js"
 ));
 
-function runPnpmAuditAsync() {
-  const rushCommonDir = path.join(__dirname, "..", "..", "common");
+function runPnpmAudit() {
+  const rushCommonDir = path.join(__dirname, "..");
   const pnpmBinaryPath = path.join(rushCommonDir, "temp", "pnpm-local", "node_modules", ".bin", "pnpm");
   const pnpmLockFileDir = path.join(rushCommonDir, "config", "rush");
 
@@ -38,4 +38,4 @@ function runPnpmAuditAsync() {
   directOutputToConsole(childProcess);
 }
 
-runPnpmAuditAsync();
+runPnpmAudit();
