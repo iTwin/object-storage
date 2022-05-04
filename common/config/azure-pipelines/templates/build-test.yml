@@ -26,7 +26,7 @@ steps:
   - script: node common/scripts/install-run-rush.js spell-check
     displayName: rush spell-check
 
-  - script: node common/scripts/install-run-rush.js test:unit
+  - script: node common/scripts/install-run-rush.js test:unit --verbose
     displayName: rush test:unit
 
   - script: npm run test:integration:backend
