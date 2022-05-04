@@ -31,7 +31,6 @@ steps:
 
   - script: node common/scripts/install-run-rush.js test:integration:backend --verbose
     displayName: rush test:integration:backend
-    workingDirectory: storage/oss
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
       TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
@@ -40,7 +39,6 @@ steps:
 
   - script: node common/scripts/install-run-rush.js test:integration:frontend --verbose
     displayName: rush test:integration:frontend
-    workingDirectory: storage/oss
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
       TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
