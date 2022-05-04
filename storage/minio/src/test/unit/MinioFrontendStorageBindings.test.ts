@@ -4,20 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { FrontendStorage, Types } from "@itwin/object-storage-core";
+import { FrontendStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-unit";
 
 import {
-  AzureFrontendStorage,
-  AzureFrontendStorageBindings,
-  BlockBlobClientWrapperFactory,
+  MinioFrontendStorage,
+  MinioFrontendStorageBindings,
 } from "../../frontend";
 
-describe(`${AzureFrontendStorageBindings.name}`, () => {
-  const frontendBindings = new AzureFrontendStorageBindings();
+describe(`${MinioFrontendStorageBindings.name}`, () => {
+  const frontendBindings = new MinioFrontendStorageBindings();
 
   describe(`${frontendBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
@@ -25,15 +24,7 @@ describe(`${AzureFrontendStorageBindings.name}`, () => {
         symbolUnderTestName: FrontendStorage.name,
         functionUnderTest: (container: Container) =>
           container.get(FrontendStorage),
-        expectedCtor: AzureFrontendStorage,
-      },
-      {
-        symbolUnderTestName: Types.Frontend.clientWrapperFactory.toString(),
-        functionUnderTest: (container: Container) =>
-          container.get<BlockBlobClientWrapperFactory>(
-            Types.Frontend.clientWrapperFactory
-          ),
-        expectedCtor: BlockBlobClientWrapperFactory,
+        expectedCtor: MinioFrontendStorage,
       },
     ];
     testBindings(frontendBindings, undefined, bindingsTestCases);
