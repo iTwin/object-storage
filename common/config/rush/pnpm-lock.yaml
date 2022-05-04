@@ -235,6 +235,7 @@ importers:
       '@itwin/object-storage-s3': workspace:*
       '@itwin/object-storage-tests-backend': workspace:*
       '@itwin/object-storage-tests-frontend': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ^8.2.2
@@ -266,6 +267,7 @@ importers:
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend': link:../../tests/backend-storage
       '@itwin/object-storage-tests-frontend': link:../../tests/frontend-storage
+      '@itwin/object-storage-tests-unit': link:../../tests/unit
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/mocha': 8.2.3

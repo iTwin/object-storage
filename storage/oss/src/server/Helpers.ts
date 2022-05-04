@@ -11,10 +11,11 @@ export function createCore(config: {
 }): Core {
   const { accessKey, secretKey, stsBaseUrl } = config;
 
-  return new Core({
+  const res = new Core({
     accessKeyId: accessKey,
     accessKeySecret: secretKey,
     endpoint: stsBaseUrl,
     apiVersion: "2015-04-01",
   });
+  return res;
 }

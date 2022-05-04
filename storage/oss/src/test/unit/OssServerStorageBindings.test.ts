@@ -2,14 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import * as Core from "@alicloud/pop-core";
 import { Container } from "inversify";
-import { Client } from "minio";
 
-import {
-  PresignedUrlProvider,
-  ServerStorage,
-  Types,
-} from "@itwin/object-storage-core";
+import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
 import { S3ServerStorageBindingsConfig } from "@itwin/object-storage-s3";
 import {
   DependencyBindingsTestCase,
@@ -17,15 +13,12 @@ import {
 } from "@itwin/object-storage-tests-unit";
 
 import {
-  MinioPresignedUrlProvider,
-  MinioServerStorage,
-  MinioServerStorageBindings,
+  OssServerStorageBindings,
+  OssTransferConfigProvider,
 } from "../../server";
 
-describe.only(`${MinioServerStorageBindings.name}`, () => {
-  const serverBindings = new MinioServerStorageBindings();
-
-  // TODO: test config validation
+describe(`${OssServerStorageBindings.name}`, () => {
+  const serverBindings = new OssServerStorageBindings();
 
   describe(`${serverBindings.register.name}()`, () => {
     const config: S3ServerStorageBindingsConfig = {
@@ -38,25 +31,20 @@ describe.only(`${MinioServerStorageBindings.name}`, () => {
       roleArn: "testRoleArn",
       stsBaseUrl: "https://testStsBaseUrl.com",
     };
+
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: ServerStorage.name,
+        symbolUnderTestName: Types.Server.transferConfigProvider.toString(),
         functionUnderTest: (container: Container) =>
-          container.get(ServerStorage),
-        expectedCtor: MinioServerStorage,
-      },
-      {
-        symbolUnderTestName: Types.Server.presignedUrlProvider.toString(),
-        functionUnderTest: (container: Container) =>
-          container.get<PresignedUrlProvider>(
-            Types.Server.presignedUrlProvider
+          container.get<TransferConfigProvider>(
+            Types.Server.transferConfigProvider
           ),
-        expectedCtor: MinioPresignedUrlProvider,
+        expectedCtor: OssTransferConfigProvider,
       },
       {
-        symbolUnderTestName: Client.name,
-        functionUnderTest: (container: Container) => container.get(Client),
-        expectedCtor: Client,
+        symbolUnderTestName: Core.name,
+        functionUnderTest: (container: Container) => container.get(Core),
+        expectedCtor: Core,
       },
     ];
     testBindings(serverBindings, config, bindingsTestCases);
