@@ -21,6 +21,6 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
       .bind(CoreTypes.Frontend.clientWrapperFactory)
       .to(S3ClientWrapperFactory)
       .inSingletonScope();
-    container.bind(FrontendStorage).to(S3FrontendStorage);
+    container.bind(FrontendStorage).to(S3FrontendStorage).inSingletonScope();
   }
 }

@@ -49,20 +49,22 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
       .bind<S3ServerStorageConfig>(Types.S3Server.config)
       .toConstantValue(config);
 
-    container.bind(ServerStorage).to(S3ServerStorage);
+    container.bind(ServerStorage).to(S3ServerStorage).inSingletonScope();
 
     container.bind(S3Client).toConstantValue(createS3Client(config));
     container.bind(STSClient).toConstantValue(createStsClient(config));
 
     container.bind(Types.bucket).toConstantValue(config.bucket);
 
-    container.bind(S3ClientWrapper).toSelf();
+    container.bind(S3ClientWrapper).toSelf().inSingletonScope();
 
     container
       .bind<PresignedUrlProvider>(CoreTypes.Server.presignedUrlProvider)
-      .to(S3PresignedUrlProvider);
+      .to(S3PresignedUrlProvider)
+      .inSingletonScope();
     container
       .bind<TransferConfigProvider>(CoreTypes.Server.transferConfigProvider)
-      .to(S3TransferConfigProvider);
+      .to(S3TransferConfigProvider)
+      .inSingletonScope();
   }
 }
