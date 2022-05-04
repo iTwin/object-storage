@@ -7,12 +7,18 @@ import { Container } from "inversify";
 import { it } from "mocha";
 
 import { Dependency, DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { ServerStorageDependency } from "@itwin/object-storage-core";
 
 export interface DependencyBindingsTestCase {
   symbolUnderTestName: string;
   functionUnderTest: (container: Container) => unknown;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expectedCtor: new (...args: any[]) => unknown;
+}
+
+export interface InvalidConfigTestCase {
+  config: DependencyConfig;
+  expectedErrorMessage: string;
 }
 
 export function testBindings(
@@ -46,6 +52,23 @@ export function testBindings(
       expect(Object.getPrototypeOf(instance).constructor.name).to.be.equal(
         testCase.expectedCtor.name
       );
+    });
+  }
+}
+
+export function testInvalidServerConfig(
+  serverBindings: ServerStorageDependency,
+  testCases: InvalidConfigTestCase[]
+): void {
+  for (const testCase of testCases) {
+    it(`should throw if dependency config is invalid (${testCase.expectedErrorMessage})`, () => {
+      const container = new Container();
+
+      const functionUnderTest = () =>
+        serverBindings.register(container, testCase.config);
+      expect(functionUnderTest)
+        .to.throw(Error)
+        .with.property("message", testCase.expectedErrorMessage);
     });
   }
 }

@@ -13,8 +13,11 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 import {
+  Constants,
   DependencyBindingsTestCase,
+  InvalidConfigTestCase,
   testBindings,
+  testInvalidServerConfig,
 } from "@itwin/object-storage-tests-unit";
 
 import { Types } from "../common";
@@ -32,18 +35,73 @@ describe(`${S3ServerStorageBindings.name}`, () => {
   const serverBindings = new S3ServerStorageBindings();
 
   describe(`${serverBindings.register.name}()`, () => {
-    // TODO:
+    const invalidConfigTestCases: InvalidConfigTestCase[] = [
+      {
+        config: {
+          dependencyName: "s3",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "accessKey is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "bucket is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+          bucket: "testBucket",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "baseUrl is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+          bucket: "testBucket",
+          baseUrl: "testBaseUrl",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "region is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+          bucket: "testBucket",
+          baseUrl: "testBaseUrl",
+          region: "testRegion",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "roleArn is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+          bucket: "testBucket",
+          baseUrl: "testBaseUrl",
+          region: "testRegion",
+          roleArn: "testRoleArn",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "secretKey is not defined in configuration",
+      },
+      {
+        config: {
+          dependencyName: "s3",
+          accessKey: "testAccessKey",
+          bucket: "testBucket",
+          baseUrl: "testBaseUrl",
+          region: "testRegion",
+          roleArn: "testRoleArn",
+          secretKey: "testSecretKey",
+        } as unknown as S3ServerStorageBindingsConfig,
+        expectedErrorMessage: "stsBaseUrl is not defined in configuration",
+      },
+    ];
+    testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 
-    const config: S3ServerStorageBindingsConfig = {
-      dependencyName: "minio",
-      baseUrl: "https://testBaseUrl.com",
-      region: "testRegion",
-      bucket: "testBucket",
-      accessKey: "testAccessKey",
-      secretKey: "testSecretKey",
-      roleArn: "testRoleArn",
-      stsBaseUrl: "https://testStsBaseUrl.com",
-    };
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         symbolUnderTestName: Types.S3Server.config.toString(),
@@ -96,6 +154,10 @@ describe(`${S3ServerStorageBindings.name}`, () => {
         expectedCtor: S3TransferConfigProvider,
       },
     ];
-    testBindings(serverBindings, config, bindingsTestCases);
+    testBindings(
+      serverBindings,
+      Constants.validS3ServerStorageConfig,
+      bindingsTestCases
+    );
   });
 });

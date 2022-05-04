@@ -3,13 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlobServiceClient } from "@azure/storage-blob";
-import { expect } from "chai";
 import { Container } from "inversify";
 
 import { ServerStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
+  InvalidConfigTestCase,
   testBindings,
+  testInvalidServerConfig,
 } from "@itwin/object-storage-tests-unit";
 
 import { Types } from "../../common";
@@ -25,14 +26,7 @@ describe(`${AzureServerStorageBindings.name}`, () => {
   const serverBindings = new AzureServerStorageBindings();
 
   describe(`${serverBindings.register.name}()`, () => {
-    const config: AzureServerStorageBindingsConfig = {
-      dependencyName: "azure",
-      accountName: "testAccountName",
-      accountKey: "testAccountKey",
-      baseUrl: "testBaseUrl",
-    };
-
-    [
+    const invalidConfigTestCases: InvalidConfigTestCase[] = [
       {
         config: {
           dependencyName: "azure",
@@ -54,23 +48,15 @@ describe(`${AzureServerStorageBindings.name}`, () => {
         } as unknown as AzureServerStorageBindingsConfig,
         expectedErrorMessage: "baseUrl is not defined in configuration",
       },
-    ].forEach(
-      (testCase: {
-        config: AzureServerStorageBindingsConfig;
-        expectedErrorMessage: string;
-      }) => {
-        it(`should throw if transfer config is invalid (${testCase.expectedErrorMessage})`, () => {
-          const container = new Container();
+    ];
+    testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 
-          const functionUnderTest = () =>
-            serverBindings.register(container, testCase.config);
-          expect(functionUnderTest)
-            .to.throw(Error)
-            .with.property("message", testCase.expectedErrorMessage);
-        });
-      }
-    );
-
+    const config: AzureServerStorageBindingsConfig = {
+      dependencyName: "azure",
+      accountName: "testAccountName",
+      accountKey: "testAccountKey",
+      baseUrl: "testBaseUrl",
+    };
     const bindingsTestCases: DependencyBindingsTestCase[] = [];
     [
       {

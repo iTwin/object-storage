@@ -10,8 +10,8 @@ import {
   ServerStorage,
   Types,
 } from "@itwin/object-storage-core";
-import { S3ServerStorageBindingsConfig } from "@itwin/object-storage-s3";
 import {
+  Constants,
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-unit";
@@ -25,19 +25,7 @@ import {
 describe.only(`${MinioServerStorageBindings.name}`, () => {
   const serverBindings = new MinioServerStorageBindings();
 
-  // TODO: test config validation
-
   describe(`${serverBindings.register.name}()`, () => {
-    const config: S3ServerStorageBindingsConfig = {
-      dependencyName: "minio",
-      baseUrl: "https://testBaseUrl.com",
-      region: "testRegion",
-      bucket: "testBucket",
-      accessKey: "testAccessKey",
-      secretKey: "testSecretKey",
-      roleArn: "testRoleArn",
-      stsBaseUrl: "https://testStsBaseUrl.com",
-    };
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         symbolUnderTestName: ServerStorage.name,
@@ -59,6 +47,10 @@ describe.only(`${MinioServerStorageBindings.name}`, () => {
         expectedCtor: Client,
       },
     ];
-    testBindings(serverBindings, config, bindingsTestCases);
+    testBindings(
+      serverBindings,
+      Constants.validS3ServerStorageConfig,
+      bindingsTestCases
+    );
   });
 });
