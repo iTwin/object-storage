@@ -8,7 +8,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
 
-import { OssServerStorageBindings } from "../../server";
+import { OssServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 async function run(): Promise<void> {

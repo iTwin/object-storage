@@ -14,8 +14,10 @@ export class ServerStorageConfigProvider {
       __dirname,
       "..",
       "..",
+      "..",
       "src",
       "test",
+      "integration",
       ".env"
     );
     dotenv.config({ path: envFilePath });
