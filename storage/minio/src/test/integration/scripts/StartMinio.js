@@ -10,6 +10,7 @@ const { directOutputToConsole } = require(path.join(
   "..",
   "..",
   "..",
+  "..",
   "node_modules",
   "@itwin",
   "object-storage-common-config",
