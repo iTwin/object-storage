@@ -6,13 +6,16 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 const constants = require("./MinioConstants");
-
-function listenTo(readable, dataCallback) {
-  if (readable) {
-    readable.setEncoding("utf8");
-    readable.on("data", dataCallback);
-  }
-}
+const { directOutputToConsole } = require(path.join(
+  "..",
+  "..",
+  "..",
+  "node_modules",
+  "@itwin",
+  "object-storage-common-config",
+  "scripts",
+  "Common.js"
+));
 
 function runMinio() {
   const testStorageDirectory = path.join(
@@ -31,16 +34,8 @@ function runMinio() {
     constants.minioServerCommand,
     testStorageDirectory,
   ]);
-  if (childProcess.stdout)
-    listenTo(childProcess.stdout, (data) => {
-      // eslint-disable-next-line no-console
-      console.log(data);
-    });
-  if (childProcess.stderr)
-    listenTo(childProcess.stderr, (data) => {
-      // eslint-disable-next-line no-console
-      console.error(data);
-    });
+
+  directOutputToConsole(childProcess);
 }
 
 runMinio();
