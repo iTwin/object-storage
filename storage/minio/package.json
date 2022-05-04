@@ -22,7 +22,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell ** --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test": "mocha lib/test/unit/**/*.test.js --color --exit",
+    "test:unit": "mocha lib/test/unit/**/*.test.js --color --exit",
     "test:integration:backend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:backend:runTests",
     "test:integration:backend:runTests": "wait-on tcp:9000 -t 30000 && node lib/test/integration/backend/RunIntegrationTests.js",
     "test:integration:frontend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:frontend:startServerRunTests ",
