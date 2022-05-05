@@ -22,6 +22,6 @@ export class AzureClientStorageBindings extends ClientStorageDependency {
       .bind(Types.Client.clientWrapperFactory)
       .to(BlockBlobClientWrapperFactory)
       .inSingletonScope();
-    container.bind(ClientStorage).to(AzureClientStorage);
+    container.bind(ClientStorage).to(AzureClientStorage).inSingletonScope();
   }
 }

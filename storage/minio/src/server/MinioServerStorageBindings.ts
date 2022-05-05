@@ -30,9 +30,10 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
 
     container
       .rebind<PresignedUrlProvider>(Types.Server.presignedUrlProvider)
-      .to(MinioPresignedUrlProvider);
+      .to(MinioPresignedUrlProvider)
+      .inSingletonScope();
 
     container.bind(Client).toConstantValue(createClient(config));
-    container.rebind(ServerStorage).to(MinioServerStorage);
+    container.rebind(ServerStorage).to(MinioServerStorage).inSingletonScope();
   }
 }

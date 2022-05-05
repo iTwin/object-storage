@@ -8,7 +8,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
 
-import { OssServerStorageBindings } from "../../server";
+import { MinioServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 async function run(): Promise<void> {
@@ -19,12 +19,12 @@ async function run(): Promise<void> {
     .toConstantValue({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
-        dependencyName: "oss",
+        dependencyName: "minio",
         ...new ServerStorageConfigProvider().get(),
       },
     });
-  backendServer.useBindings(OssServerStorageBindings);
-  return backendServer.start({ port: 1223 });
+  backendServer.useBindings(MinioServerStorageBindings);
+  return backendServer.start({ port: 1222 });
 }
 
 // eslint-disable-next-line

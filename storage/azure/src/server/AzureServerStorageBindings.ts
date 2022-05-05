@@ -37,14 +37,14 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
     if (!config.accountKey)
       throw new ConfigError<AzureServerStorageConfig>("accountKey");
     if (!config.baseUrl)
-      config.baseUrl = `https://${config.accountName}.blob.core.windows.net`;
+      throw new ConfigError<AzureServerStorageConfig>("baseUrl");
 
     container
       .bind<AzureServerStorageConfig>(Types.AzureServer.config)
       .toConstantValue(config);
 
-    container.bind(ServerStorage).to(AzureServerStorage);
-    container.bind(BlobServiceClientWrapper).toSelf();
+    container.bind(ServerStorage).to(AzureServerStorage).inSingletonScope();
+    container.bind(BlobServiceClientWrapper).toSelf().inSingletonScope();
     container
       .bind(BlobServiceClient)
       .toConstantValue(

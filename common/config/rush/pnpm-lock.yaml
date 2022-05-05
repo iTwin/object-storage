@@ -73,6 +73,7 @@ importers:
       '@itwin/object-storage-core': workspace:*
       '@itwin/object-storage-tests-backend': workspace:*
       '@itwin/object-storage-tests-frontend': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ^8.2.2
@@ -103,6 +104,7 @@ importers:
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend': link:../../tests/backend-storage
       '@itwin/object-storage-tests-frontend': link:../../tests/frontend-storage
+      '@itwin/object-storage-tests-unit': link:../../tests/unit
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/mocha': 8.2.3
@@ -171,6 +173,7 @@ importers:
       '@itwin/object-storage-s3': workspace:*
       '@itwin/object-storage-tests-backend': workspace:*
       '@itwin/object-storage-tests-frontend': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/minio': ~7.0.11
@@ -203,6 +206,7 @@ importers:
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend': link:../../tests/backend-storage
       '@itwin/object-storage-tests-frontend': link:../../tests/frontend-storage
+      '@itwin/object-storage-tests-unit': link:../../tests/unit
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/minio': 7.0.12
@@ -231,6 +235,7 @@ importers:
       '@itwin/object-storage-s3': workspace:*
       '@itwin/object-storage-tests-backend': workspace:*
       '@itwin/object-storage-tests-frontend': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ^8.2.2
@@ -262,6 +267,7 @@ importers:
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend': link:../../tests/backend-storage
       '@itwin/object-storage-tests-frontend': link:../../tests/frontend-storage
+      '@itwin/object-storage-tests-unit': link:../../tests/unit
       '@types/chai': 4.3.0
       '@types/chai-as-promised': 7.1.5
       '@types/mocha': 8.2.3
@@ -290,6 +296,7 @@ importers:
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ^8.2.2
@@ -312,6 +319,7 @@ importers:
       '@aws-sdk/s3-request-presigner': 3.44.0
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core
+      '@itwin/object-storage-tests-unit': link:../../tests/unit
       inversify: 5.0.5
       reflect-metadata: 0.1.13
     devDependencies:
@@ -402,6 +410,39 @@ importers:
       cspell: 5.18.5
       eslint: 7.32.0
       express: 4.18.0
+      rimraf: 2.7.1
+      sort-package-json: 1.53.1
+      typescript: 4.3.5
+
+  ../../tests/unit:
+    specifiers:
+      '@itwin/cloud-agnostic-core': workspace:*
+      '@itwin/object-storage-common-config': workspace:*
+      '@itwin/object-storage-core': workspace:*
+      '@types/chai': ^4.1.7
+      '@types/mocha': ^8.2.2
+      '@types/node': ^14.14.41
+      chai: ^4.2.0
+      cspell: ~5.18.5
+      eslint: ~7.32.0
+      inversify: ~5.0.1
+      mocha: ^9.2.1
+      rimraf: ^2.6.2
+      sort-package-json: ~1.53.1
+      typescript: ~4.3.0
+    dependencies:
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
+      '@itwin/object-storage-core': link:../../storage/core
+      chai: 4.3.6
+      inversify: 5.0.5
+      mocha: 9.2.1
+    devDependencies:
+      '@itwin/object-storage-common-config': link:../../utils/common-config
+      '@types/chai': 4.3.0
+      '@types/mocha': 8.2.3
+      '@types/node': 14.18.12
+      cspell: 5.18.5
+      eslint: 7.32.0
       rimraf: 2.7.1
       sort-package-json: 1.53.1
       typescript: 4.3.5

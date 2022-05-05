@@ -25,7 +25,8 @@ export class OssServerStorageBindings extends S3ServerStorageBindings {
 
     container
       .rebind<TransferConfigProvider>(Types.Server.transferConfigProvider)
-      .to(OssTransferConfigProvider);
+      .to(OssTransferConfigProvider)
+      .inSingletonScope();
     container.bind(Core).toConstantValue(createCore(config));
   }
 }

@@ -4,7 +4,7 @@
 
 Integration tests require a bucket in OSS Storage Service that will be used to perform actual file operations. Users can create it using [OSS Console](https://oss.console.aliyun.com/).
 
-To configure both backend and frontend tests create a `.env` file in `storage/oss/src/test` directory and define values for the following variables:
+To configure both backend and frontend tests create a `.env` file in `storage/oss/src/test/integration` directory and define values for the following variables:
 - `TEST_OSS_BUCKET` - test bucket name.
 - `TEST_OSS_ACCESS_KEY` - OSS storage service access key. 
 - `TEST_OSS_SECRET_KEY` - OSS storage service secret key.

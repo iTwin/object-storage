@@ -56,6 +56,11 @@
       "shouldPublish": false
     },
     {
+      "packageName": "@itwin/object-storage-tests-unit",
+      "projectFolder": "tests/unit",
+      "shouldPublish": false
+    },
+    {
       "packageName": "@itwin/object-storage-common-config",
       "projectFolder": "utils/common-config",
       "shouldPublish": false

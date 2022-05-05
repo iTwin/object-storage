@@ -23,6 +23,6 @@ export class AzureFrontendStorageBindings extends FrontendStorageDependency {
       .bind(Types.Frontend.clientWrapperFactory)
       .to(BlockBlobClientWrapperFactory)
       .inSingletonScope();
-    container.bind(FrontendStorage).to(AzureFrontendStorage);
+    container.bind(FrontendStorage).to(AzureFrontendStorage).inSingletonScope();
   }
 }

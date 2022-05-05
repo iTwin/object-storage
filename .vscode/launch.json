@@ -11,7 +11,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test"
+        "test:unit"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
@@ -28,7 +28,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test"
+        "test:unit"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
@@ -45,7 +45,41 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test"
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Minio Unit tests",
+      "cwd": "${workspaceFolder}/storage/minio",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "OSS Unit tests",
+      "cwd": "${workspaceFolder}/storage/oss",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:unit"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"

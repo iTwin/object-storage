@@ -10,7 +10,7 @@ import {
 } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
-import { OssServerStorageBindings } from "../../server";
+import { OssServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const serverStorageConfig = new ServerStorageConfigProvider().get();

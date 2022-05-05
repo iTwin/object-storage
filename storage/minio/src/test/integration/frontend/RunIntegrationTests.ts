@@ -12,10 +12,12 @@ const { bundledScriptFileName } = require(path.resolve(
   "..",
   "..",
   "..",
+  "..",
   "webpack.config.js"
 ));
 const bundledSetupScript = path.resolve(
   __dirname,
+  "..",
   "..",
   "..",
   "..",
