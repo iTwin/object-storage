@@ -90,8 +90,9 @@ export class S3ServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
-    if (typeof data === "string") data = createReadStream(data); // read from local file
-    return this._s3Client.upload(reference, data, metadata);
+    const dataToUpload =
+      typeof data === "string" ? createReadStream(data) : data;
+    return this._s3Client.upload(reference, dataToUpload, metadata);
   }
 
   public async uploadInMultipleParts(
@@ -101,8 +102,13 @@ export class S3ServerStorage extends ServerStorage {
   ): Promise<void> {
     await assertFileNotEmpty(data);
 
-    if (typeof data === "string") data = createReadStream(data); // read from local file
-    return this._s3Client.uploadInMultipleParts(reference, data, options);
+    const dataToUpload =
+      typeof data === "string" ? createReadStream(data) : data;
+    return this._s3Client.uploadInMultipleParts(
+      reference,
+      dataToUpload,
+      options
+    );
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
