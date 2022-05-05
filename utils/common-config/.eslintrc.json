@@ -13,6 +13,12 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true
+      }
+    ],
     "@itwin/no-internal-barrel-imports": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "warn",
@@ -27,37 +33,42 @@
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-empty-function": "off",
-    "import/order": ["error", {
-      "groups": [
-        "builtin",
-        "external",
-        "internal",
-        "parent",
-        "sibling",
-        "index",
-        "object"
-      ],
-      "pathGroups": [
-        {
-          "pattern": "@itwin/cloud-agnostic-core",
-          "group": "internal"
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@itwin/cloud-agnostic-core",
+            "group": "internal"
+          },
+          {
+            "pattern": "@itwin/object-storage**",
+            "group": "internal"
+          },
+          {
+            "pattern": "@itwin/**",
+            "group": "external",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "builtin"
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
         },
-        {
-          "pattern": "@itwin/object-storage**",
-          "group": "internal"
-        },
-        {
-          "pattern": "@itwin/**",
-          "group": "external",
-          "position": "after"
-        }
-      ],
-      "pathGroupsExcludedImportTypes": ["builtin"],
-      "alphabetize": {
-        "order": "asc",
-        "caseInsensitive": true
-      },
-      "newlines-between": "always"
-    }]
+        "newlines-between": "always"
+      }
+    ]
   }
 }
