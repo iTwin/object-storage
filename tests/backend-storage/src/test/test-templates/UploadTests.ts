@@ -60,7 +60,7 @@ type MultipartFrontendTestCase = FrontendStorageParam &
     dataToUpload: FrontendMultipartUploadData;
   };
 
-export type TestCase2 = ClientTestCase | FrontendTestCase;
+export type TestCase = ClientTestCase | FrontendTestCase;
 export type MultipartTestCase =
   | MultipartFrontendTestCase
   | MultipartClientTestCase;
@@ -151,7 +151,7 @@ export async function testUploadWithMetadataFromStreamToUrl(
   });
 }
 
-export async function testUploadToUrl(params: TestCase2): Promise<void> {
+export async function testUploadToUrl(params: TestCase): Promise<void> {
   const testBaseDirectory: BaseDirectory = (
     await testDirectoryManager.createNew()
   ).baseDirectory;
@@ -167,7 +167,7 @@ export async function testUploadToUrl(params: TestCase2): Promise<void> {
 }
 
 export async function testUploadToUrlWithRelativeDir(
-  params: TestCase2
+  params: TestCase
 ): Promise<void> {
   const testBaseDirectory: BaseDirectory = (
     await testDirectoryManager.createNew()
@@ -185,7 +185,7 @@ export async function testUploadToUrlWithRelativeDir(
 }
 
 export async function testUploadToUrlWithMetadata(
-  params: TestCase2
+  params: TestCase
 ): Promise<void> {
   const testDirectory: TestRemoteDirectory =
     await testDirectoryManager.createNew();
@@ -279,7 +279,7 @@ export async function testUploadWithMetadataFromStreamWithConfig(
   });
 }
 
-export async function testUploadWithConfig(params: TestCase2): Promise<void> {
+export async function testUploadWithConfig(params: TestCase): Promise<void> {
   const testBaseDirectory: BaseDirectory = (
     await testDirectoryManager.createNew()
   ).baseDirectory;
@@ -297,7 +297,7 @@ export async function testUploadWithConfig(params: TestCase2): Promise<void> {
 }
 
 export async function testUploadWithRelativeDirWithConfig(
-  params: TestCase2
+  params: TestCase
 ): Promise<void> {
   const testBaseDirectory: BaseDirectory = (
     await testDirectoryManager.createNew()
@@ -317,7 +317,7 @@ export async function testUploadWithRelativeDirWithConfig(
 }
 
 export async function testUploadWithMetadataWithConfig(
-  params: TestCase2
+  params: TestCase
 ): Promise<void> {
   const testBaseDirectory: BaseDirectory = (
     await testDirectoryManager.createNew()
@@ -438,19 +438,19 @@ export async function testMultipartUploadWithMetadata(
 }
 
 function isClientTestCase(
-  testCase: TestCase2 | MultipartTestCase
+  testCase: TestCase | MultipartTestCase
 ): testCase is ClientTestCase | MultipartClientTestCase {
   return testCase.storageUnderTest instanceof ClientStorage;
 }
 
 function isFrontendTestCase(
-  testCase: TestCase2 | MultipartTestCase
+  testCase: TestCase | MultipartTestCase
 ): testCase is FrontendTestCase | MultipartFrontendTestCase {
   return testCase.storageUnderTest instanceof FrontendStorage;
 }
 
 async function callUrlUpload(
-  params: TestCase2,
+  params: TestCase,
   url: string,
   metadata: Metadata | undefined
 ): Promise<void> {
@@ -472,7 +472,7 @@ async function callUrlUpload(
 }
 
 async function callConfigUpload(
-  params: TestCase2,
+  params: TestCase,
   reference: ObjectReference,
   transferConfig: TransferConfig,
   metadata: Metadata | undefined
