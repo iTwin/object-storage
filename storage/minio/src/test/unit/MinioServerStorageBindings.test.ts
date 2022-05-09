@@ -22,7 +22,7 @@ import {
   MinioServerStorageBindings,
 } from "../../server";
 
-describe.only(`${MinioServerStorageBindings.name}`, () => {
+describe(`${MinioServerStorageBindings.name}`, () => {
   const serverBindings = new MinioServerStorageBindings();
 
   describe(`${serverBindings.register.name}()`, () => {
