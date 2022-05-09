@@ -147,13 +147,12 @@ export function metadataToHeaders(
   );
 }
 
+export function assertRelativeDirectory(
+  relativeDirectory: string | undefined
+): void {
+  if (!relativeDirectory) return;
 
-export function assertRelativeDirectory(relativeDirectory: string | undefined) {
-  if (!relativeDirectory)
-    return;
-
-  if (relativeDirectory.includes("\\"))
-    throw new Error("TODO ERROR");
+  if (relativeDirectory.includes("\\")) throw new Error("TODO ERROR");
 }
 
 export function assertTransferConfig(transferConfig: TransferConfig): void {

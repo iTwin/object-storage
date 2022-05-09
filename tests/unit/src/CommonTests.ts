@@ -7,22 +7,12 @@ import * as chaiAsPromised from "chai-as-promised";
 
 use(chaiAsPromised);
 
-export interface ErrorThrownTestCase {
-  workflowName: string,
-  functionUnderTest: () => Promise<unknown>
-}
-
 export async function testRelativeDirectoryValidation(
-  ...testCases: ErrorThrownTestCase[]
+  functionUnderTest: () => Promise<unknown>
 ): Promise<void> {
-  for (const testCase of testCases) {
-    it(`should throw if relativeDirectory is invalid (${testCase.workflowName})`, async () => {
-      const promiseUnderTest = testCase.functionUnderTest();
-      await expect(promiseUnderTest)
-        .to.eventually.be.rejectedWith(
-          Error,
-          "TODO ERROR"
-        );
-    });
-  }
+  const promiseUnderTest = functionUnderTest();
+  await expect(promiseUnderTest).to.eventually.be.rejectedWith(
+    Error,
+    "TODO ERROR"
+  );
 }

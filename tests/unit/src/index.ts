@@ -3,6 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./BindingsTests";
-export * from "./ClientStorageTests";
+export * from "./CommonTests";
 export * from "./Constants";
-export * from "./ServerStorageTests";

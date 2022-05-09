@@ -2,14 +2,19 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { testDeleteObjectRelativeDirValidation } from "@itwin/object-storage-tests-unit";
-import { MinioServerStorage } from "../../server";
+import { instance, mock } from "ts-mockito";
+
 import {
-  instance,
-  mock,
-} from "ts-mockito";
-import { PresignedUrlProvider, TransferConfigProvider } from "@itwin/object-storage-core";
+  PresignedUrlProvider,
+  TransferConfigProvider,
+} from "@itwin/object-storage-core";
 import { S3ClientWrapper } from "@itwin/object-storage-s3";
+import {
+  Constants,
+  testRelativeDirectoryValidation,
+} from "@itwin/object-storage-tests-unit";
+
+import { MinioServerStorage } from "../../server";
 
 describe(`${MinioServerStorage.name}`, () => {
   const mockS3ClientWrapper = mock<S3ClientWrapper>();
@@ -18,10 +23,14 @@ describe(`${MinioServerStorage.name}`, () => {
   const serverStorage = new MinioServerStorage(
     instance(mockS3ClientWrapper),
     instance(mockPresignedUrlProvider),
-    instance(mockTransferConfigProvider),
+    instance(mockTransferConfigProvider)
   );
 
   describe(`${serverStorage.deleteObject.name}()`, () => {
-    testDeleteObjectRelativeDirValidation(serverStorage);
+    it("should throw if relativeDirectory is invalid", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        serverStorage.deleteObject(Constants.invalidObjectReference)
+      );
+    });
   });
 });

@@ -13,5 +13,10 @@ const constants = {
     roleArn: "testRoleArn",
     stsBaseUrl: "https://testStsBaseUrl.com",
   } as const,
+  invalidObjectReference: {
+    baseDirectory: "testBaseDirectory",
+    relativeDirectory: "testDirectory1\\testDirectory2",
+    objectName: "testObjectName",
+  } as const,
 } as const;
 export { constants as Constants };

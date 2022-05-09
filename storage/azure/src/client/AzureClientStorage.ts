@@ -10,6 +10,7 @@ import { inject, injectable } from "inversify";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   ClientStorage,
   FrontendTransferData,
   isLocalUrlTransfer,
@@ -18,7 +19,6 @@ import {
   Types,
   UrlDownloadInput,
   UrlUploadInput,
-  assertRelativeDirectory
 } from "@itwin/object-storage-core";
 
 import { BlockBlobClientWrapperFactory } from "../frontend";
