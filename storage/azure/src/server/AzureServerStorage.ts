@@ -12,6 +12,7 @@ import { inject, injectable } from "inversify";
 import {
   assertFileNotEmpty,
   assertLocalFile,
+  assertRelativeDirectory,
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
@@ -82,6 +83,7 @@ export class AzureServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
+    assertRelativeDirectory(reference.relativeDirectory);
     if (transferType === "local") {
       assertLocalFile(localPath);
       await promises.mkdir(dirname(localPath), { recursive: true });
@@ -99,6 +101,7 @@ export class AzureServerStorage extends ServerStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
     const dataToUpload: FrontendTransferData =
@@ -114,6 +117,7 @@ export class AzureServerStorage extends ServerStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
     const dataToUpload: FrontendTransferData =
@@ -154,6 +158,8 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this.handleNotFound(async () => {
       await this._client.getBlobClient(reference).delete();
     });
@@ -164,6 +170,8 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async objectExists(reference: ObjectReference): Promise<boolean> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._client.getBlobClient(reference).exists();
   }
 
@@ -171,12 +179,16 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     await this._client.getBlobClient(reference).setMetadata(metadata);
   }
 
   public async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     const { lastModified, contentLength, metadata } = await this._client
       .getBlobClient(reference)
       .getProperties();
@@ -193,6 +205,8 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiresInSeconds = 3600
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     const blobClient = this._client.getBlockBlobClient(reference);
     const parameters = buildSASParameters(
       reference.baseDirectory,
@@ -210,6 +224,8 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiresInSeconds = 3600
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     const blobClient = this._client.getBlockBlobClient(reference);
     const parameters = buildSASParameters(
       reference.baseDirectory,
@@ -227,6 +243,8 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiresInSeconds = 3600
   ): Promise<AzureTransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
     const expiresOn = buildExpiresOn(expiresInSeconds);
     const parameters = buildSASParameters(
       directory.baseDirectory,
@@ -247,6 +265,8 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiresInSeconds = 3600
   ): Promise<AzureTransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
     const expiresOn = buildExpiresOn(expiresInSeconds);
     const parameters = buildSASParameters(
       directory.baseDirectory,

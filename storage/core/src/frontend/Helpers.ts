@@ -147,6 +147,15 @@ export function metadataToHeaders(
   );
 }
 
+
+export function assertRelativeDirectory(relativeDirectory: string | undefined) {
+  if (!relativeDirectory)
+    return;
+
+  if (relativeDirectory.includes("\\"))
+    throw new Error("TODO ERROR");
+}
+
 export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(transferConfig, "transferConfig", "object");
   assertPrimitiveType(
