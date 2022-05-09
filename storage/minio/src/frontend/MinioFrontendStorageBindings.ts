@@ -15,6 +15,9 @@ export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
   public override register(container: Container): void {
     super.register(container);
 
-    container.rebind(FrontendStorage).to(MinioFrontendStorage);
+    container
+      .rebind(FrontendStorage)
+      .to(MinioFrontendStorage)
+      .inSingletonScope();
   }
 }

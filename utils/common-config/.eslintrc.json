@@ -1,7 +1,8 @@
 {
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@itwin"
+    "@itwin",
+    "mocha"
   ],
   "extends": [
     "plugin:@itwin/itwinjs-recommended",
@@ -64,6 +65,8 @@
         "caseInsensitive": true
       },
       "newlines-between": "always"
-    }]
+    }],
+    "mocha/no-skipped-tests": "error",
+    "mocha/no-exclusive-tests": "error"
   }
 }

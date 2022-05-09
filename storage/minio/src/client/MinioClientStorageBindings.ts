@@ -15,6 +15,6 @@ export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override register(container: Container): void {
     super.register(container);
 
-    container.rebind(ClientStorage).to(MinioClientStorage);
+    container.rebind(ClientStorage).to(MinioClientStorage).inSingletonScope();
   }
 }
