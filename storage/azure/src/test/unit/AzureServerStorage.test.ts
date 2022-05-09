@@ -6,7 +6,7 @@ import { testServerDownloadRelativeDirValidation, testServerUploadRelativeDirVal
 import { AzureServerStorage, BlobServiceClientWrapper } from "../../server";
 import { BlobServiceClient } from "@azure/storage-blob";
 
-describe.only(`${AzureServerStorage.name}`, () => {
+describe(`${AzureServerStorage.name}`, () => {
   const serverStorage = new AzureServerStorage(
     {
       accountName: "testAccountName",

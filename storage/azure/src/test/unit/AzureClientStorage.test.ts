@@ -6,7 +6,7 @@ import { AzureClientStorage } from "../../client";
 import { AzureTransferConfig, BlockBlobClientWrapperFactory } from "../../frontend";
 import { testClientMultipartUploadRelativeDirValidation, testClientUploadRelativeDirValidation, testClientDownloadRelativeDirValidation } from "@itwin/object-storage-tests-unit";
 
-describe.only(`${AzureClientStorage.name}`, () => {
+describe(`${AzureClientStorage.name}`, () => {
   const clientStorage = new AzureClientStorage(new BlockBlobClientWrapperFactory());
 
   const testTransferConfig: AzureTransferConfig = {

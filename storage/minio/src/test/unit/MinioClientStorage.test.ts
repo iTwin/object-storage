@@ -2,14 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { S3ClientStorage } from "../client";
-import { S3ClientWrapperFactory, S3TransferConfig } from "../frontend";
-import { testClientMultipartUploadRelativeDirValidation, testClientUploadRelativeDirValidation, testClientDownloadRelativeDirValidation } from "@itwin/object-storage-tests-unit";
+import { MinioClientStorage } from "../../client";
+import { } from "../../frontend";
+import { testClientUploadRelativeDirValidation } from "@itwin/object-storage-tests-unit";
+import { S3ClientWrapperFactory, S3TransferConfig } from "@itwin/object-storage-s3";
 import { instance, mock } from "ts-mockito";
 
-describe(`${S3ClientStorage.name}`, () => {
+describe(`${MinioClientStorage.name}`, () => {
   const mockTransferConfigProvider = mock<S3ClientWrapperFactory>();
-  const clientStorage = new S3ClientStorage(instance(mockTransferConfigProvider));
+  const clientStorage = new MinioClientStorage(instance(mockTransferConfigProvider));
 
   const testTransferConfig: S3TransferConfig = {
     expiration: new Date(),
@@ -23,15 +24,7 @@ describe(`${S3ClientStorage.name}`, () => {
     bucket: "testBucket"
   }
 
-  describe(`${clientStorage.download.name}()`, () => {
-    testClientDownloadRelativeDirValidation(clientStorage, testTransferConfig);
-  });
-
   describe(`${clientStorage.upload.name}()`, () => {
     testClientUploadRelativeDirValidation(clientStorage, testTransferConfig);
-  });
-
-  describe(`${clientStorage.uploadInMultipleParts.name}()`, () => {
-    testClientMultipartUploadRelativeDirValidation(clientStorage, testTransferConfig);
   });
 });

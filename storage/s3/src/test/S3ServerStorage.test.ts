@@ -11,7 +11,7 @@ import {
 } from "ts-mockito";
 import { PresignedUrlProvider, TransferConfigProvider } from "@itwin/object-storage-core";
 
-describe.only(`${S3ServerStorage.name}`, () => {
+describe(`${S3ServerStorage.name}`, () => {
   const mockS3ClientWrapper = mock<S3ClientWrapper>();
   const mockPresignedUrlProvider = mock<PresignedUrlProvider>();
   const mockTransferConfigProvider = mock<TransferConfigProvider>();
