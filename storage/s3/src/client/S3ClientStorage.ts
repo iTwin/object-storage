@@ -9,6 +9,7 @@ import { inject, injectable } from "inversify";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   ClientStorage,
   downloadFromUrl,
   FrontendTransferData,
@@ -62,6 +63,8 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     if (instanceOfUrlInput(input)) return downloadFromUrl(input);
 
     return createAndUseClient(
@@ -83,6 +86,8 @@ export class S3ClientStorage extends ClientStorage {
     const { data } = input;
     const { metadata } = input;
 
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
     const dataToUpload: FrontendTransferData =
@@ -106,6 +111,8 @@ export class S3ClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
     const dataToUpload: FrontendTransferData =
