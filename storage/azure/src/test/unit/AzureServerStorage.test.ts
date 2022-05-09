@@ -3,19 +3,19 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { testServerDownloadRelativeDirValidation, testServerUploadRelativeDirValidation, testServerMultipartUploadRelativeDirValidation, testDeleteObjectRelativeDirValidation, testGetDownloadConfigRelativeDirValidation, testGetDownloadUrlRelativeDirValidation, testGetObjectPropertiesRelativeDirValidation, testGetUploadConfigRelativeDirValidation, testGetUploadUrlRelativeDirValidation, testObjectExistsRelativeDirValidation, testUpdateMetadataRelativeDirValidation } from "@itwin/object-storage-tests-unit";
-import { AzureServerStorage, BlobServiceClientWrapper } from "../../server";
-import { BlobServiceClient } from "@azure/storage-blob";
+import { AzureServerStorage, AzureServerStorageConfig, BlobServiceClientWrapper } from "../../server";
+import { mock, instance } from "ts-mockito";
 
 describe(`${AzureServerStorage.name}`, () => {
+  const mockAzureServerStorageConfig: AzureServerStorageConfig =   {
+    accountName: "testAccountName",
+    accountKey: "testAccountKey",
+    baseUrl: "testBaseUrl"
+  };
+  const mockBlobServiceClientWrapper = mock<BlobServiceClientWrapper>();
   const serverStorage = new AzureServerStorage(
-    {
-      accountName: "testAccountName",
-      accountKey: "testAccountKey",
-      baseUrl: "http://testBaseUrl.com"
-    },
-    new BlobServiceClientWrapper(
-      new BlobServiceClient("http://testBaseUrl.com")
-    )
+    mockAzureServerStorageConfig,
+    instance(mockBlobServiceClientWrapper)
   );
 
   describe(`${serverStorage.download.name}()`, () => {
