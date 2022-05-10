@@ -13,6 +13,6 @@ export async function testRelativeDirectoryValidation(
   const promiseUnderTest = functionUnderTest();
   await expect(promiseUnderTest).to.eventually.be.rejectedWith(
     Error,
-    "TODO ERROR"
+    "Relative directory cannot contain backslashes."
   );
 }

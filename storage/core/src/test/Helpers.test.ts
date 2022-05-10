@@ -5,7 +5,7 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { assertTransferConfig, TransferConfig } from "../frontend";
+import { assertRelativeDirectory, assertTransferConfig, TransferConfig } from "../frontend";
 
 use(chaiAsPromised);
 
@@ -69,6 +69,52 @@ describe("Helper functions", () => {
       };
       const testedFunction = () => assertTransferConfig(transferConfig);
       expect(testedFunction).to.not.throw();
+    });
+  });
+
+  describe(`${assertRelativeDirectory.name}()`, () => {
+    [
+      {
+        relativeDirectory: "\\",
+        expectedErrorMessage: "Relative directory cannot contain backslashes.",
+      },
+      {
+        relativeDirectory: "\\foo\\",
+        expectedErrorMessage: "Relative directory cannot contain backslashes.",
+      },
+      {
+        relativeDirectory: "/foo",
+        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+      },
+      {
+        relativeDirectory: "foo/",
+        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+      },
+      {
+        relativeDirectory: "/foo/",
+        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+      },
+    ].forEach((testCase) => {
+      it(`should throw if relative directory is invalid (${testCase.relativeDirectory})`, () => {
+        const testedFunction = () =>
+          assertRelativeDirectory(testCase.relativeDirectory);
+        expect(testedFunction)
+          .to.throw(Error)
+          .with.property("message", testCase.expectedErrorMessage);
+      });
+    });
+
+    [
+      undefined,
+      "",
+      "foo",
+      "foo/bar",
+      "foo/bar/baz"
+    ].forEach((relativeDirectory) => {
+      it(`should not throw if relative directory is valid (${relativeDirectory})`, () => {
+        const testedFunction = () => assertRelativeDirectory(relativeDirectory);
+        expect(testedFunction).to.not.throw();
+      });
     });
   });
 });
