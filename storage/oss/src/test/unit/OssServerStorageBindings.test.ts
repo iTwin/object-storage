@@ -23,16 +23,16 @@ describe(`${OssServerStorageBindings.name}`, () => {
   describe(`${serverBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: Types.Server.transferConfigProvider.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.Server.transferConfigProvider.toString(),
+        testedFunction: (container: Container) =>
           container.get<TransferConfigProvider>(
             Types.Server.transferConfigProvider
           ),
         expectedCtor: OssTransferConfigProvider,
       },
       {
-        symbolUnderTestName: Core.name,
-        functionUnderTest: (container: Container) => container.get(Core),
+        testedClassIdentifier: Core.name,
+        testedFunction: (container: Container) => container.get(Core),
         expectedCtor: Core,
       },
     ];

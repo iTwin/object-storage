@@ -15,7 +15,7 @@ import { assertBuffer, assertStream, TestRemoteDirectory } from "../utils";
 const { serverStorage } = config;
 
 export async function testDownloadFromUrlToBuffer(
-  storageUnderTest: FrontendStorage | ClientStorage
+  testedStorage: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-buffer");
   const testDirectory: TestRemoteDirectory =
@@ -27,7 +27,7 @@ export async function testDownloadFromUrlToBuffer(
   );
 
   const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
-  const response = await storageUnderTest.download({
+  const response = await testedStorage.download({
     url: downloadUrl,
     transferType: "buffer",
   });
@@ -36,7 +36,7 @@ export async function testDownloadFromUrlToBuffer(
 }
 
 export async function testDownloadFromUrlToStream(
-  storageUnderTest: FrontendStorage | ClientStorage
+  testedStorage: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-from-url-to-stream");
   const testDirectory: TestRemoteDirectory =
@@ -48,7 +48,7 @@ export async function testDownloadFromUrlToStream(
   );
 
   const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
-  const response = await storageUnderTest.download({
+  const response = await testedStorage.download({
     url: downloadUrl,
     transferType: "stream",
   });
@@ -57,7 +57,7 @@ export async function testDownloadFromUrlToStream(
 }
 
 export async function testDownloadToBufferWithConfig(
-  storageUnderTest: FrontendStorage | ClientStorage
+  testedStorage: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-buffer-with-config");
   const testDirectory: TestRemoteDirectory =
@@ -71,7 +71,7 @@ export async function testDownloadToBufferWithConfig(
   const downloadConfig = await serverStorage.getDownloadConfig(
     testDirectory.baseDirectory
   );
-  const response = await storageUnderTest.download({
+  const response = await testedStorage.download({
     reference: uploadedFile,
     transferConfig: downloadConfig,
     transferType: "buffer",
@@ -81,7 +81,7 @@ export async function testDownloadToBufferWithConfig(
 }
 
 export async function testDownloadToStreamWithConfig(
-  storageUnderTest: FrontendStorage | ClientStorage
+  testedStorage: FrontendStorage | ClientStorage
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-stream-with-config");
   const testDirectory: TestRemoteDirectory =
@@ -95,7 +95,7 @@ export async function testDownloadToStreamWithConfig(
   const downloadConfig = await serverStorage.getDownloadConfig(
     testDirectory.baseDirectory
   );
-  const response = await storageUnderTest.download({
+  const response = await testedStorage.download({
     reference: uploadedFile,
     transferConfig: downloadConfig,
     transferType: "stream",

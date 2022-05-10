@@ -10,8 +10,8 @@ import { Dependency, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { ServerStorageDependency } from "@itwin/object-storage-core";
 
 export interface DependencyBindingsTestCase {
-  symbolUnderTestName: string;
-  functionUnderTest: (container: Container) => unknown;
+  testedClassIdentifier: string;
+  testedFunction: (container: Container) => unknown;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expectedCtor: new (...args: any[]) => unknown;
 }
@@ -27,27 +27,27 @@ export function testBindings(
   testCases: DependencyBindingsTestCase[]
 ): void {
   for (const testCase of testCases) {
-    it(`should register ${testCase.symbolUnderTestName}`, () => {
+    it(`should register ${testCase.testedClassIdentifier}`, () => {
       const container = new Container();
       bindings.register(container, config);
 
-      const functionUnderTest = () => testCase.functionUnderTest(container);
-      expect(functionUnderTest).to.not.throw();
+      const testedFunction = () => testCase.testedFunction(container);
+      expect(testedFunction).to.not.throw();
     });
 
-    it(`should register ${testCase.symbolUnderTestName} as a singleton`, () => {
+    it(`should register ${testCase.testedClassIdentifier} as a singleton`, () => {
       const container = new Container();
       bindings.register(container, config);
-      const instance1 = testCase.functionUnderTest(container);
-      const instance2 = testCase.functionUnderTest(container);
+      const instance1 = testCase.testedFunction(container);
+      const instance2 = testCase.testedFunction(container);
 
       expect(instance1).to.be.equal(instance2);
     });
 
-    it(`should resolve ${testCase.symbolUnderTestName} to ${testCase.expectedCtor.name}`, () => {
+    it(`should resolve ${testCase.testedClassIdentifier} to ${testCase.expectedCtor.name}`, () => {
       const container = new Container();
       bindings.register(container, config);
-      const instance = testCase.functionUnderTest(container);
+      const instance = testCase.testedFunction(container);
 
       expect(Object.getPrototypeOf(instance).constructor.name).to.be.equal(
         testCase.expectedCtor.name
@@ -64,9 +64,9 @@ export function testInvalidServerConfig(
     it(`should throw if dependency config is invalid (${testCase.expectedErrorMessage})`, () => {
       const container = new Container();
 
-      const functionUnderTest = () =>
+      const testedFunction = () =>
         serverBindings.register(container, testCase.config);
-      expect(functionUnderTest)
+      expect(testedFunction)
         .to.throw(Error)
         .with.property("message", testCase.expectedErrorMessage);
     });

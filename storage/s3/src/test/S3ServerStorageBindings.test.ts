@@ -104,50 +104,50 @@ describe(`${S3ServerStorageBindings.name}`, () => {
 
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: Types.S3Server.config.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.S3Server.config.toString(),
+        testedFunction: (container: Container) =>
           container.get<S3ServerStorageConfig>(Types.S3Server.config),
         expectedCtor: Object,
       },
       {
-        symbolUnderTestName: ServerStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ServerStorage),
+        testedClassIdentifier: ServerStorage.name,
+        testedFunction: (container: Container) => container.get(ServerStorage),
         expectedCtor: S3ServerStorage,
       },
       {
-        symbolUnderTestName: S3Client.name,
-        functionUnderTest: (container: Container) => container.get(S3Client),
+        testedClassIdentifier: S3Client.name,
+        testedFunction: (container: Container) => container.get(S3Client),
         expectedCtor: S3Client,
       },
       {
-        symbolUnderTestName: STSClient.name,
-        functionUnderTest: (container: Container) => container.get(STSClient),
+        testedClassIdentifier: STSClient.name,
+        testedFunction: (container: Container) => container.get(STSClient),
         expectedCtor: STSClient,
       },
       {
-        symbolUnderTestName: Types.bucket.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.bucket.toString(),
+        testedFunction: (container: Container) =>
           container.get<string>(Types.bucket),
         expectedCtor: String,
       },
       {
-        symbolUnderTestName: S3ClientWrapper.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: S3ClientWrapper.name,
+        testedFunction: (container: Container) =>
           container.get(S3ClientWrapper),
         expectedCtor: S3ClientWrapper,
       },
       {
-        symbolUnderTestName: CoreTypes.Server.presignedUrlProvider.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: CoreTypes.Server.presignedUrlProvider.toString(),
+        testedFunction: (container: Container) =>
           container.get<PresignedUrlProvider>(
             CoreTypes.Server.presignedUrlProvider
           ),
         expectedCtor: S3PresignedUrlProvider,
       },
       {
-        symbolUnderTestName: CoreTypes.Server.transferConfigProvider.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier:
+          CoreTypes.Server.transferConfigProvider.toString(),
+        testedFunction: (container: Container) =>
           container.get<TransferConfigProvider>(
             CoreTypes.Server.transferConfigProvider
           ),

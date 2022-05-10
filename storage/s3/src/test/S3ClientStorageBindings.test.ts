@@ -19,17 +19,16 @@ describe(`${S3ClientStorageBindings.name}`, () => {
   describe(`${clientBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: CoreTypes.Client.clientWrapperFactory.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: CoreTypes.Client.clientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
           container.get<S3ClientWrapperFactory>(
             CoreTypes.Client.clientWrapperFactory
           ),
         expectedCtor: S3ClientWrapperFactory,
       },
       {
-        symbolUnderTestName: ClientStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ClientStorage),
+        testedClassIdentifier: ClientStorage.name,
+        testedFunction: (container: Container) => container.get(ClientStorage),
         expectedCtor: S3ClientStorage,
       },
     ];
