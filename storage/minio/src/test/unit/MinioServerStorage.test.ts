@@ -7,9 +7,9 @@ import { createStubInstance } from "sinon";
 import { S3ClientWrapper } from "@itwin/object-storage-s3";
 import {
   Constants,
-  testRelativeDirectoryValidation,
   mockPresignedUrlProvider,
-  mockTransferConfigProvider
+  mockTransferConfigProvider,
+  testRelativeDirectoryValidation,
 } from "@itwin/object-storage-tests-unit";
 
 import { MinioServerStorage } from "../../server";

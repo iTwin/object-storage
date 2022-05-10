@@ -8,16 +8,17 @@ import { createStubInstance } from "sinon";
 
 import {
   Constants,
-  testRelativeDirectoryValidation,
   mockPresignedUrlProvider,
-  mockTransferConfigProvider
+  mockTransferConfigProvider,
+  testRelativeDirectoryValidation,
 } from "@itwin/object-storage-tests-unit";
 
 import { S3ClientWrapper } from "../frontend";
 import { S3ServerStorage } from "../server";
 
 describe(`${S3ServerStorage.name}`, () => {
-  const mockS3ClientWrapper: S3ClientWrapper = createStubInstance(S3ClientWrapper);
+  const mockS3ClientWrapper: S3ClientWrapper =
+    createStubInstance(S3ClientWrapper);
   const serverStorage = new S3ServerStorage(
     mockS3ClientWrapper,
     mockPresignedUrlProvider,

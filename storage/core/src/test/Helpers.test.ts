@@ -5,7 +5,11 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { assertRelativeDirectory, assertTransferConfig, TransferConfig } from "../frontend";
+import {
+  assertRelativeDirectory,
+  assertTransferConfig,
+  TransferConfig,
+} from "../frontend";
 
 use(chaiAsPromised);
 
@@ -84,15 +88,18 @@ describe("Helper functions", () => {
       },
       {
         relativeDirectory: "/foo",
-        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+        expectedErrorMessage:
+          "Relative directory cannot contain slashes at the beginning or the end of the string.",
       },
       {
         relativeDirectory: "foo/",
-        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+        expectedErrorMessage:
+          "Relative directory cannot contain slashes at the beginning or the end of the string.",
       },
       {
         relativeDirectory: "/foo/",
-        expectedErrorMessage: "Relative directory cannot contain slashes at the beginning or the end of the string.",
+        expectedErrorMessage:
+          "Relative directory cannot contain slashes at the beginning or the end of the string.",
       },
     ].forEach((testCase) => {
       it(`should throw if relative directory is invalid (${testCase.relativeDirectory})`, () => {
@@ -104,17 +111,14 @@ describe("Helper functions", () => {
       });
     });
 
-    [
-      undefined,
-      "",
-      "foo",
-      "foo/bar",
-      "foo/bar/baz"
-    ].forEach((relativeDirectory) => {
-      it(`should not throw if relative directory is valid (${relativeDirectory})`, () => {
-        const testedFunction = () => assertRelativeDirectory(relativeDirectory);
-        expect(testedFunction).to.not.throw();
-      });
-    });
+    [undefined, "", "foo", "foo/bar", "foo/bar/baz"].forEach(
+      (relativeDirectory) => {
+        it(`should not throw if relative directory is valid (${relativeDirectory})`, () => {
+          const testedFunction = () =>
+            assertRelativeDirectory(relativeDirectory);
+          expect(testedFunction).to.not.throw();
+        });
+      }
+    );
   });
 });

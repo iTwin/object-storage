@@ -16,9 +16,7 @@ import { S3ClientWrapperFactory, S3TransferConfig } from "../frontend";
 
 describe(`${S3ClientStorage.name}`, () => {
   const mockTransferConfigProvider = createStubInstance(S3ClientWrapperFactory);
-  const clientStorage = new S3ClientStorage(
-    mockTransferConfigProvider
-  );
+  const clientStorage = new S3ClientStorage(mockTransferConfigProvider);
 
   const testTransferConfig: S3TransferConfig = {
     expiration: new Date(),

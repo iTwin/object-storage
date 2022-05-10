@@ -19,9 +19,7 @@ import { MinioClientStorage } from "../../client";
 
 describe(`${MinioClientStorage.name}`, () => {
   const mockTransferConfigProvider = createStubInstance(S3ClientWrapperFactory);
-  const clientStorage = new MinioClientStorage(
-    mockTransferConfigProvider
-  );
+  const clientStorage = new MinioClientStorage(mockTransferConfigProvider);
 
   const testTransferConfig: S3TransferConfig = {
     expiration: new Date(),

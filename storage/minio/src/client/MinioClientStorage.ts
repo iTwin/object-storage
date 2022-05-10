@@ -6,6 +6,7 @@ import { createReadStream } from "fs";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   FrontendTransferData,
   instanceOfUrlInput,
   streamToBuffer,
@@ -18,7 +19,6 @@ import {
 } from "@itwin/object-storage-s3";
 
 import { handleMinioUrlUpload } from "../frontend";
-import { assertRelativeDirectory } from "@itwin/object-storage-core";
 
 export class MinioClientStorage extends S3ClientStorage {
   constructor(clientWrapperFactory: S3ClientWrapperFactory) {

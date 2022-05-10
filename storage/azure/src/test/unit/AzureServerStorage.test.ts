@@ -4,12 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
+import { createStubInstance } from "sinon";
+
 import {
   Constants,
   testRelativeDirectoryValidation,
 } from "@itwin/object-storage-tests-unit";
-
-import { createStubInstance } from 'sinon';
 
 import {
   AzureServerStorage,
@@ -23,7 +23,9 @@ describe(`${AzureServerStorage.name}`, () => {
     accountKey: "testAccountKey",
     baseUrl: "testBaseUrl",
   };
-  const mockBlobServiceClientWrapper = createStubInstance(BlobServiceClientWrapper);
+  const mockBlobServiceClientWrapper = createStubInstance(
+    BlobServiceClientWrapper
+  );
   const serverStorage = new AzureServerStorage(
     mockAzureServerStorageConfig,
     mockBlobServiceClientWrapper

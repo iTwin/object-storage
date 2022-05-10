@@ -39,8 +39,9 @@ export function buildObjectKey(reference: {
   objectName: string;
 }): string {
   const { baseDirectory, relativeDirectory, objectName } = reference;
-  return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""
-    }/${objectName}`;
+  return `${baseDirectory}${
+    relativeDirectory ? `/${relativeDirectory}` : ""
+  }/${objectName}`;
 }
 
 export function buildObjectReference(
@@ -151,12 +152,18 @@ export function assertRelativeDirectory(
 ): void {
   if (!relativeDirectory) return;
 
-  const backslash = "\\"
-  if (relativeDirectory.includes(backslash) || relativeDirectory === "") throw new Error("Relative directory cannot contain backslashes.");
+  const backslash = "\\";
+  if (relativeDirectory.includes(backslash) || relativeDirectory === "")
+    throw new Error("Relative directory cannot contain backslashes.");
 
   const separator = "/";
-  if (relativeDirectory[0] === separator || relativeDirectory[relativeDirectory.length - 1] === separator)
-    throw new Error("Relative directory cannot contain slashes at the beginning or the end of the string.")
+  if (
+    relativeDirectory[0] === separator ||
+    relativeDirectory[relativeDirectory.length - 1] === separator
+  )
+    throw new Error(
+      "Relative directory cannot contain slashes at the beginning or the end of the string."
+    );
 }
 
 export function assertTransferConfig(transferConfig: TransferConfig): void {
