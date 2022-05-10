@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { instance, mock } from "ts-mockito";
+import { createStubInstance } from "sinon";
 
 import {
   S3ClientWrapperFactory,
@@ -18,9 +18,9 @@ import {
 import { MinioClientStorage } from "../../client";
 
 describe(`${MinioClientStorage.name}`, () => {
-  const mockTransferConfigProvider = mock<S3ClientWrapperFactory>();
+  const mockTransferConfigProvider = createStubInstance(S3ClientWrapperFactory);
   const clientStorage = new MinioClientStorage(
-    instance(mockTransferConfigProvider)
+    mockTransferConfigProvider
   );
 
   const testTransferConfig: S3TransferConfig = {

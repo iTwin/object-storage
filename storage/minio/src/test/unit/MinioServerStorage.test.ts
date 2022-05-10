@@ -2,28 +2,24 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { instance, mock } from "ts-mockito";
+import { createStubInstance } from "sinon";
 
-import {
-  PresignedUrlProvider,
-  TransferConfigProvider,
-} from "@itwin/object-storage-core";
 import { S3ClientWrapper } from "@itwin/object-storage-s3";
 import {
   Constants,
   testRelativeDirectoryValidation,
+  mockPresignedUrlProvider,
+  mockTransferConfigProvider
 } from "@itwin/object-storage-tests-unit";
 
 import { MinioServerStorage } from "../../server";
 
 describe(`${MinioServerStorage.name}`, () => {
-  const mockS3ClientWrapper = mock<S3ClientWrapper>();
-  const mockPresignedUrlProvider = mock<PresignedUrlProvider>();
-  const mockTransferConfigProvider = mock<TransferConfigProvider>();
+  const mockS3ClientWrapper = createStubInstance(S3ClientWrapper);
   const serverStorage = new MinioServerStorage(
-    instance(mockS3ClientWrapper),
-    instance(mockPresignedUrlProvider),
-    instance(mockTransferConfigProvider)
+    mockS3ClientWrapper,
+    mockPresignedUrlProvider,
+    mockTransferConfigProvider
   );
 
   describe(`${serverStorage.deleteObject.name}()`, () => {

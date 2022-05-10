@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { instance, mock } from "ts-mockito";
+import { createStubInstance } from "sinon";
 
 import {
   Constants,
@@ -15,9 +15,9 @@ import { S3ClientStorage } from "../client";
 import { S3ClientWrapperFactory, S3TransferConfig } from "../frontend";
 
 describe(`${S3ClientStorage.name}`, () => {
-  const mockTransferConfigProvider = mock<S3ClientWrapperFactory>();
+  const mockTransferConfigProvider = createStubInstance(S3ClientWrapperFactory);
   const clientStorage = new S3ClientStorage(
-    instance(mockTransferConfigProvider)
+    mockTransferConfigProvider
   );
 
   const testTransferConfig: S3TransferConfig = {

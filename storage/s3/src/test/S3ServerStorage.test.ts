@@ -4,28 +4,24 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { instance, mock } from "ts-mockito";
+import { createStubInstance } from "sinon";
 
-import {
-  PresignedUrlProvider,
-  TransferConfigProvider,
-} from "@itwin/object-storage-core";
 import {
   Constants,
   testRelativeDirectoryValidation,
+  mockPresignedUrlProvider,
+  mockTransferConfigProvider
 } from "@itwin/object-storage-tests-unit";
 
 import { S3ClientWrapper } from "../frontend";
 import { S3ServerStorage } from "../server";
 
 describe(`${S3ServerStorage.name}`, () => {
-  const mockS3ClientWrapper = mock<S3ClientWrapper>();
-  const mockPresignedUrlProvider = mock<PresignedUrlProvider>();
-  const mockTransferConfigProvider = mock<TransferConfigProvider>();
+  const mockS3ClientWrapper: S3ClientWrapper = createStubInstance(S3ClientWrapper);
   const serverStorage = new S3ServerStorage(
-    instance(mockS3ClientWrapper),
-    instance(mockPresignedUrlProvider),
-    instance(mockTransferConfigProvider)
+    mockS3ClientWrapper,
+    mockPresignedUrlProvider,
+    mockTransferConfigProvider
   );
 
   describe(`${serverStorage.download.name}()`, () => {

@@ -5,3 +5,4 @@
 export * from "./BindingsTests";
 export * from "./CommonTests";
 export * from "./Constants";
+export * from "./Mocks";
