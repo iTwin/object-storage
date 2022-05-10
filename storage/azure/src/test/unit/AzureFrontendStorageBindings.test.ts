@@ -22,14 +22,14 @@ describe(`${AzureFrontendStorageBindings.name}`, () => {
   describe(`${frontendBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: FrontendStorage.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: FrontendStorage.name,
+        testedFunction: (container: Container) =>
           container.get(FrontendStorage),
         expectedCtor: AzureFrontendStorage,
       },
       {
-        symbolUnderTestName: Types.Frontend.clientWrapperFactory.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.Frontend.clientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
           container.get<BlockBlobClientWrapperFactory>(
             Types.Frontend.clientWrapperFactory
           ),

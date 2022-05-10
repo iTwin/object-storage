@@ -25,16 +25,17 @@ describe(`${S3FrontendStorageBindings.name}`, () => {
   describe(`${frontendBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: CoreTypes.Frontend.clientWrapperFactory.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier:
+          CoreTypes.Frontend.clientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
           container.get<S3ClientWrapperFactory>(
             CoreTypes.Frontend.clientWrapperFactory
           ),
         expectedCtor: S3ClientWrapperFactory,
       },
       {
-        symbolUnderTestName: FrontendStorage.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: FrontendStorage.name,
+        testedFunction: (container: Container) =>
           container.get(FrontendStorage),
         expectedCtor: S3FrontendStorage,
       },

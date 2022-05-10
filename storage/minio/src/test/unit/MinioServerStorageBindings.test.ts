@@ -28,22 +28,21 @@ describe(`${MinioServerStorageBindings.name}`, () => {
   describe(`${serverBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: ServerStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ServerStorage),
+        testedClassIdentifier: ServerStorage.name,
+        testedFunction: (container: Container) => container.get(ServerStorage),
         expectedCtor: MinioServerStorage,
       },
       {
-        symbolUnderTestName: Types.Server.presignedUrlProvider.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.Server.presignedUrlProvider.toString(),
+        testedFunction: (container: Container) =>
           container.get<PresignedUrlProvider>(
             Types.Server.presignedUrlProvider
           ),
         expectedCtor: MinioPresignedUrlProvider,
       },
       {
-        symbolUnderTestName: Client.name,
-        functionUnderTest: (container: Container) => container.get(Client),
+        testedClassIdentifier: Client.name,
+        testedFunction: (container: Container) => container.get(Client),
         expectedCtor: Client,
       },
     ];
