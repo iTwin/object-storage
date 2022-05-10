@@ -19,14 +19,13 @@ describe(`${AzureClientStorageBindings.name}`, () => {
   describe(`${clientBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: ClientStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ClientStorage),
+        testedClassIdentifier: ClientStorage.name,
+        testedFunction: (container: Container) => container.get(ClientStorage),
         expectedCtor: AzureClientStorage,
       },
       {
-        symbolUnderTestName: Types.Client.clientWrapperFactory.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.Client.clientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
           container.get<BlockBlobClientWrapperFactory>(
             Types.Client.clientWrapperFactory
           ),

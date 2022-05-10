@@ -18,9 +18,8 @@ describe(`${MinioClientStorageBindings.name}`, () => {
   describe(`${clientBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: ClientStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ClientStorage),
+        testedClassIdentifier: ClientStorage.name,
+        testedFunction: (container: Container) => container.get(ClientStorage),
         expectedCtor: MinioClientStorage,
       },
     ];

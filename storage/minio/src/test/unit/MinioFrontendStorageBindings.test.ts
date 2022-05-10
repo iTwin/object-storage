@@ -21,8 +21,8 @@ describe(`${MinioFrontendStorageBindings.name}`, () => {
   describe(`${frontendBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        symbolUnderTestName: FrontendStorage.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: FrontendStorage.name,
+        testedFunction: (container: Container) =>
           container.get(FrontendStorage),
         expectedCtor: MinioFrontendStorage,
       },

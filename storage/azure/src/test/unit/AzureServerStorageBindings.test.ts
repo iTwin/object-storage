@@ -60,26 +60,25 @@ describe(`${AzureServerStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [];
     [
       {
-        symbolUnderTestName: ServerStorage.name,
-        functionUnderTest: (container: Container) =>
-          container.get(ServerStorage),
+        testedClassIdentifier: ServerStorage.name,
+        testedFunction: (container: Container) => container.get(ServerStorage),
         expectedCtor: AzureServerStorage,
       },
       {
-        symbolUnderTestName: Types.AzureServer.config.toString(),
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: Types.AzureServer.config.toString(),
+        testedFunction: (container: Container) =>
           container.get<AzureServerStorageConfig>(Types.AzureServer.config),
         expectedCtor: Object,
       },
       {
-        symbolUnderTestName: BlobServiceClientWrapper.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: BlobServiceClientWrapper.name,
+        testedFunction: (container: Container) =>
           container.get(BlobServiceClientWrapper),
         expectedCtor: BlobServiceClientWrapper,
       },
       {
-        symbolUnderTestName: BlobServiceClient.name,
-        functionUnderTest: (container: Container) =>
+        testedClassIdentifier: BlobServiceClient.name,
+        testedFunction: (container: Container) =>
           container.get(BlobServiceClient),
         expectedCtor: BlobServiceClient,
       },

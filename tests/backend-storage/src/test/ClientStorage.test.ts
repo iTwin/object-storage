@@ -83,7 +83,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             contentBuffer
           );
         await testUploadToUrl({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: contentBuffer,
         });
@@ -105,7 +105,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             contentBuffer
           );
         await testUploadToUrlWithRelativeDir({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: contentBuffer,
         });
@@ -127,7 +127,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             contentBuffer
           );
         await testUploadToUrlWithMetadata({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: contentBuffer,
         });
@@ -209,7 +209,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testUploadWithConfig({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });
@@ -233,7 +233,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testUploadWithRelativeDirWithConfig({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });
@@ -257,7 +257,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testUploadWithMetadataWithConfig({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });
@@ -301,7 +301,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testMultipartUpload({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });
@@ -321,7 +321,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testMultipartUploadWithRelativeDir({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });
@@ -341,7 +341,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             buffer
           );
         await testMultipartUploadWithMetadata({
-          storageUnderTest: clientStorage,
+          testedStorage: clientStorage,
           dataToUpload: fileToUploadPath,
           dataToAssert: buffer,
         });

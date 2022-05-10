@@ -8,9 +8,9 @@ import * as chaiAsPromised from "chai-as-promised";
 use(chaiAsPromised);
 
 export async function testRelativeDirectoryValidation(
-  functionUnderTest: () => Promise<unknown>
+  testedFunction: () => Promise<unknown>
 ): Promise<void> {
-  const promiseUnderTest = functionUnderTest();
+  const promiseUnderTest = testedFunction();
   await expect(promiseUnderTest).to.eventually.be.rejectedWith(
     Error,
     "Relative directory cannot contain backslashes."
