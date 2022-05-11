@@ -10,8 +10,8 @@ use(chaiAsPromised);
 export async function testRelativeDirectoryValidation(
   testedFunction: () => Promise<unknown>
 ): Promise<void> {
-  const promiseUnderTest = testedFunction();
-  await expect(promiseUnderTest).to.eventually.be.rejectedWith(
+  const functionPromise = testedFunction();
+  await expect(functionPromise).to.eventually.be.rejectedWith(
     Error,
     "Relative directory cannot contain backslashes."
   );
