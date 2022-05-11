@@ -22,7 +22,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test:unit": "mocha lib/test/unit/**/*.test.js --color --exit",
+    "test:unit": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
     "test:integration:backend": "node lib/test/integration/backend/RunIntegrationTests.js",
     "test:integration:frontend": "npm-run-all -p -r test:integration:frontend:startServer test:integration:frontend:runTests ",
     "test:integration:frontend:runTests": "wait-on tcp:1223 -t 30000 && node lib/test/integration/frontend/RunIntegrationTests.js",

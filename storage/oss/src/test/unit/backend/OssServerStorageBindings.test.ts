@@ -15,7 +15,7 @@ import {
 import {
   OssServerStorageBindings,
   OssTransferConfigProvider,
-} from "../../server";
+} from "../../../server";
 
 describe(`${OssServerStorageBindings.name}`, () => {
   const serverBindings = new OssServerStorageBindings();

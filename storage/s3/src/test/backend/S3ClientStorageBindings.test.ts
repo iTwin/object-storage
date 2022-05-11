@@ -4,23 +4,32 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { ClientStorage } from "@itwin/object-storage-core";
+import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-unit";
 
-import { MinioClientStorage, MinioClientStorageBindings } from "../../client";
+import { S3ClientStorage, S3ClientStorageBindings } from "../../client";
+import { S3ClientWrapperFactory } from "../../frontend";
 
-describe(`${MinioClientStorageBindings.name}`, () => {
-  const clientBindings = new MinioClientStorageBindings();
+describe(`${S3ClientStorageBindings.name}`, () => {
+  const clientBindings = new S3ClientStorageBindings();
 
   describe(`${clientBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
+        testedClassIdentifier: CoreTypes.Client.clientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
+          container.get<S3ClientWrapperFactory>(
+            CoreTypes.Client.clientWrapperFactory
+          ),
+        expectedCtor: S3ClientWrapperFactory,
+      },
+      {
         testedClassIdentifier: ClientStorage.name,
         testedFunction: (container: Container) => container.get(ClientStorage),
-        expectedCtor: MinioClientStorage,
+        expectedCtor: S3ClientStorage,
       },
     ];
     testBindings(clientBindings, undefined, bindingsTestCases);

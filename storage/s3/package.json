@@ -22,9 +22,12 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
+    "test:unit": "npm run test:unit:backend",
+    "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
+    "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit",
+    "test:unit:backend:common": "node lib/test/backend/RunCommonUnitTests.js",
     "test:integration:backend": "",
-    "test:integration:frontend": "",
-    "test:unit": "mocha lib/test/**/*.test.js --color --exit"
+    "test:integration:frontend": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
@@ -44,6 +47,7 @@
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
     "@itwin/object-storage-tests-unit": "workspace:*",
+    "@itwin/object-storage-tests-backend-unit": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^8.2.2",

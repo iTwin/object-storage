@@ -20,7 +20,7 @@ import {
   MinioPresignedUrlProvider,
   MinioServerStorage,
   MinioServerStorageBindings,
-} from "../../server";
+} from "../../../server";
 
 describe(`${MinioServerStorageBindings.name}`, () => {
   const serverBindings = new MinioServerStorageBindings();

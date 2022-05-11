@@ -10,13 +10,6 @@ import { createStubInstance } from "sinon";
 import { BlockBlobClientWrapperFactory } from "../../../frontend";
 import { AzureServerStorage, AzureServerStorageConfig, BlobServiceClientWrapper } from "../../../server";
 
-const mockBlockBlobClientWrapperFactory = createStubInstance(
-  BlockBlobClientWrapperFactory
-);
-const clientStorage = new AzureClientStorage(
-  mockBlockBlobClientWrapperFactory
-);
-
 const mockBlobServiceClientWrapper = createStubInstance(
   BlobServiceClientWrapper
 );
@@ -28,6 +21,13 @@ const mockAzureServerStorageConfig: AzureServerStorageConfig = {
 const serverStorage = new AzureServerStorage(
   mockAzureServerStorageConfig,
   mockBlobServiceClientWrapper
+);
+
+const mockBlockBlobClientWrapperFactory = createStubInstance(
+  BlockBlobClientWrapperFactory
+);
+const clientStorage = new AzureClientStorage(
+  mockBlockBlobClientWrapperFactory
 );
 
 const tests = new StorageUnitTests(
