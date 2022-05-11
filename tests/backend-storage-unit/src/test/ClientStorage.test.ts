@@ -5,6 +5,7 @@
 import { Readable } from "stream";
 
 import { ClientStorage, TransferConfig } from "@itwin/object-storage-core";
+
 import { config } from "./Config";
 import { Constants, testRelativeDirectoryValidation } from "./test-templates";
 
@@ -13,7 +14,7 @@ const { clientStorage } = config;
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   const testTransferConfig: TransferConfig = {
     expiration: new Date(),
-    baseUrl: "testBaseUrl"
+    baseUrl: "testBaseUrl",
   };
   const commonParams = {
     reference: Constants.invalidObjectReference,

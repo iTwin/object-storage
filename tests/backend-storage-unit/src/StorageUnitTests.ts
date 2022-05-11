@@ -8,12 +8,8 @@ import { join } from "path";
 import { Container } from "inversify";
 import * as Mocha from "mocha";
 
-import {
-  Bindable,
-} from "@itwin/cloud-agnostic-core";
-import {
-  ClientStorage, ServerStorage,
-} from "@itwin/object-storage-core";
+import { Bindable } from "@itwin/cloud-agnostic-core";
+import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
 
@@ -22,7 +18,7 @@ export class StorageUnitTests extends Bindable {
 
   constructor(
     private _serverStorage: ServerStorage,
-    private _clientStorage: ClientStorage,
+    private _clientStorage: ClientStorage
   ) {
     super();
   }

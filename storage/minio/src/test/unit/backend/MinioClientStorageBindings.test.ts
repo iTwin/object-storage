@@ -10,7 +10,10 @@ import {
   testBindings,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { MinioClientStorage, MinioClientStorageBindings } from "../../../client";
+import {
+  MinioClientStorage,
+  MinioClientStorageBindings,
+} from "../../../client";
 
 describe(`${MinioClientStorageBindings.name}`, () => {
   const clientBindings = new MinioClientStorageBindings();

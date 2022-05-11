@@ -4,10 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageUnitTests,mockPresignedUrlProvider, mockTransferConfigProvider  } from "@itwin/object-storage-tests-backend-unit";
 import { createStubInstance } from "sinon";
+
+import {
+  S3ClientWrapper,
+  S3ClientWrapperFactory,
+} from "@itwin/object-storage-s3";
+import {
+  mockPresignedUrlProvider,
+  mockTransferConfigProvider,
+  StorageUnitTests,
+} from "@itwin/object-storage-tests-backend-unit";
+
 import { MinioClientStorage } from "../../../client";
-import { S3ClientWrapper, S3ClientWrapperFactory } from "@itwin/object-storage-s3";
 import { MinioServerStorage } from "../../../server";
 
 const mockS3ClientWrapper = createStubInstance(S3ClientWrapper);
@@ -20,10 +29,7 @@ const serverStorage = new MinioServerStorage(
 const mockS3ClientWrapperFactory = createStubInstance(S3ClientWrapperFactory);
 const clientStorage = new MinioClientStorage(mockS3ClientWrapperFactory);
 
-const tests = new StorageUnitTests(
-  serverStorage,
-  clientStorage,
-);
+const tests = new StorageUnitTests(serverStorage, clientStorage);
 tests.start().catch((err) => {
   process.exitCode = 1;
   throw err;

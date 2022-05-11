@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { config } from "./Config";
 import { ServerStorage } from "@itwin/object-storage-core";
+
+import { config } from "./Config";
 import { Constants, testRelativeDirectoryValidation } from "./test-templates";
 
 const { serverStorage } = config;
 
 describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
-
   describe(`${serverStorage.download.name}()`, () => {
     it("should throw if relativeDirectory is invalid (buffer)", async () => {
       await testRelativeDirectoryValidation(async () =>

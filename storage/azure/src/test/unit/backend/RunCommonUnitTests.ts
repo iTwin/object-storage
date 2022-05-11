@@ -4,11 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
-import { AzureClientStorage } from "../../../client";
 import { createStubInstance } from "sinon";
+
+import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
+
+import { AzureClientStorage } from "../../../client";
 import { BlockBlobClientWrapperFactory } from "../../../frontend";
-import { AzureServerStorage, AzureServerStorageConfig, BlobServiceClientWrapper } from "../../../server";
+import {
+  AzureServerStorage,
+  AzureServerStorageConfig,
+  BlobServiceClientWrapper,
+} from "../../../server";
 
 const mockBlobServiceClientWrapper = createStubInstance(
   BlobServiceClientWrapper
@@ -26,14 +32,9 @@ const serverStorage = new AzureServerStorage(
 const mockBlockBlobClientWrapperFactory = createStubInstance(
   BlockBlobClientWrapperFactory
 );
-const clientStorage = new AzureClientStorage(
-  mockBlockBlobClientWrapperFactory
-);
+const clientStorage = new AzureClientStorage(mockBlockBlobClientWrapperFactory);
 
-const tests = new StorageUnitTests(
-  serverStorage,
-  clientStorage,
-);
+const tests = new StorageUnitTests(serverStorage, clientStorage);
 tests.start().catch((err) => {
   process.exitCode = 1;
   throw err;
