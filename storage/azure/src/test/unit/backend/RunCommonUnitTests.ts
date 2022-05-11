@@ -64,6 +64,7 @@ class TestAzureClientStorageBindings extends AzureClientStorageBindings {
     const mockBlockBlobClientWrapperFactory = createStubInstance(
       BlockBlobClientWrapperFactory
     );
+
     container
       .rebind(Types.Client.clientWrapperFactory)
       .toConstantValue(mockBlockBlobClientWrapperFactory);

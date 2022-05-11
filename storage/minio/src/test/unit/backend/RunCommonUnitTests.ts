@@ -36,6 +36,7 @@ const minioTestConfig = {
     dependencyName,
   },
 };
+
 class TestMinioServerStorageBindings extends MinioServerStorageBindings {
   public override register(
     container: Container,
