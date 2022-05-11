@@ -4,32 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { createStubInstance } from "sinon";
-
 import {
   Constants,
   testRelativeDirectoryValidation,
 } from "@itwin/object-storage-tests-unit";
 
-import {
-  AzureServerStorage,
-  AzureServerStorageConfig,
-  BlobServiceClientWrapper,
-} from "../../server";
+import { config } from "./Config";
+import { ServerStorage } from "@itwin/object-storage-core";
 
-describe(`${AzureServerStorage.name}`, () => {
-  const mockAzureServerStorageConfig: AzureServerStorageConfig = {
-    accountName: "testAccountName",
-    accountKey: "testAccountKey",
-    baseUrl: "testBaseUrl",
-  };
-  const mockBlobServiceClientWrapper = createStubInstance(
-    BlobServiceClientWrapper
-  );
-  const serverStorage = new AzureServerStorage(
-    mockAzureServerStorageConfig,
-    mockBlobServiceClientWrapper
-  );
+const { serverStorage } = config;
+
+describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.download.name}()`, () => {
     it("should throw if relativeDirectory is invalid (buffer)", async () => {

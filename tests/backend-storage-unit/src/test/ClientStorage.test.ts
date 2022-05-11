@@ -9,21 +9,15 @@ import {
   testRelativeDirectoryValidation,
 } from "@itwin/object-storage-tests-unit";
 
-import { AzureClientStorage } from "../../client";
-import {
-  AzureTransferConfig,
-  BlockBlobClientWrapperFactory,
-} from "../../frontend";
+import { ClientStorage, TransferConfig } from "@itwin/object-storage-core";
+import { config } from "./Config";
 
-describe(`${AzureClientStorage.name}`, () => {
-  const clientStorage = new AzureClientStorage(
-    new BlockBlobClientWrapperFactory()
-  );
+const { clientStorage } = config;
 
-  const testTransferConfig: AzureTransferConfig = {
+describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
+  const testTransferConfig: TransferConfig = {
     expiration: new Date(),
-    baseUrl: "testBaseUrl",
-    authentication: "testAuthentication",
+    baseUrl: "testBaseUrl"
   };
   const commonParams = {
     reference: Constants.invalidObjectReference,

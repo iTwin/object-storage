@@ -10,8 +10,8 @@ import {
   testBindings,
 } from "@itwin/object-storage-tests-unit";
 
-import { AzureClientStorage, AzureClientStorageBindings } from "../../client";
-import { BlockBlobClientWrapperFactory } from "../../frontend";
+import { AzureClientStorage, AzureClientStorageBindings } from "../../../client";
+import { BlockBlobClientWrapperFactory } from "../../../frontend";
 
 describe(`${AzureClientStorageBindings.name}`, () => {
   const clientBindings = new AzureClientStorageBindings();

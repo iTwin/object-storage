@@ -21,14 +21,14 @@
       ]
     },
     {
-      "name": "Azure Unit tests",
+      "name": "Azure Backend Unit tests",
       "cwd": "${workspaceFolder}/storage/azure",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:unit"
+        "test:unit:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"

@@ -72,6 +72,7 @@ importers:
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
       '@itwin/object-storage-tests-backend': workspace:*
+      '@itwin/object-storage-tests-backend-unit': workspace:*
       '@itwin/object-storage-tests-frontend': workspace:*
       '@itwin/object-storage-tests-unit': workspace:*
       '@types/chai': ^4.1.7
@@ -105,6 +106,7 @@ importers:
     devDependencies:
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend': link:../../tests/backend-storage
+      '@itwin/object-storage-tests-backend-unit': link:../../tests/backend-storage-unit
       '@itwin/object-storage-tests-frontend': link:../../tests/frontend-storage
       '@itwin/object-storage-tests-unit': link:../../tests/unit
       '@types/chai': 4.3.0
@@ -385,6 +387,45 @@ importers:
       '@types/mocha': 8.2.3
       '@types/node': 14.18.12
       '@types/yargs': 15.0.14
+      cspell: 5.18.5
+      eslint: 7.32.0
+      rimraf: 2.7.1
+      sort-package-json: 1.53.1
+      typescript: 4.3.5
+
+  ../../tests/backend-storage-unit:
+    specifiers:
+      '@itwin/cloud-agnostic-core': workspace:*
+      '@itwin/object-storage-common-config': workspace:*
+      '@itwin/object-storage-core': workspace:*
+      '@itwin/object-storage-tests-unit': workspace:*
+      '@types/chai': ^4.1.7
+      '@types/chai-as-promised': ^7.1.2
+      '@types/mocha': ^8.2.2
+      '@types/node': ^14.14.41
+      chai: ^4.2.0
+      chai-as-promised: ^7.1.1
+      cspell: ~5.18.5
+      eslint: ~7.32.0
+      inversify: ~5.0.1
+      mocha: ^9.2.1
+      rimraf: ^2.6.2
+      sort-package-json: ~1.53.1
+      typescript: ~4.3.0
+    dependencies:
+      '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
+      '@itwin/object-storage-core': link:../../storage/core
+      chai: 4.3.6
+      chai-as-promised: 7.1.1_chai@4.3.6
+      inversify: 5.0.5
+      mocha: 9.2.1
+    devDependencies:
+      '@itwin/object-storage-common-config': link:../../utils/common-config
+      '@itwin/object-storage-tests-unit': link:../unit
+      '@types/chai': 4.3.0
+      '@types/chai-as-promised': 7.1.5
+      '@types/mocha': 8.2.3
+      '@types/node': 14.18.12
       cspell: 5.18.5
       eslint: 7.32.0
       rimraf: 2.7.1

@@ -51,6 +51,11 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@itwin/object-storage-tests-backend-unit",
+      "projectFolder": "tests/backend-storage-unit",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@itwin/object-storage-tests-frontend",
       "projectFolder": "tests/frontend-storage",
       "shouldPublish": false
