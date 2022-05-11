@@ -24,7 +24,8 @@
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
-    "test:unit": ""
+    "test:unit": "",
+    "test:unit:backend": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

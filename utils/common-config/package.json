@@ -19,7 +19,8 @@
     "spell-check": "cspell ** --config ./cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
-    "test:unit": ""
+    "test:unit": "",
+    "test:unit:backend": ""
   },
   "devDependencies": {
     "@itwin/eslint-plugin": "^3.0.0",
