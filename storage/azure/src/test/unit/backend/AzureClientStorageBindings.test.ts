@@ -8,7 +8,7 @@ import { ClientStorage, Types } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import { AzureClientStorage, AzureClientStorageBindings } from "../../../client";
 import { BlockBlobClientWrapperFactory } from "../../../frontend";

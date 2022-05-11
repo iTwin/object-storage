@@ -4,11 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import {
-  mockPresignedUrlProvider,
-  mockTransferConfigProvider
-} from "@itwin/object-storage-tests-unit";
-import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
+import { StorageUnitTests,  mockPresignedUrlProvider,
+  mockTransferConfigProvider } from "@itwin/object-storage-tests-backend-unit";
 import { createStubInstance } from "sinon";
 import { S3ClientWrapper, S3ClientWrapperFactory } from "../../frontend";
 import { S3ServerStorage } from "../../server";

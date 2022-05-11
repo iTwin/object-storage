@@ -8,7 +8,7 @@ import { FrontendStorage, Types } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import {
   AzureFrontendStorage,

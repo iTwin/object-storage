@@ -44,7 +44,7 @@
     "@itwin/object-storage-common-config": "workspace:*",
     "@itwin/object-storage-tests-backend": "workspace:*",
     "@itwin/object-storage-tests-frontend": "workspace:*",
-    "@itwin/object-storage-tests-unit": "workspace:*",
+    "@itwin/object-storage-tests-backend-unit": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^8.2.2",

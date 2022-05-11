@@ -8,7 +8,7 @@ import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import { S3ClientStorage, S3ClientStorageBindings } from "../../client";
 import { S3ClientWrapperFactory } from "../../frontend";

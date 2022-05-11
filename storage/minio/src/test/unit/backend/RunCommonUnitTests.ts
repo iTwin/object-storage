@@ -4,12 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
+import { StorageUnitTests,mockPresignedUrlProvider, mockTransferConfigProvider  } from "@itwin/object-storage-tests-backend-unit";
 import { createStubInstance } from "sinon";
 import { MinioClientStorage } from "../../../client";
 import { S3ClientWrapper, S3ClientWrapperFactory } from "@itwin/object-storage-s3";
 import { MinioServerStorage } from "../../../server";
-import { mockPresignedUrlProvider, mockTransferConfigProvider } from "@itwin/object-storage-tests-unit";
 
 const mockS3ClientWrapper = createStubInstance(S3ClientWrapper);
 const serverStorage = new MinioServerStorage(

@@ -4,13 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import {
-  Constants,
-  testRelativeDirectoryValidation,
-} from "@itwin/object-storage-tests-unit";
-
 import { config } from "./Config";
 import { ServerStorage } from "@itwin/object-storage-core";
+import { Constants, testRelativeDirectoryValidation } from "./test-templates";
 
 const { serverStorage } = config;
 

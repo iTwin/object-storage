@@ -11,7 +11,7 @@ import {
   InvalidConfigTestCase,
   testBindings,
   testInvalidServerConfig,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import { Types } from "../../../common";
 import {
