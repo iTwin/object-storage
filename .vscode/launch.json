@@ -21,6 +21,9 @@
       ]
     },
     {
+      "name": "-- Backend Unit Tests --"
+    },
+    {
       "name": "Azure Backend Unit tests",
       "cwd": "${workspaceFolder}/storage/azure",
       "type": "pwa-node",
@@ -38,14 +41,14 @@
       ]
     },
     {
-      "name": "S3 Unit tests",
+      "name": "S3 Backend Unit tests",
       "cwd": "${workspaceFolder}/storage/s3",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:unit"
+        "test:unit:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"
@@ -55,14 +58,14 @@
       ]
     },
     {
-      "name": "Minio Unit tests",
+      "name": "Minio Backend Unit tests",
       "cwd": "${workspaceFolder}/storage/minio",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "test:unit"
+        "test:unit:backend"
       ],
       "outFiles": [
         "${workspaceFolder}/*/*/lib/**/*.js"

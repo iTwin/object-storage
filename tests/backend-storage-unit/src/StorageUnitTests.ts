@@ -8,8 +8,17 @@ import { join } from "path";
 import { Container } from "inversify";
 import * as Mocha from "mocha";
 
-import { Bindable } from "@itwin/cloud-agnostic-core";
-import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
+import {
+  Bindable,
+  Types as CoreTypes,
+  DependenciesConfig,
+} from "@itwin/cloud-agnostic-core";
+import {
+  ClientStorage,
+  ClientStorageDependency,
+  ServerStorage,
+  ServerStorageDependency,
+} from "@itwin/object-storage-core";
 
 import { setOptions } from "./test/Config";
 
@@ -17,16 +26,32 @@ export class StorageUnitTests extends Bindable {
   public readonly container = new Container();
 
   constructor(
-    private _serverStorage: ServerStorage,
-    private _clientStorage: ClientStorage
+    config: DependenciesConfig,
+    serverStorageDependency: new () => ServerStorageDependency,
+    clientStorageDependency: new () => ClientStorageDependency
   ) {
     super();
+
+    this.requireDependency(ServerStorageDependency.dependencyType);
+    this.requireDependency(ClientStorageDependency.dependencyType);
+
+    this.useBindings(serverStorageDependency);
+    this.useBindings(clientStorageDependency);
+
+    this.container
+      .bind<DependenciesConfig>(CoreTypes.dependenciesConfig)
+      .toConstantValue(config);
   }
 
   public async start(): Promise<void> {
+    this.bindDependencies(this.container);
+
+    const serverStorage = this.container.get(ServerStorage);
+    const clientStorage = this.container.get(ClientStorage);
+
     setOptions({
-      serverStorage: this._serverStorage,
-      clientStorage: this._clientStorage,
+      serverStorage,
+      clientStorage,
     });
 
     const mochaOptions: Mocha.MochaOptions = {
