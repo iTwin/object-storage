@@ -153,7 +153,7 @@ export function assertRelativeDirectory(
   if (!relativeDirectory) return;
 
   const backslash = "\\";
-  if (relativeDirectory.includes(backslash) || relativeDirectory === "")
+  if (relativeDirectory.includes(backslash))
     throw new Error("Relative directory cannot contain backslashes.");
 
   const separator = "/";
