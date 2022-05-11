@@ -7,7 +7,8 @@ import { Readable } from "stream";
 import { ServerStorage } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
-import { Constants, testRelativeDirectoryValidation } from "./test-templates";
+import { Constants } from "./Constants";
+import { testRelativeDirectoryValidation } from "./test-templates/CommonTests";
 
 const { serverStorage } = config;
 
