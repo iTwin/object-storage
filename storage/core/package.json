@@ -23,7 +23,7 @@
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
-    "test:unit": "mocha lib/test/**/*.test.js --color --exit",
+    "test:unit": "npm run test:unit:frontend",
     "test:unit:backend": "",
     "test:unit:frontend": "npm run test:unit:frontend:local",
     "test:unit:frontend:local": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",

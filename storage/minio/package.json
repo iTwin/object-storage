@@ -22,7 +22,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test:unit": "npm run test:unit:backend",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",

@@ -24,7 +24,7 @@
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
-    "test:unit": "npm run test:unit:backend",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:common": "node lib/test/backend/RunCommonUnitTests.js",
     "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit",
