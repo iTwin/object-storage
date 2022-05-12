@@ -24,7 +24,6 @@
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:unit": "npm run test:unit:backend && npm run test:unit:frontend:local",
     "test:unit:frontend": "npm run test:unit:frontend:local",
-    
     "test:unit:frontend:local": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:frontend:local:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
@@ -59,6 +58,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cspell": "~5.18.5",
+    "cypress": "~9.5.4",
     "dotenv": "~16.0.0",
     "eslint": "~7.32.0",
     "mocha": "^9.2.1",
@@ -70,8 +70,7 @@
     "typescript": "~4.3.0",
     "wait-on": "~6.0.1",
     "webpack": "~5.72.0",
-    "webpack-cli": "~4.9.2",
-    "cypress": "~9.5.4"
+    "webpack-cli": "~4.9.2"
   },
   "engines": {
     "node": ">=12.20 <17.0.0"
