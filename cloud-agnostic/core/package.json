@@ -27,7 +27,8 @@
     "test:integration:backend": "",
     "test:integration:frontend": "",
     "test:unit": "mocha lib/**/*.test.js",
-    "test:unit:backend": ""
+    "test:unit:backend": "",
+    "test:unit:frontend": ""
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {

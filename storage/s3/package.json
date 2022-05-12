@@ -28,7 +28,7 @@
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:common": "node lib/test/backend/RunCommonUnitTests.js",
     "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit",
-
+    "test:unit:frontend": "npm run test:unit:frontend:local",
     "test:unit:frontend:local": "cypress run --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:frontend:local:debug": "cypress open --config-file node_modules/@itwin/object-storage-common-config/cypress.json"
   },
