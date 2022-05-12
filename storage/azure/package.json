@@ -22,7 +22,7 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend:local",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:frontend:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
