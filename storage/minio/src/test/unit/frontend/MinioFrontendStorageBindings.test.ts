@@ -13,7 +13,7 @@ import {
 import {
   MinioFrontendStorage,
   MinioFrontendStorageBindings,
-} from "../../frontend";
+} from "../../../frontend";
 
 describe(`${MinioFrontendStorageBindings.name}`, () => {
   const frontendBindings = new MinioFrontendStorageBindings();

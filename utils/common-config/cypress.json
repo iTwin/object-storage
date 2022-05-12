@@ -2,10 +2,10 @@
   "browser": "chrome",
   "pluginsFile": false,
   "supportFile": false,
+  "fixturesFolder": false,
   "integrationFolder": "lib/test/unit",
   "testFiles": [
-    "frontend/**.test.js",
-    "common/**.test.js"
+    "frontend/**.test.js"
   ],
   "video": false
 }

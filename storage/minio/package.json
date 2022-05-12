@@ -26,6 +26,10 @@
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
+
+    "test:unit:frontend:local": "cypress run --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+    "test:unit:frontend:local:debug": "cypress open --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+
     "test:integration:backend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:backend:runTests",
     "test:integration:backend:runTests": "wait-on tcp:9000 -t 30000 && node lib/test/integration/backend/RunIntegrationTests.js",
     "test:integration:frontend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:frontend:startServerRunTests ",
@@ -71,7 +75,8 @@
     "typescript": "~4.3.0",
     "wait-on": "~6.0.1",
     "webpack": "~5.72.0",
-    "webpack-cli": "~4.9.2"
+    "webpack-cli": "~4.9.2",
+    "cypress": "~9.5.4"
   },
   "engines": {
     "node": ">=12.20 <17.0.0"
