@@ -41,22 +41,6 @@
       ]
     },
     {
-      "type": "pwa-chrome",
-      "request": "attach",
-      "name": "Attach to Cypress Chrome",
-      "port": 9222,
-      "urlFilter": "http://localhost*",
-      "webRoot": "${workspaceFolder}",
-      "sourceMaps": true,
-      "skipFiles": [
-        "cypress_runner.js",
-      ],
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/**",
-        "!**/node_modules/**"
-      ],
-    },
-    {
       "name": "S3 Backend Unit tests",
       "cwd": "${workspaceFolder}/storage/s3",
       "type": "pwa-node",
