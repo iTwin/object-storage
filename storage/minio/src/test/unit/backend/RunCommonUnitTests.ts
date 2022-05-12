@@ -12,7 +12,7 @@ import {
   rebindS3Client,
   rebindS3Server,
   s3TestConfig,
-} from "@itwin/object-storage-s3/lib/test/backend/CommonUnitTestUtils";
+} from "@itwin/object-storage-s3/lib/test/unit/backend/CommonUnitTestUtils";
 
 import { S3ServerStorageBindingsConfig } from "@itwin/object-storage-s3";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";

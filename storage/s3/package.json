@@ -27,7 +27,10 @@
     "test:unit": "npm run test:unit:backend",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:common": "node lib/test/backend/RunCommonUnitTests.js",
-    "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit"
+    "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit",
+
+    "test:unit:frontend:local": "cypress run --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+    "test:unit:frontend:local:debug": "cypress open --config-file node_modules/@itwin/object-storage-common-config/cypress.json"
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
@@ -60,7 +63,8 @@
     "rimraf": "^2.6.2",
     "sinon": "~14.0.0",
     "sort-package-json": "~1.53.1",
-    "typescript": "~4.3.0"
+    "typescript": "~4.3.0",
+    "cypress": "~9.5.4"
   },
   "engines": {
     "node": ">=12.20 <17.0.0"

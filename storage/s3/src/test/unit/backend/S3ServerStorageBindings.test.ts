@@ -20,8 +20,8 @@ import {
   testInvalidServerConfig,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { Types } from "../../common";
-import { S3ClientWrapper } from "../../frontend";
+import { Types } from "../../../common";
+import { S3ClientWrapper } from "../../../frontend";
 import {
   S3PresignedUrlProvider,
   S3ServerStorage,
@@ -29,7 +29,7 @@ import {
   S3ServerStorageBindingsConfig,
   S3ServerStorageConfig,
   S3TransferConfigProvider,
-} from "../../server";
+} from "../../../server";
 
 describe(`${S3ServerStorageBindings.name}`, () => {
   const serverBindings = new S3ServerStorageBindings();
