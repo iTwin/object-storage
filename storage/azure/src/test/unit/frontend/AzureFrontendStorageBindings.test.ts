@@ -14,7 +14,7 @@ import {
   AzureFrontendStorage,
   AzureFrontendStorageBindings,
   BlockBlobClientWrapperFactory,
-} from "../../frontend";
+} from "../../../frontend";
 
 describe(`${AzureFrontendStorageBindings.name}`, () => {
   const frontendBindings = new AzureFrontendStorageBindings();

@@ -1,0 +1,11 @@
+{
+  "browser": "chrome",
+  "pluginsFile": false,
+  "supportFile": false,
+  "integrationFolder": "lib/test/unit",
+  "testFiles": [
+    "frontend/**.test.js",
+    "common/**.test.js"
+  ],
+  "video": false
+}

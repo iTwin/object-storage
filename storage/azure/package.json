@@ -22,7 +22,11 @@
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
-    "test:unit": "npm run test:unit:backend",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend:local",
+    
+    "test:unit:frontend:local": "cypress run --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+    "test:unit:frontend:local:debug": "cypress open --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
@@ -66,7 +70,8 @@
     "typescript": "~4.3.0",
     "wait-on": "~6.0.1",
     "webpack": "~5.72.0",
-    "webpack-cli": "~4.9.2"
+    "webpack-cli": "~4.9.2",
+    "cypress": "~9.5.4"
   },
   "engines": {
     "node": ">=12.20 <17.0.0"
