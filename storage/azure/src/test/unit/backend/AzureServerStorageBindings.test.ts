@@ -11,16 +11,16 @@ import {
   InvalidConfigTestCase,
   testBindings,
   testInvalidServerConfig,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
-import { Types } from "../../common";
+import { Types } from "../../../common";
 import {
   AzureServerStorage,
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   AzureServerStorageConfig,
   BlobServiceClientWrapper,
-} from "../../server";
+} from "../../../server";
 
 describe(`${AzureServerStorageBindings.name}`, () => {
   const serverBindings = new AzureServerStorageBindings();

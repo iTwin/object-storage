@@ -9,6 +9,7 @@ import { inject, injectable } from "inversify";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   BaseDirectory,
   Metadata,
   MultipartUploadData,
@@ -79,6 +80,8 @@ export class S3ServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     const downloadStream = await this._s3Client.download(reference);
     return streamToTransferType(downloadStream, transferType, localPath);
   }
@@ -88,6 +91,7 @@ export class S3ServerStorage extends ServerStorage {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
     const dataToUpload =
@@ -100,6 +104,7 @@ export class S3ServerStorage extends ServerStorage {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
     const dataToUpload =
@@ -135,6 +140,8 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     await this._s3Client.deleteObject(reference);
   }
 
@@ -143,6 +150,8 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async objectExists(reference: ObjectReference): Promise<boolean> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._s3Client.objectExists(reference);
   }
 
@@ -150,12 +159,16 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._s3Client.updateMetadata(reference, metadata);
   }
 
   public async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._s3Client.getObjectProperties(reference);
   }
 
@@ -163,6 +176,8 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiresInSeconds?: number
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._presignedUrlProvider.getDownloadUrl(
       reference,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
@@ -173,6 +188,8 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiresInSeconds?: number
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
+
     return this._presignedUrlProvider.getUploadUrl(
       reference,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
@@ -183,6 +200,8 @@ export class S3ServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
     return this._transferConfigProvider.getDownloadConfig(
       directory,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
@@ -193,6 +212,8 @@ export class S3ServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiresInSeconds?: number
   ): Promise<TransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
     return this._transferConfigProvider.getUploadConfig(
       directory,
       expiresInSeconds ? Math.floor(expiresInSeconds) : undefined

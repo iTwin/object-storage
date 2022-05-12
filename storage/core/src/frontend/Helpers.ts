@@ -147,6 +147,25 @@ export function metadataToHeaders(
   );
 }
 
+export function assertRelativeDirectory(
+  relativeDirectory: string | undefined
+): void {
+  if (!relativeDirectory) return;
+
+  const backslash = "\\";
+  if (relativeDirectory.includes(backslash))
+    throw new Error("Relative directory cannot contain backslashes.");
+
+  const separator = "/";
+  if (
+    relativeDirectory[0] === separator ||
+    relativeDirectory[relativeDirectory.length - 1] === separator
+  )
+    throw new Error(
+      "Relative directory cannot contain slashes at the beginning or the end of the string."
+    );
+}
+
 export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(transferConfig, "transferConfig", "object");
   assertPrimitiveType(

@@ -14,13 +14,13 @@ import {
   Constants,
   DependencyBindingsTestCase,
   testBindings,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import {
   MinioPresignedUrlProvider,
   MinioServerStorage,
   MinioServerStorageBindings,
-} from "../../server";
+} from "../../../server";
 
 describe(`${MinioServerStorageBindings.name}`, () => {
   const serverBindings = new MinioServerStorageBindings();

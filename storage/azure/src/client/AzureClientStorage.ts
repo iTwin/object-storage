@@ -10,6 +10,7 @@ import { inject, injectable } from "inversify";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   ClientStorage,
   FrontendTransferData,
   isLocalUrlTransfer,
@@ -59,6 +60,9 @@ export class AzureClientStorage extends ClientStorage {
   public async download(
     input: UrlDownloadInput | AzureConfigDownloadInput
   ): Promise<TransferData> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
     if (isLocalUrlTransfer(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
@@ -76,6 +80,8 @@ export class AzureClientStorage extends ClientStorage {
   public async upload(
     input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
     const dataToUpload: FrontendTransferData =
@@ -91,6 +97,8 @@ export class AzureClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
     const dataToUpload: FrontendTransferData =

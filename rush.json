@@ -51,13 +51,13 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@itwin/object-storage-tests-frontend",
-      "projectFolder": "tests/frontend-storage",
+      "packageName": "@itwin/object-storage-tests-backend-unit",
+      "projectFolder": "tests/backend-storage-unit",
       "shouldPublish": false
     },
     {
-      "packageName": "@itwin/object-storage-tests-unit",
-      "projectFolder": "tests/unit",
+      "packageName": "@itwin/object-storage-tests-frontend",
+      "projectFolder": "tests/frontend-storage",
       "shouldPublish": false
     },
     {

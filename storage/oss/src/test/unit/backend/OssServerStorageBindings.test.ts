@@ -10,12 +10,12 @@ import {
   Constants,
   DependencyBindingsTestCase,
   testBindings,
-} from "@itwin/object-storage-tests-unit";
+} from "@itwin/object-storage-tests-backend-unit";
 
 import {
   OssServerStorageBindings,
   OssTransferConfigProvider,
-} from "../../server";
+} from "../../../server";
 
 describe(`${OssServerStorageBindings.name}`, () => {
   const serverBindings = new OssServerStorageBindings();

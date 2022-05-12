@@ -6,6 +6,7 @@ import { createReadStream } from "fs";
 
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
   FrontendTransferData,
   instanceOfUrlInput,
   streamToBuffer,
@@ -27,6 +28,8 @@ export class MinioClientStorage extends S3ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
     const dataToUpload: FrontendTransferData =

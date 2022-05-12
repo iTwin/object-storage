@@ -1,4 +1,4 @@
-# @itwin/object-storage-tests-frontend
+# @itwin/object-storage-tests-backend-unit
 
 Copyright © Bentley Systems, Incorporated. All rights reserved. See [LICENSE.md](./LICENSE.md) for license terms and full copyright notice.
 
