@@ -17,7 +17,7 @@ import {
   S3ClientWrapperFactory,
   S3FrontendStorage,
   S3FrontendStorageBindings,
-} from "../frontend";
+} from "../../../frontend";
 
 describe(`${S3FrontendStorageBindings.name}`, () => {
   const frontendBindings = new S3FrontendStorageBindings();

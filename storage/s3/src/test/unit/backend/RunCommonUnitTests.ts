@@ -7,11 +7,11 @@ import { Container } from "inversify";
 
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
-import { S3ClientStorageBindings } from "../../client";
+import { S3ClientStorageBindings } from "../../../client";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,
-} from "../../server";
+} from "../../../server";
 
 import {
   rebindS3Client,

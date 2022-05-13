@@ -20,7 +20,8 @@
     "test:integration:backend": "",
     "test:integration:frontend": "",
     "test:unit": "",
-    "test:unit:backend": ""
+    "test:unit:backend": "",
+    "test:unit:frontend": ""
   },
   "devDependencies": {
     "@itwin/eslint-plugin": "^3.0.0",

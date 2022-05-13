@@ -24,10 +24,12 @@
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
-    "test:unit": "npm run test:unit:backend",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
-    "test:unit:backend:common": "node lib/test/backend/RunCommonUnitTests.js",
-    "test:unit:backend:local": "mocha lib/test/backend/**/*.test.js --color --exit"
+    "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
+    "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
+    "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
+    "test:unit:frontend:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json"
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
@@ -54,6 +56,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cspell": "~5.18.5",
+    "cypress": "~9.5.4",
     "eslint": "~7.32.0",
     "mocha": "^9.2.1",
     "nyc": "^14.0.0",
