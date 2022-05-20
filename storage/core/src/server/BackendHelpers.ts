@@ -10,15 +10,25 @@ import axios from "axios";
 
 import { TransferData, TransferType, UrlDownloadInput } from "../client";
 import {
-  downloadFromUrlFrontendFriendly,
+  downloadFromUrlFrontend,
   FrontendUrlDownloadInput,
-  streamToTransferTypeFrontend,
 } from "../frontend";
 
 function isFrontendDownloadInput(
   input: UrlDownloadInput
 ): input is FrontendUrlDownloadInput {
   return input.transferType !== "local";
+}
+
+export async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks = Array<Uint8Array>();
+    stream.on("data", (data) =>
+      chunks.push(data instanceof Buffer ? data : Buffer.from(data))
+    );
+    stream.on("end", () => resolve(Buffer.concat(chunks)));
+    stream.on("error", reject);
+  });
 }
 
 export async function streamToLocalFile(
@@ -39,7 +49,7 @@ export async function downloadFromUrl(
   input: UrlDownloadInput
 ): Promise<TransferData> {
   if (isFrontendDownloadInput(input))
-    return downloadFromUrlFrontendFriendly(input);
+    return (await downloadFromUrlFrontend(input)) as TransferData;
 
   const { url, localPath } = input;
   assertLocalFile(localPath);
@@ -52,18 +62,33 @@ export async function downloadFromUrl(
   return localPath;
 }
 
+export async function uploadToUrl(
+  url: string,
+  data: TransferData,
+  headers?: Record<string, string>
+): Promise<void> {
+  await axios.put(url, data, {
+    headers,
+  });
+}
+
 export async function streamToTransferType(
   stream: Readable,
   transferType: TransferType,
   localPath?: string
 ): Promise<TransferData> {
-  if (transferType === "local") {
-    assertLocalFile(localPath);
-    await streamToLocalFile(stream, localPath);
-    return localPath;
+  switch(transferType) {
+    case "local":
+      assertLocalFile(localPath);
+      await streamToLocalFile(stream, localPath);
+      return localPath;
+    case "stream":
+      return stream;
+    case "buffer":
+      return streamToBuffer(stream);
+    default:
+      throw new Error(`Type '${transferType}' is not supported`);
   }
-
-  return streamToTransferTypeFrontend(stream, transferType);
 }
 
 export function assertLocalFile(

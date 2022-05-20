@@ -10,7 +10,7 @@ import {
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+import { S3ClientWrapperFactoryFrontend } from "./S3ClientWrapperFactory";
 import { S3FrontendStorage } from "./S3FrontendStorage";
 
 export class S3FrontendStorageBindings extends FrontendStorageDependency {
@@ -19,7 +19,7 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
   public override register(container: Container): void {
     container
       .bind(CoreTypes.Frontend.clientWrapperFactory)
-      .to(S3ClientWrapperFactory)
+      .to(S3ClientWrapperFactoryFrontend)
       .inSingletonScope();
     container.bind(FrontendStorage).to(S3FrontendStorage).inSingletonScope();
   }

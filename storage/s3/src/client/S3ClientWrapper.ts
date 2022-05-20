@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { Readable } from "stream";
+
 import {
   CopyObjectCommand,
   DeleteObjectCommand,
@@ -9,33 +11,28 @@ import {
   HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
-  S3Client,
+  S3Client
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import { inject, injectable } from "inversify";
-
 import {
   BaseDirectory,
   buildObjectKey,
-  buildObjectReference,
-  FrontendMultipartUploadData,
-  FrontendTransferData,
-  Metadata,
-  MultipartUploadOptions,
+  buildObjectReference, Metadata, MultipartUploadData, MultipartUploadOptions,
   ObjectProperties,
-  ObjectReference,
-} from "@itwin/object-storage-core/lib/frontend";
+  ObjectReference, TransferData
+} from "@itwin/object-storage-core";
+import { inject, injectable } from "inversify";
 
 import { Types } from "../common";
 
 @injectable()
-export class S3ClientWrapperFrontend {
+export class S3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
     @inject(Types.bucket) protected readonly _bucket: string
-  ) {}
+  ) { }
 
-  public async download(reference: ObjectReference): Promise<ReadableStream> {
+  public async download(reference: ObjectReference): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Body } = await this._client.send(
       new GetObjectCommand({
@@ -45,16 +42,14 @@ export class S3ClientWrapperFrontend {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    if(Body instanceof ReadableStream)
+    if (Body instanceof Readable)
       return Body;
-    if(Body instanceof Blob)
-      return Body.stream();
     throw new Error("Unexpected body type");
   }
 
   public async upload(
     reference: ObjectReference,
-    data: FrontendTransferData,
+    data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -62,7 +57,7 @@ export class S3ClientWrapperFrontend {
       new PutObjectCommand({
         Bucket: this._bucket,
         Key: buildObjectKey(reference),
-        Body: data instanceof ArrayBuffer ? new Uint8Array(data) : data,
+        Body: data,
         Metadata: metadata,
       })
     );
@@ -71,7 +66,7 @@ export class S3ClientWrapperFrontend {
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
-    data: FrontendMultipartUploadData,
+    data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { queueSize, partSize, metadata } = options ?? {};

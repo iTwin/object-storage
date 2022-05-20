@@ -4,11 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Readable } from "stream";
-
 import { injectable } from "inversify";
 
-import { BaseFrontendStorage } from "./BaseFrontendStorage";
 import {
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
@@ -18,18 +15,18 @@ import {
 } from "./FrontendInterfaces";
 
 @injectable()
-export abstract class FrontendStorage implements BaseFrontendStorage {
+export abstract class FrontendStorage {
   public abstract download(
     input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
       transferType: "buffer";
     }
-  ): Promise<Buffer>;
+  ): Promise<ArrayBuffer>;
 
   public abstract download(
     input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {
       transferType: "stream";
     }
-  ): Promise<Readable>;
+  ): Promise<ReadableStream>;
 
   public abstract upload(
     input: FrontendUrlUploadInput | FrontendConfigUploadInput

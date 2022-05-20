@@ -12,7 +12,6 @@ import {
   assertRelativeDirectory,
   ClientStorage,
   downloadFromUrl,
-  FrontendTransferData,
   instanceOfUrlInput,
   metadataToHeaders,
   streamToTransferType,
@@ -24,16 +23,13 @@ import {
 } from "@itwin/object-storage-core";
 
 import {
-  createAndUseClient,
-  S3ClientWrapper,
-  S3ClientWrapperFactory,
-} from "../frontend";
-
-import {
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "./ClientInterfaces";
+import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+import { S3ClientWrapper } from "./S3ClientWrapper";
+import { createAndUseClient } from "./Helpers";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -90,7 +86,7 @@ export class S3ClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData =
+    const dataToUpload: TransferData =
       typeof data === "string" ? createReadStream(data) : data;
 
     if (instanceOfUrlInput(input)) {
@@ -115,7 +111,7 @@ export class S3ClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData =
+    const dataToUpload: TransferData =
       typeof input.data === "string"
         ? createReadStream(input.data)
         : input.data;

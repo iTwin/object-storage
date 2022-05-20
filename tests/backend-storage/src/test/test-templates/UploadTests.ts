@@ -8,13 +8,9 @@ import { Readable } from "stream";
 import {
   BaseDirectory,
   ClientStorage,
-  FrontendMultipartUploadData,
-  FrontendStorage,
-  FrontendTransferData,
   Metadata,
   MultipartUploadData,
   ObjectReference,
-  TransferConfig,
   TransferData,
 } from "@itwin/object-storage-core";
 
@@ -28,42 +24,20 @@ import {
 
 const { serverStorage } = config;
 
-interface DataToAssertParam {
-  dataToAssert: Buffer;
-}
 
-interface ClientStorageParam {
+interface BaseTestCase {
+  dataToAssert: Buffer;
   testedStorage: ClientStorage;
 }
 
-interface FrontendStorageParam {
-  testedStorage: FrontendStorage;
-}
 
-type ClientTestCase = ClientStorageParam &
-  DataToAssertParam & {
-    dataToUpload: TransferData;
-  };
+type TestCase = BaseTestCase & {
+  dataToUpload: TransferData;
+};
 
-type FrontendTestCase = FrontendStorageParam &
-  DataToAssertParam & {
-    dataToUpload: FrontendTransferData;
-  };
-
-type MultipartClientTestCase = ClientStorageParam &
-  DataToAssertParam & {
-    dataToUpload: MultipartUploadData;
-  };
-
-type MultipartFrontendTestCase = FrontendStorageParam &
-  DataToAssertParam & {
-    dataToUpload: FrontendMultipartUploadData;
-  };
-
-export type TestCase = ClientTestCase | FrontendTestCase;
-export type MultipartTestCase =
-  | MultipartFrontendTestCase
-  | MultipartClientTestCase;
+type MultipartTestCase = BaseTestCase & {
+  dataToUpload: MultipartUploadData;
+};
 
 async function getTestStream(data: string): Promise<Readable> {
   // TODO: there are more simple ways to create a test stream than to write the
@@ -77,7 +51,7 @@ async function getTestStream(data: string): Promise<Readable> {
 }
 
 export async function testUploadFromBufferToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-from-buffer-to-url`
@@ -90,7 +64,7 @@ export async function testUploadFromBufferToUrl(
 }
 
 export async function testUploadFromStreamToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-from-stream-to-url`;
   const stream = await getTestStream(data);
@@ -102,7 +76,7 @@ export async function testUploadFromStreamToUrl(
 }
 
 export async function testUploadWithRelativeDirFromBufferToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-from-buffer-to-url-relative-dir`
@@ -115,7 +89,7 @@ export async function testUploadWithRelativeDirFromBufferToUrl(
 }
 
 export async function testUploadWithRelativeDirFromStreamToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-from-stream-to-url-relative-dir`;
   const stream = await getTestStream(data);
@@ -127,7 +101,7 @@ export async function testUploadWithRelativeDirFromStreamToUrl(
 }
 
 export async function testUploadWithMetadataFromBufferToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-from-buffer-to-url-metadata`
@@ -140,7 +114,7 @@ export async function testUploadWithMetadataFromBufferToUrl(
 }
 
 export async function testUploadWithMetadataFromStreamToUrl(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-from-stream-to-url-metadata`;
   const stream = await getTestStream(data);
@@ -161,7 +135,10 @@ export async function testUploadToUrl(params: TestCase): Promise<void> {
   };
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
-  await callUrlUpload(params, uploadUrl, undefined);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    url: uploadUrl
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -179,7 +156,10 @@ export async function testUploadToUrlWithRelativeDir(
   };
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
-  await callUrlUpload(params, uploadUrl, undefined);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    url: uploadUrl
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -198,14 +178,18 @@ export async function testUploadToUrlWithMetadata(
   };
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
-  await callUrlUpload(params, uploadUrl, metadata);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    url: uploadUrl,
+    metadata,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
   await queryAndAssertMetadata(reference, metadata);
 }
 
 export async function testUploadFromBufferWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-from-buffer-with-config`
@@ -218,7 +202,7 @@ export async function testUploadFromBufferWithConfig(
 }
 
 export async function testUploadFromStreamWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -230,7 +214,7 @@ export async function testUploadFromStreamWithConfig(
 }
 
 export async function testUploadWithRelativeDirFromBufferWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-with-relative-dir-from-buffer-with-config`
@@ -243,7 +227,7 @@ export async function testUploadWithRelativeDirFromBufferWithConfig(
 }
 
 export async function testUploadWithRelativeDirFromStreamWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -255,7 +239,7 @@ export async function testUploadWithRelativeDirFromStreamWithConfig(
 }
 
 export async function testUploadWithMetadataFromBufferWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const buffer = Buffer.from(
     `${testedStorage.constructor.name}-test-upload-with-metadata-from-buffer-with-config`
@@ -268,7 +252,7 @@ export async function testUploadWithMetadataFromBufferWithConfig(
 }
 
 export async function testUploadWithMetadataFromStreamWithConfig(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-with-metadata-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -291,7 +275,11 @@ export async function testUploadWithConfig(params: TestCase): Promise<void> {
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callConfigUpload(params, reference, uploadConfig, undefined);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -311,7 +299,11 @@ export async function testUploadWithRelativeDirWithConfig(
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callConfigUpload(params, reference, uploadConfig, undefined);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -333,14 +325,19 @@ export async function testUploadWithMetadataWithConfig(
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callConfigUpload(params, reference, uploadConfig, metadata);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+    metadata,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
   await queryAndAssertMetadata(reference, metadata);
 }
 
 export async function testMultipartUploadFromStream(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -352,7 +349,7 @@ export async function testMultipartUploadFromStream(
 }
 
 export async function testMultipartUploadWithRelativeDirFromStream(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -364,7 +361,7 @@ export async function testMultipartUploadWithRelativeDirFromStream(
 }
 
 export async function testMultipartUploadWithMetadataFromStream(
-  testedStorage: FrontendStorage | ClientStorage
+  testedStorage: ClientStorage
 ): Promise<void> {
   const data = `${testedStorage.constructor.name}-test-upload-with-relative-dir-from-stream-with-config`;
   const stream = await getTestStream(data);
@@ -389,7 +386,11 @@ export async function testMultipartUpload(
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callUploadInMultipleParts(params, reference, uploadConfig, undefined);
+  await params.testedStorage.uploadInMultipleParts({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -409,7 +410,11 @@ export async function testMultipartUploadWithRelativeDir(
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callUploadInMultipleParts(params, reference, uploadConfig, undefined);
+  await params.testedStorage.uploadInMultipleParts({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
 }
@@ -431,92 +436,13 @@ export async function testMultipartUploadWithMetadata(
   const uploadConfig = await serverStorage.getUploadConfig({
     baseDirectory: testBaseDirectory.baseDirectory,
   });
-  await callUploadInMultipleParts(params, reference, uploadConfig, metadata);
+  await params.testedStorage.uploadInMultipleParts({
+    data: params.dataToUpload,
+    reference,
+    transferConfig: uploadConfig,
+    options: { metadata },
+  });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
   await queryAndAssertMetadata(reference, metadata);
-}
-
-function isClientTestCase(
-  testCase: TestCase | MultipartTestCase
-): testCase is ClientTestCase | MultipartClientTestCase {
-  return testCase.testedStorage instanceof ClientStorage;
-}
-
-function isFrontendTestCase(
-  testCase: TestCase | MultipartTestCase
-): testCase is FrontendTestCase | MultipartFrontendTestCase {
-  return testCase.testedStorage instanceof FrontendStorage;
-}
-
-async function callUrlUpload(
-  params: TestCase,
-  url: string,
-  metadata: Metadata | undefined
-): Promise<void> {
-  if (isClientTestCase(params)) {
-    return params.testedStorage.upload({
-      data: params.dataToUpload,
-      url,
-      metadata,
-    });
-  } else if (isFrontendTestCase(params)) {
-    return params.testedStorage.upload({
-      data: params.dataToUpload,
-      url,
-      metadata,
-    });
-  } else {
-    throw new Error("Invalid test case type.");
-  }
-}
-
-async function callConfigUpload(
-  params: TestCase,
-  reference: ObjectReference,
-  transferConfig: TransferConfig,
-  metadata: Metadata | undefined
-): Promise<void> {
-  if (isClientTestCase(params)) {
-    return params.testedStorage.upload({
-      data: params.dataToUpload,
-      reference,
-      transferConfig,
-      metadata,
-    });
-  } else if (isFrontendTestCase(params)) {
-    return params.testedStorage.upload({
-      data: params.dataToUpload,
-      reference,
-      transferConfig,
-      metadata,
-    });
-  } else {
-    throw new Error("Invalid test case type.");
-  }
-}
-
-async function callUploadInMultipleParts(
-  params: MultipartTestCase,
-  reference: ObjectReference,
-  transferConfig: TransferConfig,
-  metadata: Metadata | undefined
-): Promise<void> {
-  if (isClientTestCase(params)) {
-    return params.testedStorage.uploadInMultipleParts({
-      data: params.dataToUpload,
-      reference,
-      transferConfig,
-      options: { metadata },
-    });
-  } else if (isFrontendTestCase(params)) {
-    return params.testedStorage.uploadInMultipleParts({
-      data: params.dataToUpload,
-      reference,
-      transferConfig,
-      options: { metadata },
-    });
-  } else {
-    throw new Error("Invalid test case type.");
-  }
 }

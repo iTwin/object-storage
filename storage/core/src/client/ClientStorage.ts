@@ -8,8 +8,6 @@ import { Readable } from "stream";
 
 import { injectable } from "inversify";
 
-import { BaseFrontendStorage } from "../frontend";
-
 import {
   ConfigDownloadInput,
   ConfigUploadInput,
@@ -19,7 +17,7 @@ import {
 } from "./ClientInterfaces";
 
 @injectable()
-export abstract class ClientStorage implements BaseFrontendStorage {
+export abstract class ClientStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
   ): Promise<Buffer>;

@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import axios from "axios";
 
 import {
@@ -22,15 +20,8 @@ import {
   TransferConfig,
 } from "./FrontendInterfaces";
 
-export async function streamToBuffer(stream: Readable): Promise<Buffer> {
-  return new Promise<Buffer>((resolve, reject) => {
-    const chunks = Array<Uint8Array>();
-    stream.on("data", (data) =>
-      chunks.push(data instanceof Buffer ? data : Buffer.from(data))
-    );
-    stream.on("end", () => resolve(Buffer.concat(chunks)));
-    stream.on("error", reject);
-  });
+export async function streamToBufferFrontend(stream: ReadableStream): Promise<ArrayBuffer> {
+  return new Response(stream).arrayBuffer();
 }
 
 export function buildObjectKey(reference: {
@@ -85,7 +76,7 @@ export function getTransferTimeInSeconds(
   return seconds > maxTransferTime ? maxTransferTime : seconds;
 }
 
-export async function downloadFromUrlFrontendFriendly(
+export async function downloadFromUrlFrontend(
   input: FrontendUrlDownloadInput
 ): Promise<FrontendTransferData> {
   const { transferType, url } = input;
@@ -95,13 +86,13 @@ export async function downloadFromUrlFrontendFriendly(
       const bufferResponse = await axios.get(url, {
         responseType: "arraybuffer",
       });
-      return bufferResponse.data as Buffer;
+      return bufferResponse.data as ArrayBuffer;
 
     case "stream":
       const streamResponse = await axios.get(url, {
         responseType: "stream",
       });
-      return streamResponse.data as Readable;
+      return streamResponse.data as ReadableStream;
 
     default:
       throw new Error(`Type '${transferType}' is not supported`);
@@ -109,12 +100,12 @@ export async function downloadFromUrlFrontendFriendly(
 }
 
 export async function streamToTransferTypeFrontend(
-  stream: Readable,
+  stream: ReadableStream,
   transferType: FrontendTransferType
 ): Promise<FrontendTransferData> {
   switch (transferType) {
     case "buffer":
-      return streamToBuffer(stream);
+      return streamToBufferFrontend(stream);
 
     case "stream":
       return stream;
@@ -124,7 +115,7 @@ export async function streamToTransferTypeFrontend(
   }
 }
 
-export async function uploadToUrl(
+export async function uploadToUrlFrontend(
   url: string,
   data: FrontendTransferData,
   headers?: Record<string, string>

@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { Readable } from "stream";
 import {
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
   FrontendMultipartUploadData,
-  FrontendTransferData,
   FrontendTransferType,
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
@@ -14,7 +14,7 @@ import {
 } from "../frontend";
 
 export type TransferType = FrontendTransferType | "local";
-export type TransferData = FrontendTransferData | string;
+export type TransferData = Readable | Buffer | string;
 export type MultipartUploadData = FrontendMultipartUploadData | string;
 
 export interface UrlDownloadInput

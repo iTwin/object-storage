@@ -16,7 +16,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 
 import { S3TransferConfig } from "./FrontendInterfaces";
-import { S3ClientWrapper } from "./S3ClientWrapper";
+import { S3ClientWrapperFrontend } from "./S3ClientWrapper";
 
 export function assertS3TransferConfig(
   transferConfig: TransferConfig | S3TransferConfig
@@ -96,8 +96,8 @@ export function createStsClient(config: {
 }
 
 export async function createAndUseClient<TResult>(
-  clientFactory: () => S3ClientWrapper,
-  method: (clientWrapper: S3ClientWrapper) => Promise<TResult>
+  clientFactory: () => S3ClientWrapperFrontend,
+  method: (clientWrapper: S3ClientWrapperFrontend) => Promise<TResult>
 ): Promise<TResult> {
   const clientWrapper = clientFactory();
 

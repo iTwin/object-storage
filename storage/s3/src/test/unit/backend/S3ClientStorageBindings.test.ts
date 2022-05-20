@@ -10,8 +10,7 @@ import {
   testBindings,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { S3ClientStorage, S3ClientStorageBindings } from "../../../client";
-import { S3ClientWrapperFactory } from "../../../frontend";
+import { S3ClientStorage, S3ClientStorageBindings, S3ClientWrapperFactory } from "../../../client";
 
 describe(`${S3ClientStorageBindings.name}`, () => {
   const clientBindings = new S3ClientStorageBindings();

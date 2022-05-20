@@ -14,8 +14,8 @@ import {
   mockPresignedUrlProvider,
   mockTransferConfigProvider,
 } from "@itwin/object-storage-tests-backend-unit";
-
-import { S3ClientWrapper, S3ClientWrapperFactory } from "../../../frontend";
+import { S3ClientWrapper } from "../../../client/S3ClientWrapper";
+import { S3ClientWrapperFactory } from "../../../client/S3ClientWrapperFactory";
 
 const dependencyName = "s3";
 export const s3TestConfig = {

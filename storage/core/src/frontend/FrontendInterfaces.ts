@@ -5,7 +5,7 @@
 import { Readable } from "stream";
 
 export type FrontendTransferType = "buffer" | "stream";
-export type FrontendTransferData = Buffer | Readable;
+export type FrontendTransferData = ArrayBuffer | ReadableStream;
 export type FrontendMultipartUploadData = Readable;
 
 export interface Metadata {

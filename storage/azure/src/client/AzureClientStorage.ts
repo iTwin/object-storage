@@ -84,7 +84,7 @@ export class AzureClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData =
+    const dataToUpload: TransferData =
       typeof input.data === "string"
         ? createReadStream(input.data)
         : input.data;

@@ -16,7 +16,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { Types } from "../common";
-import { createS3Client, createStsClient, S3ClientWrapper } from "../frontend";
+import { createS3Client, createStsClient, S3ClientWrapperFrontend } from "../frontend";
 
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
@@ -56,7 +56,7 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
 
     container.bind(Types.bucket).toConstantValue(config.bucket);
 
-    container.bind(S3ClientWrapper).toSelf().inSingletonScope();
+    container.bind(S3ClientWrapperFrontend).toSelf().inSingletonScope();
 
     container
       .bind<PresignedUrlProvider>(CoreTypes.Server.presignedUrlProvider)
