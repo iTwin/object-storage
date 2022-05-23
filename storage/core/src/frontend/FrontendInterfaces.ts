@@ -2,11 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 export type FrontendTransferType = "buffer" | "stream";
 export type FrontendTransferData = ArrayBuffer | ReadableStream;
-export type FrontendMultipartUploadData = Readable;
+export type FrontendMultipartUploadData = ReadableStream;
 
 export interface Metadata {
   [key: string]: string;
