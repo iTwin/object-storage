@@ -16,7 +16,6 @@ import {
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
-  FrontendTransferData,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -32,13 +31,13 @@ import {
 import { Types } from "../common";
 import {
   AzureTransferConfig,
-  BlockBlobClientWrapper,
   buildBlobName,
   buildExpiresOn,
 } from "../frontend";
 
 import { buildSASParameters } from "./BackendHelpers";
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
+import { BlockBlobClientWrapper } from "../client";
 
 export interface AzureServerStorageConfig {
   accountName: string;
@@ -104,8 +103,7 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
-    const dataToUpload: FrontendTransferData =
-      typeof data === "string" ? createReadStream(data) : data;
+    const dataToUpload: TransferData = typeof data === "string" ? createReadStream(data) : data;
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
@@ -120,7 +118,7 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(reference.relativeDirectory);
     await assertFileNotEmpty(data);
 
-    const dataToUpload: FrontendTransferData =
+    const dataToUpload: TransferData =
       typeof data === "string" ? createReadStream(data) : data;
 
     return new BlockBlobClientWrapper(

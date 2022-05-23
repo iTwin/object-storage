@@ -2,35 +2,25 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
+import { FrontendMultipartUploadData, FrontendTransferData, MultipartUploadOptions, streamToBufferFrontend } from "@itwin/object-storage-core";
 
-import {
-  FrontendMultipartUploadData,
-  FrontendTransferData,
-  MultipartUploadOptions,
-} from "@itwin/object-storage-core/lib/frontend";
-
-export class BlockBlobClientWrapper {
+export class FrontendBlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
-  public async download(): Promise<Readable> {
+  public async download(): Promise<Blob> {
     // TODO: update behavior as per documentation
     const downloadResponse = await this._client.download();
-    return downloadResponse.readableStreamBody! as Readable;
+    return downloadResponse.blobBody!;
   }
 
   public async upload(
     data: FrontendTransferData,
     metadata?: Metadata
   ): Promise<void> {
-    if (data instanceof Buffer) {
-      // TODO: update behavior as per documentation
-      await this._client.upload(data, data.byteLength, { metadata });
-    } else {
-      await this._client.uploadStream(data, undefined, undefined, { metadata });
-    }
+    const dataBuffer = data instanceof ArrayBuffer ? data : await streamToBufferFrontend(data); // _client.uploadStream() is node.js only
+    // TODO: update behavior as per documentation
+    await this._client.upload(dataBuffer, dataBuffer.byteLength, { metadata });
   }
 
   public async uploadInMultipleParts(
@@ -38,17 +28,11 @@ export class BlockBlobClientWrapper {
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { metadata, partSize, queueSize } = options ?? {};
-
-    if (typeof data === "string") {
-      await this._client.uploadFile(data, {
-        metadata,
-        blockSize: partSize,
-        concurrency: queueSize,
-      });
-    } else {
-      await this._client.uploadStream(data, partSize, queueSize, {
-        metadata,
-      });
-    }
+    const dataBuffer = await streamToBufferFrontend(data);
+    await this._client.uploadBrowserData(dataBuffer, {
+      metadata,
+      blockSize: partSize,
+      concurrency: queueSize
+    });
   }
 }

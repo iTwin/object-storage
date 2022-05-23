@@ -7,7 +7,7 @@ import { Container } from "inversify";
 import {
   FrontendStorage,
   FrontendStorageDependency,
-} from "@itwin/object-storage-core/lib/frontend";
+} from "@itwin/object-storage-core";
 
 import {
   Bindable,

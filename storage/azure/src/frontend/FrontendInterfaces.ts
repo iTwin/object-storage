@@ -7,7 +7,7 @@ import {
   FrontendConfigUploadInput,
   FrontendUploadInMultiplePartsInput,
   TransferConfig,
-} from "@itwin/object-storage-core/lib/frontend";
+} from "@itwin/object-storage-core";
 
 export interface AzureTransferConfig extends TransferConfig {
   authentication: string;

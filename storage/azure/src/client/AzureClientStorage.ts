@@ -12,7 +12,6 @@ import {
   assertFileNotEmpty,
   assertRelativeDirectory,
   ClientStorage,
-  FrontendTransferData,
   isLocalUrlTransfer,
   streamToTransferType,
   TransferData,
@@ -21,7 +20,7 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { BlockBlobClientWrapperFactory } from "../frontend";
+import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 
 import {
   AzureConfigDownloadInput,
@@ -101,7 +100,7 @@ export class AzureClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     await assertFileNotEmpty(input.data);
 
-    const dataToUpload: FrontendTransferData =
+    const dataToUpload: TransferData =
       typeof input.data === "string"
         ? createReadStream(input.data)
         : input.data;

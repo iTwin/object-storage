@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable, Stream } from "stream";
+import { Readable } from "stream";
 import {
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,

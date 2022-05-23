@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./AzureFrontendStorage";
 export * from "./AzureFrontendStorageBindings";
-export * from "./BlockBlobClientWrapper";
-export * from "./BlockBlobClientWrapperFactory";
 export * from "./FrontendInterfaces";
 export * from "./Helpers";
+export * from "./FrontendBlockBlobClientWrapperFactory";

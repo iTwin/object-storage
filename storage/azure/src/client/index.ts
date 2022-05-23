@@ -5,3 +5,5 @@
 export * from "./AzureClientStorage";
 export * from "./AzureClientStorageBindings";
 export * from "./ClientInterfaces";
+export * from "./BlockBlobClientWrapper";
+export * from "./BlockBlobClientWrapperFactory";
