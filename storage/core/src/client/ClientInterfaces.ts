@@ -14,7 +14,7 @@ import {
 
 export type TransferType = FrontendTransferType | "local";
 export type TransferData = Readable | Buffer | string;
-export type MultipartUploadData = Stream | string;
+export type MultipartUploadData = Readable | string;
 
 export interface UrlDownloadInput
   extends Omit<FrontendUrlDownloadInput, "transferType"> {
