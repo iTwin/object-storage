@@ -2,22 +2,21 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import {
   FrontendConfigUploadInput,
   FrontendUrlUploadInput,
   instanceOfUrlInput,
   metadataToHeaders,
-  streamToBuffer,
-  uploadToUrl,
+  streamToBufferFrontend,
+  uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
+
 import {
-  S3ClientWrapperFactory,
+  S3ClientWrapperFactoryFrontend,
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
 
-export async function handleMinioUrlUpload(
+export async function handleMinioUrlUploadFrontend(
   input: FrontendUrlUploadInput
 ): Promise<void> {
   // minio responds with 411 error if Content-Length header is not present
@@ -33,17 +32,17 @@ export async function handleMinioUrlUpload(
   };
 
   const dataToUpload =
-    data instanceof Readable ? await streamToBuffer(data) : data;
+    data instanceof ReadableStream ? await streamToBufferFrontend(data) : data;
 
   const size = dataToUpload.byteLength;
 
   headers["Content-Length"] = size.toString();
 
-  return uploadToUrl(url, dataToUpload, headers);
+  return uploadToUrlFrontend(url, dataToUpload, headers);
 }
 
 export class MinioFrontendStorage extends S3FrontendStorage {
-  public constructor(clientWrapperFactory: S3ClientWrapperFactory) {
+  public constructor(clientWrapperFactory: S3ClientWrapperFactoryFrontend) {
     super(clientWrapperFactory);
   }
 
@@ -51,7 +50,7 @@ export class MinioFrontendStorage extends S3FrontendStorage {
     input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void> {
     if (instanceOfUrlInput(input)) {
-      return handleMinioUrlUpload(input);
+      return handleMinioUrlUploadFrontend(input);
     } else {
       return super.upload(input);
     }

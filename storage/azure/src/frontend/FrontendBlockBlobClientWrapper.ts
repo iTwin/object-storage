@@ -3,7 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
-import { FrontendMultipartUploadData, FrontendTransferData, MultipartUploadOptions, streamToBufferFrontend } from "@itwin/object-storage-core";
+import {
+  FrontendMultipartUploadData,
+  FrontendTransferData,
+  MultipartUploadOptions,
+  streamToBufferFrontend
+} from "@itwin/object-storage-core/lib/frontend";
 
 export class FrontendBlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}

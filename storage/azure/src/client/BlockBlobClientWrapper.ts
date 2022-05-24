@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
-import { MultipartUploadData, MultipartUploadOptions, TransferData } from "@itwin/object-storage-core";
+import { TransferData, MultipartUploadData } from "@itwin/object-storage-core/lib/client";
+import { MultipartUploadOptions } from "@itwin/object-storage-core/lib/frontend";
 
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}

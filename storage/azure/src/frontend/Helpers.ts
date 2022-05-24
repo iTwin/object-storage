@@ -8,7 +8,7 @@ import {
   buildObjectKey,
   ObjectReference,
   TransferConfig,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import {
   assertPrimitiveType,
