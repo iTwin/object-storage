@@ -11,11 +11,12 @@ import { createStubInstance } from "sinon";
 import { Types } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
-import { AzureClientStorageBindings, BlockBlobClientWrapperFactory } from "../../../client";
+import { AzureClientStorageBindings } from "../../../client";
 import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   BlobServiceClientWrapper,
+  BlockBlobClientWrapperFactory,
 } from "../../../server";
 
 const dependencyName = "azure";

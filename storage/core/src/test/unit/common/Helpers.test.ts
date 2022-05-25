@@ -9,7 +9,7 @@ import {
   assertRelativeDirectory,
   assertTransferConfig,
   TransferConfig,
-} from "../../../frontend";
+} from "../../../common";
 
 use(chaiAsPromised);
 

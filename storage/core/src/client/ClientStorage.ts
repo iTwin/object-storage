@@ -3,10 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
-
-import { Readable } from "stream";
-
 import { injectable } from "inversify";
+import { Readable } from "stream";
 
 import {
   ConfigDownloadInput,
@@ -14,7 +12,7 @@ import {
   UploadInMultiplePartsInput,
   UrlDownloadInput,
   UrlUploadInput,
-} from "./ClientInterfaces";
+} from "../server";
 
 @injectable()
 export abstract class ClientStorage {

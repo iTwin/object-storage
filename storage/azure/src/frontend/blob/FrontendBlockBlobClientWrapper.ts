@@ -3,10 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
+
+import { MultipartUploadOptions } from "@itwin/object-storage-core/lib/common";
 import {
   FrontendMultipartUploadData,
   FrontendTransferData,
-  MultipartUploadOptions,
   streamToBufferFrontend
 } from "@itwin/object-storage-core/lib/frontend";
 

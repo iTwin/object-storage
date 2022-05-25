@@ -2,31 +2,31 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream, promises } from "fs";
+import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
-
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertRelativeDirectory,
-  ClientStorage,
-  isLocalUrlTransfer,
-  streamToTransferType,
-  TransferData,
   Types,
+  assertRelativeDirectory,
+} from "@itwin/object-storage-core/lib/common";
+import {
+  TransferData,
   UrlDownloadInput,
   UrlUploadInput,
-} from "@itwin/object-storage-core";
-
-import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
-
+  streamToTransferType,
+  isTransferInputLocal,
+} from "@itwin/object-storage-core/lib/server";
+import {
+  ClientStorage,
+}from "@itwin/object-storage-core/lib/client";
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
-} from "./ClientInterfaces";
+} from "../server";
+import { BlockBlobClientWrapperFactory } from "../server/blob";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
@@ -62,12 +62,10 @@ export class AzureClientStorage extends ClientStorage {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
 
-    if (isLocalUrlTransfer(input))
+    if (isTransferInputLocal(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
-    const downloadStream = await this._clientWrapperFactory
-      .create(input)
-      .download();
+    const downloadStream = await this._clientWrapperFactory.create(input).download();
 
     return streamToTransferType(
       downloadStream,
@@ -81,16 +79,8 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
-
-    const dataToUpload: TransferData =
-      typeof input.data === "string"
-        ? createReadStream(input.data)
-        : input.data;
-
-    return this._clientWrapperFactory
-      .create(input)
-      .upload(dataToUpload, input.metadata);
+    
+    return this._clientWrapperFactory.create(input).upload(input.data, input.metadata);
   }
 
   public async uploadInMultipleParts(
@@ -98,15 +88,7 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
 
-    const dataToUpload: TransferData =
-      typeof input.data === "string"
-        ? createReadStream(input.data)
-        : input.data;
-
-    return this._clientWrapperFactory
-      .create(input)
-      .uploadInMultipleParts(dataToUpload, input.options);
+    return this._clientWrapperFactory.create(input).uploadInMultipleParts(input.data, input.options);
   }
 }

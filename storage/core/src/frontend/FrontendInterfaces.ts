@@ -2,77 +2,38 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import {
+  Metadata,
+  ObjectReference,
+  TransferConfig,
+  MultipartUploadOptions,
+  TransferInput,
+  ConfigTransferInput,
+} from "../common";
+
 export type FrontendTransferType = "buffer" | "stream";
 export type FrontendTransferData = ArrayBuffer | ReadableStream;
 export type FrontendMultipartUploadData = ReadableStream;
 
-export interface Metadata {
-  [key: string]: string;
-}
-
-export interface MultipartUploadOptions {
-  partSize?: number;
-  queueSize?: number;
-  metadata?: Metadata;
-}
-
-export interface BaseDirectory {
-  /** Container for Azure. First directory of a prefix for S3. */
-  baseDirectory: string;
-}
-
-export interface ObjectDirectory extends BaseDirectory {
-  /** Additional directories in the path to object. */
-  relativeDirectory?: string;
-}
-
-export interface ObjectReference extends ObjectDirectory {
-  objectName: string;
-}
-
-export interface TransferConfig {
-  baseUrl: string;
-  expiration: Date;
-}
-
-export interface ObjectProperties {
-  reference: ObjectReference;
-  size: number;
-  lastModified: Date;
-  metadata?: Metadata;
-}
-
-export interface FrontendUrlTransferInput {
-  url: string;
-}
-
-export interface FrontendUrlDownloadInput extends FrontendUrlTransferInput {
+export interface FrontendUrlDownloadInput extends TransferInput {
   transferType: FrontendTransferType;
 }
-
-export interface FrontendUrlUploadInput extends FrontendUrlTransferInput {
+export interface FrontendUrlUploadInput extends TransferInput {
   data: FrontendTransferData;
   metadata?: Metadata;
 }
 
-export interface FrontendConfigTransferInput {
-  reference: ObjectReference;
-  transferConfig: TransferConfig;
-}
-
-export interface FrontendConfigDownloadInput
-  extends FrontendConfigTransferInput {
+export interface FrontendConfigDownloadInput extends ConfigTransferInput {
   transferType: FrontendTransferType;
 }
-
-export interface FrontendConfigUploadInput extends FrontendConfigTransferInput {
+export interface FrontendConfigUploadInput extends ConfigTransferInput {
   data: FrontendTransferData;
   metadata?: Metadata;
 }
 
 export interface FrontendUploadInMultiplePartsInput {
-  reference: ObjectReference;
   data: FrontendMultipartUploadData;
+  reference: ObjectReference;
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
 }

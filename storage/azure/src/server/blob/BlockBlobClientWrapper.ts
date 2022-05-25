@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
-import { TransferData, MultipartUploadData } from "@itwin/object-storage-core/lib/client";
-import { MultipartUploadOptions } from "@itwin/object-storage-core/lib/frontend";
+
+import { MultipartUploadOptions } from "@itwin/object-storage-core/lib/common";
+import { TransferData, MultipartUploadData, assertFileNotEmpty } from "@itwin/object-storage-core/lib/server";
 
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
@@ -20,13 +21,14 @@ export class BlockBlobClientWrapper {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
-    if (data instanceof Buffer) {
-      // TODO: update behavior as per documentation
+    if (data instanceof Buffer)
       await this._client.upload(data, data.byteLength, { metadata });
-    } else if (data instanceof Readable) {
+    else if(data instanceof Readable)
       await this._client.uploadStream(data, undefined, undefined, { metadata });
-    } else
-      throw new Error("String TransferData is unsupported");
+    else {
+      await assertFileNotEmpty(data);
+      await this._client.uploadFile(data, { metadata });
+    }
   }
 
   public async uploadInMultipleParts(
@@ -34,16 +36,12 @@ export class BlockBlobClientWrapper {
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { metadata, partSize, queueSize } = options ?? {};
-    if (typeof data === "string") {
-      await this._client.uploadFile(data, {
-        metadata,
-        blockSize: partSize,
-        concurrency: queueSize,
-      });
-    } else {
-      await this._client.uploadStream(data, partSize, queueSize, {
-        metadata,
-      });
+    
+    if(data instanceof Readable)
+      await this._client.uploadStream(data, partSize, queueSize);
+    else {
+      await assertFileNotEmpty(data);
+      await this._client.uploadFile(data, { metadata, blockSize: partSize, concurrency: queueSize });
     }
   }
 }

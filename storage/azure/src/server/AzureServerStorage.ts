@@ -2,42 +2,34 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream, promises } from "fs";
+import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
-
 import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertLocalFile,
   assertRelativeDirectory,
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
   Metadata,
-  MultipartUploadData,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
+} from "@itwin/object-storage-core/lib/common";
+import {
+  assertLocalFile,
+  MultipartUploadData,
   ServerStorage,
   streamToTransferType,
   TransferData,
   TransferType,
-} from "@itwin/object-storage-core";
-
-import { Types } from "../common";
-import {
-  AzureTransferConfig,
-  buildBlobName,
-  buildExpiresOn,
-} from "../frontend";
-
-import { buildSASParameters } from "./BackendHelpers";
-import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
-import { BlockBlobClientWrapper } from "../client";
+} from "@itwin/object-storage-core/lib/server";
+import { Types, AzureTransferConfig, buildBlobName, buildExpiresOn } from "../common";
+import { buildSASParameters } from "./Helpers";
+import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./blob";
 
 export interface AzureServerStorageConfig {
   accountName: string;
@@ -101,13 +93,9 @@ export class AzureServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload: TransferData = typeof data === "string" ? createReadStream(data) : data;
-
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).upload(dataToUpload, metadata);
+    ).upload(data, metadata);
   }
 
   public async uploadInMultipleParts(
@@ -116,14 +104,9 @@ export class AzureServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload: TransferData =
-      typeof data === "string" ? createReadStream(data) : data;
-
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).uploadInMultipleParts(dataToUpload, options);
+    ).uploadInMultipleParts(data, options);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {

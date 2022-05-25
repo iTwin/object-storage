@@ -11,8 +11,7 @@ import {
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
-
-import { FrontendBlockBlobClientWrapperFactory } from "./FrontendBlockBlobClientWrapperFactory";
+import { FrontendBlockBlobClientWrapperFactory } from "./blob";
 import {
   FrontendAzureConfigDownloadInput,
   FrontendAzureConfigUploadInput,
@@ -43,25 +42,19 @@ export class AzureFrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    const downloadBlob = await this._clientWrapperFactory
-      .create(input)
-      .download();
+    const downloadBlob = await this._clientWrapperFactory.create(input).download();
     return downloadBlob.arrayBuffer();
   }
 
   public async upload(
     input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput
   ): Promise<void> {
-    return this._clientWrapperFactory
-      .create(input)
-      .upload(input.data, input.metadata);
+    return this._clientWrapperFactory.create(input).upload(input.data, input.metadata);
   }
 
   public async uploadInMultipleParts(
     input: FrontendAzureUploadInMultiplePartsInput
   ): Promise<void> {
-    return this._clientWrapperFactory
-      .create(input)
-      .uploadInMultipleParts(input.data, input.options);
+    return this._clientWrapperFactory.create(input).uploadInMultipleParts(input.data, input.options);
   }
 }

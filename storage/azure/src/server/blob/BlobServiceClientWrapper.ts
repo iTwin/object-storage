@@ -2,17 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { injectable } from "inversify";
 import {
   BlobClient,
   BlobServiceClient,
   BlockBlobClient,
   ContainerClient,
 } from "@azure/storage-blob";
-import { injectable } from "inversify";
 
-import { ObjectReference } from "@itwin/object-storage-core/lib/frontend";
-
-import { buildBlobName } from "../frontend";
+import { ObjectReference } from "@itwin/object-storage-core/lib/common";
+import { buildBlobName } from "../../common";
 
 @injectable()
 export class BlobServiceClientWrapper {

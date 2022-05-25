@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { BlobServiceClient, StorageSharedKeyCredential } from "@azure/storage-blob";
 import { Container } from "inversify";
+
 import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { ServerStorage, ServerStorageDependency } from "@itwin/object-storage-core/lib/server";
 import { Types } from "../common";
 import { AzureServerStorage, AzureServerStorageConfig } from "./AzureServerStorage";
-import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
+import { BlobServiceClientWrapper } from "./blob/BlobServiceClientWrapper";
 
-export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
-  DependencyConfig;
+export type AzureServerStorageBindingsConfig = AzureServerStorageConfig & DependencyConfig;
 
 export class AzureServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "azure";

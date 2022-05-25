@@ -3,6 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./FrontendInterfaces";
+export * from "./FrontendHelpers";
 export * from "./FrontendStorage";
 export * from "./FrontendStorageDependency";
-export * from "./Helpers";
