@@ -5,11 +5,8 @@
 import { Container } from "inversify";
 import { Client } from "minio";
 
-import {
-  PresignedUrlProvider,
-  ServerStorage,
-  Types,
-} from "@itwin/object-storage-core";
+import { Types } from "@itwin/object-storage-core/lib/common";
+import { PresignedUrlProvider, ServerStorage } from "@itwin/object-storage-core/lib/server";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,

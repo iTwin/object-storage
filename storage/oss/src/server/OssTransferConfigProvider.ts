@@ -10,8 +10,8 @@ import { inject, injectable } from "inversify";
 import {
   buildObjectDirectoryString,
   ObjectDirectory,
-  TransferConfigProvider,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/common";
+import { TransferConfigProvider } from "@itwin/object-storage-core/lib/server";
 import {
   S3ServerStorageConfig,
   S3TransferConfig,

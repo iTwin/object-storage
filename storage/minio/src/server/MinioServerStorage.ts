@@ -2,11 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  ObjectReference,
-  PresignedUrlProvider,
-  TransferConfigProvider,
-} from "@itwin/object-storage-core";
+import { ObjectReference } from "@itwin/object-storage-core/lib/common";
+import { PresignedUrlProvider, TransferConfigProvider  } from "@itwin/object-storage-core/lib/server"
 import { S3ClientWrapper, S3ServerStorage } from "@itwin/object-storage-s3";
 
 export class MinioServerStorage extends S3ServerStorage {

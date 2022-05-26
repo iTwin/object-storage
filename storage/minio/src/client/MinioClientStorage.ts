@@ -3,56 +3,23 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { createReadStream } from "fs";
+import { Readable } from "stream";
 
 import {
-  UrlUploadInput,
-  TransferData
-} from "@itwin/object-storage-core/lib/client";
+  metadataToHeaders,
+  instanceOfTransferInput
+} from "@itwin/object-storage-core/lib/common";
 import {
   streamToBuffer,
   uploadToUrl,
-  assertFileNotEmpty
+  assertFileNotEmpty,
+  UrlUploadInput
 } from "@itwin/object-storage-core/lib/server";
-import {
-  metadataToHeaders,
-  assertRelativeDirectory,
-  instanceOfUrlInput
-} from "@itwin/object-storage-core/lib/frontend";
-
 import {
   S3ClientStorage,
   S3ClientWrapperFactory,
   S3ConfigUploadInput,
 } from "@itwin/object-storage-s3";
-import { Readable } from "stream";
-
-export async function handleMinioUrlUpload(
-  input: UrlUploadInput
-): Promise<void> {
-  // minio responds with 411 error if Content-Length header is not present
-  // used streamToBuffer to get the length before uploading for streams
-  const { data, metadata, url } = input;
-
-  const metaHeaders = metadata
-    ? metadataToHeaders(metadata, "x-amz-meta-")
-    : undefined;
-
-  const headers = {
-    ...metaHeaders,
-  };
-
-  if(typeof data === "string")
-    throw new Error("TransferData of type string is not supported");
-
-  const dataToUpload = data instanceof Readable ? await streamToBuffer(data) : data;
-
-  const size = dataToUpload.byteLength;
-
-  headers["Content-Length"] = size.toString();
-
-  return uploadToUrl(url, dataToUpload, headers);
-}
-
 
 export class MinioClientStorage extends S3ClientStorage {
   constructor(clientWrapperFactory: S3ClientWrapperFactory) {
@@ -62,19 +29,33 @@ export class MinioClientStorage extends S3ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
-
-    const dataToUpload: TransferData =
-      typeof input.data === "string"
-        ? await streamToBuffer(createReadStream(input.data))
-        : input.data;
-
-    if (instanceOfUrlInput(input)) {
-      return handleMinioUrlUpload({ ...input, data: dataToUpload });
-    } else {
+    if (instanceOfTransferInput(input))
+      return handleMinioUrlUpload(input);
+    else
       return super.upload(input);
-    }
   }
+}
+
+export async function handleMinioUrlUpload(
+  input: UrlUploadInput
+): Promise<void> {
+  // minio responds with 411 error if Content-Length header is not present
+  // used streamToBuffer to get the length before uploading for streams
+  const { data, metadata, url } = input;
+
+  let dataToUpload: Buffer;
+  if(data instanceof Buffer)
+    dataToUpload = data
+  else if(data instanceof Readable)
+    dataToUpload = await streamToBuffer(data);
+  else {
+    assertFileNotEmpty(data);
+    dataToUpload = await streamToBuffer( createReadStream(data) );
+  }
+  const metaHeaders = metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined;
+  const headers = {
+    ...metaHeaders,
+    "Content-Length": dataToUpload.byteLength.toString()
+  };
+  return uploadToUrl(url, dataToUpload, headers);
 }

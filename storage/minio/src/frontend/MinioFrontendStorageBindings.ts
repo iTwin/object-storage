@@ -6,7 +6,6 @@ import { Container } from "inversify";
 
 import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
 import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
-
 import { MinioFrontendStorage } from "./MinioFrontendStorage";
 
 export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
