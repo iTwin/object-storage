@@ -21,8 +21,8 @@ import {
 } from "@itwin/object-storage-tests-backend-unit";
 
 import { Types } from "../../../common";
-import { S3ClientWrapperFrontend } from "../../../frontend";
 import {
+  S3ClientWrapper,
   S3PresignedUrlProvider,
   S3ServerStorage,
   S3ServerStorageBindings,
@@ -131,10 +131,10 @@ describe(`${S3ServerStorageBindings.name}`, () => {
         expectedCtor: String,
       },
       {
-        testedClassIdentifier: S3ClientWrapperFrontend.name,
+        testedClassIdentifier: S3ClientWrapper.name,
         testedFunction: (container: Container) =>
-          container.get(S3ClientWrapperFrontend),
-        expectedCtor: S3ClientWrapperFrontend,
+          container.get(S3ClientWrapper),
+        expectedCtor: S3ClientWrapper,
       },
       {
         testedClassIdentifier: CoreTypes.Server.presignedUrlProvider.toString(),

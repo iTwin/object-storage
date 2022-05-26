@@ -5,14 +5,15 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { TransferConfig } from "@itwin/object-storage-core";
+import { TransferConfig } from "@itwin/object-storage-core/lib/common";
 
-import { assertS3TransferConfig, S3TransferConfig } from "../../../common";
+import { S3TransferConfig } from "../../../common";
+import { assertS3TransferConfig } from "../../../common/Helpers";
 
 use(chaiAsPromised);
 
 describe("Helper functions", () => {
-  describe(`${assertS3TransferConfig.name}()`, () => {
+  describe("assertS3TransferConfig()", () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "http://foo.bar",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
