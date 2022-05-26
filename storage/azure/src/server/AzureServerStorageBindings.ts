@@ -9,7 +9,7 @@ import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { ServerStorage, ServerStorageDependency } from "@itwin/object-storage-core/lib/server";
 import { Types } from "../common";
 import { AzureServerStorage, AzureServerStorageConfig } from "./AzureServerStorage";
-import { BlobServiceClientWrapper } from "./blob/BlobServiceClientWrapper";
+import { BlobServiceClientWrapper } from "./wrappers/BlobServiceClientWrapper";
 
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig & DependencyConfig;
 

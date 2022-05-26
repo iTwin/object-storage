@@ -5,13 +5,11 @@
 import { Container } from "inversify";
 
 import {
+  Types as CoreTypes,
   ClientStorage,
   ClientStorageDependency,
-  Types as CoreTypes,
 } from "@itwin/object-storage-core";
-
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
-
+import { S3ClientWrapperFactory } from "../server";
 import { S3ClientStorage } from "./S3ClientStorage";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {

@@ -2,31 +2,30 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream } from "fs";
 import { Readable } from "stream";
-
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertRelativeDirectory,
   BaseDirectory,
   Metadata,
-  MultipartUploadData,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
+  Types,
+  TransferConfig,
+  assertRelativeDirectory,
+} from "@itwin/object-storage-core/lib/common";
+import {
+  MultipartUploadData,
   PresignedUrlProvider,
   ServerStorage,
   streamToTransferType,
-  TransferConfig,
   TransferConfigProvider,
   TransferData,
   TransferType,
-  Types,
-} from "@itwin/object-storage-core";
-import { S3ClientWrapper } from "../client/S3ClientWrapper";
+} from "@itwin/object-storage-core/lib/server";
+import { S3ClientWrapper } from "./wrappers";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
@@ -80,7 +79,6 @@ export class S3ServerStorage extends ServerStorage {
     localPath?: string
   ): Promise<TransferData> {
     assertRelativeDirectory(reference.relativeDirectory);
-
     const downloadStream = await this._s3Client.download(reference);
     return streamToTransferType(downloadStream, transferType, localPath);
   }
@@ -91,11 +89,7 @@ export class S3ServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload =
-      typeof data === "string" ? createReadStream(data) : data;
-    return this._s3Client.upload(reference, dataToUpload, metadata);
+    return this._s3Client.upload(reference, data, metadata);
   }
 
   public async uploadInMultipleParts(
@@ -104,13 +98,9 @@ export class S3ServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload =
-      typeof data === "string" ? createReadStream(data) : data;
     return this._s3Client.uploadInMultipleParts(
       reference,
-      dataToUpload,
+      data,
       options
     );
   }

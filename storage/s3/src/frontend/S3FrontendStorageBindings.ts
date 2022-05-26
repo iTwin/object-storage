@@ -9,8 +9,7 @@ import {
   FrontendStorage,
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";
-
-import { S3ClientWrapperFactoryFrontend } from "./S3ClientWrapperFactory";
+import { S3ClientWrapperFactoryFrontend } from "./wrappers";
 import { S3FrontendStorage } from "./S3FrontendStorage";
 
 export class S3FrontendStorageBindings extends FrontendStorageDependency {

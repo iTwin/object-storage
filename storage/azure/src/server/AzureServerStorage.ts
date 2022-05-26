@@ -29,7 +29,7 @@ import {
 } from "@itwin/object-storage-core/lib/server";
 import { Types, AzureTransferConfig, buildBlobName, buildExpiresOn } from "../common";
 import { buildSASParameters } from "./Helpers";
-import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./blob";
+import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
 export interface AzureServerStorageConfig {
   accountName: string;

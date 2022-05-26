@@ -2,20 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { inject, injectable } from "inversify";
 
-import {
-  buildObjectKey,
-  ObjectReference,
-  PresignedUrlProvider,
-} from "@itwin/object-storage-core";
-
+import { ObjectReference, buildObjectKey } from "@itwin/object-storage-core/lib/common";
+import { PresignedUrlProvider } from "@itwin/object-storage-core/lib/server";
 import { Types } from "../common";
 
 @injectable()

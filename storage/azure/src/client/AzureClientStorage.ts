@@ -26,7 +26,7 @@ import {
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
 } from "../server";
-import { BlockBlobClientWrapperFactory } from "../server/blob";
+import { BlockBlobClientWrapperFactory } from "../server/wrappers";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {

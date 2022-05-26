@@ -2,34 +2,34 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream } from "fs";
 import { Readable } from "stream";
-
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
+  Types,
   assertRelativeDirectory,
-  ClientStorage,
-  downloadFromUrl,
-  instanceOfUrlInput,
   metadataToHeaders,
+  instanceOfTransferInput
+} from "@itwin/object-storage-core/lib/common";
+import {
+  ClientStorage
+} from "@itwin/object-storage-core/lib/client";
+import {
+  downloadFromUrl,
   streamToTransferType,
   TransferData,
-  Types,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
-} from "@itwin/object-storage-core";
-
+} from "@itwin/object-storage-core/lib/server";
 import {
+  S3ClientWrapper,
+  S3ClientWrapperFactory,
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
-} from "./ClientInterfaces";
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
-import { S3ClientWrapper } from "./S3ClientWrapper";
-import { createAndUseClient } from "./Helpers";
+  createAndUseClient
+} from "../server";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -59,9 +59,10 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
+    
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (instanceOfUrlInput(input)) return downloadFromUrl(input);
+    if (instanceOfTransferInput(input)) return downloadFromUrl(input);
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -84,24 +85,22 @@ export class S3ClientStorage extends ClientStorage {
 
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
 
-    const dataToUpload: TransferData =
-      typeof data === "string" ? createReadStream(data) : data;
-
-    if (instanceOfUrlInput(input)) {
+    if( instanceOfTransferInput(input) )
       return uploadToUrl(
         input.url,
-        dataToUpload,
+        input.data,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
-    }
-
-    return createAndUseClient(
-      () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.upload(input.reference, dataToUpload, metadata)
-    );
+    else
+      return createAndUseClient(
+        () => this._clientWrapperFactory.create(input.transferConfig),
+        async (clientWrapper: S3ClientWrapper) => clientWrapper.upload(
+          input.reference,
+          data,
+          metadata
+        )
+      );
   }
 
   public async uploadInMultipleParts(
@@ -109,19 +108,13 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
-
-    const dataToUpload: TransferData =
-      typeof input.data === "string"
-        ? createReadStream(input.data)
-        : input.data;
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
-          dataToUpload,
+          input.data,
           input.options
         )
     );

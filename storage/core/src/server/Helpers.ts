@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createWriteStream, promises } from "fs";
+import { createReadStream, createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 import axios from "axios";
@@ -83,6 +83,10 @@ export async function uploadToUrl(
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
+  if(typeof data === "string") {
+    assertFileNotEmpty(data);
+    data = createReadStream(data);
+  }
   await axios.put(url, data, {
     headers,
   });

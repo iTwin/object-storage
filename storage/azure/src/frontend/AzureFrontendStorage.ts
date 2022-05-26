@@ -11,7 +11,7 @@ import {
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
-import { FrontendBlockBlobClientWrapperFactory } from "./blob";
+import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 import {
   FrontendAzureConfigDownloadInput,
   FrontendAzureConfigUploadInput,

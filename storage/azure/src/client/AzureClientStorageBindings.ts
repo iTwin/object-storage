@@ -9,7 +9,7 @@ import {
   ClientStorage,
   ClientStorageDependency,
 } from "@itwin/object-storage-core/lib/client";
-import { BlockBlobClientWrapperFactory } from "../server/blob/BlockBlobClientWrapperFactory";
+import { BlockBlobClientWrapperFactory } from "../server/wrappers/BlockBlobClientWrapperFactory";
 import { AzureClientStorage } from "./AzureClientStorage";
 
 export class AzureClientStorageBindings extends ClientStorageDependency {
