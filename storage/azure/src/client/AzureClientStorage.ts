@@ -17,6 +17,7 @@ import {
   UrlUploadInput,
   streamToTransferType,
   isTransferInputLocal,
+  assertFileNotEmpty,
 } from "@itwin/object-storage-core/lib/server";
 import {
   ClientStorage,
@@ -79,6 +80,8 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
+    if (typeof input.data === "string")
+      await assertFileNotEmpty(input.data);
     
     return this._clientWrapperFactory.create(input).upload(input.data, input.metadata);
   }
@@ -88,6 +91,8 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
+    if (typeof input.data === "string")
+      await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory.create(input).uploadInMultipleParts(input.data, input.options);
   }

@@ -21,6 +21,7 @@ import {
 } from "@itwin/object-storage-core/lib/common";
 import {
   assertLocalFile,
+  assertFileNotEmpty,
   MultipartUploadData,
   ServerStorage,
   streamToTransferType,
@@ -93,6 +94,9 @@ export class AzureServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
+    if(typeof data === "string")
+      await assertFileNotEmpty(data);
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).upload(data, metadata);
@@ -104,6 +108,9 @@ export class AzureServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
+    if(typeof data === "string")
+      await assertFileNotEmpty(data);
+      
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).uploadInMultipleParts(data, options);
