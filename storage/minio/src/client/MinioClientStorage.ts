@@ -49,7 +49,7 @@ export async function handleMinioUrlUpload(
   else if(data instanceof Readable)
     dataToUpload = await streamToBuffer(data);
   else {
-    assertFileNotEmpty(data);
+    await assertFileNotEmpty(data);
     dataToUpload = await streamToBuffer( createReadStream(data) );
   }
   const metaHeaders = metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined;

@@ -23,14 +23,12 @@ import {
 } from "@itwin/object-storage-core/lib/common";
 import {
   TransferData,
-  assertFileNotEmpty,
   MultipartUploadData, 
 } from "@itwin/object-storage-core/lib/server";
 
 import { inject, injectable } from "inversify";
 
 import { Types } from "../../common";
-import { createReadStream } from "fs";
 
 @injectable()
 export class S3ClientWrapper {
@@ -59,10 +57,6 @@ export class S3ClientWrapper {
     data: TransferData,
     metadata?: Metadata
   ): Promise<void> {
-    if(typeof data === "string") {
-      assertFileNotEmpty(data);
-      data = createReadStream(data);
-    }
     /* eslint-disable @typescript-eslint/naming-convention */
     await this._client.send(
       new PutObjectCommand({
@@ -80,10 +74,6 @@ export class S3ClientWrapper {
     data: MultipartUploadData,
     options?: MultipartUploadOptions
   ): Promise<void> {
-    if(typeof data === "string") {
-      assertFileNotEmpty(data);
-      data = createReadStream(data);
-    }
     const { queueSize, partSize, metadata } = options ?? {};
 
     /* eslint-disable @typescript-eslint/naming-convention */

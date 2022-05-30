@@ -17,6 +17,7 @@ import {
 import {
   downloadFromUrl,
   streamToTransferType,
+  assertFileNotEmpty,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
@@ -30,6 +31,7 @@ import {
   S3UploadInMultiplePartsInput,
   createAndUseClient
 } from "../server";
+import { createReadStream } from "fs";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -59,10 +61,10 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (instanceOfTransferInput(input)) return downloadFromUrl(input);
+    if (instanceOfTransferInput(input))
+      return downloadFromUrl(input);
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -80,16 +82,20 @@ export class S3ClientStorage extends ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    const { data } = input;
+    let { data } = input;
     const { metadata } = input;
 
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
+    if(typeof data === "string") {
+      await assertFileNotEmpty(data);
+      data = createReadStream(data);
+    }
 
     if( instanceOfTransferInput(input) )
       return uploadToUrl(
         input.url,
-        input.data,
+        data,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
     else
@@ -106,15 +112,20 @@ export class S3ClientStorage extends ClientStorage {
   public async uploadInMultipleParts(
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
+    let { data } = input;
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
+    if(typeof data === "string") {
+      await assertFileNotEmpty(data);
+      data = createReadStream(data);
+    }
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
-          input.data,
+          data,
           input.options
         )
     );

@@ -21,11 +21,13 @@ import {
   PresignedUrlProvider,
   ServerStorage,
   streamToTransferType,
+  assertFileNotEmpty,
   TransferConfigProvider,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core/lib/server";
 import { S3ClientWrapper } from "./wrappers";
+import { createReadStream } from "fs";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
@@ -89,6 +91,10 @@ export class S3ServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
+    if(typeof data === "string") {
+      await assertFileNotEmpty(data);
+      data = createReadStream(data);
+    }
     return this._s3Client.upload(reference, data, metadata);
   }
 
@@ -98,6 +104,10 @@ export class S3ServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
+    if(typeof data === "string") {
+      await assertFileNotEmpty(data);
+      data = createReadStream(data);
+    }
     return this._s3Client.uploadInMultipleParts(
       reference,
       data,

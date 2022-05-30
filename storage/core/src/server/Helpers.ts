@@ -68,15 +68,23 @@ export async function streamToTransferType(
 }
 
 export async function downloadFromUrl(input: UrlDownloadInput): Promise<TransferData> {
-  const { url, localPath } = input;
-  assertLocalFile(localPath);
+  const { transferType, url } = input;
+  switch(transferType) {
+    case "buffer":
+      return (await axios.get(url, { responseType: "arraybuffer" })).data as Buffer;
+    case "stream":
+      return (await axios.get(url, { responseType: "stream" })).data as Readable;
+    case "local":
+      const localPath = input.localPath;
+      assertLocalFile(localPath);
+      
+      const stream = (await axios.get(url, { responseType: "stream" })).data as Readable;
+      await streamToLocalFile(stream, localPath);
 
-  const localResponse = await axios.get(url, {
-    responseType: "stream",
-  });
-  await streamToLocalFile(localResponse.data, localPath);
-
-  return localPath;
+      return localPath;
+    default:
+      throw new Error(`Type ${input.transferType} is not supported`);
+  }
 }
 export async function uploadToUrl(
   url: string,
