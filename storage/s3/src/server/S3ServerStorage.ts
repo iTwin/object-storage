@@ -2,32 +2,34 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { createReadStream } from "fs";
 import { Readable } from "stream";
+
 import { inject, injectable } from "inversify";
 
 import {
+  assertRelativeDirectory,
   BaseDirectory,
   Metadata,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
-  Types,
   TransferConfig,
-  assertRelativeDirectory,
+  Types,
 } from "@itwin/object-storage-core/lib/common";
 import {
+  assertFileNotEmpty,
   MultipartUploadData,
   PresignedUrlProvider,
   ServerStorage,
   streamToTransferType,
-  assertFileNotEmpty,
   TransferConfigProvider,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core/lib/server";
+
 import { S3ClientWrapper } from "./wrappers";
-import { createReadStream } from "fs";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
@@ -91,11 +93,14 @@ export class S3ServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    if(typeof data === "string") {
+    let dataToUpload: Readable | Buffer;
+    if (typeof data === "string") {
       await assertFileNotEmpty(data);
-      data = createReadStream(data);
+      dataToUpload = createReadStream(data);
+    } else {
+      dataToUpload = data;
     }
-    return this._s3Client.upload(reference, data, metadata);
+    return this._s3Client.upload(reference, dataToUpload, metadata);
   }
 
   public async uploadInMultipleParts(
@@ -104,13 +109,16 @@ export class S3ServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    if(typeof data === "string") {
+    let dataToUpload: Buffer | Readable;
+    if (typeof data === "string") {
       await assertFileNotEmpty(data);
-      data = createReadStream(data);
+      dataToUpload = createReadStream(data);
+    } else {
+      dataToUpload = data;
     }
     return this._s3Client.uploadInMultipleParts(
       reference,
-      data,
+      dataToUpload,
       options
     );
   }

@@ -2,36 +2,36 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { createReadStream } from "fs";
 import { Readable } from "stream";
+
 import { inject, injectable } from "inversify";
 
+import { ClientStorage } from "@itwin/object-storage-core/lib/client";
 import {
-  Types,
   assertRelativeDirectory,
+  instanceOfTransferInput,
   metadataToHeaders,
-  instanceOfTransferInput
+  Types,
 } from "@itwin/object-storage-core/lib/common";
 import {
-  ClientStorage
-} from "@itwin/object-storage-core/lib/client";
-import {
+  assertFileNotEmpty,
   downloadFromUrl,
   streamToTransferType,
-  assertFileNotEmpty,
   TransferData,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core/lib/server";
+
 import {
+  createAndUseClient,
   S3ClientWrapper,
   S3ClientWrapperFactory,
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
-  createAndUseClient
 } from "../server";
-import { createReadStream } from "fs";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -63,8 +63,7 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<TransferData> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (instanceOfTransferInput(input))
-      return downloadFromUrl(input);
+    if (instanceOfTransferInput(input)) return downloadFromUrl(input);
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -87,12 +86,12 @@ export class S3ClientStorage extends ClientStorage {
 
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if(typeof data === "string") {
+    if (typeof data === "string") {
       await assertFileNotEmpty(data);
       data = createReadStream(data);
     }
 
-    if( instanceOfTransferInput(input) )
+    if (instanceOfTransferInput(input))
       return uploadToUrl(
         input.url,
         data,
@@ -101,11 +100,8 @@ export class S3ClientStorage extends ClientStorage {
     else
       return createAndUseClient(
         () => this._clientWrapperFactory.create(input.transferConfig),
-        async (clientWrapper: S3ClientWrapper) => clientWrapper.upload(
-          input.reference,
-          data,
-          metadata
-        )
+        async (clientWrapper: S3ClientWrapper) =>
+          clientWrapper.upload(input.reference, data, metadata)
       );
   }
 
@@ -115,7 +111,7 @@ export class S3ClientStorage extends ClientStorage {
     let { data } = input;
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if(typeof data === "string") {
+    if (typeof data === "string") {
       await assertFileNotEmpty(data);
       data = createReadStream(data);
     }

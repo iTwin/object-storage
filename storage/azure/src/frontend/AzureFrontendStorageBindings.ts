@@ -9,8 +9,9 @@ import {
   FrontendStorage,
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";
-import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
+
 import { AzureFrontendStorage } from "./AzureFrontendStorage";
+import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 export class AzureFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "azure";

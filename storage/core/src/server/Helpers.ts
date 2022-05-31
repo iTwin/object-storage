@@ -5,12 +5,21 @@
 import { createReadStream, createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
+
 import axios from "axios";
 
-import { ConfigDownloadInput, TransferData, TransferType, UrlDownloadInput } from "./Interfaces";
 import { ConfigTransferInput, TransferInput } from "../common";
 
-export function assertLocalFile(localPath: string | undefined): asserts localPath is string {
+import {
+  ConfigDownloadInput,
+  TransferData,
+  TransferType,
+  UrlDownloadInput,
+} from "./Interfaces";
+
+export function assertLocalFile(
+  localPath: string | undefined
+): asserts localPath is string {
   if (!localPath) throw new Error("Specify localPath");
 }
 export async function assertFileNotEmpty(filePath: string): Promise<void> {
@@ -21,8 +30,10 @@ export async function assertFileNotEmpty(filePath: string): Promise<void> {
 }
 export function isTransferInputLocal(
   transfer: TransferInput | ConfigTransferInput
-): transfer is ( UrlDownloadInput  | ConfigDownloadInput ) & { localPath: string } {
-  return "localPath" in transfer && transfer["localPath"] !== undefined;
+): transfer is (UrlDownloadInput | ConfigDownloadInput) & {
+  localPath: string;
+} {
+  return "localPath" in transfer && transfer.localPath !== undefined;
 }
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -53,7 +64,7 @@ export async function streamToTransferType(
   transferType: TransferType,
   localPath?: string
 ): Promise<TransferData> {
-  switch(transferType) {
+  switch (transferType) {
     case "local":
       assertLocalFile(localPath);
       await streamToLocalFile(stream, localPath);
@@ -67,18 +78,23 @@ export async function streamToTransferType(
   }
 }
 
-export async function downloadFromUrl(input: UrlDownloadInput): Promise<TransferData> {
+export async function downloadFromUrl(
+  input: UrlDownloadInput
+): Promise<TransferData> {
   const { transferType, url } = input;
-  switch(transferType) {
+  switch (transferType) {
     case "buffer":
-      return (await axios.get(url, { responseType: "arraybuffer" })).data as Buffer;
+      return (await axios.get(url, { responseType: "arraybuffer" }))
+        .data as Buffer;
     case "stream":
-      return (await axios.get(url, { responseType: "stream" })).data as Readable;
+      return (await axios.get(url, { responseType: "stream" }))
+        .data as Readable;
     case "local":
       const localPath = input.localPath;
       assertLocalFile(localPath);
-      
-      const stream = (await axios.get(url, { responseType: "stream" })).data as Readable;
+
+      const stream = (await axios.get(url, { responseType: "stream" }))
+        .data as Readable;
       await streamToLocalFile(stream, localPath);
 
       return localPath;
@@ -91,11 +107,14 @@ export async function uploadToUrl(
   data: TransferData,
   headers?: Record<string, string>
 ): Promise<void> {
-  if(typeof data === "string") {
-    assertFileNotEmpty(data);
-    data = createReadStream(data);
+  let dataToUpload: Readable | Buffer;
+  if (typeof data === "string") {
+    await assertFileNotEmpty(data);
+    dataToUpload = createReadStream(data);
+  } else {
+    dataToUpload = data;
   }
-  await axios.put(url, data, {
+  await axios.put(url, dataToUpload, {
     headers,
   });
 }

@@ -2,11 +2,23 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { assertInstanceType, assertPrimitiveType } from "@itwin/cloud-agnostic-core";
+import {
+  assertInstanceType,
+  assertPrimitiveType,
+} from "@itwin/cloud-agnostic-core";
 
-import { Metadata, ObjectDirectory, ObjectReference, TransferConfig, TransferInput } from "./Interfaces";
+import {
+  Metadata,
+  ObjectDirectory,
+  ObjectReference,
+  TransferConfig,
+  TransferInput,
+} from "./Interfaces";
 
-export function metadataToHeaders(metadata: Metadata, prefix: string): Record<string, string> {
+export function metadataToHeaders(
+  metadata: Metadata,
+  prefix: string
+): Record<string, string> {
   return Object.keys(metadata).reduce(
     (acc: Record<string, string>, suffix: string) => ({
       ...acc,
@@ -18,9 +30,12 @@ export function metadataToHeaders(metadata: Metadata, prefix: string): Record<st
 
 export function buildObjectKey(ref: ObjectReference): string {
   const relative = ref.relativeDirectory ? `/${ref.relativeDirectory}` : "";
-  return `${ref.baseDirectory}${relative}/${ref.objectName}`
+  return `${ref.baseDirectory}${relative}/${ref.objectName}`;
 }
-export function buildObjectReference(objectKey: string, separator = "/"): ObjectReference {
+export function buildObjectReference(
+  objectKey: string,
+  separator = "/"
+): ObjectReference {
   const parts = objectKey.split(separator).filter((key) => key);
   const lastIndex = parts.length - 1;
 
@@ -39,7 +54,9 @@ export function buildObjectDirectoryString(directory: ObjectDirectory): string {
   return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""}`;
 }
 
-export function assertRelativeDirectory(relativeDirectory: string | undefined): void {
+export function assertRelativeDirectory(
+  relativeDirectory: string | undefined
+): void {
   if (!relativeDirectory) return;
 
   const backslash = "\\";
@@ -51,7 +68,9 @@ export function assertRelativeDirectory(relativeDirectory: string | undefined): 
     relativeDirectory[0] === separator ||
     relativeDirectory[relativeDirectory.length - 1] === separator
   )
-    throw new Error("Relative directory cannot contain slashes at the beginning or the end of the string.");
+    throw new Error(
+      "Relative directory cannot contain slashes at the beginning or the end of the string."
+    );
 }
 export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(transferConfig, "transferConfig", "object");
@@ -66,9 +85,11 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
     Date
   );
   if (new Date() > transferConfig.expiration)
-    throw Error("Transfer config is expired");
+    throw new Error("Transfer config is expired");
 }
-export function instanceOfTransferInput(input: any): input is TransferInput {
+export function instanceOfTransferInput(
+  input: unknown
+): input is TransferInput {
   return "url" in (input as TransferInput);
 }
 

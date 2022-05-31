@@ -6,23 +6,25 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 import { Container } from "inversify";
 
-import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
-import {
-  Types as CoreTypes,
-} from "@itwin/object-storage-core/lib/common";
+import { Types as CoreTypes } from "@itwin/object-storage-core/lib/common";
 import {
   PresignedUrlProvider,
   ServerStorage,
   ServerStorageDependency,
   TransferConfigProvider,
-} from "@itwin/object-storage-core/lib/server"; 
-import { Types, createS3Client, createStsClient } from "../common";
-import { S3ClientWrapper } from "./wrappers";
+} from "@itwin/object-storage-core/lib/server";
+
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
+
+import { createS3Client, createStsClient, Types } from "../common";
+
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
 import { S3TransferConfigProvider } from "./S3TransferConfigProvider";
+import { S3ClientWrapper } from "./wrappers";
 
-export type S3ServerStorageBindingsConfig = S3ServerStorageConfig & DependencyConfig;
+export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
+  DependencyConfig;
 
 export class S3ServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "s3";

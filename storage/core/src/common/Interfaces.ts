@@ -36,7 +36,7 @@ export interface TransferConfig {
 }
 
 export interface TransferInput {
-  url: string
+  url: string;
 }
 
 export interface ConfigTransferInput {

@@ -5,6 +5,7 @@
 import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
+
 import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
@@ -20,15 +21,22 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core/lib/common";
 import {
-  assertLocalFile,
   assertFileNotEmpty,
+  assertLocalFile,
   MultipartUploadData,
   ServerStorage,
   streamToTransferType,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core/lib/server";
-import { Types, AzureTransferConfig, buildBlobName, buildExpiresOn } from "../common";
+
+import {
+  AzureTransferConfig,
+  buildBlobName,
+  buildExpiresOn,
+  Types,
+} from "../common";
+
 import { buildSASParameters } from "./Helpers";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
@@ -94,8 +102,7 @@ export class AzureServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    if(typeof data === "string")
-      await assertFileNotEmpty(data);
+    if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
@@ -108,9 +115,8 @@ export class AzureServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    if(typeof data === "string")
-      await assertFileNotEmpty(data);
-      
+    if (typeof data === "string") await assertFileNotEmpty(data);
+
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
     ).uploadInMultipleParts(data, options);

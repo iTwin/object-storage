@@ -23,7 +23,11 @@ import {
   ObjectProperties,
   ObjectReference,
 } from "@itwin/object-storage-core/lib/common";
-import { FrontendMultipartUploadData, FrontendTransferData } from "@itwin/object-storage-core/lib/frontend";
+import {
+  FrontendMultipartUploadData,
+  FrontendTransferData,
+} from "@itwin/object-storage-core/lib/frontend";
+
 import { Types } from "../../common";
 
 @injectable()
@@ -43,10 +47,8 @@ export class S3ClientWrapperFrontend {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    if(Body instanceof ReadableStream)
-      return Body;
-    if(Body instanceof Blob)
-      return Body.stream();
+    if (Body instanceof ReadableStream) return Body;
+    if (Body instanceof Blob) return Body.stream();
     throw new Error("Unexpected body type");
   }
 

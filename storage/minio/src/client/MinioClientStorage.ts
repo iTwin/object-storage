@@ -6,15 +6,16 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
+  instanceOfTransferInput,
   metadataToHeaders,
-  instanceOfTransferInput
 } from "@itwin/object-storage-core/lib/common";
 import {
+  assertFileNotEmpty,
   streamToBuffer,
   uploadToUrl,
-  assertFileNotEmpty,
-  UrlUploadInput
+  UrlUploadInput,
 } from "@itwin/object-storage-core/lib/server";
+
 import {
   S3ClientStorage,
   S3ClientWrapperFactory,
@@ -29,10 +30,8 @@ export class MinioClientStorage extends S3ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    if (instanceOfTransferInput(input))
-      return handleMinioUrlUpload(input);
-    else
-      return super.upload(input);
+    if (instanceOfTransferInput(input)) return handleMinioUrlUpload(input);
+    else return super.upload(input);
   }
 }
 
@@ -44,18 +43,19 @@ export async function handleMinioUrlUpload(
   const { data, metadata, url } = input;
 
   let dataToUpload: Buffer;
-  if(data instanceof Buffer)
-    dataToUpload = data
-  else if(data instanceof Readable)
-    dataToUpload = await streamToBuffer(data);
+  if (data instanceof Buffer) dataToUpload = data;
+  else if (data instanceof Readable) dataToUpload = await streamToBuffer(data);
   else {
     await assertFileNotEmpty(data);
-    dataToUpload = await streamToBuffer( createReadStream(data) );
+    dataToUpload = await streamToBuffer(createReadStream(data));
   }
-  const metaHeaders = metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined;
+  const metaHeaders = metadata
+    ? metadataToHeaders(metadata, "x-amz-meta-")
+    : undefined;
   const headers = {
     ...metaHeaders,
-    "Content-Length": dataToUpload.byteLength.toString()
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    "Content-Length": dataToUpload.byteLength.toString(),
   };
   return uploadToUrl(url, dataToUpload, headers);
 }

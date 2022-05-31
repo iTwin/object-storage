@@ -24,12 +24,10 @@ import {
 
 const { serverStorage } = config;
 
-
 interface BaseTestCase {
   dataToAssert: Buffer;
   testedStorage: ClientStorage;
 }
-
 
 type TestCase = BaseTestCase & {
   dataToUpload: TransferData;
@@ -137,7 +135,7 @@ export async function testUploadToUrl(params: TestCase): Promise<void> {
   const uploadUrl = await serverStorage.getUploadUrl(reference);
   await params.testedStorage.upload({
     data: params.dataToUpload,
-    url: uploadUrl
+    url: uploadUrl,
   });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
@@ -158,7 +156,7 @@ export async function testUploadToUrlWithRelativeDir(
   const uploadUrl = await serverStorage.getUploadUrl(reference);
   await params.testedStorage.upload({
     data: params.dataToUpload,
-    url: uploadUrl
+    url: uploadUrl,
   });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);

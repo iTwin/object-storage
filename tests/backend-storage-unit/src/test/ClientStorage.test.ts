@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { TransferConfig } from "@itwin/object-storage-core/lib/common";
 import { ClientStorage } from "@itwin/object-storage-core/lib/client";
+import { TransferConfig } from "@itwin/object-storage-core/lib/common";
 
 import { config } from "./Config";
 import { Constants } from "./Constants";

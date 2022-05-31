@@ -5,24 +5,28 @@
 import { inject, injectable } from "inversify";
 
 import {
-  Types,
   instanceOfTransferInput,
   metadataToHeaders,
+  Types,
 } from "@itwin/object-storage-core/lib/common";
 import {
-  FrontendStorage,
-  FrontendUrlDownloadInput,
-  FrontendTransferData,
-  FrontendUrlUploadInput,
-  FrontendUploadInMultiplePartsInput,
-  FrontendConfigUploadInput,
   downloadFromUrlFrontend,
-  uploadToUrlFrontend,
+  FrontendConfigUploadInput,
+  FrontendStorage,
+  FrontendTransferData,
+  FrontendUploadInMultiplePartsInput,
+  FrontendUrlDownloadInput,
+  FrontendUrlUploadInput,
   streamToTransferTypeFrontend,
+  uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
-import { S3ClientWrapperFrontend, S3ClientWrapperFactoryFrontend } from "./wrappers";
+
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClientFrontend } from "./Helpers";
+import {
+  S3ClientWrapperFactoryFrontend,
+  S3ClientWrapperFrontend,
+} from "./wrappers";
 
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
@@ -48,8 +52,7 @@ export class S3FrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    if (instanceOfTransferInput(input))
-      return downloadFromUrlFrontend(input);
+    if (instanceOfTransferInput(input)) return downloadFromUrlFrontend(input);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),

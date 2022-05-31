@@ -7,7 +7,10 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig, buildBlobUrlFromAzureTransferConfigInput } from "../../../common";
+import {
+  AzureTransferConfig,
+  buildBlobUrlFromAzureTransferConfigInput,
+} from "../../../common";
 
 use(chaiAsPromised);
 
@@ -44,12 +47,11 @@ describe("Helper functions", () => {
           objectName: "testObjectName",
         };
         const testedFunction = () =>
-          buildBlobUrlFromAzureTransferConfigInput(
-            {
-              transferConfig: testCase.transferConfig as unknown as AzureTransferConfig,
-              reference
-            }
-          );
+          buildBlobUrlFromAzureTransferConfigInput({
+            transferConfig:
+              testCase.transferConfig as unknown as AzureTransferConfig,
+            reference,
+          });
         expect(testedFunction)
           .to.throw(Error)
           .with.property("message", testCase.expectedErrorMessage);
@@ -66,7 +68,7 @@ describe("Helper functions", () => {
         objectName: "testObjectName",
       };
       const testedFunction = () =>
-        buildBlobUrlFromAzureTransferConfigInput({transferConfig, reference});
+        buildBlobUrlFromAzureTransferConfigInput({ transferConfig, reference });
       expect(testedFunction).to.not.throw();
     });
   });

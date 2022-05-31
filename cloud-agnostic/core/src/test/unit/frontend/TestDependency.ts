@@ -27,5 +27,3 @@ export class DefaultTestDependencies {
     dependable.useBindings(ConcreteTestDependencyBindings);
   }
 }
-
-

@@ -4,12 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   ClientStorage,
   ClientStorageDependency,
 } from "@itwin/object-storage-core/lib/client";
+import { Types } from "@itwin/object-storage-core/lib/common";
+
 import { BlockBlobClientWrapperFactory } from "../server/wrappers/BlockBlobClientWrapperFactory";
+
 import { AzureClientStorage } from "./AzureClientStorage";
 
 export class AzureClientStorageBindings extends ClientStorageDependency {

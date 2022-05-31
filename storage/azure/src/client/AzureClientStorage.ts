@@ -5,23 +5,23 @@
 import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
+
 import { inject, injectable } from "inversify";
 
+import { ClientStorage } from "@itwin/object-storage-core/lib/client";
 import {
-  Types,
   assertRelativeDirectory,
+  Types,
 } from "@itwin/object-storage-core/lib/common";
 import {
+  assertFileNotEmpty,
+  isTransferInputLocal,
+  streamToTransferType,
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
-  streamToTransferType,
-  isTransferInputLocal,
-  assertFileNotEmpty,
 } from "@itwin/object-storage-core/lib/server";
-import {
-  ClientStorage,
-}from "@itwin/object-storage-core/lib/client";
+
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
@@ -66,7 +66,9 @@ export class AzureClientStorage extends ClientStorage {
     if (isTransferInputLocal(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
-    const downloadStream = await this._clientWrapperFactory.create(input).download();
+    const downloadStream = await this._clientWrapperFactory
+      .create(input)
+      .download();
 
     return streamToTransferType(
       downloadStream,
@@ -80,10 +82,11 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (typeof input.data === "string")
-      await assertFileNotEmpty(input.data);
-    
-    return this._clientWrapperFactory.create(input).upload(input.data, input.metadata);
+    if (typeof input.data === "string") await assertFileNotEmpty(input.data);
+
+    return this._clientWrapperFactory
+      .create(input)
+      .upload(input.data, input.metadata);
   }
 
   public async uploadInMultipleParts(
@@ -91,9 +94,10 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (typeof input.data === "string")
-      await assertFileNotEmpty(input.data);
+    if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
-    return this._clientWrapperFactory.create(input).uploadInMultipleParts(input.data, input.options);
+    return this._clientWrapperFactory
+      .create(input)
+      .uploadInMultipleParts(input.data, input.options);
   }
 }

@@ -12,7 +12,9 @@ import {
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB
 
-export async function streamToBufferFrontend(stream: ReadableStream): Promise<ArrayBuffer> {
+export async function streamToBufferFrontend(
+  stream: ReadableStream
+): Promise<ArrayBuffer> {
   return new Response(stream).arrayBuffer();
 }
 export async function streamToTransferTypeFrontend(
@@ -31,7 +33,9 @@ export async function streamToTransferTypeFrontend(
   }
 }
 
-export async function downloadFromUrlFrontend(input: FrontendUrlDownloadInput): Promise<FrontendTransferData> {
+export async function downloadFromUrlFrontend(
+  input: FrontendUrlDownloadInput
+): Promise<FrontendTransferData> {
   const { transferType, url } = input;
   switch (transferType) {
     case "buffer":

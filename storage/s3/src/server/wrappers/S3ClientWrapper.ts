@@ -11,22 +11,24 @@ import {
   HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
-  S3Client
+  S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import { inject, injectable } from "inversify";
+
 import {
   BaseDirectory,
   buildObjectKey,
-  buildObjectReference, Metadata, MultipartUploadOptions,
+  buildObjectReference,
+  Metadata,
+  MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
 } from "@itwin/object-storage-core/lib/common";
 import {
+  MultipartUploadData,
   TransferData,
-  MultipartUploadData, 
 } from "@itwin/object-storage-core/lib/server";
-
-import { inject, injectable } from "inversify";
 
 import { Types } from "../../common";
 
@@ -35,7 +37,7 @@ export class S3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
     @inject(Types.bucket) protected readonly _bucket: string
-  ) { }
+  ) {}
 
   public async download(reference: ObjectReference): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -47,8 +49,7 @@ export class S3ClientWrapper {
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    if (Body instanceof Readable)
-      return Body;
+    if (Body instanceof Readable) return Body;
     throw new Error("Unexpected body type");
   }
 

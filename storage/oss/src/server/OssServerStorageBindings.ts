@@ -7,6 +7,7 @@ import { Container } from "inversify";
 
 import { Types } from "@itwin/object-storage-core/lib/common";
 import { TransferConfigProvider } from "@itwin/object-storage-core/lib/server";
+
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,

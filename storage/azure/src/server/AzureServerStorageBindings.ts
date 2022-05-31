@@ -2,16 +2,29 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { BlobServiceClient, StorageSharedKeyCredential } from "@azure/storage-blob";
+import {
+  BlobServiceClient,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 import { Container } from "inversify";
 
+import {
+  ServerStorage,
+  ServerStorageDependency,
+} from "@itwin/object-storage-core/lib/server";
+
 import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
-import { ServerStorage, ServerStorageDependency } from "@itwin/object-storage-core/lib/server";
+
 import { Types } from "../common";
-import { AzureServerStorage, AzureServerStorageConfig } from "./AzureServerStorage";
+
+import {
+  AzureServerStorage,
+  AzureServerStorageConfig,
+} from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./wrappers/BlobServiceClientWrapper";
 
-export type AzureServerStorageBindingsConfig = AzureServerStorageConfig & DependencyConfig;
+export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
+  DependencyConfig;
 
 export class AzureServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "azure";

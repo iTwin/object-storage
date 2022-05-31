@@ -7,9 +7,11 @@ import {
   FrontendConfigUploadInput,
   FrontendUploadInMultiplePartsInput,
 } from "@itwin/object-storage-core/lib/frontend";
+
 import { S3TransferConfig } from "../common";
 
-export interface FrontendS3ConfigDownloadInput extends FrontendConfigDownloadInput {
+export interface FrontendS3ConfigDownloadInput
+  extends FrontendConfigDownloadInput {
   transferConfig: S3TransferConfig;
 }
 
@@ -17,6 +19,7 @@ export interface FrontendS3ConfigUploadInput extends FrontendConfigUploadInput {
   transferConfig: S3TransferConfig;
 }
 
-export interface FrontendS3UploadInMultiplePartsInput extends FrontendUploadInMultiplePartsInput {
+export interface FrontendS3UploadInMultiplePartsInput
+  extends FrontendUploadInMultiplePartsInput {
   transferConfig: S3TransferConfig;
 }

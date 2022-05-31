@@ -3,10 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
+
 import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import { MultipartUploadOptions } from "@itwin/object-storage-core/lib/common";
-import { TransferData, MultipartUploadData } from "@itwin/object-storage-core/lib/server";
+import {
+  MultipartUploadData,
+  TransferData,
+} from "@itwin/object-storage-core/lib/server";
 
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
@@ -17,16 +21,12 @@ export class BlockBlobClientWrapper {
     return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public async upload(
-    data: TransferData,
-    metadata?: Metadata
-  ): Promise<void> {
+  public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
     if (data instanceof Buffer)
       await this._client.upload(data, data.byteLength, { metadata });
-    else if(data instanceof Readable)
+    else if (data instanceof Readable)
       await this._client.uploadStream(data, undefined, undefined, { metadata });
-    else
-      await this._client.uploadFile(data, { metadata });
+    else await this._client.uploadFile(data, { metadata });
   }
 
   public async uploadInMultipleParts(
@@ -34,9 +34,13 @@ export class BlockBlobClientWrapper {
     options?: MultipartUploadOptions
   ): Promise<void> {
     const { metadata, partSize, queueSize } = options ?? {};
-    if(data instanceof Readable)
+    if (data instanceof Readable)
       await this._client.uploadStream(data, partSize, queueSize, { metadata });
     else
-      await this._client.uploadFile(data, { metadata, blockSize: partSize, concurrency: queueSize });
+      await this._client.uploadFile(data, {
+        metadata,
+        blockSize: partSize,
+        concurrency: queueSize,
+      });
   }
 }

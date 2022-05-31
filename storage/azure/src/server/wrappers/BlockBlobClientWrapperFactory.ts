@@ -5,8 +5,16 @@
 import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
-import { TransferInput, instanceOfTransferInput } from "@itwin/object-storage-core/lib/common";
-import { AzureTransferConfigInput, buildBlobUrlFromAzureTransferConfigInput } from "../../common";
+import {
+  instanceOfTransferInput,
+  TransferInput,
+} from "@itwin/object-storage-core/lib/common";
+
+import {
+  AzureTransferConfigInput,
+  buildBlobUrlFromAzureTransferConfigInput,
+} from "../../common";
+
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 
 @injectable()

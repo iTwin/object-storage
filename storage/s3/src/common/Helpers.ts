@@ -4,21 +4,26 @@
  *--------------------------------------------------------------------------------------------*/
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
+
+import {
+  assertTransferConfig,
+  TransferConfig,
+} from "@itwin/object-storage-core/lib/common";
+
 import {
   assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core";
-import {
-  TransferConfig,
-  assertTransferConfig,
-} from "@itwin/object-storage-core/lib/common";
+
 import { S3TransferConfig } from "./Interfaces";
 
-export function assertS3TransferConfig(transferConfig: TransferConfig | S3TransferConfig): asserts transferConfig is S3TransferConfig {
+export function assertS3TransferConfig(
+  transferConfig: TransferConfig | S3TransferConfig
+): asserts transferConfig is S3TransferConfig {
   assertTransferConfig(transferConfig);
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");
-  
+
   assertPrimitiveType(
     transferConfig.authentication,
     "transferConfig.authentication",
@@ -48,7 +53,6 @@ export function assertS3TransferConfig(transferConfig: TransferConfig | S3Transf
     throw new FalsyValueError("transferConfig.bucket");
   assertPrimitiveType(transferConfig.bucket, "transferConfig.bucket", "string");
 }
-
 
 export function createS3Client(config: {
   baseUrl: string;

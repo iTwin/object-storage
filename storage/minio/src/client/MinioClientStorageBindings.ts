@@ -5,6 +5,7 @@
 import { Container } from "inversify";
 
 import { ClientStorage } from "@itwin/object-storage-core/lib/client";
+
 import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
 
 import { MinioClientStorage } from "./MinioClientStorage";

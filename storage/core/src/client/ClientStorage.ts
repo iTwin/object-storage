@@ -3,8 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
-import { injectable } from "inversify";
 import { Readable } from "stream";
+
+import { injectable } from "inversify";
 
 import {
   ConfigDownloadInput,

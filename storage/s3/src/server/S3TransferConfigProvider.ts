@@ -3,12 +3,18 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { randomUUID } from "crypto";
+
 import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
 import { inject, injectable } from "inversify";
 
-import { ObjectDirectory, buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common";
+import {
+  buildObjectDirectoryString,
+  ObjectDirectory,
+} from "@itwin/object-storage-core/lib/common";
 import { TransferConfigProvider } from "@itwin/object-storage-core/lib/server";
-import { Types, S3TransferConfig } from "../common";
+
+import { S3TransferConfig, Types } from "../common";
+
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 
 @injectable()

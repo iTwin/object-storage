@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { instanceOfTransferInput, metadataToHeaders } from "@itwin/object-storage-core/lib/common";
+import {
+  instanceOfTransferInput,
+  metadataToHeaders,
+} from "@itwin/object-storage-core/lib/common";
 import {
   FrontendConfigUploadInput,
   FrontendUrlUploadInput,
@@ -24,8 +27,7 @@ export class MinioFrontendStorage extends S3FrontendStorage {
   ): Promise<void> {
     if (instanceOfTransferInput(input))
       return handleMinioUrlUploadFrontend(input);
-    else
-      return super.upload(input);
+    else return super.upload(input);
   }
 }
 
@@ -36,11 +38,15 @@ export async function handleMinioUrlUploadFrontend(
   // used streamToBuffer to get the length before uploading for streams
   const { data, metadata, url } = input;
 
-  const dataToUpload = data instanceof ReadableStream ? await streamToBufferFrontend(data) : data;
-  const metaHeaders = metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined;
+  const dataToUpload =
+    data instanceof ReadableStream ? await streamToBufferFrontend(data) : data;
+  const metaHeaders = metadata
+    ? metadataToHeaders(metadata, "x-amz-meta-")
+    : undefined;
   const headers = {
     ...metaHeaders,
-    "Content-Length": dataToUpload.byteLength.toString()
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    "Content-Length": dataToUpload.byteLength.toString(),
   };
   return uploadToUrlFrontend(url, dataToUpload, headers);
 }

@@ -18,6 +18,7 @@ export interface S3ConfigUploadInput extends ConfigUploadInput {
   transferConfig: S3TransferConfig;
 }
 
-export interface S3UploadInMultiplePartsInput extends UploadInMultiplePartsInput {
+export interface S3UploadInMultiplePartsInput
+  extends UploadInMultiplePartsInput {
   transferConfig: S3TransferConfig;
 }

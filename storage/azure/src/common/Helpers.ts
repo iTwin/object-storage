@@ -2,14 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { assertPrimitiveType, FalsyValueError } from "@itwin/cloud-agnostic-core";
-
 import {
+  assertTransferConfig,
+  buildObjectKey,
   ObjectReference,
   TransferConfig,
-  assertTransferConfig,
-  buildObjectKey
 } from "@itwin/object-storage-core/lib/common";
+
+import {
+  assertPrimitiveType,
+  FalsyValueError,
+} from "@itwin/cloud-agnostic-core";
+
 import { AzureTransferConfig, AzureTransferConfigInput } from "./Interfaces";
 
 export function assertAzureTransferConfig(
@@ -19,7 +23,7 @@ export function assertAzureTransferConfig(
 
   if (!("authentication" in transferConfig))
     throw new FalsyValueError("transferConfig.authentication");
-  
+
   assertPrimitiveType(
     transferConfig.authentication,
     "transferConfig.authentication",
@@ -27,7 +31,9 @@ export function assertAzureTransferConfig(
   );
 }
 
-export function buildBlobUrlFromAzureTransferConfigInput(input: AzureTransferConfigInput): string {
+export function buildBlobUrlFromAzureTransferConfigInput(
+  input: AzureTransferConfigInput
+): string {
   assertAzureTransferConfig(input.transferConfig);
   const { authentication, baseUrl } = input.transferConfig;
   return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
