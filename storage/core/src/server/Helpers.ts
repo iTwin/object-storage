@@ -33,7 +33,11 @@ export function isTransferInputLocal(
 ): transfer is (UrlDownloadInput | ConfigDownloadInput) & {
   localPath: string;
 } {
-  return "localPath" in transfer && transfer.localPath !== undefined;
+  if ("localPath" in transfer) {
+    const localInput = transfer as UrlDownloadInput | ConfigDownloadInput;
+    return localInput.localPath !== undefined;
+  }
+  return false;
 }
 
 export async function streamToBuffer(stream: Readable): Promise<Buffer> {
