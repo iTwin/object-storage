@@ -2,6 +2,7 @@
   "extends": "../node_modules/@itwin/object-storage-common-config/tsconfig.json",
   "include": [
     "./integration/**/*.ts",
+    "./utils/**/*.ts"
   ],
   "compilerOptions": {
     "module": "esnext",
@@ -11,8 +12,7 @@
       "dom"
     ],
     "types": [
-      "cypress",
-      "node"
+      "cypress"
     ],
     "moduleResolution": "node"
   }
