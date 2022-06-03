@@ -6,13 +6,13 @@ import {
   DependenciesConfig,
   Types as DependencyTypes,
 } from "@itwin/cloud-agnostic-core";
-import { BackendStorageServer } from "@itwin/object-storage-tests-frontend";
+import { ServerStorageProxyBackend } from "@itwin/object-storage-tests-frontend";
 
 import { OssServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 async function run(): Promise<void> {
-  const backendServer = new BackendStorageServer();
+  const backendServer = new ServerStorageProxyBackend();
 
   backendServer.container
     .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
