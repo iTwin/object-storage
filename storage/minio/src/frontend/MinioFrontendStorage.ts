@@ -3,12 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  instanceOfTransferInput,
-  metadataToHeaders,
-} from "@itwin/object-storage-core/lib/common";
-import {
   FrontendConfigUploadInput,
   FrontendUrlUploadInput,
+  instanceOfTransferInput,
+  metadataToHeaders,
   streamToBufferFrontend,
   uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";

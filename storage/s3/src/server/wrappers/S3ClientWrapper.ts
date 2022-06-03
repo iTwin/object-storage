@@ -21,14 +21,12 @@ import {
   buildObjectKey,
   buildObjectReference,
   Metadata,
+  MultipartUploadData,
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
-} from "@itwin/object-storage-core/lib/common";
-import {
-  MultipartUploadData,
   TransferData,
-} from "@itwin/object-storage-core/lib/server";
+} from "@itwin/object-storage-core";
 
 import { Types } from "../../common";
 

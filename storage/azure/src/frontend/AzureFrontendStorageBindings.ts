@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   FrontendStorage,
   FrontendStorageDependency,
+  Types,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { AzureFrontendStorage } from "./AzureFrontendStorage";

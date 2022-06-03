@@ -6,7 +6,7 @@
 import {
   FrontendTransferType,
   ObjectReference,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import {
   assertArrayBuffer,

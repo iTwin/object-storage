@@ -4,12 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import { inject, injectable } from "inversify";
 
-import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   FrontendStorage,
   FrontendTransferData,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
+  Types,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {

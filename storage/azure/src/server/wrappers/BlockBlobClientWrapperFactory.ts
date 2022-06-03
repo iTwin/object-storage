@@ -8,7 +8,7 @@ import { injectable } from "inversify";
 import {
   instanceOfTransferInput,
   TransferInput,
-} from "@itwin/object-storage-core/lib/common";
+} from "@itwin/object-storage-core";
 
 import {
   AzureTransferConfigInput,

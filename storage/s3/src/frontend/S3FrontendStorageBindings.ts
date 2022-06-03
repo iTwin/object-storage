@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types as CoreTypes } from "@itwin/object-storage-core/lib/common";
 import {
+  Types as CoreTypes,
   FrontendStorage,
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";

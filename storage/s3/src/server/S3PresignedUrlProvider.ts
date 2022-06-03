@@ -13,8 +13,8 @@ import { inject, injectable } from "inversify";
 import {
   buildObjectKey,
   ObjectReference,
-} from "@itwin/object-storage-core/lib/common";
-import { PresignedUrlProvider } from "@itwin/object-storage-core/lib/server";
+  PresignedUrlProvider,
+} from "@itwin/object-storage-core";
 
 import { Types } from "../common";
 

@@ -7,22 +7,20 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
-import { ClientStorage } from "@itwin/object-storage-core/lib/client";
-import {
-  assertRelativeDirectory,
-  instanceOfTransferInput,
-  metadataToHeaders,
-  Types,
-} from "@itwin/object-storage-core/lib/common";
 import {
   assertFileNotEmpty,
+  assertRelativeDirectory,
+  ClientStorage,
   downloadFromUrl,
+  instanceOfTransferInput,
+  metadataToHeaders,
   streamToTransferType,
   TransferData,
+  Types,
   uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
-} from "@itwin/object-storage-core/lib/server";
+} from "@itwin/object-storage-core";
 
 import {
   createAndUseClient,

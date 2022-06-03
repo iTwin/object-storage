@@ -5,11 +5,6 @@
 import { inject, injectable } from "inversify";
 
 import {
-  instanceOfTransferInput,
-  metadataToHeaders,
-  Types,
-} from "@itwin/object-storage-core/lib/common";
-import {
   downloadFromUrlFrontend,
   FrontendConfigUploadInput,
   FrontendStorage,
@@ -17,7 +12,10 @@ import {
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
+  instanceOfTransferInput,
+  metadataToHeaders,
   streamToTransferTypeFrontend,
+  Types,
   uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 

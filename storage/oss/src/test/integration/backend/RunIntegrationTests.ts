@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import {
-  S3ClientStorageBindings,
-  S3FrontendStorageBindings,
-} from "@itwin/object-storage-s3";
+import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
+
+import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { OssServerStorageBindings } from "../../../server";

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { ServerStorage } from "@itwin/object-storage-core/lib/server";
+import { ServerStorage } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 import { Constants } from "./Constants";

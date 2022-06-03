@@ -18,14 +18,12 @@ import {
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
+  FrontendMultipartUploadData,
+  FrontendTransferData,
   Metadata,
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
-} from "@itwin/object-storage-core/lib/common";
-import {
-  FrontendMultipartUploadData,
-  FrontendTransferData,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { Types } from "../../common";

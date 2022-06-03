@@ -8,7 +8,7 @@ import {
   FrontendTransferType,
   Metadata,
   ObjectReference,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 import { arrayBufferToReadableStream, stringToArrayBuffer } from "../Helpers";
 import { TestCase } from "../Interfaces";

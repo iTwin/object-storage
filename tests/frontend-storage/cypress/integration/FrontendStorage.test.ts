@@ -2,12 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FrontendStorage } from "@itwin/object-storage-core";
-import { ServerStorageProxyFrontend } from "../../src/backend/server-storage-proxy/Frontend";
-import { FrontendTestRemoteDirectoryManager } from "../../src/frontend/utils/RemoteDirectoryManager";
-import { testDownload } from "../../src/frontend/test-templates/Download";
-import { testUpload } from "../../src/frontend/test-templates/Upload";
-import { TestCase } from "../../src/frontend/Interfaces";
+import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+import {
+  TestCase,
+  ServerStorageProxyFrontend,
+  FrontendTestRemoteDirectoryManager,
+  testDownload,
+  testUpload,
+} from "../../src/frontend";
 
 const serverBaseUrl: string = (window as any).serverBaseUrl;
 const frontendStorage: FrontendStorage = (window as any).frontendStorage;
@@ -61,10 +63,10 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       await testUpload(test, "stream", "config", true);
     });
     it("should upload buffer with relative directory using transfer config", async () => {
-
+      await testUpload(test, "stream", "config", true, true);
     });
     it("should upload stream with relative directory using transfer config", async () => {
-      
+      await testUpload(test, "stream", "config", true, true);
     });
   });
 });

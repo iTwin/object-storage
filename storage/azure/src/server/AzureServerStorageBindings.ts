@@ -8,12 +8,11 @@ import {
 } from "@azure/storage-blob";
 import { Container } from "inversify";
 
+import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
-} from "@itwin/object-storage-core/lib/server";
-
-import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
+} from "@itwin/object-storage-core";
 
 import { Types } from "../common";
 

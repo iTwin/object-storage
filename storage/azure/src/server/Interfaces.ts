@@ -6,7 +6,7 @@ import {
   ConfigDownloadInput,
   ConfigUploadInput,
   UploadInMultiplePartsInput,
-} from "@itwin/object-storage-core/lib/server";
+} from "@itwin/object-storage-core";
 
 import { AzureTransferConfig } from "../common";
 

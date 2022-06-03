@@ -10,25 +10,23 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
+  assertFileNotEmpty,
+  assertLocalFile,
   assertRelativeDirectory,
   BaseDirectory,
   buildObjectKey,
   buildObjectReference,
   Metadata,
+  MultipartUploadData,
   MultipartUploadOptions,
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
-} from "@itwin/object-storage-core/lib/common";
-import {
-  assertFileNotEmpty,
-  assertLocalFile,
-  MultipartUploadData,
   ServerStorage,
   streamToTransferType,
   TransferData,
   TransferType,
-} from "@itwin/object-storage-core/lib/server";
+} from "@itwin/object-storage-core";
 
 import {
   AzureTransferConfig,

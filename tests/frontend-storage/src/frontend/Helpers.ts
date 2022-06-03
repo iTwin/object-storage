@@ -5,7 +5,7 @@
 import {
   FrontendTransferData,
   streamToBufferFrontend,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
 
 export function stringToArrayBuffer(input: string): ArrayBuffer {
   return new TextEncoder().encode(input).buffer;

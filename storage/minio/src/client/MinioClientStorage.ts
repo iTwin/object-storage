@@ -6,16 +6,13 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import {
+  assertFileNotEmpty,
   instanceOfTransferInput,
   metadataToHeaders,
-} from "@itwin/object-storage-core/lib/common";
-import {
-  assertFileNotEmpty,
   streamToBuffer,
   uploadToUrl,
   UrlUploadInput,
-} from "@itwin/object-storage-core/lib/server";
-
+} from "@itwin/object-storage-core";
 import {
   S3ClientStorage,
   S3ClientWrapperFactory,

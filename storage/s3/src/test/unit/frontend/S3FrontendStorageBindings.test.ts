@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types as CoreTypes } from "@itwin/object-storage-core/lib/common";
-import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+import {
+  Types as CoreTypes,
+  FrontendStorage,
+} from "@itwin/object-storage-core/lib/frontend";
 
 import {
   DependencyBindingsTestCase,

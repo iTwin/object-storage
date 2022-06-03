@@ -10,7 +10,7 @@ import {
 } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
-import { ObjectReference } from "@itwin/object-storage-core/lib/common";
+import { ObjectReference } from "@itwin/object-storage-core";
 
 import { buildBlobName } from "../../common";
 

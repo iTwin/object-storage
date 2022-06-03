@@ -8,9 +8,8 @@ import { Client } from "minio";
 import {
   buildObjectKey,
   ObjectReference,
-} from "@itwin/object-storage-core/lib/common";
-import { PresignedUrlProvider } from "@itwin/object-storage-core/lib/server";
-
+  PresignedUrlProvider,
+} from "@itwin/object-storage-core";
 import { Types } from "@itwin/object-storage-s3";
 
 @injectable()

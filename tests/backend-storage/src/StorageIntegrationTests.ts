@@ -9,6 +9,11 @@ import { Container } from "inversify";
 import * as Mocha from "mocha";
 
 import {
+  FrontendStorage,
+  FrontendStorageDependency,
+} from "@itwin/object-storage-core/lib/frontend";
+
+import {
   Bindable,
   DependenciesConfig,
   Types as DependencyTypes,
@@ -16,8 +21,6 @@ import {
 import {
   ClientStorage,
   ClientStorageDependency,
-  FrontendStorage,
-  FrontendStorageDependency,
   ServerStorage,
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
