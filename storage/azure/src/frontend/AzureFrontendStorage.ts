@@ -46,8 +46,8 @@ export class AzureFrontendStorage extends FrontendStorage {
     const downloadBlob = await this._clientWrapperFactory
       .create(input)
       .download();
-      
-    switch(input.transferType) {
+
+    switch (input.transferType) {
       case "buffer":
         return downloadBlob.arrayBuffer();
       case "stream":
