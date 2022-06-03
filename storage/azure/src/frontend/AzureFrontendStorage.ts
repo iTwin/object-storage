@@ -46,7 +46,15 @@ export class AzureFrontendStorage extends FrontendStorage {
     const downloadBlob = await this._clientWrapperFactory
       .create(input)
       .download();
-    return downloadBlob.arrayBuffer();
+      
+    switch(input.transferType) {
+      case "buffer":
+        return downloadBlob.arrayBuffer();
+      case "stream":
+        return downloadBlob.stream();
+      default:
+        throw new Error(`Transfer type ${input.transferType} is unsupported`);
+    }
   }
 
   public async upload(
