@@ -20,8 +20,7 @@ export class FrontendStorageIntegrationTests {
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
     const currentProjectRootAbsolutePath = path.resolve(__dirname, "..");
-    const cypressConfig: Partial<CypressCommandLine.CypressRunOptions> &
-      Partial<CypressCommandLine.CypressOpenOptions> = {
+    const cypressConfig: Partial<CypressCommandLine.CypressOpenOptions> = {
       browser: "chrome",
       project: currentProjectRootAbsolutePath,
       configFile: false,

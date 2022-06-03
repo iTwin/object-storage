@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BaseDirectory } from "@itwin/object-storage-core";
+
 import { ServerStorageProxyFrontend } from "../../backend/server-storage-proxy/Frontend";
 
 declare global {
@@ -24,7 +25,7 @@ export class FrontendTestRemoteDirectoryManager {
       baseDirectory: `integration-tests-${crypto.randomUUID()}`,
     };
     this.addForDelete(newDirectory);
-    await this._serverStorage.createBaseDirectory({directory: newDirectory});
+    await this._serverStorage.createBaseDirectory({ directory: newDirectory });
     return newDirectory;
   }
 
@@ -34,7 +35,9 @@ export class FrontendTestRemoteDirectoryManager {
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await this._serverStorage.deleteBaseDirectory({directory: directoryToDelete});
+      await this._serverStorage.deleteBaseDirectory({
+        directory: directoryToDelete,
+      });
     this._createdDirectories = [];
   }
 }

@@ -33,68 +33,101 @@ export class ServerStorageProxyBackend extends Bindable {
     app.use(express.json());
 
     // Not exactly REST but it's for tests only
-    app.post(Common.DownloadRequestPath, async (request, response) => {
+    app.post(Common.DOWNLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DownloadRequest;
       const result = await serverStorage.download(body.reference, "buffer");
       response.status(200).send(result);
     });
-    app.post(Common.UploadRequestPath, async (request, response) => {
+    app.post(Common.UPLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.UploadRequest;
       const dataBuffer = Buffer.from(body.data);
       await serverStorage.upload(body.reference, dataBuffer, body.metadata);
       response.status(201).send();
     });
-    app.post(Common.CreateBaseDirectoryRequestPath, async (request, response) => {
-      const body = request.body as Common.CreateBaseDirectoryRequest;
-      await serverStorage.createBaseDirectory(body.directory);
-      response.status(201).send();
-    })
-    app.post(Common.DeleteBaseDirectoryRequestPath, async (request, response) => {
-      const body = request.body as Common.DeleteBaseDirectoryRequest;
-      await serverStorage.deleteBaseDirectory(body.directory);
-      response.status(204).send();
-    });
-    app.post(Common.DeleteObjectRequestPath, async (request, response) => {
+    app.post(
+      Common.CREATE_BASE_DIRECTORY_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.CreateBaseDirectoryRequest;
+        await serverStorage.createBaseDirectory(body.directory);
+        response.status(201).send();
+      }
+    );
+    app.post(
+      Common.DELETE_BASE_DIRECTORY_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.DeleteBaseDirectoryRequest;
+        await serverStorage.deleteBaseDirectory(body.directory);
+        response.status(204).send();
+      }
+    );
+    app.post(Common.DELETE_OBJECT_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DeleteObjectRequest;
       await serverStorage.deleteObject(body.reference);
       response.status(204).send();
     });
-    app.post(Common.BaseDirectoryExistsRequestPath, async (request, response) => {
-      const body = request.body as Common.BaseDirectoryExistsRequest;
-      const result = await serverStorage.baseDirectoryExists(body.directory);
-      response.status(200).send(result);
-    });
-    app.post(Common.ObjectExistsRequestPath, async (request, response) => {
+    app.post(
+      Common.BASE_DIRECTORY_EXISTS_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.BaseDirectoryExistsRequest;
+        const result = await serverStorage.baseDirectoryExists(body.directory);
+        response.status(200).send(result);
+      }
+    );
+    app.post(Common.OBJECT_EXISTS_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.ObjectExistsRequest;
       const result = await serverStorage.objectExists(body.reference);
       response.status(200).send(result);
     });
-    app.post(Common.GetObjectPropertiesRequestPath, async (request, response) => {
-      const body = request.body as Common.GetObjectPropertiesRequest;
-      const result = await serverStorage.getObjectProperties(body.reference);
-      response.status(200).send(result);
-    });
-    app.post(Common.GetDownloadUrlRequestPath, async (request, response) => {
-      const body = request.body as Common.GetDownloadUrlRequest;
-      const result = await serverStorage.getDownloadUrl(body.reference, body.expiresInSeconds);
-      response.status(200).send(result);
-    });
-    app.post(Common.GetUploadUrlRequestPath, async (request, response) => {
+    app.post(
+      Common.GET_OBJECT_PROPERTIES_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.GetObjectPropertiesRequest;
+        const result = await serverStorage.getObjectProperties(body.reference);
+        response.status(200).send(result);
+      }
+    );
+    app.post(
+      Common.GET_DOWNLOAD_URL_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.GetDownloadUrlRequest;
+        const result = await serverStorage.getDownloadUrl(
+          body.reference,
+          body.expiresInSeconds
+        );
+        response.status(200).send(result);
+      }
+    );
+    app.post(Common.GET_UPLOAD_URL_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.GetUploadUrlRequest;
-      const result = await serverStorage.getUploadUrl(body.reference, body.expiresInSeconds);
+      const result = await serverStorage.getUploadUrl(
+        body.reference,
+        body.expiresInSeconds
+      );
       response.status(200).send(result);
     });
-    app.post(Common.GetDownloadConfigRequestPath, async (request, response) => {
-      const body = request.body as Common.GetDownloadConfigRequest;
-      const result = await serverStorage.getDownloadConfig(body.directory, body.expiresInSeconds);
-      response.status(200).send(result);
-    });
-    app.post(Common.GetUploadConfigRequestPath, async (request, response) => {
-      const body = request.body as Common.GetUploadConfigRequest;
-      const result = await serverStorage.getUploadConfig(body.directory, body.expiresInSeconds);
-      response.status(200).send(result);
-    });
-    
+    app.post(
+      Common.GET_DOWNLOAD_CONFIG_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.GetDownloadConfigRequest;
+        const result = await serverStorage.getDownloadConfig(
+          body.directory,
+          body.expiresInSeconds
+        );
+        response.status(200).send(result);
+      }
+    );
+    app.post(
+      Common.GET_UPLOAD_CONFIG_REQUEST_PATH,
+      async (request, response) => {
+        const body = request.body as Common.GetUploadConfigRequest;
+        const result = await serverStorage.getUploadConfig(
+          body.directory,
+          body.expiresInSeconds
+        );
+        response.status(200).send(result);
+      }
+    );
+
     app.listen(config.port, () => {
       // eslint-disable-next-line no-console
       console.log(

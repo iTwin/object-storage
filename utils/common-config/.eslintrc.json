@@ -5,9 +5,9 @@
     "mocha"
   ],
   "extends": [
-    "plugin:@itwin/itwinjs-recommended",
+    "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:@itwin/itwinjs-recommended"
   ],
   "parserOptions": {
     "project": "tsconfig.json",

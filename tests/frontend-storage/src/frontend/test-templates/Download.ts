@@ -3,51 +3,69 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { FrontendTransferType, ObjectReference } from "@itwin/object-storage-core";
-import { assertArrayBuffer, assertReadableStream, stringToArrayBuffer } from "../Helpers";
+import {
+  FrontendTransferType,
+  ObjectReference,
+} from "@itwin/object-storage-core";
+
+import {
+  assertArrayBuffer,
+  assertReadableStream,
+  stringToArrayBuffer,
+} from "../Helpers";
 import { TestCase } from "../Interfaces";
 
 export async function testDownload(
   test: TestCase,
   transferType: FrontendTransferType,
   inputMethod: "url" | "config"
-) {
+): Promise<void> {
   const testData = `test-download-to-${transferType}-using-${inputMethod}`;
   const testDataBuffer = stringToArrayBuffer(testData);
 
   const directory = await test.directoryManager.createNew();
   const reference: ObjectReference = {
     baseDirectory: directory.baseDirectory,
-    objectName: testData
+    objectName: testData,
   };
-  await test.serverStorage.upload({data: testData, reference});
+  await test.serverStorage.upload({ data: testData, reference });
 
-  switch(inputMethod) {
+  switch (inputMethod) {
     case "url":
-      const url = await test.serverStorage.getDownloadUrl({reference});
-      switch(transferType) {
+      const url = await test.serverStorage.getDownloadUrl({ reference });
+      switch (transferType) {
         case "buffer":
-          const responseBuffer = await test.frontendStorage.download({url, transferType});
+          const responseBuffer = await test.frontendStorage.download({
+            url,
+            transferType,
+          });
           assertArrayBuffer(responseBuffer, testDataBuffer);
           break;
         case "stream":
-          const responseStream = await test.frontendStorage.download({url, transferType});
-          assertReadableStream(responseStream, testDataBuffer);
+          const responseStream = await test.frontendStorage.download({
+            url,
+            transferType,
+          });
+          await assertReadableStream(responseStream, testDataBuffer);
           return;
 
         default:
-          throw new Error(`Missing test case for transfer type ${transferType}`);
+          throw new Error(
+            `Missing test case for transfer type ${transferType}`
+          );
       }
       break;
 
     case "config":
-      const transferConfig = await test.serverStorage.getDownloadConfig({directory});
-      switch(transferType) {
+      const transferConfig = await test.serverStorage.getDownloadConfig({
+        directory,
+      });
+      switch (transferType) {
         case "buffer":
           const responseBuffer = await test.frontendStorage.download({
             reference,
             transferConfig,
-            transferType
+            transferType,
           });
           assertArrayBuffer(responseBuffer, testDataBuffer);
           break;
@@ -55,13 +73,15 @@ export async function testDownload(
           const responseStream = await test.frontendStorage.download({
             reference,
             transferConfig,
-            transferType
+            transferType,
           });
-          assertReadableStream(responseStream, testDataBuffer);
+          await assertReadableStream(responseStream, testDataBuffer);
           break;
-        
+
         default:
-          throw new Error(`Missing test case for transfer type ${transferType}`);
+          throw new Error(
+            `Missing test case for transfer type ${transferType}`
+          );
       }
       break;
 
