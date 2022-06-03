@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { TransferConfig } from "@itwin/object-storage-core";
-import axios from "axios";
+import { ObjectProperties, TransferConfig } from "@itwin/object-storage-core";
+import axios, { AxiosError } from "axios";
 import * as Common from "./Common";
 
 export class ServerStorageProxyFrontend {
@@ -22,11 +22,16 @@ export class ServerStorageProxyFrontend {
         baseURL: this._baseUrl,
         headers: this._headers,
       })
-      .then(response => { return response.data; } )
+      .then(response => { return response.data; })
+      .catch((error: AxiosError) => {
+        throw new Error(
+          `${ServerStorageProxyFrontend.name} ERROR: ${error.response?.status} "${url}"`
+        );
+      });
   }
 
-  public async download(request: Common.DownloadRequest): Promise<ArrayBuffer> {
-    return this.post<ArrayBuffer>(Common.DownloadRequestPath, request);
+  public async download(request: Common.DownloadRequest): Promise<string> {
+    return this.post<string>(Common.DownloadRequestPath, request);
   }
 
   public async upload(request: Common.UploadRequest): Promise<void> {
@@ -46,26 +51,36 @@ export class ServerStorageProxyFrontend {
   }
 
   public async baseDirectoryExists(request: Common.BaseDirectoryExistsRequest): Promise<boolean> {
-    return this.post<boolean>(Common.BaseDirectoryExistsRequestPath, request);
+    return await this.post<boolean>(Common.BaseDirectoryExistsRequestPath, request);
   }
 
   public async objectExists(request: Common.ObjectExistsRequest): Promise<boolean> {
     return this.post<boolean>(Common.ObjectExistsRequestPath, request);
   }
 
-  public async GetDownloadUrl(request: Common.GetDownloadUrlRequest): Promise<string> {
+  public async getObjectProperties(request: Common.GetObjectPropertiesRequest): Promise<ObjectProperties> {
+    const properties = await this.post<ObjectProperties>(Common.GetObjectPropertiesRequestPath, request);
+    properties.lastModified = new Date(properties.lastModified as unknown as string);
+    return properties;
+  }
+
+  public async getDownloadUrl(request: Common.GetDownloadUrlRequest): Promise<string> {
     return this.post<string>(Common.GetDownloadUrlRequestPath, request);
   }
 
-  public async GetUploadUrl(request: Common.GetUploadUrlRequest): Promise<string> {
+  public async getUploadUrl(request: Common.GetUploadUrlRequest): Promise<string> {
     return this.post<string>(Common.GetUploadUrlRequestPath, request);
   }
 
-  public async GetDownloadConfig(request: Common.GetDownloadConfigRequest): Promise<TransferConfig> {
-    return this.post<TransferConfig>(Common.GetDownloadConfigRequestPath, request);
+  public async getDownloadConfig(request: Common.GetDownloadConfigRequest): Promise<TransferConfig> {
+    const config = await this.post<TransferConfig>(Common.GetDownloadConfigRequestPath, request);
+    config.expiration = new Date(config.expiration as unknown as string);
+    return config;
   }
 
-  public async GetUploadConfig(request: Common.GetUploadConfigRequest): Promise<TransferConfig> {
-    return this.post<TransferConfig>(Common.GetUploadConfigRequestPath, request);
+  public async getUploadConfig(request: Common.GetUploadConfigRequest): Promise<TransferConfig> {
+    const config = await this.post<TransferConfig>(Common.GetUploadConfigRequestPath, request);
+    config.expiration = new Date(config.expiration as unknown as string);
+    return config;
   }
 }

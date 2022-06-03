@@ -14,7 +14,7 @@ export interface DownloadRequest {
 export const UploadRequestPath = `${BasePath}/upload`;
 export interface UploadRequest {
   reference: ObjectReference;
-  data: unknown;
+  data: string;
   metadata?: Metadata;
 }
 
@@ -42,6 +42,11 @@ export const ObjectExistsRequestPath = `${BasePath}/objectExists`;
 export interface ObjectExistsRequest {
   reference: ObjectReference;
 }
+
+export const GetObjectPropertiesRequestPath = `${BasePath}/getObjectProperties`;
+export interface GetObjectPropertiesRequest {
+  reference: ObjectReference
+};
 
 export const GetDownloadUrlRequestPath = `${BasePath}/getDownloadUrl`;
 export interface GetDownloadUrlRequest {

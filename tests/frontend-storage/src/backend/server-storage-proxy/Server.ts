@@ -40,7 +40,8 @@ export class ServerStorageProxyBackend extends Bindable {
     });
     app.post(Common.UploadRequestPath, async (request, response) => {
       const body = request.body as Common.UploadRequest;
-      await serverStorage.upload(body.reference, body.data as Buffer, body.metadata);
+      const dataBuffer = Buffer.from(body.data);
+      await serverStorage.upload(body.reference, dataBuffer, body.metadata);
       response.status(201).send();
     });
     app.post(Common.CreateBaseDirectoryRequestPath, async (request, response) => {
@@ -58,10 +59,20 @@ export class ServerStorageProxyBackend extends Bindable {
       await serverStorage.deleteObject(body.reference);
       response.status(204).send();
     });
+    app.post(Common.BaseDirectoryExistsRequestPath, async (request, response) => {
+      const body = request.body as Common.BaseDirectoryExistsRequest;
+      const result = await serverStorage.baseDirectoryExists(body.directory);
+      response.status(200).send(result);
+    });
     app.post(Common.ObjectExistsRequestPath, async (request, response) => {
       const body = request.body as Common.ObjectExistsRequest;
       const result = await serverStorage.objectExists(body.reference);
-      response.send(200).send(result);
+      response.status(200).send(result);
+    });
+    app.post(Common.GetObjectPropertiesRequestPath, async (request, response) => {
+      const body = request.body as Common.GetObjectPropertiesRequest;
+      const result = await serverStorage.getObjectProperties(body.reference);
+      response.status(200).send(result);
     });
     app.post(Common.GetDownloadUrlRequestPath, async (request, response) => {
       const body = request.body as Common.GetDownloadUrlRequest;

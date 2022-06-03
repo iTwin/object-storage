@@ -4,4 +4,3 @@
  *--------------------------------------------------------------------------------------------*/
 export * as ServerStorageProxyCommon from "./Common";
 export * from "./Server";
-export * from "./Frontend";

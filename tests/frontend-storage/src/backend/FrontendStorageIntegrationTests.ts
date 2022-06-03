@@ -14,6 +14,7 @@ export class FrontendStorageIntegrationTests {
     const supportDir = path.resolve(__dirname, "..", "cypress", "support");
     if (!fs.existsSync(supportDir))
       fs.mkdirSync(supportDir, { recursive: true });
+
     const supportFileName = path.basename(this._supportFileSourcePath);
     const supportFileTargetPath = path.join(supportDir, supportFileName);
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
@@ -34,8 +35,7 @@ export class FrontendStorageIntegrationTests {
       },
     };
 
-    if (process.env.DEBUG)
-      await cypress.open(cypressConfig);
+    if (process.env.DEBUG) await cypress.open(cypressConfig);
     else {
       const result = await cypress.run(cypressConfig);
       const cypressLaunchFailed = result.status === "failed";

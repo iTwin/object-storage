@@ -3,5 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./server-storage-proxy";
-export * from "./FrontendStorageIntegrationTests";
 export * from "./FrontendStorageTestSetup";
+export * from "./FrontendStorageIntegrationTests";

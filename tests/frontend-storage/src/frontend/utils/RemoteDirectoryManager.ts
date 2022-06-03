@@ -3,13 +3,19 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BaseDirectory } from "@itwin/object-storage-core";
-import { ServerStorageProxy } from "../server-storage-proxy/Frontend";
+import { ServerStorageProxyFrontend } from "../../backend/server-storage-proxy/Frontend";
 
-export class TestRemoteDirectoryManager {
-  private readonly _serverStorage: ServerStorageProxy;
+declare global {
+  interface Crypto {
+    randomUUID: () => string;
+  }
+}
+
+export class FrontendTestRemoteDirectoryManager {
+  private readonly _serverStorage: ServerStorageProxyFrontend;
   private _createdDirectories: BaseDirectory[] = [];
 
-  constructor(serverStorage: ServerStorageProxy) {
+  constructor(serverStorage: ServerStorageProxyFrontend) {
     this._serverStorage = serverStorage;
   }
 
