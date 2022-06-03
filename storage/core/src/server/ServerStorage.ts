@@ -18,10 +18,10 @@ import {
 
 import { MultipartUploadData, TransferData } from "./Interfaces";
 
+// prettier-ignore
 @injectable()
 export abstract class ServerStorage
-  implements PresignedUrlProvider, TransferConfigProvider
-{
+implements PresignedUrlProvider, TransferConfigProvider {
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"

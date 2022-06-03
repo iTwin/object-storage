@@ -50,12 +50,12 @@ export interface AzureServerStorageConfig {
 export class AzureServerStorage extends ServerStorage {
   private readonly _config: AzureServerStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
-
+  /* eslint-disable @typescript-eslint/indent */
   public constructor(
-    @inject(Types.AzureServer.config)
-    config: AzureServerStorageConfig,
+    @inject(Types.AzureServer.config) config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {
+    /* eslint-enable @typescript-eslint/indent */
     super();
 
     this._config = config;

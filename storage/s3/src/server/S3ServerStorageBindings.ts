@@ -23,8 +23,10 @@ import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
 import { S3TransferConfigProvider } from "./S3TransferConfigProvider";
 import { S3ClientWrapper } from "./wrappers";
 
+/* eslint-disable @typescript-eslint/indent */
 export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
   DependencyConfig;
+/* eslint-enable @typescript-eslint/indent */
 
 export class S3ServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "s3";
