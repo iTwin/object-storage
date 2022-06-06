@@ -50,7 +50,8 @@ export class S3FrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    if (instanceOfTransferInput(input)) return downloadFromUrlFrontend(input);
+    if (instanceOfTransferInput(input))
+      return downloadFromUrlFrontend(input);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),

@@ -2,31 +2,31 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { ObjectProperties, TransferConfig } from "@itwin/object-storage-core";
 
 import * as Common from "./Common";
 
 export class ServerStorageProxyFrontend {
-  private readonly _axiosConfig: AxiosRequestConfig;
+  private readonly _axiosClient: AxiosInstance;
 
   constructor(baseURL: string) {
-    this._axiosConfig = {
+    this._axiosClient = axios.create({
       baseURL,
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         "Content-Type": "application/json",
-      },
-    };
+      }
+    });
   }
 
   private async post<TResponse>(
     url: string,
     data?: unknown
   ): Promise<TResponse> {
-    return axios
-      .post<TResponse>(url, data, this._axiosConfig)
+    return this._axiosClient
+      .post<TResponse>(url, data)
       .then((response) => {
         return response.data;
       })

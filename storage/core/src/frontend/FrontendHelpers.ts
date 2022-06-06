@@ -45,11 +45,9 @@ export async function downloadFromUrlFrontend(
       return bufferResponse.data as ArrayBuffer;
 
     case "stream":
-      const streamResponse = await axios.get(url, {
-        responseType: "stream",
-      });
-      return streamResponse.data as ReadableStream;
-
+      // https://github.com/axios/axios/issues/479
+      const blobResponse = await axios.get(url, { responseType: "blob" });
+      return (blobResponse.data as Blob).stream();
     default:
       throw new Error(`Type '${transferType}' is not supported`);
   }
