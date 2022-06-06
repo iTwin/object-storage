@@ -8,17 +8,17 @@ import {
   MultipartUploadOptions,
   ObjectReference,
   TransferConfig,
-  TransferInput,
+  UrlTransferInput,
 } from "../common";
 
 export type FrontendTransferType = "buffer" | "stream";
 export type FrontendTransferData = ArrayBuffer | ReadableStream;
 export type FrontendMultipartUploadData = ReadableStream;
 
-export interface FrontendUrlDownloadInput extends TransferInput {
+export interface FrontendUrlDownloadInput extends UrlTransferInput {
   transferType: FrontendTransferType;
 }
-export interface FrontendUrlUploadInput extends TransferInput {
+export interface FrontendUrlUploadInput extends UrlTransferInput {
   data: FrontendTransferData;
   metadata?: Metadata;
 }

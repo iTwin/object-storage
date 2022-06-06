@@ -7,7 +7,7 @@ import { Readable } from "stream";
 
 import {
   assertFileNotEmpty,
-  instanceOfTransferInput,
+  instanceOfUrlTransferInput,
   metadataToHeaders,
   streamToBuffer,
   uploadToUrl,
@@ -27,7 +27,7 @@ export class MinioClientStorage extends S3ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    if (instanceOfTransferInput(input)) return handleMinioUrlUpload(input);
+    if (instanceOfUrlTransferInput(input)) return handleMinioUrlUpload(input);
     else return super.upload(input);
   }
 }

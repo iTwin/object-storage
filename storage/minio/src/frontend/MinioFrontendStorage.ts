@@ -5,7 +5,7 @@
 import {
   FrontendConfigUploadInput,
   FrontendUrlUploadInput,
-  instanceOfTransferInput,
+  instanceOfUrlTransferInput,
   metadataToHeaders,
   streamToBufferFrontend,
   uploadToUrlFrontend,
@@ -23,7 +23,7 @@ export class MinioFrontendStorage extends S3FrontendStorage {
   public override async upload(
     input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void> {
-    if (instanceOfTransferInput(input))
+    if (instanceOfUrlTransferInput(input))
       return handleMinioUrlUploadFrontend(input);
     else return super.upload(input);
   }

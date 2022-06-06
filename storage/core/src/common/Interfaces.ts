@@ -35,7 +35,7 @@ export interface TransferConfig {
   expiration: Date;
 }
 
-export interface TransferInput {
+export interface UrlTransferInput {
   url: string;
 }
 

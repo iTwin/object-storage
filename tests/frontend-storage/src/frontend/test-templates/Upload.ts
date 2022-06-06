@@ -11,12 +11,12 @@ import {
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { arrayBufferToReadableStream, stringToArrayBuffer } from "../Helpers";
-import { TestCase } from "../Interfaces";
+import { InputMethod, TestCase } from "../Interfaces";
 
 export async function testUpload(
   test: TestCase,
   transferType: FrontendTransferType,
-  inputMethod: "url" | "config",
+  inputMethod: InputMethod,
   useMetadata = false,
   useRelativeDir = false
 ): Promise<void> {

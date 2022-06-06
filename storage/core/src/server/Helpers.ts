@@ -8,7 +8,7 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
-import { ConfigTransferInput, TransferInput } from "../common";
+import { ConfigTransferInput, UrlTransferInput } from "../common";
 
 import {
   ConfigDownloadInput,
@@ -29,7 +29,7 @@ export async function assertFileNotEmpty(filePath: string): Promise<void> {
   }
 }
 export function isTransferInputLocal(
-  transfer: TransferInput | ConfigTransferInput
+  transfer: UrlTransferInput | ConfigTransferInput
 ): transfer is (UrlDownloadInput | ConfigDownloadInput) & {
   localPath: string;
 } {

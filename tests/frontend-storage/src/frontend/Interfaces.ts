@@ -13,3 +13,5 @@ export interface TestCase {
   directoryManager: FrontendTestRemoteDirectoryManager;
   frontendStorage: FrontendStorage;
 }
+
+export type InputMethod = "url" | "config";

@@ -13,12 +13,12 @@ import {
   assertReadableStream,
   stringToArrayBuffer,
 } from "../Helpers";
-import { TestCase } from "../Interfaces";
+import { InputMethod, TestCase } from "../Interfaces";
 
 export async function testDownload(
   test: TestCase,
   transferType: FrontendTransferType,
-  inputMethod: "url" | "config"
+  inputMethod: InputMethod,
 ): Promise<void> {
   const testData = `test-download-to-${transferType}-using-${inputMethod}`;
   const testDataBuffer = stringToArrayBuffer(testData);

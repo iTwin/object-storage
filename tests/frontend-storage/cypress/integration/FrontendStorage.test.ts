@@ -2,13 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+import { FrontendStorage, FrontendTransferType } from "@itwin/object-storage-core/lib/frontend";
 import {
   TestCase,
   ServerStorageProxyFrontend,
   FrontendTestRemoteDirectoryManager,
   testDownload,
   testUpload,
+  InputMethod,
 } from "../../src/frontend";
 
 const serverBaseUrl: string = (window as any).serverBaseUrl;
@@ -30,43 +31,26 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
   });
   
   describe(`${frontendStorage.download.name}()`, () => {
-    it("should download to buffer using URL", async () => {
-      await testDownload(test, "buffer", "url");
-    });
-    it("should download to stream using URL", async () => {
-      await testDownload(test, "stream", "url");
-    });
-    it("should download to buffer using transfer config", async () => {
-      await testDownload(test, "buffer", "config");
-    });
-    it("should download to stream using transfer config", async () => {
-      await testDownload(test, "stream", "config");
-    })
+    for(const transferType of ["buffer", "stream"] as Array<FrontendTransferType>)
+    for(const inputMethod of ["url", "config"] as Array<InputMethod>) {
+      it(`should download to ${transferType} from ${inputMethod}`, async () => {
+        await testDownload(test, transferType, inputMethod);
+      });
+    }
   });
+
   describe(`${frontendStorage.upload.name}()`, () => {
-    it("should upload buffer using URL", async () => {
-      await testUpload(test, "buffer", "url");
-    });
-    it("should upload stream using URL", async () => {
-      await testUpload(test, "stream", "url");
-    });
-    it("should upload buffer using transfer config", async () => {
-      await testUpload(test, "buffer", "config");
-    });
-    it("should upload stream using transfer config", async () => {
-      await testUpload(test, "stream", "config");
-    });
-    it("should upload buffer with metadata using transfer config", async () => {
-      await testUpload(test, "buffer", "config", true);
-    });
-    it("should upload stream with metadata using transfer config", async () => {
-      await testUpload(test, "stream", "config", true);
-    });
-    it("should upload buffer with relative directory using transfer config", async () => {
-      await testUpload(test, "stream", "config", true, true);
-    });
-    it("should upload stream with relative directory using transfer config", async () => {
-      await testUpload(test, "stream", "config", true, true);
-    });
+    for(const transferType of ["buffer", "stream"] as  Array<FrontendTransferType>)
+    for(const inputMethod of ["url", "config"] as Array<InputMethod>)
+    for(const useMetadata of [false, true] as Array<boolean>)
+    for(const useRelativeDir of [false, true] as Array<boolean>) {
+      const title = `should upload ${transferType} using ${inputMethod}` +
+        (useMetadata ? " with metadata" : "") +
+        (useRelativeDir ? " with relative dir": "");
+
+      it(title, async () => {
+        await testUpload(test, "buffer", "url");
+      });
+    }
   });
 });

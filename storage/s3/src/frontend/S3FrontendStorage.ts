@@ -13,7 +13,7 @@ import {
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  instanceOfTransferInput,
+  instanceOfUrlTransferInput,
   metadataToHeaders,
   streamToTransferTypeFrontend,
   Types,
@@ -51,7 +51,7 @@ export class S3FrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    if (instanceOfTransferInput(input)) return downloadFromUrlFrontend(input);
+    if (instanceOfUrlTransferInput(input)) return downloadFromUrlFrontend(input);
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
     return createAndUseClientFrontend(
@@ -68,7 +68,7 @@ export class S3FrontendStorage extends FrontendStorage {
   ): Promise<void> {
     const { data, metadata } = input;
 
-    if (instanceOfTransferInput(input))
+    if (instanceOfUrlTransferInput(input))
       return uploadToUrlFrontend(
         input.url,
         data,

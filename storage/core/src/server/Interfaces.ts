@@ -10,18 +10,18 @@ import {
   MultipartUploadOptions,
   ObjectReference,
   TransferConfig,
-  TransferInput,
+  UrlTransferInput,
 } from "../common";
 
 export type TransferType = "buffer" | "stream" | "local";
 export type TransferData = Readable | Buffer | string;
 export type MultipartUploadData = Readable | string;
 
-export interface UrlDownloadInput extends TransferInput {
+export interface UrlDownloadInput extends UrlTransferInput {
   transferType: TransferType;
   localPath?: string;
 }
-export interface UrlUploadInput extends TransferInput {
+export interface UrlUploadInput extends UrlTransferInput {
   data: TransferData;
   metadata?: Metadata;
 }

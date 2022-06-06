@@ -12,7 +12,7 @@ import {
   ObjectDirectory,
   ObjectReference,
   TransferConfig,
-  TransferInput,
+  UrlTransferInput,
 } from "./Interfaces";
 
 export function metadataToHeaders(
@@ -87,10 +87,10 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
   if (new Date() > transferConfig.expiration)
     throw new Error("Transfer config is expired");
 }
-export function instanceOfTransferInput(
+export function instanceOfUrlTransferInput(
   input: unknown
-): input is TransferInput {
-  return "url" in (input as TransferInput);
+): input is UrlTransferInput {
+  return "url" in (input as UrlTransferInput);
 }
 
 interface GetTransferTimeInSecondsOptions {

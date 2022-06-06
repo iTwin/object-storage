@@ -12,7 +12,7 @@ import {
   assertRelativeDirectory,
   ClientStorage,
   downloadFromUrl,
-  instanceOfTransferInput,
+  instanceOfUrlTransferInput,
   metadataToHeaders,
   streamToTransferType,
   TransferData,
@@ -59,7 +59,7 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    if (instanceOfTransferInput(input)) return downloadFromUrl(input);
+    if (instanceOfUrlTransferInput(input)) return downloadFromUrl(input);
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
     return createAndUseClient(
@@ -89,7 +89,7 @@ export class S3ClientStorage extends ClientStorage {
       data = createReadStream(data);
     }
 
-    if (instanceOfTransferInput(input))
+    if (instanceOfUrlTransferInput(input))
       return uploadToUrl(
         input.url,
         data,

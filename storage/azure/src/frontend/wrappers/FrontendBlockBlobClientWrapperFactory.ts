@@ -6,8 +6,8 @@ import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
 import {
-  instanceOfTransferInput,
-  TransferInput,
+  instanceOfUrlTransferInput,
+  UrlTransferInput,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {
@@ -20,10 +20,10 @@ import { FrontendBlockBlobClientWrapper } from "./FrontendBlockBlobClientWrapper
 @injectable()
 export class FrontendBlockBlobClientWrapperFactory {
   public create(
-    input: TransferInput | AzureTransferConfigInput
+    input: UrlTransferInput | AzureTransferConfigInput
   ): FrontendBlockBlobClientWrapper {
     const blobClient = new BlockBlobClient(
-      instanceOfTransferInput(input)
+      instanceOfUrlTransferInput(input)
         ? input.url
         : buildBlobUrlFromAzureTransferConfigInput(input)
     );
