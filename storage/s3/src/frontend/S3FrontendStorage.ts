@@ -17,6 +17,7 @@ import {
   streamToTransferTypeFrontend,
   Types,
   uploadToUrlFrontend,
+  assertRelativeDirectory,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
@@ -52,6 +53,8 @@ export class S3FrontendStorage extends FrontendStorage {
   ): Promise<FrontendTransferData> {
     if (instanceOfTransferInput(input))
       return downloadFromUrlFrontend(input);
+    else
+      assertRelativeDirectory(input.reference.relativeDirectory);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -73,12 +76,14 @@ export class S3FrontendStorage extends FrontendStorage {
         data,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
-
-    return createAndUseClientFrontend(
-      () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapperFrontend) =>
-        clientWrapper.upload(input.reference, data, metadata)
-    );
+    else {
+      assertRelativeDirectory(input.reference.relativeDirectory);
+      return createAndUseClientFrontend(
+        () => this._clientWrapperFactory.create(input.transferConfig),
+        async (clientWrapper: S3ClientWrapperFrontend) =>
+          clientWrapper.upload(input.reference, data, metadata)
+      );
+    }
   }
 
   public async uploadInMultipleParts(

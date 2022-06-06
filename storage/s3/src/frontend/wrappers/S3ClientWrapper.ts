@@ -36,12 +36,11 @@ export class S3ClientWrapperFrontend {
   ) {}
 
   public async download(reference: ObjectReference): Promise<ReadableStream> {
-    const key = buildObjectKey(reference);
     /* eslint-disable @typescript-eslint/naming-convention */
-    const { Body, } = await this._client.send(
+    const { Body } = await this._client.send(
       new GetObjectCommand({
         Bucket: this._bucket,
-        Key: key,
+        Key: buildObjectKey(reference),
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */

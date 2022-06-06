@@ -59,9 +59,10 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    if ("reference" in input)
+    if (instanceOfTransferInput(input))
+      return downloadFromUrl(input);
+    else
       assertRelativeDirectory(input.reference.relativeDirectory);
-    if (instanceOfTransferInput(input)) return downloadFromUrl(input);
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -81,9 +82,7 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     let { data } = input;
     const { metadata } = input;
-
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
       data = createReadStream(data);
@@ -95,12 +94,14 @@ export class S3ClientStorage extends ClientStorage {
         data,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
-    else
+    else {
+      assertRelativeDirectory(input.reference.relativeDirectory);
       return createAndUseClient(
         () => this._clientWrapperFactory.create(input.transferConfig),
         async (clientWrapper: S3ClientWrapper) =>
           clientWrapper.upload(input.reference, data, metadata)
       );
+    }
   }
 
   public async uploadInMultipleParts(
