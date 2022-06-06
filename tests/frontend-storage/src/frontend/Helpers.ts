@@ -32,7 +32,10 @@ export function assertArrayBuffer(
   got: FrontendTransferData,
   expected: ArrayBuffer
 ): void {
-  expect(got instanceof ArrayBuffer, `Not an ArrayBuffer: ${got.constructor.name}`).to.be.true;
+  expect(
+    got instanceof ArrayBuffer,
+    `Not an ArrayBuffer: ${got.constructor.name}`
+  ).to.be.true;
   expect(arrayBufferEquals(got as ArrayBuffer, expected), "got != expected").to
     .be.true;
 }
@@ -41,7 +44,10 @@ export async function assertReadableStream(
   got: FrontendTransferData,
   expectedAsBuffer: ArrayBuffer
 ): Promise<void> {
-  expect(got instanceof ReadableStream, `Not a ReadableStream: ${got.constructor.name}`).to.be.true;
+  expect(
+    got instanceof ReadableStream,
+    `Not a ReadableStream: ${got.constructor.name}`
+  ).to.be.true;
   const gotBuffer = await streamToBufferFrontend(got as ReadableStream);
   expect(arrayBufferEquals(gotBuffer, expectedAsBuffer), "got != expected").to
     .be.true;

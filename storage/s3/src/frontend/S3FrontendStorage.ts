@@ -5,6 +5,7 @@
 import { inject, injectable } from "inversify";
 
 import {
+  assertRelativeDirectory,
   downloadFromUrlFrontend,
   FrontendConfigUploadInput,
   FrontendStorage,
@@ -17,7 +18,6 @@ import {
   streamToTransferTypeFrontend,
   Types,
   uploadToUrlFrontend,
-  assertRelativeDirectory,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
@@ -51,10 +51,8 @@ export class S3FrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    if (instanceOfTransferInput(input))
-      return downloadFromUrlFrontend(input);
-    else
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if (instanceOfTransferInput(input)) return downloadFromUrlFrontend(input);
+    else assertRelativeDirectory(input.reference.relativeDirectory);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
