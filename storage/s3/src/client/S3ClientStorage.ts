@@ -81,6 +81,9 @@ export class S3ClientStorage extends ClientStorage {
     let { data } = input;
     const { metadata } = input;
 
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
       data = createReadStream(data);
@@ -93,7 +96,6 @@ export class S3ClientStorage extends ClientStorage {
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
     else {
-      assertRelativeDirectory(input.reference.relativeDirectory);
       return createAndUseClient(
         () => this._clientWrapperFactory.create(input.transferConfig),
         async (clientWrapper: S3ClientWrapper) =>
