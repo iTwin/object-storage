@@ -18,7 +18,7 @@ import { InputMethod, TestCase } from "../Interfaces";
 export async function testDownload(
   test: TestCase,
   transferType: FrontendTransferType,
-  inputMethod: InputMethod,
+  inputMethod: InputMethod
 ): Promise<void> {
   const testData = `test-download-to-${transferType}-using-${inputMethod}`;
   const testDataBuffer = stringToArrayBuffer(testData);

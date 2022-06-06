@@ -7,7 +7,6 @@ import "reflect-metadata";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { MinioClientStorageBindings } from "../../../client";
-import { MinioFrontendStorageBindings } from "../../../frontend";
 import { MinioServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
@@ -34,8 +33,7 @@ const config = {
 const tests = new StorageIntegrationTests(
   config,
   MinioServerStorageBindings,
-  MinioClientStorageBindings,
-  MinioFrontendStorageBindings
+  MinioClientStorageBindings
 );
 tests.start().catch((err) => {
   process.exitCode = 1;
