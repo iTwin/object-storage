@@ -15,7 +15,7 @@ import {
 use(chaiAsPromised);
 
 describe("Helper functions", () => {
-  describe("buildBlobUrlFromAzureTransferConfigInput()", () => {
+  describe(`${buildBlobUrlFromAzureTransferConfigInput.name}()`, () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "testBaseUrl",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),

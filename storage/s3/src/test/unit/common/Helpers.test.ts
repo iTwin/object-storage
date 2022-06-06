@@ -13,7 +13,7 @@ import { assertS3TransferConfig } from "../../../common/Helpers";
 use(chaiAsPromised);
 
 describe("Helper functions", () => {
-  describe("assertS3TransferConfig()", () => {
+  describe(`${assertS3TransferConfig.name}()`, () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "http://foo.bar",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
