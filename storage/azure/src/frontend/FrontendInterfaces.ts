@@ -10,7 +10,6 @@ import {
 
 import { AzureTransferConfigInput } from "../common";
 
-/* eslint-disable @typescript-eslint/indent */
 export type FrontendAzureConfigDownloadInput = FrontendConfigDownloadInput &
   AzureTransferConfigInput;
 
@@ -19,4 +18,3 @@ export type FrontendAzureConfigUploadInput = FrontendConfigUploadInput &
 
 export type FrontendAzureUploadInMultiplePartsInput =
   FrontendUploadInMultiplePartsInput & AzureTransferConfigInput;
-/* eslint-enable @typescript-eslint/indent */

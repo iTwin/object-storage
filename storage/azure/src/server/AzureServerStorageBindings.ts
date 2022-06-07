@@ -22,7 +22,7 @@ import {
 } from "./AzureServerStorage";
 import { BlobServiceClientWrapper } from "./wrappers/BlobServiceClientWrapper";
 
-export type AzureServerStorageBindingsConfig = AzureServerStorageConfig & // eslint-disable-next-line @typescript-eslint/indent
+export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;
 
 export class AzureServerStorageBindings extends ServerStorageDependency {
