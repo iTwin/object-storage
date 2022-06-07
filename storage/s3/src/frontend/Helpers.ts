@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { S3ClientWrapperFrontend } from "./wrappers";
+import { FrontendS3ClientWrapper } from "./wrappers";
 
 export async function createAndUseClientFrontend<TResult>(
-  clientFactory: () => S3ClientWrapperFrontend,
-  method: (clientWrapper: S3ClientWrapperFrontend) => Promise<TResult>
+  clientFactory: () => FrontendS3ClientWrapper,
+  method: (clientWrapper: FrontendS3ClientWrapper) => Promise<TResult>
 ): Promise<TResult> {
   const clientWrapper = clientFactory();
 

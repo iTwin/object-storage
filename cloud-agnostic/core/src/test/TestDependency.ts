@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Bindable, Dependency } from "../../..";
+import { Bindable, Dependency } from "..";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
 

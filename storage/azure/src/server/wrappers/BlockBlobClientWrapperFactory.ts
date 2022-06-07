@@ -10,10 +10,7 @@ import {
   UrlTransferInput,
 } from "@itwin/object-storage-core";
 
-import {
-  AzureTransferConfigInput,
-  buildBlobUrlFromAzureTransferConfigInput,
-} from "../../common";
+import { AzureTransferConfigInput, buildBloburl } from "../../common";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 
@@ -23,9 +20,7 @@ export class BlockBlobClientWrapperFactory {
     input: UrlTransferInput | AzureTransferConfigInput
   ): BlockBlobClientWrapper {
     const blobClient = new BlockBlobClient(
-      instanceOfUrlTransferInput(input)
-        ? input.url
-        : buildBlobUrlFromAzureTransferConfigInput(input)
+      instanceOfUrlTransferInput(input) ? input.url : buildBloburl(input)
     );
     return new BlockBlobClientWrapper(blobClient);
   }

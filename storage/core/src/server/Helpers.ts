@@ -28,7 +28,7 @@ export async function assertFileNotEmpty(filePath: string): Promise<void> {
     throw new Error("Provided path is an empty file.");
   }
 }
-export function isTransferInputLocal(
+export function isLocalTransferInput(
   transfer: UrlTransferInput | ConfigTransferInput
 ): transfer is (UrlDownloadInput | ConfigDownloadInput) & {
   localPath: string;

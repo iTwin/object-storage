@@ -15,7 +15,7 @@ import {
 } from "@itwin/object-storage-tests-backend-unit";
 
 import {
-  S3ClientWrapperFactoryFrontend,
+  FrontendS3ClientWrapperFactory,
   S3FrontendStorage,
   S3FrontendStorageBindings,
 } from "../../../frontend";
@@ -29,10 +29,10 @@ describe(`${S3FrontendStorageBindings.name}`, () => {
         testedClassIdentifier:
           CoreTypes.Frontend.clientWrapperFactory.toString(),
         testedFunction: (container: Container) =>
-          container.get<S3ClientWrapperFactoryFrontend>(
+          container.get<FrontendS3ClientWrapperFactory>(
             CoreTypes.Frontend.clientWrapperFactory
           ),
-        expectedCtor: S3ClientWrapperFactoryFrontend,
+        expectedCtor: FrontendS3ClientWrapperFactory,
       },
       {
         testedClassIdentifier: FrontendStorage.name,

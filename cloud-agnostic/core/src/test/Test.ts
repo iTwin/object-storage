@@ -6,7 +6,7 @@ import "reflect-metadata";
 
 import { inject, injectable } from "inversify";
 
-import { DependencyConfig } from "../../..";
+import { DependencyConfig } from "..";
 
 export interface TestConfig extends DependencyConfig {
   testProperty: string;

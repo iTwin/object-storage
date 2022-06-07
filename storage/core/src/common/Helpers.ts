@@ -32,6 +32,7 @@ export function buildObjectKey(ref: ObjectReference): string {
   const relative = ref.relativeDirectory ? `/${ref.relativeDirectory}` : "";
   return `${ref.baseDirectory}${relative}/${ref.objectName}`;
 }
+
 export function buildObjectReference(
   objectKey: string,
   separator = "/"
@@ -72,6 +73,7 @@ export function assertRelativeDirectory(
       "Relative directory cannot contain slashes at the beginning or the end of the string."
     );
 }
+
 export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(transferConfig, "transferConfig", "object");
   assertPrimitiveType(
@@ -87,6 +89,7 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
   if (new Date() > transferConfig.expiration)
     throw new Error("Transfer config is expired");
 }
+
 export function instanceOfUrlTransferInput(
   input: unknown
 ): input is UrlTransferInput {
@@ -98,6 +101,7 @@ interface GetTransferTimeInSecondsOptions {
   minTransferSpeedInKbps?: number;
   padding?: number;
 }
+
 export function getTransferTimeInSeconds(
   fileSize: number,
   {

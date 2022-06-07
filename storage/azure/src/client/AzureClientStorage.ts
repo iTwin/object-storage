@@ -12,7 +12,7 @@ import {
   assertFileNotEmpty,
   assertRelativeDirectory,
   ClientStorage,
-  isTransferInputLocal,
+  isLocalTransferInput,
   streamToTransferType,
   TransferData,
   Types,
@@ -61,7 +61,7 @@ export class AzureClientStorage extends ClientStorage {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
 
-    if (isTransferInputLocal(input))
+    if (isLocalTransferInput(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
     const downloadStream = await this._clientWrapperFactory

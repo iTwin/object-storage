@@ -28,7 +28,8 @@ export class MinioClientStorage extends S3ClientStorage {
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
     if (instanceOfUrlTransferInput(input)) return handleMinioUrlUpload(input);
-    else return super.upload(input);
+
+    return super.upload(input);
   }
 }
 

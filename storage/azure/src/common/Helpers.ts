@@ -31,9 +31,7 @@ export function assertAzureTransferConfig(
   );
 }
 
-export function buildBlobUrlFromAzureTransferConfigInput(
-  input: AzureTransferConfigInput
-): string {
+export function buildBloburl(input: AzureTransferConfigInput): string {
   assertAzureTransferConfig(input.transferConfig);
   const { authentication, baseUrl } = input.transferConfig;
   return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;

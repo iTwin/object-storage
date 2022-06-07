@@ -16,5 +16,5 @@
     "**/out": true,
     "**/lib": true,
     "common/temp": true
-  }
+  },
 }

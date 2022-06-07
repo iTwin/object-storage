@@ -23,15 +23,15 @@ import {
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClientFrontend } from "./Helpers";
 import {
-  S3ClientWrapperFactoryFrontend,
-  S3ClientWrapperFrontend,
+  FrontendS3ClientWrapper,
+  FrontendS3ClientWrapperFactory,
 } from "./wrappers";
 
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
     @inject(Types.Frontend.clientWrapperFactory)
-    private _clientWrapperFactory: S3ClientWrapperFactoryFrontend
+    private _clientWrapperFactory: FrontendS3ClientWrapperFactory
   ) {
     super();
   }
@@ -57,7 +57,7 @@ export class S3FrontendStorage extends FrontendStorage {
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapperFrontend) => {
+      async (clientWrapper: FrontendS3ClientWrapper) => {
         const downloadStream = await clientWrapper.download(input.reference);
         return streamToTransferTypeFrontend(downloadStream, input.transferType);
       }
@@ -79,7 +79,7 @@ export class S3FrontendStorage extends FrontendStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
       return createAndUseClientFrontend(
         () => this._clientWrapperFactory.create(input.transferConfig),
-        async (clientWrapper: S3ClientWrapperFrontend) =>
+        async (clientWrapper: FrontendS3ClientWrapper) =>
           clientWrapper.upload(input.reference, data, metadata)
       );
     }
@@ -90,7 +90,7 @@ export class S3FrontendStorage extends FrontendStorage {
   ): Promise<void> {
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapperFrontend) =>
+      async (clientWrapper: FrontendS3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,

@@ -11,12 +11,12 @@ import {
   uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
-  S3ClientWrapperFactoryFrontend,
+  FrontendS3ClientWrapperFactory,
   S3FrontendStorage,
 } from "@itwin/object-storage-s3/lib/frontend";
 
 export class MinioFrontendStorage extends S3FrontendStorage {
-  public constructor(clientWrapperFactory: S3ClientWrapperFactoryFrontend) {
+  public constructor(clientWrapperFactory: FrontendS3ClientWrapperFactory) {
     super(clientWrapperFactory);
   }
 

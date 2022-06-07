@@ -29,7 +29,7 @@ import {
 import { Types } from "../../common";
 
 @injectable()
-export class S3ClientWrapperFrontend {
+export class FrontendS3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
     @inject(Types.bucket) protected readonly _bucket: string
