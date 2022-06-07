@@ -7,12 +7,12 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig, buildBloburl } from "../../../common";
+import { AzureTransferConfig, buildBlobUrl } from "../../../common";
 
 use(chaiAsPromised);
 
 describe("Helper functions", () => {
-  describe(`${buildBloburl.name}()`, () => {
+  describe(`${buildBlobUrl.name}()`, () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "testBaseUrl",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
@@ -44,7 +44,7 @@ describe("Helper functions", () => {
           objectName: "testObjectName",
         };
         const testedFunction = () =>
-          buildBloburl({
+          buildBlobUrl({
             transferConfig:
               testCase.transferConfig as unknown as AzureTransferConfig,
             reference,
@@ -64,7 +64,7 @@ describe("Helper functions", () => {
         baseDirectory: "testBaseDirectory",
         objectName: "testObjectName",
       };
-      const testedFunction = () => buildBloburl({ transferConfig, reference });
+      const testedFunction = () => buildBlobUrl({ transferConfig, reference });
       expect(testedFunction).to.not.throw();
     });
   });
