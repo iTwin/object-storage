@@ -6,8 +6,8 @@ import { injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core";
 
-import { createS3Client } from "../Helpers";
 import { assertS3TransferConfig } from "../../common";
+import { createS3Client } from "../Helpers";
 
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
