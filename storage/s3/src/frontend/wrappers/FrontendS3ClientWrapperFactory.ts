@@ -6,7 +6,8 @@ import { injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
 
-import { assertS3TransferConfig, createS3Client } from "../../common";
+import { createS3ClientFrontend } from "..";
+import { assertS3TransferConfig } from "../../common";
 
 import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 
@@ -19,7 +20,13 @@ export class FrontendS3ClientWrapperFactory {
     const { accessKey, secretKey, sessionToken } = authentication;
 
     return new FrontendS3ClientWrapper(
-      createS3Client({ baseUrl, region, accessKey, secretKey, sessionToken }),
+      createS3ClientFrontend({
+        baseUrl,
+        region,
+        accessKey,
+        secretKey,
+        sessionToken,
+      }),
       bucket
     );
   }

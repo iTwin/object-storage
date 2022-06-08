@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
@@ -54,26 +53,6 @@ export function assertS3TransferConfig(
   assertPrimitiveType(transferConfig.bucket, "transferConfig.bucket", "string");
 }
 
-export function createS3Client(config: {
-  baseUrl: string;
-  region: string;
-  accessKey: string;
-  secretKey: string;
-  sessionToken?: string;
-}): S3Client {
-  const { baseUrl, region, accessKey, secretKey, sessionToken } = config;
-
-  return new S3Client({
-    endpoint: baseUrl,
-    region,
-    credentials: {
-      accessKeyId: accessKey,
-      secretAccessKey: secretKey,
-      sessionToken,
-    },
-    forcePathStyle: true, // needed for minio
-  });
-}
 export function createStsClient(config: {
   stsBaseUrl: string;
   region: string;

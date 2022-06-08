@@ -24,6 +24,7 @@ import {
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
+  streamToBufferFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { Types } from "../../common";
@@ -55,12 +56,16 @@ export class FrontendS3ClientWrapper {
     data: FrontendTransferData,
     metadata?: Metadata
   ): Promise<void> {
+    // PutObject doesn't like streams
+    const dataToUpload = new Uint8Array(
+      data instanceof ArrayBuffer ? data : await streamToBufferFrontend(data)
+    );
     /* eslint-disable @typescript-eslint/naming-convention */
     await this._client.send(
       new PutObjectCommand({
         Bucket: this._bucket,
         Key: buildObjectKey(reference),
-        Body: data instanceof ArrayBuffer ? new Uint8Array(data) : data,
+        Body: dataToUpload,
         Metadata: metadata,
       })
     );

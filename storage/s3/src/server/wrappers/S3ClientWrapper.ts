@@ -25,6 +25,7 @@ import {
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
+  streamToBuffer,
   TransferData,
 } from "@itwin/object-storage-core";
 
@@ -61,7 +62,8 @@ export class S3ClientWrapper {
       new PutObjectCommand({
         Bucket: this._bucket,
         Key: buildObjectKey(reference),
-        Body: data,
+        // PutObject doesn't like streams
+        Body: data instanceof Readable ? await streamToBuffer(data) : data,
         Metadata: metadata,
       })
     );
