@@ -4,14 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types as CoreTypes } from "@itwin/object-storage-core/lib/frontend";
+import {
+  Types as CoreTypes,
+  FrontendStorage,
+} from "@itwin/object-storage-core/lib/frontend";
 import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
 
+import { OSSFrontendStorage } from "./OssFrontendStorage";
 import { FrontendOssS3ClientWrapperFactory } from "./wrappers";
 
 export class OssFrontendStorageBindings extends S3FrontendStorageBindings {
   public override register(container: Container): void {
     super.register(container);
+
+    container.rebind(FrontendStorage).to(OSSFrontendStorage).inSingletonScope();
 
     container
       .rebind(CoreTypes.Frontend.clientWrapperFactory)
