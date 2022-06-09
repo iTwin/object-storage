@@ -3,5 +3,5 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./wrappers";
-export * from "./MinioFrontendStorage";
-export * from "./MinioFrontendStorageBindings";
+export * from "./Helpers";
+export * from "./OssFrontendStorageBindings";

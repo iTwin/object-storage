@@ -2,8 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
 import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
+
+import { OssFrontendStorageBindings } from "../../../frontend";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -13,7 +14,7 @@ const config = {
 };
 const setup = new FrontendStorageTestSetup(
   config,
-  S3FrontendStorageBindings,
+  OssFrontendStorageBindings,
   "http://localhost:1223"
 );
 setup.setGlobals();

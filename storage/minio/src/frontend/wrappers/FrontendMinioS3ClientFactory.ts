@@ -5,13 +5,15 @@
 import { injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
+import {
+  assertS3TransferConfig,
+  FrontendS3ClientWrapper,
+} from "@itwin/object-storage-s3/lib/frontend";
 
-import { assertS3TransferConfig, createS3Client } from "../../common";
-
-import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
+import { createMinioS3ClientFrontend } from "../Helpers";
 
 @injectable()
-export class FrontendS3ClientWrapperFactory {
+export class FrontendMinioS3ClientWrapperFactory {
   public create(transferConfig: TransferConfig): FrontendS3ClientWrapper {
     assertS3TransferConfig(transferConfig);
 
@@ -19,7 +21,7 @@ export class FrontendS3ClientWrapperFactory {
     const { accessKey, secretKey, sessionToken } = authentication;
 
     return new FrontendS3ClientWrapper(
-      createS3Client({
+      createMinioS3ClientFrontend({
         baseUrl,
         region,
         accessKey,

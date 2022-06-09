@@ -4,10 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+import {
+  Types as CoreTypes,
+  FrontendStorage,
+} from "@itwin/object-storage-core/lib/frontend";
 import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
 
 import { MinioFrontendStorage } from "./MinioFrontendStorage";
+import { FrontendMinioS3ClientWrapperFactory } from "./wrappers/FrontendMinioS3ClientFactory";
 
 export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
   public override readonly dependencyName: string = "minio";
@@ -18,6 +22,11 @@ export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
     container
       .rebind(FrontendStorage)
       .to(MinioFrontendStorage)
+      .inSingletonScope();
+
+    container
+      .rebind(CoreTypes.Frontend.clientWrapperFactory)
+      .to(FrontendMinioS3ClientWrapperFactory)
       .inSingletonScope();
   }
 }
