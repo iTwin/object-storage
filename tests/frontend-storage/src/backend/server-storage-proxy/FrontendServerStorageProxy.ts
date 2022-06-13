@@ -8,7 +8,7 @@ import { ObjectProperties, TransferConfig } from "@itwin/object-storage-core";
 
 import * as Common from "./Common";
 
-export class ServerStorageProxyFrontend {
+export class FrontendServerStorageProxy {
   private readonly _axiosClient: AxiosInstance;
 
   constructor(baseURL: string) {
@@ -32,7 +32,7 @@ export class ServerStorageProxyFrontend {
       })
       .catch((error: AxiosError) => {
         throw new Error(
-          `${ServerStorageProxyFrontend.name} ERROR: ${error.response?.status} "${url}"`
+          `${FrontendServerStorageProxy.name} ERROR: ${error.response?.status} "${url}"`
         );
       });
   }

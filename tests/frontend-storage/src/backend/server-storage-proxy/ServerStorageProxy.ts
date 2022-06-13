@@ -15,7 +15,7 @@ import {
 
 import * as Common from "./Common";
 
-export class ServerStorageProxyBackend extends Bindable {
+export class ServerStorageProxy extends Bindable {
   public readonly container = new Container();
 
   constructor() {
@@ -32,7 +32,6 @@ export class ServerStorageProxyBackend extends Bindable {
     app.use(express.static(publicDir));
     app.use(express.json());
 
-    // Not exactly REST but it's for tests only
     app.post(Common.DOWNLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DownloadRequest;
       const result = await serverStorage.download(body.reference, "buffer");

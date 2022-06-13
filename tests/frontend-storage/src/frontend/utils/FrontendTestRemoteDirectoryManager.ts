@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { BaseDirectory } from "@itwin/object-storage-core/lib/frontend";
 
-import { ServerStorageProxyFrontend } from "../../backend/server-storage-proxy/Frontend";
+import { FrontendServerStorageProxy } from "../../backend/server-storage-proxy/FrontendServerStorageProxy";
 
 declare global {
   interface Crypto {
@@ -13,10 +13,10 @@ declare global {
 }
 
 export class FrontendTestRemoteDirectoryManager {
-  private readonly _serverStorage: ServerStorageProxyFrontend;
+  private readonly _serverStorage: FrontendServerStorageProxy;
   private _createdDirectories: BaseDirectory[] = [];
 
-  constructor(serverStorage: ServerStorageProxyFrontend) {
+  constructor(serverStorage: FrontendServerStorageProxy) {
     this._serverStorage = serverStorage;
   }
 
@@ -29,7 +29,7 @@ export class FrontendTestRemoteDirectoryManager {
     return newDirectory;
   }
 
-  public addForDelete(directory: BaseDirectory): void {
+  private addForDelete(directory: BaseDirectory): void {
     this._createdDirectories.push(directory);
   }
 

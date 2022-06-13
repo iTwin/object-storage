@@ -10,7 +10,7 @@ import {
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {
-  ServerStorageProxyFrontend,
+  FrontendServerStorageProxy,
   FrontendTestRemoteDirectoryManager,
   stringToArrayBuffer,
   assertArrayBuffer,
@@ -22,7 +22,7 @@ type InputMethod = "url" | "config";
 
 const serverBaseUrl: string = (window as any).serverBaseUrl;
 const frontendStorage: FrontendStorage = (window as any).frontendStorage;
-const serverStorage = new ServerStorageProxyFrontend(serverBaseUrl);
+const serverStorage = new FrontendServerStorageProxy(serverBaseUrl);
 const directoryManager = new FrontendTestRemoteDirectoryManager(serverStorage);
 
 describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
