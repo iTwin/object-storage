@@ -7,13 +7,16 @@ import {
   streamToBufferFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 
-export function stringToArrayBuffer(input: string): ArrayBuffer {
-  return new TextEncoder().encode(input).buffer;
-}
 export function arrayBufferToReadableStream(
   buffer: ArrayBuffer
 ): ReadableStream {
   return new Response(buffer).body;
+}
+export function stringToArrayBuffer(input: string): ArrayBuffer {
+  return new TextEncoder().encode(input).buffer;
+}
+export function stringToReadableStream(input: string): ReadableStream {
+  return arrayBufferToReadableStream(stringToArrayBuffer(input));
 }
 
 export function arrayBufferEquals(x: ArrayBuffer, y: ArrayBuffer): boolean {

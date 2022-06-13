@@ -2,7 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { FrontendServerStorageProxy } from "../backend/server-storage-proxy/FrontendServerStorageProxy";
-export * from "./test-templates";
-export * from "./utils";
-export * from "./Helpers";
+import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+
+import {
+  FrontendServerStorageProxy,
+  FrontendTestRemoteDirectoryManager,
+} from "..";
+
+export interface TestProps {
+  serverStorage: FrontendServerStorageProxy;
+  directoryManager: FrontendTestRemoteDirectoryManager;
+  frontendStorage: FrontendStorage;
+}
