@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   Metadata,
+  ObjectDirectory,
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
 
@@ -14,6 +15,33 @@ import { TestProps } from "./Interfaces";
 export interface UploadTestOptions {
   useRelativeDir?: boolean;
   useMetadata?: boolean;
+}
+
+interface UploadTestSetup {
+  data: string;
+  directory: ObjectDirectory;
+  reference: ObjectReference;
+  metadata?: Metadata;
+}
+
+async function setupUpload(
+  testName: string,
+  test: TestProps,
+  options: UploadTestOptions = {}
+): Promise<UploadTestSetup> {
+  const data = testName;
+  const directory = await test.directoryManager.createNew();
+  const reference: ObjectReference = {
+    baseDirectory: directory.baseDirectory,
+    relativeDirectory: options.useRelativeDir
+      ? "test-relative-1/test-relative-2"
+      : undefined,
+    objectName: `${testName}.txt`,
+  };
+  const metadata: Metadata | undefined = options.useMetadata
+    ? { test: "test-metadata" }
+    : undefined;
+  return { data, directory, reference, metadata };
 }
 
 async function assertUploadedFile(
@@ -36,26 +64,6 @@ async function assertUploadedFile(
       expectedMetadata
     );
   }
-}
-
-async function setupUpload(
-  testName: string,
-  test: TestProps,
-  options: UploadTestOptions = {}
-) {
-  const data = testName;
-  const directory = await test.directoryManager.createNew();
-  const reference: ObjectReference = {
-    baseDirectory: directory.baseDirectory,
-    relativeDirectory: options.useRelativeDir
-      ? "test-relative-1/test-relative-2"
-      : undefined,
-    objectName: `${testName}.txt`,
-  };
-  const metadata: Metadata | undefined = options.useMetadata
-    ? { test: "test-metadata" }
-    : undefined;
-  return { data, directory, reference, metadata };
 }
 
 export async function testUploadFromBufferToUrl(

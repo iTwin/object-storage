@@ -3,7 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { ObjectReference } from "@itwin/object-storage-core";
+import {
+  ObjectDirectory,
+  ObjectReference,
+  TransferConfig,
+} from "@itwin/object-storage-core";
 
 import {
   assertArrayBuffer,
@@ -13,7 +17,23 @@ import {
 
 import { TestProps } from "./Interfaces";
 
-async function setupDownload(testName: string, test: TestProps) {
+interface DownloadTestSetup {
+  data: string;
+  dataBuffer: ArrayBuffer;
+  directory: ObjectDirectory;
+  reference: ObjectReference;
+}
+interface UrlDownloadTestSetup extends DownloadTestSetup {
+  url: string;
+}
+interface ConfigDownloadTestSetup extends DownloadTestSetup {
+  transferConfig: TransferConfig;
+}
+
+async function setupDownload(
+  testName: string,
+  test: TestProps
+): Promise<DownloadTestSetup> {
   const data = testName;
   const dataBuffer = stringToArrayBuffer(data);
   const directory = await test.directoryManager.createNew();
@@ -25,7 +45,10 @@ async function setupDownload(testName: string, test: TestProps) {
   return { data, dataBuffer, directory, reference };
 }
 
-async function setupDownloadUrl(testName: string, test: TestProps) {
+async function setupDownloadUrl(
+  testName: string,
+  test: TestProps
+): Promise<UrlDownloadTestSetup> {
   const setup = await setupDownload(testName, test);
   const url = await test.serverStorage.getDownloadUrl({
     reference: setup.reference,
@@ -33,7 +56,10 @@ async function setupDownloadUrl(testName: string, test: TestProps) {
   return { ...setup, url };
 }
 
-async function setupDownloadConfig(testName: string, test: TestProps) {
+async function setupDownloadConfig(
+  testName: string,
+  test: TestProps
+): Promise<ConfigDownloadTestSetup> {
   const setup = await setupDownload(testName, test);
   const transferConfig = await test.serverStorage.getDownloadConfig({
     directory: setup.directory,
