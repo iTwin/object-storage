@@ -65,10 +65,9 @@ export class S3ClientWrapper {
       Metadata: metadata,
     };
     /* eslint-enable @typescript-eslint/naming-convention */
-    if(data)
+    if (data)
       input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
-    else
-      input.ContentLength = 0;
+    else input.ContentLength = 0;
     await this._client.send(new PutObjectCommand(input));
   }
 
