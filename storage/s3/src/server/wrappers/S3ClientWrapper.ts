@@ -11,6 +11,7 @@ import {
   HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
+  PutObjectCommandInput,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -54,20 +55,21 @@ export class S3ClientWrapper {
 
   public async upload(
     reference: ObjectReference,
-    data: TransferData,
+    data?: TransferData,
     metadata?: Metadata
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
-    await this._client.send(
-      new PutObjectCommand({
-        Bucket: this._bucket,
-        Key: buildObjectKey(reference),
-        // PutObject doesn't like streams
-        Body: data instanceof Readable ? await streamToBuffer(data) : data,
-        Metadata: metadata,
-      })
-    );
+    const input: PutObjectCommandInput = {
+      Bucket: this._bucket,
+      Key: buildObjectKey(reference),
+      Metadata: metadata,
+    };
     /* eslint-enable @typescript-eslint/naming-convention */
+    if(data)
+      input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
+    else
+      input.ContentLength = 0;
+    await this._client.send(new PutObjectCommand(input));
   }
 
   public async uploadInMultipleParts(

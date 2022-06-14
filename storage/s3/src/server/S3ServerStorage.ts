@@ -126,8 +126,7 @@ export class S3ServerStorage extends ServerStorage {
       {
         baseDirectory: directory.baseDirectory,
         objectName: "",
-      },
-      Buffer.from(" ")
+      }
     );
   }
 
