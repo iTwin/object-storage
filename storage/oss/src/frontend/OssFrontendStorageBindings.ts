@@ -4,9 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import {
-  Types as CoreTypes
-} from "@itwin/object-storage-core/lib/frontend";
+import { Types as CoreTypes } from "@itwin/object-storage-core/lib/frontend";
 import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend";
 
 import { FrontendOssS3ClientWrapperFactory } from "./wrappers";

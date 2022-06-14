@@ -19,10 +19,7 @@ export class FrontendBlockBlobClientWrapper {
     return downloadResponse.blobBody!;
   }
 
-  public async upload(
-    data: ArrayBuffer,
-    metadata?: Metadata
-  ): Promise<void> {
+  public async upload(data: ArrayBuffer, metadata?: Metadata): Promise<void> {
     // TODO: update behavior as per documentation
     await this._client.upload(data, data.byteLength, { metadata });
   }
