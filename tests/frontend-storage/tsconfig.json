@@ -1,11 +1,3 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "es5",
-      "dom"
-    ],
-    "types": [
-      "cypress"
-    ],
-  }
+  "extends": "./node_modules/@itwin/object-storage-common-config/tsconfig.json",
 }
