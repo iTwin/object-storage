@@ -14,13 +14,11 @@ export class FrontendBlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
   public async download(): Promise<Blob> {
-    // TODO: update behavior as per documentation
     const downloadResponse = await this._client.download();
     return downloadResponse.blobBody!;
   }
 
   public async upload(data: ArrayBuffer, metadata?: Metadata): Promise<void> {
-    // TODO: update behavior as per documentation
     await this._client.upload(data, data.byteLength, { metadata });
   }
 

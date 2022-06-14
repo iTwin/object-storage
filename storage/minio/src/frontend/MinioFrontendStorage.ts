@@ -31,8 +31,6 @@ export class MinioFrontendStorage extends S3FrontendStorage {
 export async function handleMinioUrlUploadFrontend(
   input: FrontendUrlUploadInput
 ): Promise<void> {
-  // minio responds with 411 error if Content-Length header is not present
-  // used streamToBuffer to get the length before uploading for streams
   const { data, metadata, url } = input;
   const headers = metadata
     ? metadataToHeaders(metadata, "x-amz-meta-")

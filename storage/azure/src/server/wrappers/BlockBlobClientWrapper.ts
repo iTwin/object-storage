@@ -16,7 +16,6 @@ export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
   public async download(): Promise<Readable> {
-    // TODO: update behavior as per documentation
     const downloadResponse = await this._client.download();
     return downloadResponse.readableStreamBody! as Readable;
   }
