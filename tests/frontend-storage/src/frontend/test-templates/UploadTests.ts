@@ -85,25 +85,6 @@ export async function testUploadFromBufferToUrl(
   await assertUploadedFile(test, reference, data, metadata);
 }
 
-export async function testUploadFromStreamToUrl(
-  test: TestProps,
-  options?: UploadTestOptions
-): Promise<void> {
-  const { data, reference, metadata } = await setupUpload(
-    "test-upload-from-stream-to-url",
-    test,
-    options
-  );
-  const dataStream = stringToReadableStream(data);
-  const url = await test.serverStorage.getUploadUrl({ reference });
-  await test.frontendStorage.upload({
-    url,
-    data: dataStream,
-    metadata,
-  });
-  await assertUploadedFile(test, reference, data, metadata);
-}
-
 export async function testUploadFromBufferWithConfig(
   test: TestProps,
   options?: UploadTestOptions
@@ -121,28 +102,6 @@ export async function testUploadFromBufferWithConfig(
     reference,
     transferConfig,
     data: dataBuffer,
-    metadata,
-  });
-  await assertUploadedFile(test, reference, data, metadata);
-}
-
-export async function testUploadFromStreamWithConfig(
-  test: TestProps,
-  options?: UploadTestOptions
-): Promise<void> {
-  const { data, directory, reference, metadata } = await setupUpload(
-    "test-upload-from-stream-with-config",
-    test,
-    options
-  );
-  const dataStream = stringToReadableStream(data);
-  const transferConfig = await test.serverStorage.getUploadConfig({
-    directory,
-  });
-  await test.frontendStorage.upload({
-    reference,
-    transferConfig,
-    data: dataStream,
     metadata,
   });
   await assertUploadedFile(test, reference, data, metadata);

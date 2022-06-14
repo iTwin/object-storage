@@ -10,7 +10,7 @@ import {
 export function arrayBufferToReadableStream(
   buffer: ArrayBuffer
 ): ReadableStream {
-  return new Response(buffer).body;
+  return new Response(buffer).body!;
 }
 export function stringToArrayBuffer(input: string): ArrayBuffer {
   return new TextEncoder().encode(input).buffer;

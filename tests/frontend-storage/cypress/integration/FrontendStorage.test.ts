@@ -9,9 +9,7 @@ import {
   FrontendTestRemoteDirectoryManager,
   TestProps,
   testUploadFromBufferToUrl,
-  testUploadFromStreamToUrl,
   testUploadFromBufferWithConfig,
-  testUploadFromStreamWithConfig,
   testDownloadFromUrlToBuffer,
   testDownloadFromUrlToStream,
   testDownloadToBufferWithConfig,
@@ -45,20 +43,11 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       it("should upload a file from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test);
       });
-      it("should upload a file from stream to URL", async () => {
-        await testUploadFromStreamToUrl(test);
-      });
       it("should upload a file with relative dir from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test, { useRelativeDir: true })
       });
-      it("should upload a file with relative dir from stream to URL", async () => {
-        await testUploadFromStreamToUrl(test, { useRelativeDir: true })
-      });
       it("should upload a file with metadata from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test, { useMetadata: true })
-      });
-      it("should upload a file with metadata from stream to URL", async () => {
-        await testUploadFromStreamToUrl(test, { useMetadata: true })
       });
     });
     describe(`${frontendStorage.download.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
@@ -76,20 +65,11 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       it("should upload a file from buffer using transfer config", async () => {
         await testUploadFromBufferWithConfig(test);
       });
-      it(`should upload a file from stream using transfer config`, async () => {
-        await testUploadFromStreamWithConfig(test);
-      });
       it(`should upload a file with relative directory from buffer using transfer config`, async () => {
         await testUploadFromBufferWithConfig(test, { useRelativeDir: true });
       });
-      it(`should upload a file with relative directory from stream using transfer config`, async () => {
-        await testUploadFromStreamWithConfig(test, { useRelativeDir: true });
-      });
       it(`should upload a file from buffer with metadata using transfer config`, async () => {
         await testUploadFromBufferWithConfig(test, { useMetadata: true });
-      });
-      it(`should upload a file from stream with metadata using transfer config`, async () => {
-        await testUploadFromStreamWithConfig(test, { useMetadata: true });
       });
     });
     describe(`${frontendStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {

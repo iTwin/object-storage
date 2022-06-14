@@ -7,7 +7,6 @@ import {
   FrontendUrlUploadInput,
   instanceOfUrlTransferInput,
   metadataToHeaders,
-  streamToBufferFrontend,
   uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
@@ -35,16 +34,8 @@ export async function handleMinioUrlUploadFrontend(
   // minio responds with 411 error if Content-Length header is not present
   // used streamToBuffer to get the length before uploading for streams
   const { data, metadata, url } = input;
-
-  const dataToUpload =
-    data instanceof ReadableStream ? await streamToBufferFrontend(data) : data;
-  const metaHeaders = metadata
+  const headers = metadata
     ? metadataToHeaders(metadata, "x-amz-meta-")
     : undefined;
-  const headers = {
-    ...metaHeaders,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    "Content-Length": dataToUpload.byteLength.toString(),
-  };
-  return uploadToUrlFrontend(url, dataToUpload, headers);
+  return uploadToUrlFrontend(url, data, headers);
 }

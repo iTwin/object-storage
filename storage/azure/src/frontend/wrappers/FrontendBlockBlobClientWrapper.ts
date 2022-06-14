@@ -6,7 +6,6 @@ import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import {
   FrontendMultipartUploadData,
-  FrontendTransferData,
   MultipartUploadOptions,
   streamToBufferFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
@@ -21,13 +20,11 @@ export class FrontendBlockBlobClientWrapper {
   }
 
   public async upload(
-    data: FrontendTransferData,
+    data: ArrayBuffer,
     metadata?: Metadata
   ): Promise<void> {
-    const dataBuffer =
-      data instanceof ArrayBuffer ? data : await streamToBufferFrontend(data); // _client.uploadStream() is node.js only
     // TODO: update behavior as per documentation
-    await this._client.upload(dataBuffer, dataBuffer.byteLength, { metadata });
+    await this._client.upload(data, data.byteLength, { metadata });
   }
 
   public async uploadInMultipleParts(

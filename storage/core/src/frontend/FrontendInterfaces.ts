@@ -19,7 +19,7 @@ export interface FrontendUrlDownloadInput extends UrlTransferInput {
   transferType: FrontendTransferType;
 }
 export interface FrontendUrlUploadInput extends UrlTransferInput {
-  data: FrontendTransferData;
+  data: ArrayBuffer;
   metadata?: Metadata;
 }
 
@@ -27,7 +27,7 @@ export interface FrontendConfigDownloadInput extends ConfigTransferInput {
   transferType: FrontendTransferType;
 }
 export interface FrontendConfigUploadInput extends ConfigTransferInput {
-  data: FrontendTransferData;
+  data: ArrayBuffer;
   metadata?: Metadata;
 }
 
