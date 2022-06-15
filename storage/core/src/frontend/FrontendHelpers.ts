@@ -17,6 +17,7 @@ export async function streamToBufferFrontend(
 ): Promise<ArrayBuffer> {
   return new Response(stream).arrayBuffer();
 }
+
 export async function streamToTransferTypeFrontend(
   stream: ReadableStream,
   transferType: FrontendTransferType
@@ -52,6 +53,7 @@ export async function downloadFromUrlFrontend(
       throw new Error(`Type '${transferType}' is not supported`);
   }
 }
+
 export async function uploadToUrlFrontend(
   url: string,
   data: FrontendTransferData,

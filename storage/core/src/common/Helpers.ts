@@ -50,6 +50,7 @@ export function buildObjectReference(
 
   return result;
 }
+
 export function buildObjectDirectoryString(directory: ObjectDirectory): string {
   const { baseDirectory, relativeDirectory } = directory;
   return `${baseDirectory}${relativeDirectory ? `/${relativeDirectory}` : ""}`;

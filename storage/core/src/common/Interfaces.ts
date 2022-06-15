@@ -16,13 +16,16 @@ export interface BaseDirectory {
   /** Container for Azure. First directory of a prefix for S3. */
   baseDirectory: string;
 }
+
 export interface ObjectDirectory extends BaseDirectory {
   /** Additional directories in the path to object. */
   relativeDirectory?: string;
 }
+
 export interface ObjectReference extends ObjectDirectory {
   objectName: string;
 }
+
 export interface ObjectProperties {
   reference: ObjectReference;
   size: number;

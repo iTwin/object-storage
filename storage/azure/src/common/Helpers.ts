@@ -36,10 +36,12 @@ export function buildBlobUrl(input: AzureTransferConfigInput): string {
   const { authentication, baseUrl } = input.transferConfig;
   return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
 }
+
 export function buildBlobName(reference: ObjectReference): string {
   const { relativeDirectory, objectName } = reference;
   return (relativeDirectory ? `${relativeDirectory}/` : "") + objectName;
 }
+
 export function buildExpiresOn(expiresInSeconds: number): Date {
   const expiresOn = new Date();
   expiresOn.setSeconds(expiresOn.getSeconds() + expiresInSeconds);

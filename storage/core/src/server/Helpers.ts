@@ -22,12 +22,14 @@ export function assertLocalFile(
 ): asserts localPath is string {
   if (!localPath) throw new Error("Specify localPath");
 }
+
 export async function assertFileNotEmpty(filePath: string): Promise<void> {
   const fileStats = await promises.stat(filePath);
   if (fileStats.size === 0) {
     throw new Error("Provided path is an empty file.");
   }
 }
+
 export function isLocalTransferInput(
   transfer: UrlTransferInput | ConfigTransferInput
 ): transfer is (UrlDownloadInput | ConfigDownloadInput) & {
@@ -50,6 +52,7 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
     stream.on("error", reject);
   });
 }
+
 export async function streamToLocalFile(
   stream: Readable,
   destinationPath: string
@@ -63,6 +66,7 @@ export async function streamToLocalFile(
     fileStream.on("finish", resolve);
   });
 }
+
 export async function streamToTransferType(
   stream: Readable,
   transferType: TransferType,
@@ -106,6 +110,7 @@ export async function downloadFromUrl(
       throw new Error(`Type ${input.transferType} is not supported`);
   }
 }
+
 export async function uploadToUrl(
   url: string,
   data: TransferData,
