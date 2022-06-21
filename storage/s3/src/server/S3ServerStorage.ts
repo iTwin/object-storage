@@ -27,7 +27,7 @@ import {
   Types,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapper } from "../frontend";
+import { S3ClientWrapper } from "./wrappers";
 
 export interface S3ServerStorageConfig {
   baseUrl: string;
@@ -81,7 +81,6 @@ export class S3ServerStorage extends ServerStorage {
     localPath?: string
   ): Promise<TransferData> {
     assertRelativeDirectory(reference.relativeDirectory);
-
     const downloadStream = await this._s3Client.download(reference);
     return streamToTransferType(downloadStream, transferType, localPath);
   }
@@ -92,10 +91,13 @@ export class S3ServerStorage extends ServerStorage {
     metadata?: Metadata
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload =
-      typeof data === "string" ? createReadStream(data) : data;
+    let dataToUpload: Readable | Buffer;
+    if (typeof data === "string") {
+      await assertFileNotEmpty(data);
+      dataToUpload = createReadStream(data);
+    } else {
+      dataToUpload = data;
+    }
     return this._s3Client.upload(reference, dataToUpload, metadata);
   }
 
@@ -105,10 +107,13 @@ export class S3ServerStorage extends ServerStorage {
     options?: MultipartUploadOptions
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
-    await assertFileNotEmpty(data);
-
-    const dataToUpload =
-      typeof data === "string" ? createReadStream(data) : data;
+    let dataToUpload: Buffer | Readable;
+    if (typeof data === "string") {
+      await assertFileNotEmpty(data);
+      dataToUpload = createReadStream(data);
+    } else {
+      dataToUpload = data;
+    }
     return this._s3Client.uploadInMultipleParts(
       reference,
       dataToUpload,
@@ -117,13 +122,10 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
-    return this._s3Client.upload(
-      {
-        baseDirectory: directory.baseDirectory,
-        objectName: "",
-      },
-      ""
-    );
+    return this._s3Client.upload({
+      baseDirectory: directory.baseDirectory,
+      objectName: "",
+    });
   }
 
   /** Max 1000 objects */

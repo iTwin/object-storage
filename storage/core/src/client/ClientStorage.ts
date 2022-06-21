@@ -3,12 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
-
 import { Readable } from "stream";
 
 import { injectable } from "inversify";
-
-import { BaseFrontendStorage } from "../frontend";
 
 import {
   ConfigDownloadInput,
@@ -16,10 +13,10 @@ import {
   UploadInMultiplePartsInput,
   UrlDownloadInput,
   UrlUploadInput,
-} from "./ClientInterfaces";
+} from "../server";
 
 @injectable()
-export abstract class ClientStorage implements BaseFrontendStorage {
+export abstract class ClientStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
   ): Promise<Buffer>;

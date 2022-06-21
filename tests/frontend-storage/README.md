@@ -14,7 +14,7 @@ Test launch workflow:
     1. Transpile the script from TS to JS.
     1. Bundle the script using `webpack` to include all of its dependencies. 
 1. Start a web server that will be used by the tests to get object access information.
-    1. Construct an instance of `BackendStorageServer` and bind an implementation of `ServerStorage` to its `container`.
+    1. Construct an instance of `ServerStorageProxyBackend` and bind an implementation of `ServerStorage` to its `container`.
     1. Start the configured server by calling `BackendStorageServer.start` on the constructed instance.
 1. Construct an instance of `FrontendStorageIntegrationTests` and pass the path of the bundled script as a constructor argument.
 1. Start the tests by calling `FrontendStorageIntegrationTests.start` on the test class instance which:

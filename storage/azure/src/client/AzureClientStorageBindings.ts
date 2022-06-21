@@ -10,7 +10,7 @@ import {
   Types,
 } from "@itwin/object-storage-core";
 
-import { BlockBlobClientWrapperFactory } from "../frontend";
+import { BlockBlobClientWrapperFactory } from "../server/wrappers/BlockBlobClientWrapperFactory";
 
 import { AzureClientStorage } from "./AzureClientStorage";
 

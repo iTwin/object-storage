@@ -27,7 +27,7 @@
     "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
-    "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
+    "test:unit:backend:local": "mocha lib/test/unit/**/*.test.js --color --exit",
     "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json",
     "test:unit:frontend:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.json"
   },
@@ -36,10 +36,10 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "~3.44.0",
-    "@aws-sdk/client-sts": "~3.43.0",
-    "@aws-sdk/lib-storage": "~3.44.0",
-    "@aws-sdk/s3-request-presigner": "~3.44.0",
+    "@aws-sdk/client-s3": "3.105.0",
+    "@aws-sdk/client-sts": "3.105.0",
+    "@aws-sdk/lib-storage": "3.105.0",
+    "@aws-sdk/s3-request-presigner": "3.105.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
     "inversify": "~5.0.1",

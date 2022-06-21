@@ -6,7 +6,6 @@ import { Readable } from "stream";
 
 import { injectable } from "inversify";
 
-import { MultipartUploadData, TransferData } from "../client";
 import {
   BaseDirectory,
   Metadata,
@@ -15,7 +14,9 @@ import {
   ObjectProperties,
   ObjectReference,
   TransferConfig,
-} from "../frontend";
+} from "../common";
+
+import { MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage

@@ -14,7 +14,7 @@ import {
   AzureClientStorage,
   AzureClientStorageBindings,
 } from "../../../client";
-import { BlockBlobClientWrapperFactory } from "../../../frontend";
+import { BlockBlobClientWrapperFactory } from "../../../server/wrappers";
 
 describe(`${AzureClientStorageBindings.name}`, () => {
   const clientBindings = new AzureClientStorageBindings();

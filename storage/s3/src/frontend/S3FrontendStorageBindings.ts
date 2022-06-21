@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { Types as CoreTypes } from "@itwin/object-storage-core/lib/common";
 import {
+  Types as CoreTypes,
   FrontendStorage,
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
 import { S3FrontendStorage } from "./S3FrontendStorage";
+import { FrontendS3ClientWrapperFactory } from "./wrappers";
 
 export class S3FrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "s3";
@@ -19,7 +19,7 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
   public override register(container: Container): void {
     container
       .bind(CoreTypes.Frontend.clientWrapperFactory)
-      .to(S3ClientWrapperFactory)
+      .to(FrontendS3ClientWrapperFactory)
       .inSingletonScope();
     container.bind(FrontendStorage).to(S3FrontendStorage).inSingletonScope();
   }

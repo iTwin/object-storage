@@ -6,23 +6,9 @@ import {
   FrontendConfigDownloadInput,
   FrontendConfigUploadInput,
   FrontendUploadInMultiplePartsInput,
-  TransferConfig,
 } from "@itwin/object-storage-core/lib/frontend";
 
-export interface S3Credentials {
-  accessKey: string;
-  secretKey: string;
-}
-
-export interface TemporaryS3Credentials extends S3Credentials {
-  sessionToken: string;
-}
-
-export interface S3TransferConfig extends TransferConfig {
-  authentication: TemporaryS3Credentials;
-  region: string;
-  bucket: string;
-}
+import { S3TransferConfig } from "../common";
 
 export interface FrontendS3ConfigDownloadInput
   extends FrontendConfigDownloadInput {

@@ -21,8 +21,8 @@ import {
 } from "@itwin/object-storage-tests-backend-unit";
 
 import { Types } from "../../../common";
-import { S3ClientWrapper } from "../../../frontend";
 import {
+  S3ClientWrapper,
   S3PresignedUrlProvider,
   S3ServerStorage,
   S3ServerStorageBindings,

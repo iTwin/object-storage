@@ -12,11 +12,11 @@ import { Types } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { AzureClientStorageBindings } from "../../../client";
-import { BlockBlobClientWrapperFactory } from "../../../frontend";
 import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   BlobServiceClientWrapper,
+  BlockBlobClientWrapperFactory,
 } from "../../../server";
 
 const dependencyName = "azure";

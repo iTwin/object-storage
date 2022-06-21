@@ -10,7 +10,7 @@ import {
   Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
-import { S3ClientWrapperFactory } from "../frontend";
+import { S3ClientWrapperFactory } from "../server";
 
 import { S3ClientStorage } from "./S3ClientStorage";
 

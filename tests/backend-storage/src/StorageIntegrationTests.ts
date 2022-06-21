@@ -16,8 +16,6 @@ import {
 import {
   ClientStorage,
   ClientStorageDependency,
-  FrontendStorage,
-  FrontendStorageDependency,
   ServerStorage,
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
@@ -30,18 +28,15 @@ export class StorageIntegrationTests extends Bindable {
   constructor(
     config: DependenciesConfig,
     serverStorageDependency: new () => ServerStorageDependency,
-    clientStorageDependency: new () => ClientStorageDependency,
-    frontendStorageDependency: new () => FrontendStorageDependency
+    clientStorageDependency: new () => ClientStorageDependency
   ) {
     super();
 
     this.requireDependency(ServerStorageDependency.dependencyType);
     this.requireDependency(ClientStorageDependency.dependencyType);
-    this.requireDependency(FrontendStorageDependency.dependencyType);
 
     this.useBindings(serverStorageDependency);
     this.useBindings(clientStorageDependency);
-    this.useBindings(frontendStorageDependency);
 
     this.container
       .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
@@ -53,12 +48,10 @@ export class StorageIntegrationTests extends Bindable {
 
     const serverStorage = this.container.get(ServerStorage);
     const clientStorage = this.container.get(ClientStorage);
-    const frontendStorage = this.container.get(FrontendStorage);
 
     setOptions({
       serverStorage,
       clientStorage,
-      frontendStorage,
     });
 
     const mochaOptions: Mocha.MochaOptions = {

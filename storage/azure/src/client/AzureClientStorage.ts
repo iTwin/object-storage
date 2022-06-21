@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { createReadStream, promises } from "fs";
+import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
@@ -12,8 +12,7 @@ import {
   assertFileNotEmpty,
   assertRelativeDirectory,
   ClientStorage,
-  FrontendTransferData,
-  isLocalUrlTransfer,
+  isLocalTransferInput,
   streamToTransferType,
   TransferData,
   Types,
@@ -21,13 +20,12 @@ import {
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
-import { BlockBlobClientWrapperFactory } from "../frontend";
-
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
-} from "./ClientInterfaces";
+} from "../server";
+import { BlockBlobClientWrapperFactory } from "../server/wrappers";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
@@ -63,7 +61,7 @@ export class AzureClientStorage extends ClientStorage {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
 
-    if (isLocalUrlTransfer(input))
+    if (isLocalTransferInput(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
     const downloadStream = await this._clientWrapperFactory
@@ -82,16 +80,11 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
-
-    const dataToUpload: FrontendTransferData =
-      typeof input.data === "string"
-        ? createReadStream(input.data)
-        : input.data;
+    if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
-      .upload(dataToUpload, input.metadata);
+      .upload(input.data, input.metadata);
   }
 
   public async uploadInMultipleParts(
@@ -99,15 +92,10 @@ export class AzureClientStorage extends ClientStorage {
   ): Promise<void> {
     if ("reference" in input)
       assertRelativeDirectory(input.reference.relativeDirectory);
-    await assertFileNotEmpty(input.data);
-
-    const dataToUpload: FrontendTransferData =
-      typeof input.data === "string"
-        ? createReadStream(input.data)
-        : input.data;
+    if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
-      .uploadInMultipleParts(dataToUpload, input.options);
+      .uploadInMultipleParts(input.data, input.options);
   }
 }

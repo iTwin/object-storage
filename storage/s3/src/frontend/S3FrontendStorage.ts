@@ -2,35 +2,36 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import { inject, injectable } from "inversify";
 
-import { Types } from "@itwin/object-storage-core/lib/common";
 import {
-  downloadFromUrlFrontendFriendly,
+  assertRelativeDirectory,
+  downloadFromUrlFrontend,
   FrontendConfigUploadInput,
   FrontendStorage,
   FrontendTransferData,
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  instanceOfUrlInput,
+  instanceOfUrlTransferInput,
   metadataToHeaders,
   streamToTransferTypeFrontend,
-  uploadToUrl,
+  Types,
+  uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
-import { createAndUseClient } from "./Helpers";
-import { S3ClientWrapper } from "./S3ClientWrapper";
-import { S3ClientWrapperFactory } from "./S3ClientWrapperFactory";
+import { createAndUseClientFrontend } from "./Helpers";
+import {
+  FrontendS3ClientWrapper,
+  FrontendS3ClientWrapperFactory,
+} from "./wrappers";
 
 @injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
     @inject(Types.Frontend.clientWrapperFactory)
-    private _clientWrapperFactory: S3ClientWrapperFactory
+    private _clientWrapperFactory: FrontendS3ClientWrapperFactory
   ) {
     super();
   }
@@ -39,23 +40,24 @@ export class S3FrontendStorage extends FrontendStorage {
     input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "buffer";
     }
-  ): Promise<Buffer>;
+  ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "stream";
     }
-  ): Promise<Readable>;
+  ): Promise<ReadableStream>;
 
   public async download(
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    if (instanceOfUrlInput(input))
-      return downloadFromUrlFrontendFriendly(input);
+    if (instanceOfUrlTransferInput(input))
+      return downloadFromUrlFrontend(input);
+    else assertRelativeDirectory(input.reference.relativeDirectory);
 
-    return createAndUseClient(
+    return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapper) => {
+      async (clientWrapper: FrontendS3ClientWrapper) => {
         const downloadStream = await clientWrapper.download(input.reference);
         return streamToTransferTypeFrontend(downloadStream, input.transferType);
       }
@@ -67,26 +69,28 @@ export class S3FrontendStorage extends FrontendStorage {
   ): Promise<void> {
     const { data, metadata } = input;
 
-    if (instanceOfUrlInput(input))
-      return uploadToUrl(
+    if (instanceOfUrlTransferInput(input))
+      return uploadToUrlFrontend(
         input.url,
         data,
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
-
-    return createAndUseClient(
-      () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.upload(input.reference, data, metadata)
-    );
+    else {
+      assertRelativeDirectory(input.reference.relativeDirectory);
+      return createAndUseClientFrontend(
+        () => this._clientWrapperFactory.create(input.transferConfig),
+        async (clientWrapper: FrontendS3ClientWrapper) =>
+          clientWrapper.upload(input.reference, data, metadata)
+      );
+    }
   }
 
   public async uploadInMultipleParts(
     input: FrontendUploadInMultiplePartsInput
   ): Promise<void> {
-    return createAndUseClient(
+    return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
-      async (clientWrapper: S3ClientWrapper) =>
+      async (clientWrapper: FrontendS3ClientWrapper) =>
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,

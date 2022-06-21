@@ -5,14 +5,13 @@
   ],
   "compilerOptions": {
     "module": "esnext",
-    "target": "es5",
+    "target": "es2017",
     "lib": [
-      "es5",
+      "es2017",
       "dom"
     ],
     "types": [
-      "cypress",
-      "node"
+      "cypress"
     ],
     "moduleResolution": "node"
   }

@@ -7,14 +7,15 @@ import { Container } from "inversify";
 import {
   Types as CoreTypes,
   FrontendStorage,
-} from "@itwin/object-storage-core";
+} from "@itwin/object-storage-core/lib/frontend";
+
 import {
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-backend-unit";
 
 import {
-  S3ClientWrapperFactory,
+  FrontendS3ClientWrapperFactory,
   S3FrontendStorage,
   S3FrontendStorageBindings,
 } from "../../../frontend";
@@ -28,10 +29,10 @@ describe(`${S3FrontendStorageBindings.name}`, () => {
         testedClassIdentifier:
           CoreTypes.Frontend.clientWrapperFactory.toString(),
         testedFunction: (container: Container) =>
-          container.get<S3ClientWrapperFactory>(
+          container.get<FrontendS3ClientWrapperFactory>(
             CoreTypes.Frontend.clientWrapperFactory
           ),
-        expectedCtor: S3ClientWrapperFactory,
+        expectedCtor: FrontendS3ClientWrapperFactory,
       },
       {
         testedClassIdentifier: FrontendStorage.name,

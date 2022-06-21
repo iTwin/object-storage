@@ -1,8 +1,3 @@
 {
-  "compilerOptions": {
-    "types": [
-      "cypress",
-      "node"
-    ],
-  }
+  "extends": "./node_modules/@itwin/object-storage-common-config/tsconfig.json",
 }

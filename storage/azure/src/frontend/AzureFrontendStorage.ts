@@ -2,31 +2,28 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Readable } from "stream";
-
 import { inject, injectable } from "inversify";
 
-import { Types } from "@itwin/object-storage-core/lib/common";
 import {
   FrontendStorage,
   FrontendTransferData,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  streamToTransferTypeFrontend,
+  Types,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { BlockBlobClientWrapperFactory } from "./BlockBlobClientWrapperFactory";
 import {
   FrontendAzureConfigDownloadInput,
   FrontendAzureConfigUploadInput,
   FrontendAzureUploadInMultiplePartsInput,
 } from "./FrontendInterfaces";
+import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 @injectable()
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
     @inject(Types.Frontend.clientWrapperFactory)
-    private _clientWrapperFactory: BlockBlobClientWrapperFactory
+    private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory
   ) {
     super();
   }
@@ -35,22 +32,29 @@ export class AzureFrontendStorage extends FrontendStorage {
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "buffer";
     }
-  ): Promise<Buffer>;
+  ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "stream";
     }
-  ): Promise<Readable>;
+  ): Promise<ReadableStream>;
 
   public async download(
     input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
   ): Promise<FrontendTransferData> {
-    const downloadStream = await this._clientWrapperFactory
+    const downloadBlob = await this._clientWrapperFactory
       .create(input)
       .download();
 
-    return streamToTransferTypeFrontend(downloadStream, input.transferType);
+    switch (input.transferType) {
+      case "buffer":
+        return downloadBlob.arrayBuffer();
+      case "stream":
+        return downloadBlob.stream();
+      default:
+        throw new Error(`Transfer type ${input.transferType} is unsupported`);
+    }
   }
 
   public async upload(

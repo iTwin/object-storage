@@ -16,7 +16,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc --p tools.tsconfig.json 1>&2",
+    "build": "tsc --p tsconfig-backend.json 1>&2 && npm run build:frontend",
+    "build:frontend": "tsc -p ./cypress/tsconfig.json --noEmit",
     "clean": "rimraf lib && rimraf cypress/support",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",

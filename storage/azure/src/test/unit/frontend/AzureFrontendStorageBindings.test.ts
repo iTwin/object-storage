@@ -4,7 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
-import { FrontendStorage, Types } from "@itwin/object-storage-core";
+import {
+  FrontendStorage,
+  Types,
+} from "@itwin/object-storage-core/lib/frontend";
+
 import {
   DependencyBindingsTestCase,
   testBindings,
@@ -13,7 +17,7 @@ import {
 import {
   AzureFrontendStorage,
   AzureFrontendStorageBindings,
-  BlockBlobClientWrapperFactory,
+  FrontendBlockBlobClientWrapperFactory,
 } from "../../../frontend";
 
 describe(`${AzureFrontendStorageBindings.name}`, () => {
@@ -30,10 +34,10 @@ describe(`${AzureFrontendStorageBindings.name}`, () => {
       {
         testedClassIdentifier: Types.Frontend.clientWrapperFactory.toString(),
         testedFunction: (container: Container) =>
-          container.get<BlockBlobClientWrapperFactory>(
+          container.get<FrontendBlockBlobClientWrapperFactory>(
             Types.Frontend.clientWrapperFactory
           ),
-        expectedCtor: BlockBlobClientWrapperFactory,
+        expectedCtor: FrontendBlockBlobClientWrapperFactory,
       },
     ];
     testBindings(frontendBindings, undefined, bindingsTestCases);
