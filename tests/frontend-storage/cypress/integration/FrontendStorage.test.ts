@@ -101,7 +101,7 @@ Common frontend UNIT tests.
 Should be moved to a separate frontend-storage-unit package in the future,
 but it isn't optimal to do it at the moment.
 */
-describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Unit)`, () => {
+describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input validation)`, () => {
   async function testRelativeDirectoryValidation(promise: Promise<any>): Promise<void> {
     let caughtError: unknown | undefined = undefined;
     try { await promise; }
