@@ -88,6 +88,8 @@ export class S3FrontendStorage extends FrontendStorage {
   public async uploadInMultipleParts(
     input: FrontendUploadInMultiplePartsInput
   ): Promise<void> {
+    assertRelativeDirectory(input.reference.relativeDirectory);
+
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: FrontendS3ClientWrapper) =>

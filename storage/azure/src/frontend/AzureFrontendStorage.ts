@@ -5,6 +5,7 @@
 import { inject, injectable } from "inversify";
 
 import {
+  assertRelativeDirectory,
   FrontendStorage,
   FrontendTransferData,
   FrontendUrlDownloadInput,
@@ -43,6 +44,9 @@ export class AzureFrontendStorage extends FrontendStorage {
   public async download(
     input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
   ): Promise<FrontendTransferData> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
     const downloadBlob = await this._clientWrapperFactory
       .create(input)
       .download();
@@ -60,6 +64,9 @@ export class AzureFrontendStorage extends FrontendStorage {
   public async upload(
     input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
     return this._clientWrapperFactory
       .create(input)
       .upload(input.data, input.metadata);
@@ -68,6 +75,9 @@ export class AzureFrontendStorage extends FrontendStorage {
   public async uploadInMultipleParts(
     input: FrontendAzureUploadInMultiplePartsInput
   ): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
     return this._clientWrapperFactory
       .create(input)
       .uploadInMultipleParts(input.data, input.options);
