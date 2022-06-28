@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FrontendStorage, } from "@itwin/object-storage-core/lib/frontend";
+import { FrontendStorage, ObjectReference, TransferConfig, } from "@itwin/object-storage-core/lib/frontend";
 
 import {
   FrontendServerStorageProxy,
@@ -14,7 +14,9 @@ import {
   testDownloadFromUrlToStream,
   testDownloadToBufferWithConfig,
   testDownloadToStreamWithConfig,
-  testUploadMultipart
+  testUploadMultipart,
+  stringToArrayBuffer,
+  stringToReadableStream
 } from "../../src/frontend";
 
 const serverBaseUrl: string = (window as any).serverBaseUrl;
@@ -93,3 +95,69 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
     });
   });
 });
+
+/**
+Common frontend UNIT tests.
+Should be moved to a separate frontend-storage-unit package in the future,
+but it isn't optimal to do it at the moment.
+*/
+describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input validation)`, () => {
+  async function testRelativeDirectoryValidation(promise: Promise<any>): Promise<void> {
+    let caughtError: unknown | undefined = undefined;
+    try { await promise; }
+    catch(error) { caughtError = error; }
+    expect(caughtError).to.not.be.undefined;
+    expect( (caughtError as Error).message ).to.equal("Relative directory cannot contain backslashes.");
+  }
+  const invalidRelativeDirInput = {
+    reference: {
+      baseDirectory: "testBaseDirectory",
+      relativeDirectory: "testDirectory1\\testDirectory2",
+      objectName: "testObjectName"
+    } as ObjectReference,
+    transferConfig: {
+      expiration: new Date(),
+      baseUrl: "testBaseUrl"
+    } as TransferConfig
+  };
+
+  describe(`${frontendStorage.download.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (buffer)", async () => {
+      await testRelativeDirectoryValidation(
+        frontendStorage.download({
+          transferType: "buffer",
+          ...invalidRelativeDirInput
+        })
+      );
+    });
+    
+    it("should throw if relativeDirectory is invalid (stream)", async () => {
+      await testRelativeDirectoryValidation(
+        frontendStorage.download({
+          transferType: "stream",
+          ...invalidRelativeDirInput
+        })
+      );
+    });
+  });
+  describe(`${frontendStorage.upload.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (buffer)", async () => {
+      await testRelativeDirectoryValidation(
+        frontendStorage.upload({
+          data: stringToArrayBuffer("testPayload"),
+          ...invalidRelativeDirInput
+        })
+      );
+    });
+  });
+  describe(`${frontendStorage.uploadInMultipleParts.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (stream)", async () => {
+      await testRelativeDirectoryValidation(
+        frontendStorage.uploadInMultipleParts({
+          data: stringToReadableStream("testPayload"),
+          ...invalidRelativeDirInput
+        })
+      );
+    });
+  });
+})
