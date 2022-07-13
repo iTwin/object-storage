@@ -19,16 +19,18 @@ import { inject, injectable } from "inversify";
 
 import {
   BaseDirectory,
-  buildObjectKey,
-  buildObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
   ObjectProperties,
   ObjectReference,
-  streamToBuffer,
   TransferData,
 } from "@itwin/object-storage-core";
+import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
+import {
+  buildObjectKey,
+  buildObjectReference
+} from "@itwin/object-storage-core/lib/common/internal";
 
 import { Types } from "../../common";
 
@@ -37,7 +39,7 @@ export class S3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
     @inject(Types.bucket) protected readonly _bucket: string
-  ) {}
+  ) { }
 
   public async download(reference: ObjectReference): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */

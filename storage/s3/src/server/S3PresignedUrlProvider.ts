@@ -11,10 +11,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { inject, injectable } from "inversify";
 
 import {
-  buildObjectKey,
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
+import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 
 import { Types } from "../common";
 

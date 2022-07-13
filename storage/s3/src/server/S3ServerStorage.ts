@@ -8,8 +8,6 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertRelativeDirectory,
   BaseDirectory,
   Metadata,
   MultipartUploadData,
@@ -19,14 +17,14 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
-  streamToTransferType,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
   TransferType,
   Types,
 } from "@itwin/object-storage-core";
-
+import { assertFileNotEmpty, streamToTransferType } from "@itwin/object-storage-core/lib/server/internal";
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import { S3ClientWrapper } from "./wrappers";
 
 export interface S3ServerStorageConfig {

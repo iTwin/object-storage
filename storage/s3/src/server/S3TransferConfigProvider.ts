@@ -8,10 +8,10 @@ import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
 import { inject, injectable } from "inversify";
 
 import {
-  buildObjectDirectoryString,
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
+import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 
 import { S3TransferConfig, Types } from "../common";
 
