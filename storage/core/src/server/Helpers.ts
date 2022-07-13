@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { randomBytes } from "crypto";
 import { createReadStream, createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
@@ -126,4 +127,8 @@ export async function uploadToUrl(
   await axios.put(url, dataToUpload, {
     headers,
   });
+}
+
+export function getRandomString(): string {
+  return randomBytes(16).toString("hex");
 }
