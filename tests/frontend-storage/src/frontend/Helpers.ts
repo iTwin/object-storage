@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   FrontendTransferData,
-  streamToBufferFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
+import { streamToBufferFrontend } from "@itwin/object-storage-core/lib/frontend/internal";
 
 export function arrayBufferToReadableStream(
   buffer: ArrayBuffer

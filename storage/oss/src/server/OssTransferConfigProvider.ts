@@ -8,10 +8,10 @@ import * as Core from "@alicloud/pop-core";
 import { inject, injectable } from "inversify";
 
 import {
-  buildObjectDirectoryString,
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
+import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import {
   S3ServerStorageConfig,
   S3TransferConfig,
