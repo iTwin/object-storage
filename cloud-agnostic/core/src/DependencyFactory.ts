@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Dependency } from "./Dependency";
-import { DependencyError } from "./Errors";
+import { DependencyError } from "./internal";
 
 export class DependencyFactory {
   private _dependencyMap = new Map<string, Dependency>();

@@ -5,7 +5,7 @@
 import {
   assertInstanceType,
   assertPrimitiveType,
-} from "@itwin/cloud-agnostic-core";
+} from "@itwin/cloud-agnostic-core/lib/internal";
 
 import {
   Metadata,
@@ -13,7 +13,7 @@ import {
   ObjectReference,
   TransferConfig,
   UrlTransferInput,
-} from "./Interfaces";
+} from "../Interfaces";
 
 export function metadataToHeaders(
   metadata: Metadata,

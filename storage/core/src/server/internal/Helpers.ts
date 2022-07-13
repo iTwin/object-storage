@@ -8,14 +8,14 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
-import { ConfigTransferInput, UrlTransferInput } from "../common";
+import { ConfigTransferInput, UrlTransferInput } from "../../common";
 
 import {
   ConfigDownloadInput,
   TransferData,
   TransferType,
   UrlDownloadInput,
-} from "./Interfaces";
+} from "../Interfaces";
 
 export function assertLocalFile(
   localPath: string | undefined

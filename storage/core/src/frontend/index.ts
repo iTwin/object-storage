@@ -4,6 +4,5 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "../common";
 export * from "./FrontendInterfaces";
-export * from "./FrontendHelpers";
 export * from "./FrontendStorage";
 export * from "./FrontendStorageDependency";
