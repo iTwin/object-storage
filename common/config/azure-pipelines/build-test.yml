@@ -7,7 +7,7 @@ parameters:
   default: true
 
 variables:
-  node16Version: '16.13.2'
+  node16Version: '16.15.0'
   node12Version: '12.17.0'
 
 trigger: none
