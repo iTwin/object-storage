@@ -12,7 +12,7 @@ import { injectable } from "inversify";
 
 import { ObjectReference } from "@itwin/object-storage-core";
 
-import { buildBlobName } from "../../common";
+import { buildBlobName } from "../../common/internal";
 
 @injectable()
 export class BlobServiceClientWrapper {

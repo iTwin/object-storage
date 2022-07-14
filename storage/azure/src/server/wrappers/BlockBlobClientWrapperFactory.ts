@@ -9,7 +9,8 @@ import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/commo
 
 import { UrlTransferInput } from "@itwin/object-storage-core";
 
-import { AzureTransferConfigInput, buildBlobUrl } from "../../common";
+import { AzureTransferConfigInput } from "../../common";
+import { buildBlobUrl } from "../../common/internal";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 

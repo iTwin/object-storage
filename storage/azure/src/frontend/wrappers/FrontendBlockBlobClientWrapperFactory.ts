@@ -8,7 +8,8 @@ import { injectable } from "inversify";
 import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
 import { UrlTransferInput } from "@itwin/object-storage-core/lib/frontend";
 
-import { AzureTransferConfigInput, buildBlobUrl } from "../../common";
+import { AzureTransferConfigInput } from "../../common";
+import { buildBlobUrl } from "../../common/internal";
 
 import { FrontendBlockBlobClientWrapper } from "./FrontendBlockBlobClientWrapper";
 

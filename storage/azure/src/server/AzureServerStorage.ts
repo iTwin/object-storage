@@ -33,14 +33,10 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import {
-  AzureTransferConfig,
-  buildBlobName,
-  buildExpiresOn,
-  Types,
-} from "../common";
+import { AzureTransferConfig, Types } from "../common";
+import { buildBlobName, buildExpiresOn } from "../common/internal";
 
-import { buildSASParameters } from "./Helpers";
+import { buildSASParameters } from "./internal";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
 export interface AzureServerStorageConfig {

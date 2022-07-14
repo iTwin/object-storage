@@ -15,7 +15,7 @@ import {
   buildObjectKey,
 } from "@itwin/object-storage-core/lib/common/internal";
 
-import { AzureTransferConfig, AzureTransferConfigInput } from "./Interfaces";
+import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
 
 export function assertAzureTransferConfig(
   transferConfig: TransferConfig | AzureTransferConfig
