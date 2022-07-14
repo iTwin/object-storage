@@ -6,16 +6,13 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 
 import {
-  assertTransferConfig,
-  TransferConfig,
-} from "@itwin/object-storage-core/lib/common";
-
-import {
   assertPrimitiveType,
   FalsyValueError,
-} from "@itwin/cloud-agnostic-core";
+} from "@itwin/cloud-agnostic-core/lib/internal";
+import { TransferConfig } from "@itwin/object-storage-core/lib/common";
+import { assertTransferConfig } from "@itwin/object-storage-core/lib/common/internal";
 
-import { S3TransferConfig } from "./Interfaces";
+import { S3TransferConfig } from "../Interfaces";
 
 export function createS3Client(config: {
   baseUrl: string;

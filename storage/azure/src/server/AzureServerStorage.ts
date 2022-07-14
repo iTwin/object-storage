@@ -10,12 +10,18 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertLocalFile,
   assertRelativeDirectory,
-  BaseDirectory,
   buildObjectKey,
   buildObjectReference,
+} from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertFileNotEmpty,
+  assertLocalFile,
+  streamToTransferType,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import {
+  BaseDirectory,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -23,19 +29,14 @@ import {
   ObjectProperties,
   ObjectReference,
   ServerStorage,
-  streamToTransferType,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
 
-import {
-  AzureTransferConfig,
-  buildBlobName,
-  buildExpiresOn,
-  Types,
-} from "../common";
+import { AzureTransferConfig, Types } from "../common";
+import { buildBlobName, buildExpiresOn } from "../common/internal";
 
-import { buildSASParameters } from "./Helpers";
+import { buildSASParameters } from "./internal";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
 export interface AzureServerStorageConfig {

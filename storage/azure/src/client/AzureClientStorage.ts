@@ -8,12 +8,15 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
-  assertRelativeDirectory,
-  ClientStorage,
   isLocalTransferInput,
   streamToTransferType,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import {
+  ClientStorage,
   TransferData,
   Types,
   UrlDownloadInput,

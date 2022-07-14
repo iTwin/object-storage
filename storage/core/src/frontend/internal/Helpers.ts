@@ -8,7 +8,7 @@ import {
   FrontendTransferData,
   FrontendTransferType,
   FrontendUrlDownloadInput,
-} from "./FrontendInterfaces";
+} from "../FrontendInterfaces";
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB
 

@@ -15,9 +15,11 @@ import { Upload } from "@aws-sdk/lib-storage";
 import { inject, injectable } from "inversify";
 
 import {
-  BaseDirectory,
   buildObjectKey,
   buildObjectReference,
+} from "@itwin/object-storage-core/lib/common/internal";
+import {
+  BaseDirectory,
   FrontendMultipartUploadData,
   Metadata,
   MultipartUploadOptions,

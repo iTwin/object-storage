@@ -5,8 +5,9 @@
 import { inject, injectable } from "inversify";
 import { Client } from "minio";
 
+import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
+
 import {
-  buildObjectKey,
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";

@@ -8,28 +8,33 @@ import { Readable } from "stream";
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
   assertRelativeDirectory,
-  ClientStorage,
-  downloadFromUrl,
   instanceOfUrlTransferInput,
   metadataToHeaders,
+} from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertFileNotEmpty,
+  downloadFromUrl,
   streamToTransferType,
+  uploadToUrl,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import {
+  ClientStorage,
   TransferData,
   Types,
-  uploadToUrl,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
 import {
-  createAndUseClient,
   S3ClientWrapper,
   S3ClientWrapperFactory,
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "../server";
+import { createAndUseClient } from "../server/internal";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {

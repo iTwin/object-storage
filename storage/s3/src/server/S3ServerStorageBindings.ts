@@ -6,7 +6,9 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
 import { Container } from "inversify";
 
-import { ConfigError, DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
+
+import { DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   Types as CoreTypes,
   PresignedUrlProvider,
@@ -15,7 +17,8 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { createS3Client, createStsClient, Types } from "../common";
+import { Types } from "../common";
+import { createS3Client, createStsClient } from "../common/internal";
 
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";

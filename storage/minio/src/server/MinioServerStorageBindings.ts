@@ -15,7 +15,7 @@ import {
   S3ServerStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
-import { createClient } from "./Helpers";
+import { createClient } from "./internal";
 import { MinioPresignedUrlProvider } from "./MinioPresignedUrlProvider";
 import { MinioServerStorage } from "./MinioServerStorage";
 

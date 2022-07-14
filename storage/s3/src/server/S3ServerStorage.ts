@@ -7,9 +7,13 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
-  assertRelativeDirectory,
+  streamToTransferType,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import {
   BaseDirectory,
   Metadata,
   MultipartUploadData,
@@ -19,7 +23,6 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
-  streamToTransferType,
   TransferConfig,
   TransferConfigProvider,
   TransferData,

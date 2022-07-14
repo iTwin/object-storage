@@ -8,9 +8,10 @@ import * as path from "path";
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
+
 import {
   BaseDirectory,
-  getRandomString,
   Metadata,
   ObjectReference,
   ServerStorage,

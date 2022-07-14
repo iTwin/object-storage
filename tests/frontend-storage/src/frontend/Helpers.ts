@@ -2,10 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  FrontendTransferData,
-  streamToBufferFrontend,
-} from "@itwin/object-storage-core/lib/frontend";
+import { FrontendTransferData } from "@itwin/object-storage-core/lib/frontend";
+import { streamToBufferFrontend } from "@itwin/object-storage-core/lib/frontend/internal";
 
 export function arrayBufferToReadableStream(
   buffer: ArrayBuffer

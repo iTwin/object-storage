@@ -7,10 +7,11 @@ import { Readable } from "stream";
 
 import { expect } from "chai";
 
+import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
+
 import {
   Metadata,
   ObjectReference,
-  streamToBuffer,
   TransferData,
 } from "@itwin/object-storage-core";
 

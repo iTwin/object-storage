@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { BaseDirectory, getRandomString } from "@itwin/object-storage-core";
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
+
+import { BaseDirectory } from "@itwin/object-storage-core";
 
 import { config } from "../Config";
 

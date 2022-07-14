@@ -6,22 +6,26 @@ import { inject, injectable } from "inversify";
 
 import {
   assertRelativeDirectory,
-  downloadFromUrlFrontend,
+  instanceOfUrlTransferInput,
+  metadataToHeaders,
+} from "@itwin/object-storage-core/lib/common/internal";
+import {
   FrontendConfigUploadInput,
   FrontendStorage,
   FrontendTransferData,
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  instanceOfUrlTransferInput,
-  metadataToHeaders,
-  streamToTransferTypeFrontend,
   Types,
-  uploadToUrlFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
+import {
+  downloadFromUrlFrontend,
+  streamToTransferTypeFrontend,
+  uploadToUrlFrontend,
+} from "@itwin/object-storage-core/lib/frontend/internal";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
-import { createAndUseClientFrontend } from "./Helpers";
+import { createAndUseClientFrontend } from "./internal";
 import {
   FrontendS3ClientWrapper,
   FrontendS3ClientWrapperFactory,

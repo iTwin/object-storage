@@ -5,9 +5,10 @@
 import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
 import { inject, injectable } from "inversify";
 
+import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
+
 import {
-  buildObjectDirectoryString,
-  getRandomString,
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";

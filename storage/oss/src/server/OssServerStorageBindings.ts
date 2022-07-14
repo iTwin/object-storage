@@ -11,7 +11,7 @@ import {
   S3ServerStorageBindingsConfig,
 } from "@itwin/object-storage-s3";
 
-import { createCore } from "./Helpers";
+import { createCore } from "./internal";
 import { OssTransferConfigProvider } from "./OssTransferConfigProvider";
 
 export class OssServerStorageBindings extends S3ServerStorageBindings {

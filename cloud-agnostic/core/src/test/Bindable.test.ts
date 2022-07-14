@@ -5,7 +5,8 @@
 import { expect } from "chai";
 import { Container } from "inversify";
 
-import { Bindable, DependenciesConfig, DependencyError } from "..";
+import { Bindable, DependenciesConfig } from "..";
+import { DependencyError } from "../internal";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
 import { ConcreteTestDependencyBindings } from "./TestDependency";

@@ -7,7 +7,7 @@ import { Container } from "inversify";
 import { Dependency } from "./Dependency";
 import { DependenciesConfig } from "./DependencyConfig";
 import { DependencyFactory } from "./DependencyFactory";
-import { DependencyError } from "./Errors";
+import { DependencyError } from "./internal";
 import { Types } from "./Types";
 
 export abstract class Bindable {

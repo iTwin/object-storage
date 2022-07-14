@@ -7,8 +7,8 @@ import { BlockBlobClient, Metadata } from "@azure/storage-blob";
 import {
   FrontendMultipartUploadData,
   MultipartUploadOptions,
-  streamToBufferFrontend,
 } from "@itwin/object-storage-core/lib/frontend";
+import { streamToBufferFrontend } from "@itwin/object-storage-core/lib/frontend/internal";
 
 export class FrontendBlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
