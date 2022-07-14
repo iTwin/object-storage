@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { existsSync, promises, rmSync } from "fs";
-import path = require("path");
+import { existsSync, constants as fsConstants, promises } from "fs";
+import * as path from "path";
 
 export class TestLocalFileManager {
   private readonly _downloadsDir: string;
@@ -34,11 +34,32 @@ export class TestLocalFileManager {
   }
 
   public async purgeCreatedFiles(): Promise<void> {
-    this.purgeDirectory(this._downloadsDir);
-    this.purgeDirectory(this._uploadsDir);
+    await Promise.all([
+      this.purgeDirectory(this._downloadsDir),
+      this.purgeDirectory(this._uploadsDir),
+    ]);
   }
 
-  private purgeDirectory(directory: string): void {
-    rmSync(directory, { recursive: true, force: true });
+  // TODO: switch to using fs.promises.rm function once support for Node 12.x is dropped.
+  private async purgeDirectory(directory: string): Promise<void> {
+    if (!(await this.doesFileOrDirectoryExist(directory))) return;
+
+    const directoryItems = await promises.readdir(directory);
+    for (const itemName of directoryItems) {
+      const fullItemPath = path.join(directory, itemName);
+      if (await this.doesFileOrDirectoryExist(fullItemPath))
+        await promises.unlink(fullItemPath);
+    }
+  }
+
+  private async doesFileOrDirectoryExist(
+    fileOrDirPath: string
+  ): Promise<boolean> {
+    try {
+      await promises.access(fileOrDirPath, fsConstants.F_OK);
+      return true;
+    } catch (error: unknown) {
+      return false;
+    }
   }
 }

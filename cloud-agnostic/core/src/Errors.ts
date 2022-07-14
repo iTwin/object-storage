@@ -19,7 +19,7 @@ export class DependencyError extends Error {
 }
 
 export class ConfigError<T> extends Error {
-  constructor(property: keyof T) {
+  constructor(property: keyof T & string) {
     super(`${property} is not defined in configuration`);
   }
 }
