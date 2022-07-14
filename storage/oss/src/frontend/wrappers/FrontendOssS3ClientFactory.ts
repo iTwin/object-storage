@@ -5,10 +5,8 @@
 import { injectable } from "inversify";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
-import {
-  FrontendS3ClientWrapper,
-} from "@itwin/object-storage-s3/lib/frontend";
 import { assertS3TransferConfig } from "@itwin/object-storage-s3/lib/common/internal";
+import { FrontendS3ClientWrapper } from "@itwin/object-storage-s3/lib/frontend";
 
 import { createOssS3ClientFrontend } from "../internal";
 

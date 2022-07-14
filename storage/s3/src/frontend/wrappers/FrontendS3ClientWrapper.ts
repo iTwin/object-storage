@@ -15,6 +15,10 @@ import { Upload } from "@aws-sdk/lib-storage";
 import { inject, injectable } from "inversify";
 
 import {
+  buildObjectKey,
+  buildObjectReference,
+} from "@itwin/object-storage-core/lib/common/internal";
+import {
   BaseDirectory,
   FrontendMultipartUploadData,
   Metadata,
@@ -23,11 +27,6 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import {
-  buildObjectKey,
-  buildObjectReference,
-} from "@itwin/object-storage-core/lib/common/internal";
-
 import { Types } from "../../common";
 
 @injectable()
@@ -35,7 +34,7 @@ export class FrontendS3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
     @inject(Types.bucket) protected readonly _bucket: string
-  ) { }
+  ) {}
 
   public async download(reference: ObjectReference): Promise<ReadableStream> {
     /* eslint-disable @typescript-eslint/naming-convention */

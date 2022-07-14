@@ -5,13 +5,10 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import {
-  TransferConfig,
-} from "../../../common";
-
+import { TransferConfig } from "../../../common";
 import {
   assertRelativeDirectory,
-  assertTransferConfig
+  assertTransferConfig,
 } from "../../../common/internal";
 
 use(chaiAsPromised);

@@ -8,6 +8,13 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertFileNotEmpty,
+  isLocalTransferInput,
+  streamToTransferType,
+} from "@itwin/object-storage-core/lib/server/internal";
+
 import {
   ClientStorage,
   TransferData,
@@ -15,8 +22,6 @@ import {
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
-import { assertFileNotEmpty, isLocalTransferInput, streamToTransferType } from "@itwin/object-storage-core/lib/server/internal";
-import { assertRelativeDirectory, } from "@itwin/object-storage-core/lib/common/internal";
 
 import {
   AzureConfigDownloadInput,

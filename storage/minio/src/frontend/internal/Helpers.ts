@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { S3Client } from "@aws-sdk/client-s3";
+
 import { metadataToHeaders } from "@itwin/object-storage-core/lib/common/internal";
 import { FrontendUrlUploadInput } from "@itwin/object-storage-core/lib/frontend";
 import { uploadToUrlFrontend } from "@itwin/object-storage-core/lib/frontend/internal";

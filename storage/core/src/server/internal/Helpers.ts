@@ -9,7 +9,6 @@ import { Readable } from "stream";
 import axios from "axios";
 
 import { ConfigTransferInput, UrlTransferInput } from "../../common";
-
 import {
   ConfigDownloadInput,
   TransferData,

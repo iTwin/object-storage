@@ -5,10 +5,8 @@
 import { BlockBlobClient } from "@azure/storage-blob";
 import { injectable } from "inversify";
 
-import {
-  UrlTransferInput,
-} from "@itwin/object-storage-core/lib/frontend";
 import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
+import { UrlTransferInput } from "@itwin/object-storage-core/lib/frontend";
 
 import { AzureTransferConfigInput, buildBlobUrl } from "../../common";
 

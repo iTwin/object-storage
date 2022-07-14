@@ -7,11 +7,12 @@ import { randomUUID } from "crypto";
 import * as Core from "@alicloud/pop-core";
 import { inject, injectable } from "inversify";
 
+import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+
 import {
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
-import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import {
   S3ServerStorageConfig,
   S3TransferConfig,

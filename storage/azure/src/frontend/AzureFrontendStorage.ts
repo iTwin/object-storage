@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { inject, injectable } from "inversify";
 
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   FrontendStorage,
   FrontendTransferData,
@@ -11,7 +12,6 @@ import {
   FrontendUrlUploadInput,
   Types,
 } from "@itwin/object-storage-core/lib/frontend";
-import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 
 import {
   FrontendAzureConfigDownloadInput,

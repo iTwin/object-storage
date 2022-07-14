@@ -2,11 +2,17 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { assertFileNotEmpty, streamToBuffer, uploadToUrl } from "@itwin/object-storage-core/lib/server/internal"
-import { UrlUploadInput } from "@itwin/object-storage-core";
-import { metadataToHeaders } from "@itwin/object-storage-core/lib/common/internal";
 import { createReadStream } from "fs";
 import { Readable } from "stream";
+
+import { metadataToHeaders } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertFileNotEmpty,
+  streamToBuffer,
+  uploadToUrl,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import { UrlUploadInput } from "@itwin/object-storage-core";
 
 export async function handleMinioUrlUpload(
   input: UrlUploadInput

@@ -8,8 +8,9 @@ import {
 } from "@azure/storage-blob";
 import { Container } from "inversify";
 
-import { DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
+
+import { DependencyConfig } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,

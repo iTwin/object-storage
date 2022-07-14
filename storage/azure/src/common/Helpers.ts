@@ -3,6 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  assertPrimitiveType,
+  FalsyValueError,
+} from "@itwin/cloud-agnostic-core/lib/internal";
+import {
   ObjectReference,
   TransferConfig,
 } from "@itwin/object-storage-core/lib/common";
@@ -10,11 +14,6 @@ import {
   assertTransferConfig,
   buildObjectKey,
 } from "@itwin/object-storage-core/lib/common/internal";
-
-import {
-  assertPrimitiveType,
-  FalsyValueError,
-} from "@itwin/cloud-agnostic-core/lib/internal";
 
 import { AzureTransferConfig, AzureTransferConfigInput } from "./Interfaces";
 

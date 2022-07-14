@@ -5,11 +5,12 @@
 import { inject, injectable } from "inversify";
 import { Client } from "minio";
 
+import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
+
 import {
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
-import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 import { Types } from "@itwin/object-storage-s3";
 
 @injectable()
