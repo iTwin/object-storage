@@ -10,12 +10,7 @@ import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
-  assertFileNotEmpty,
-  assertLocalFile,
-  assertRelativeDirectory,
   BaseDirectory,
-  buildObjectKey,
-  buildObjectReference,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -23,10 +18,19 @@ import {
   ObjectProperties,
   ObjectReference,
   ServerStorage,
-  streamToTransferType,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
+
+import {
+  assertFileNotEmpty,
+  assertLocalFile,
+  streamToTransferType
+} from "@itwin/object-storage-core/lib/server/internal";
+import {
+  assertRelativeDirectory, buildObjectKey,
+  buildObjectReference,
+} from "@itwin/object-storage-core/lib/common/internal";
 
 import {
   AzureTransferConfig,
@@ -274,7 +278,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {
