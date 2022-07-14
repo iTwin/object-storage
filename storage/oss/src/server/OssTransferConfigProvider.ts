@@ -2,12 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { randomUUID } from "crypto";
-
 import * as Core from "@alicloud/pop-core";
 import { inject, injectable } from "inversify";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   ObjectDirectory,
@@ -56,7 +55,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       "AssumeRole",
       {
         RoleArn: this._config.roleArn,
-        RoleSessionName: randomUUID(),
+        RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
         DurationSeconds: expiresInSeconds,
       },
@@ -103,7 +102,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       "AssumeRole",
       {
         RoleArn: this._config.roleArn,
-        RoleSessionName: randomUUID(),
+        RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
         DurationSeconds: expiresInSeconds,
       },

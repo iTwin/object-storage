@@ -2,12 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { randomUUID } from "crypto";
 import { createReadStream } from "fs";
 import * as path from "path";
 
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
+
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -35,7 +36,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.createBaseDirectory.name}()`, () => {
     it("should create directory", async () => {
       const testDirectory: BaseDirectory = {
-        baseDirectory: `test-create-directory-${randomUUID()}`,
+        baseDirectory: `test-create-directory-${getRandomString()}`,
       };
       testDirectoryManager.addForDelete(testDirectory);
 
@@ -328,7 +329,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     it("should not throw if base directory does not exist", async () => {
       const deletePromise = serverStorage.deleteBaseDirectory({
-        baseDirectory: randomUUID(),
+        baseDirectory: getRandomString(),
       });
 
       await expect(deletePromise).to.eventually.be.fulfilled;
@@ -357,7 +358,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       ).baseDirectory;
       const deletePromise = serverStorage.deleteObject({
         baseDirectory: testBaseDirectory.baseDirectory,
-        objectName: randomUUID(),
+        objectName: getRandomString(),
       });
 
       await expect(deletePromise).to.eventually.be.fulfilled;
@@ -365,9 +366,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     it("should not throw if the whole path does not exist", async () => {
       const deletePromise = serverStorage.deleteObject({
-        baseDirectory: randomUUID(),
-        relativeDirectory: randomUUID(),
-        objectName: randomUUID(),
+        baseDirectory: getRandomString(),
+        relativeDirectory: getRandomString(),
+        objectName: getRandomString(),
       });
 
       await expect(deletePromise).to.eventually.be.fulfilled;
@@ -405,7 +406,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     it("should return false if base directory does not exist", async () => {
       const exists = await serverStorage.baseDirectoryExists({
-        baseDirectory: randomUUID(),
+        baseDirectory: getRandomString(),
       });
 
       expect(exists).to.be.false;
@@ -434,7 +435,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       const exists = await serverStorage.objectExists({
         baseDirectory: testBaseDirectory.baseDirectory,
-        objectName: randomUUID(),
+        objectName: getRandomString(),
       });
 
       expect(exists).to.be.false;
@@ -442,9 +443,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
     it("should return false if the whole path does not exist", async () => {
       const exists = await serverStorage.objectExists({
-        baseDirectory: randomUUID(),
-        relativeDirectory: randomUUID(),
-        objectName: randomUUID(),
+        baseDirectory: getRandomString(),
+        relativeDirectory: getRandomString(),
+        objectName: getRandomString(),
       });
 
       expect(exists).to.be.false;

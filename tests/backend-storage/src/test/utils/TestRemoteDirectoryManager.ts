@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { randomUUID } from "crypto";
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import { BaseDirectory } from "@itwin/object-storage-core";
 
@@ -17,7 +17,7 @@ export class TestRemoteDirectoryManager {
 
   public async createNew(): Promise<TestRemoteDirectory> {
     const newDirectory: BaseDirectory = {
-      baseDirectory: `integration-tests-${randomUUID()}`,
+      baseDirectory: `integration-tests-${getRandomString()}`,
     };
     this.addForDelete(newDirectory);
     await serverStorage.createBaseDirectory(newDirectory);

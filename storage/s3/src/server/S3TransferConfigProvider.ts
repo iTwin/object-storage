@@ -2,12 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { randomUUID } from "crypto";
-
 import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
 import { inject, injectable } from "inversify";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   ObjectDirectory,
@@ -56,7 +55,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         DurationSeconds: expiresInSeconds,
         Policy: JSON.stringify(policy),
         RoleArn: this._config.roleArn,
-        RoleSessionName: randomUUID(),
+        RoleSessionName: getRandomString(),
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -99,7 +98,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         DurationSeconds: expiresInSeconds,
         Policy: JSON.stringify(policy),
         RoleArn: this._config.roleArn,
-        RoleSessionName: randomUUID(),
+        RoleSessionName: getRandomString(),
       })
     );
     /* eslint-enable @typescript-eslint/naming-convention */
