@@ -28,13 +28,13 @@ import {
 } from "@itwin/object-storage-core";
 
 import {
-  createAndUseClient,
   S3ClientWrapper,
   S3ClientWrapperFactory,
   S3ConfigDownloadInput,
   S3ConfigUploadInput,
   S3UploadInMultiplePartsInput,
 } from "../server";
+import { createAndUseClient } from "../server/internal";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {

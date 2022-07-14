@@ -25,7 +25,7 @@ import {
 } from "@itwin/object-storage-core/lib/frontend/internal";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
-import { createAndUseClientFrontend } from "./Helpers";
+import { createAndUseClientFrontend } from "./internal";
 import {
   FrontendS3ClientWrapper,
   FrontendS3ClientWrapperFactory,
