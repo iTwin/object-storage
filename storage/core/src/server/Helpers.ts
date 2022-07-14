@@ -129,6 +129,7 @@ export async function uploadToUrl(
   });
 }
 
+// TODO: switch to using crypto.randomUUID function once support for Node 12.x is dropped.
 export function getRandomString(): string {
   return randomBytes(16).toString("hex");
 }
