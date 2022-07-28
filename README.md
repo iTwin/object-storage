@@ -15,7 +15,9 @@ This repository contains packages that expose a unified cloud-agnostic object st
     - [`@itwin/object-storage-minio`](./storage/minio/README.md) contains an implementation for MinIO.
 
 This repository also contains packages that are relevant only for development:
-- [`@itwin/object-storage-tests`](./tests/object-storage/README.md) contains integration tests that can be run using different storage implementations.
+- [`@itwin/object-storage-tests-backend-unit`](./tests//backend-storage-unit/README.md) contains unit tests for different object storage implementations.
+- [`@itwin/object-storage-tests-backend`](./tests/backend-storage/README.md),\
+  [`@itwin/object-storage-tests-frontend`](./tests/frontend-storage/README.md) contain integration tests that can be run using different storage implementations.
 - [`@itwin/object-storage-common-config`](./utils/common-config/README.md) is a collection of various configuration files shared across the packages in this monorepo.
 
 ## Build Instructions

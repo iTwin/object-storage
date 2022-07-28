@@ -9,6 +9,11 @@
     "Object storage",
     "Minio"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/minio",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
