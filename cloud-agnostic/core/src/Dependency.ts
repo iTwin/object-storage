@@ -13,4 +13,10 @@ export abstract class Dependency {
     container: Container,
     config?: DependencyConfig
   ): void;
+  public registerInstance(
+    _container: Container,
+    _config?: DependencyConfig // TODO: make instanceName mandatory in config
+  ): void {
+    console.log("not implemented");
+  }
 }

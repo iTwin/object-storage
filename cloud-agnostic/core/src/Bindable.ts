@@ -42,7 +42,7 @@ export abstract class Bindable {
         for (const configInstance of dependencyConfig) {
           factory
             .getDependency(configInstance.dependencyName)
-            .register(container, configInstance);
+            .registerInstance(container, configInstance);
         }
       } else {
         factory
