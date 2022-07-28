@@ -258,6 +258,23 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
-    }
+    },
+    {
+      "name": "POC multiple instances",
+      "cwd": "${workspaceFolder}/samples/lib/named-injection",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "Run.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
   ]
 }

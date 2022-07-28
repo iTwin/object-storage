@@ -38,9 +38,18 @@ export abstract class Bindable {
 
     this._dependencyFactories.forEach((factory) => {
       const dependencyConfig = config[factory.dependencyType];
-      factory
-        .getDependency(dependencyConfig.dependencyName)
-        .register(container, dependencyConfig);
+      if (Array.isArray(dependencyConfig)) {
+        for (const configInstance of dependencyConfig) {
+          factory
+            .getDependency(configInstance.dependencyName)
+            .register(container, configInstance);
+        }
+      } else {
+        factory
+          .getDependency(dependencyConfig.dependencyName)
+          .register(container, dependencyConfig);
+      }
+
     });
   }
 }
