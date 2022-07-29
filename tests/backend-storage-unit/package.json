@@ -8,6 +8,11 @@
     "Object storage",
     "Tests"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/tests/backend-storage-unit",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

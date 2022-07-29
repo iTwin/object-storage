@@ -8,6 +8,11 @@
     "iTwin platform",
     "Object storage"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/samples",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

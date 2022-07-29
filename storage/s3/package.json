@@ -9,6 +9,11 @@
     "Object storage",
     "S3"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/s3",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",

@@ -9,6 +9,11 @@
     "Object storage",
     "Azure"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/azure",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
