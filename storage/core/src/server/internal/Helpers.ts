@@ -90,18 +90,24 @@ export async function downloadFromUrl(
   input: UrlDownloadInput
 ): Promise<TransferData> {
   const { transferType, url } = input;
+
+  // There is an issue with Axios type definitions. Casting should be removed
+  // after upgrading to Axios 1.0
+  // See: https://github.com/axios/axios/pull/4229
+  const signal = input.abortSignal as AbortSignal | undefined;
+
   switch (transferType) {
     case "buffer":
-      return (await axios.get(url, { responseType: "arraybuffer" }))
+      return (await axios.get(url, { responseType: "arraybuffer", signal }))
         .data as Buffer;
     case "stream":
-      return (await axios.get(url, { responseType: "stream" }))
+      return (await axios.get(url, { responseType: "stream", signal }))
         .data as Readable;
     case "local":
       const localPath = input.localPath;
       assertLocalFile(localPath);
 
-      const stream = (await axios.get(url, { responseType: "stream" }))
+      const stream = (await axios.get(url, { responseType: "stream", signal }))
         .data as Readable;
       await streamToLocalFile(stream, localPath);
 
