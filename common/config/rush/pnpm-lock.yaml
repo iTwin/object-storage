@@ -313,6 +313,7 @@ importers:
       '@aws-sdk/client-sts': 3.105.0
       '@aws-sdk/lib-storage': 3.105.0
       '@aws-sdk/s3-request-presigner': 3.105.0
+      '@aws-sdk/types': 3.78.0
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
@@ -345,6 +346,7 @@ importers:
       inversify: 5.0.5
       reflect-metadata: 0.1.13
     devDependencies:
+      '@aws-sdk/types': 3.78.0
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend-unit': link:../../tests/backend-storage-unit
       '@types/chai': 4.3.0
@@ -375,6 +377,7 @@ importers:
       '@types/mocha': ^8.2.2
       '@types/node': ~16.6.2
       '@types/yargs': ~15.0.5
+      abort-controller: ~3.0.0
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
       cspell: ~5.18.5
@@ -389,6 +392,7 @@ importers:
     dependencies:
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../../storage/core
+      abort-controller: 3.0.0
       chai: 4.3.6
       chai-as-promised: 7.1.1_chai@4.3.6
       fs-extra: 10.1.0
@@ -1247,7 +1251,6 @@ packages:
   /@aws-sdk/types/3.78.0:
     resolution: {integrity: sha512-I9PTlVNSbwhIgMfmDM5as1tqRIkVZunjVmfogb2WVVPp4CaX0Ll01S0FSMSLL9k6tcQLXqh45pFRjrxCl9WKdQ==}
     engines: {node: '>= 12.0.0'}
-    dev: false
 
   /@aws-sdk/url-parser/3.78.0:
     resolution: {integrity: sha512-iQn2AjECUoJE0Ae9XtgHtGGKvUkvE8hhbktGopdj+zsPBe4WrBN2DgVxlKPPrBonG/YlcL1D7a5EXaujWSlUUw==}
@@ -2648,6 +2651,13 @@ packages:
     resolution: {integrity: sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==}
     dev: false
     optional: true
+
+  /abort-controller/3.0.0:
+    resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
+    engines: {node: '>=6.5'}
+    dependencies:
+      event-target-shim: 5.0.1
+    dev: false
 
   /accepts/1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -4253,6 +4263,11 @@ packages:
     resolution: {integrity: sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=}
     engines: {node: '>= 0.6'}
     dev: true
+
+  /event-target-shim/5.0.1:
+    resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
+    engines: {node: '>=6'}
+    dev: false
 
   /eventemitter2/6.4.5:
     resolution: {integrity: sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==}
