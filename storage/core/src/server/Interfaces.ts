@@ -18,7 +18,7 @@ export type TransferData = Readable | Buffer | string;
 export type MultipartUploadData = Readable | string;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AbortSignalListener = (this: any, ev: any) => any;
+export type AbortSignalListener = (this: AbortSignal, ev: any) => any;
 
 export interface AbortSignal {
   aborted: boolean;
