@@ -6,7 +6,11 @@ import { Container } from "inversify";
 
 import { Bindable, DependenciesConfig, Types } from "..";
 
-import { DefaultTestDependencies, TestDependency } from "./TestDependency";
+import {
+  DefaultTestDependencies,
+  DefaultTestDependenciesWithInstances,
+  TestDependency,
+} from "./TestDependency";
 
 export class TestSetup extends Bindable {
   constructor(public container: Container, config: DependenciesConfig) {
@@ -14,6 +18,23 @@ export class TestSetup extends Bindable {
 
     this.requireDependency(TestDependency.dependencyType);
     DefaultTestDependencies.apply(this);
+
+    container
+      .bind<DependenciesConfig>(Types.dependenciesConfig)
+      .toDynamicValue(() => config);
+  }
+
+  public start(): void {
+    this.bindDependencies(this.container);
+  }
+}
+
+export class TestSetupWithNamedInstances extends Bindable {
+  constructor(public container: Container, config: DependenciesConfig) {
+    super();
+
+    this.requireDependency(TestDependency.dependencyType);
+    DefaultTestDependenciesWithInstances.apply(this);
 
     container
       .bind<DependenciesConfig>(Types.dependenciesConfig)

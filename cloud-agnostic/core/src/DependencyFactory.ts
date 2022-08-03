@@ -2,8 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { NamedDependency } from "./NamedDependency";
 import { Dependency } from "./Dependency";
-import { DependencyError } from "./internal";
+import { DependencyError, DependencyTypeError } from "./internal";
 
 export class DependencyFactory {
   private _dependencyMap = new Map<string, Dependency>();
@@ -25,5 +26,16 @@ export class DependencyFactory {
       );
 
     return dependency;
+  }
+
+  public getNamedDependency(name: string): NamedDependency {
+    const dependency = this.getDependency(name);
+    if (!(dependency instanceof NamedDependency))
+      throw new DependencyTypeError(
+        `dependency "${name}" does not support named dependency instances`,
+        this.dependencyType
+      );
+
+    return dependency as NamedDependency;
   }
 }
