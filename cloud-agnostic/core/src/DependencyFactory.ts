@@ -2,9 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { NamedDependency } from "./NamedDependency";
 import { Dependency } from "./Dependency";
 import { DependencyError, DependencyTypeError } from "./internal";
+import { NamedDependency } from "./NamedDependency";
 
 export class DependencyFactory {
   private _dependencyMap = new Map<string, Dependency>();
@@ -36,6 +36,6 @@ export class DependencyFactory {
         this.dependencyType
       );
 
-    return dependency as NamedDependency;
+    return dependency;
   }
 }

@@ -3,13 +3,16 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Container, interfaces } from "inversify";
+
 import { Dependency } from "./Dependency";
 import { DependencyConfig } from "./DependencyConfig";
 import { ConfigError } from "./internal";
 
 export abstract class NamedDependency extends Dependency {
   protected registerNamedInstance<TInstance>(
-    instanceType: interfaces.Newable<TInstance> | interfaces.Abstract<TInstance>,
+    instanceType:
+      | interfaces.Newable<TInstance>
+      | interfaces.Abstract<TInstance>,
     container: Container,
     config: DependencyConfig
   ): void {
