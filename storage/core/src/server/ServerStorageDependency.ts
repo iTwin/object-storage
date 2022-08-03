@@ -2,8 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { NamedDependency, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { Container } from "inversify";
+
+import { DependencyConfig, NamedDependency } from "@itwin/cloud-agnostic-core";
+
 import { ServerStorage } from "./ServerStorage";
 
 export abstract class ServerStorageDependency extends NamedDependency {

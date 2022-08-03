@@ -5,8 +5,8 @@
 import { Container } from "inversify";
 
 import { Bindable, Dependency } from "..";
-import { NamedDependency } from "../NamedDependency";
 import { DependencyConfig } from "../DependencyConfig";
+import { NamedDependency } from "../NamedDependency";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
 

@@ -12,9 +12,9 @@ import { ConcreteTest, Test, TestConfig } from "./Test";
 import { ConcreteTestDependencyBindings } from "./TestDependency";
 import {
   TestSetup,
-  TestSetupWithNamedInstances,
   TestSetupNoDefaultDependencies,
   TestSetupNoFactory,
+  TestSetupWithNamedInstances,
 } from "./TestSetup";
 
 const testConfig: TestConfig = {

@@ -33,7 +33,7 @@ export class ConcreteTest extends Test {
     return this._config.testProperty;
   }
 
-  public get instanceName(): string | undefined{
+  public get instanceName(): string | undefined {
     return this._config.instanceName;
   }
 }

@@ -19,13 +19,8 @@ export class DependencyError extends Error {
 }
 
 export class DependencyTypeError extends Error {
-  constructor(
-    message: string,
-    public readonly dependencyType: string,
-  ) {
-    super(
-      `${dependencyType} ${message}.`
-    );
+  constructor(message: string, public readonly dependencyType: string) {
+    super(`${dependencyType} ${message}.`);
   }
 }
 
