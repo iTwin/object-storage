@@ -6,6 +6,7 @@ import { Container } from "inversify";
 
 import { Bindable, Dependency } from "..";
 import { DependencyConfig } from "../DependencyConfig";
+import { ConfigError } from "../internal";
 import { NamedDependency } from "../NamedDependency";
 
 import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
@@ -36,11 +37,15 @@ export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDepend
     container.bind(Test).to(ConcreteTest).inSingletonScope();
   }
 
-  public override registerInstance(
+  protected override bindInstances(
     container: Container,
+    childContainer: Container,
     config: DependencyConfig
   ): void {
-    super.registerNamedInstance(Test, container, config);
+    if (!config.instanceName)
+      throw new ConfigError<DependencyConfig>("instanceName");
+
+    this.bindInstance(container, childContainer, Test, config.instanceName);
   }
 }
 

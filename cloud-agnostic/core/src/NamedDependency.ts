@@ -6,34 +6,38 @@ import { Container, interfaces } from "inversify";
 
 import { Dependency } from "./Dependency";
 import { DependencyConfig } from "./DependencyConfig";
-import { ConfigError } from "./internal";
 
 export abstract class NamedDependency extends Dependency {
-  protected registerNamedInstance<TInstance>(
-    instanceType:
-      | interfaces.Newable<TInstance>
-      | interfaces.Abstract<TInstance>,
+  protected abstract bindInstances(
+    container: Container,
+    childContainer: Container,
+    config: DependencyConfig
+  ): void;
+
+  public registerInstance(
     container: Container,
     config: DependencyConfig
   ): void {
-    if (!config.instanceName)
-      throw new ConfigError<DependencyConfig>("instanceName");
-
     const childContainer = container.createChild();
 
     this.register(childContainer, config);
+    this.bindInstances(container, childContainer, config);
+  }
 
+  protected bindInstance<TInstance>(
+    container: Container,
+    childContainer: Container,
+    instanceType:
+      | interfaces.Newable<TInstance>
+      | interfaces.Abstract<TInstance>,
+    instanceName: string
+  ) {
     container
       .bind(instanceType)
       .toDynamicValue(() => {
         return childContainer.get(instanceType);
       })
       .inSingletonScope()
-      .whenTargetNamed(config.instanceName);
+      .whenTargetNamed(instanceName);
   }
-
-  public abstract registerInstance(
-    container: Container,
-    config: DependencyConfig
-  ): void;
 }
