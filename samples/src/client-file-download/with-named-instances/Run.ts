@@ -11,10 +11,10 @@ import { AzureClientStorageBindings } from "@itwin/object-storage-azure";
 import { App } from "./App";
 
 /**
- * This function starts the application by first creating an named instance/instances of it and
+ * This function starts the application by first creating an instance of it and
  * then configuring its container by binding `DependenciesConfig` to a specific
  * value and `ClientStorage` to a specific implementation (in this case,
- * `AzureClientStorage` class). This allows the `App` class to be unaware of any
+ * `AzureClientStorage` class).This allows the `App` class to be unaware of any
  * specific cloud providers and rely that it will get some type of
  * `ClientStorage`.
  */
