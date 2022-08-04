@@ -9,9 +9,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "Cloud Agnostic Core Unit tests",
@@ -19,9 +26,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "-- Backend Unit Tests --"
@@ -32,9 +46,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "S3 Backend Unit tests",
@@ -42,9 +63,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "Minio Backend Unit tests",
@@ -52,9 +80,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "OSS Unit tests",
@@ -62,9 +97,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:unit"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "-- Backend Integration Tests --"
@@ -75,9 +117,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:integration:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "Backend OSS Integration tests",
@@ -85,9 +134,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": [
+        "run",
+        "test:integration:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "envFile": "${workspaceFolder}/storage/oss/src/test/.env"
     },
     {
@@ -96,9 +152,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:backend"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:integration:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "Backend MinIO Integration tests (Tests only)",
@@ -106,9 +169,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:backend:runTests"],
-      "outFiles": ["${workspaceFolder}/*/*/lib/**/*.js"],
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeArgs": [
+        "run",
+        "test:integration:backend:runTests"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "-- Frontend Integration Tests --"
@@ -119,7 +189,10 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:frontend"],
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
       "env": {
         "DEBUG": "1"
       }
@@ -130,7 +203,10 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:frontend"],
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
       "env": {
         "DEBUG": "1"
       }
@@ -141,7 +217,10 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:frontend"],
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend"
+      ],
       "env": {
         "DEBUG": "1"
       }
@@ -152,7 +231,10 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "test:integration:frontend:startServerRunTests"],
+      "runtimeArgs": [
+        "run",
+        "test:integration:frontend:startServerRunTests"
+      ],
       "env": {
         "DEBUG": "1"
       }
@@ -166,12 +248,16 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["Run.js"],
+      "runtimeArgs": [
+        "Run.js"
+      ],
       "outFiles": [
         "${workspaceFolder}/samples/lib/**/*.js",
         "${workspaceFolder}/*/*/lib/**/*.js"
       ],
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
       "name": "Client file download without `inversify` sample",
@@ -179,25 +265,33 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["Run.js"],
+      "runtimeArgs": [
+        "Run.js"
+      ],
       "outFiles": [
         "${workspaceFolder}/samples/lib/**/*.js",
         "${workspaceFolder}/*/*/lib/**/*.js"
       ],
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     },
     {
-      "name": "POC multiple instances",
-      "cwd": "${workspaceFolder}/samples/lib/named-injection",
+      "name": "Client file download with `inversify` named instances sample",
+      "cwd": "${workspaceFolder}/samples/lib/with-named-instances",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["Run.js"],
+      "runtimeArgs": [
+        "Run.js"
+      ],
       "outFiles": [
         "${workspaceFolder}/samples/lib/**/*.js",
         "${workspaceFolder}/*/*/lib/**/*.js"
       ],
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }
