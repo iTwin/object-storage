@@ -9,13 +9,15 @@ import { ClientStorage } from "@itwin/object-storage-core";
 /**
  * Simple file downloader that depends on {@link ClientStorage}. Any specific
  * implementation of {@link ClientStorage} can be passed to the constructor
- * making this class cloud agnostic. {@link ClientStorage} instance is resolved 
- * using instance name (which is described in the configuration as instanceName property) 
+ * making this class cloud agnostic. {@link ClientStorage} instance is resolved
+ * using instance name (which is described in the configuration as instanceName property)
  */
 @injectable()
 export class NamedFileDownloader {
   constructor(
-    @inject(ClientStorage) @named("instanceName") private _storage: ClientStorage
+    @inject(ClientStorage)
+    @named("instanceName")
+    private _storage: ClientStorage
   ) {}
 
   public async downloadFile(): Promise<void> {

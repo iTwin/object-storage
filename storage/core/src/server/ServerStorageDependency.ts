@@ -4,10 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Container } from "inversify";
 
+import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
+
 import { DependencyConfig, NamedDependency } from "@itwin/cloud-agnostic-core";
 
 import { ServerStorage } from "./ServerStorage";
-import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
 export abstract class ServerStorageDependency extends NamedDependency {
   public static readonly dependencyType = "ServerStorage";
