@@ -18,9 +18,9 @@ export type TransferData = Readable | Buffer | string;
 export type MultipartUploadData = Readable | string;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AbortSignalListener = (this: AbortSignal, ev: any) => any;
+export type AbortSignalListener = (this: GenericAbortSignal, ev: any) => any;
 
-export interface AbortSignal {
+export interface GenericAbortSignal {
   aborted: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onabort: ((this: any, ev: any) => any) | null;
@@ -31,7 +31,7 @@ export interface AbortSignal {
 export interface UrlDownloadInput extends UrlTransferInput {
   transferType: TransferType;
   localPath?: string;
-  abortSignal?: AbortSignal;
+  abortSignal?: GenericAbortSignal;
 }
 
 export interface UrlUploadInput extends UrlTransferInput {
@@ -42,7 +42,7 @@ export interface UrlUploadInput extends UrlTransferInput {
 export interface ConfigDownloadInput extends ConfigTransferInput {
   transferType: TransferType;
   localPath?: string;
-  abortSignal?: AbortSignal;
+  abortSignal?: GenericAbortSignal;
 }
 
 export interface ConfigUploadInput extends ConfigTransferInput {
