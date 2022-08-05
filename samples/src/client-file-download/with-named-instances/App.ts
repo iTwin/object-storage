@@ -41,6 +41,6 @@ export class App extends Bindable {
     this.bindDependencies(this.container);
 
     const namedFileDownloader = this.container.get(NamedFileDownloader);
-    await namedFileDownloader.downloadFile();
+    await namedFileDownloader.downloadAllFiles();
   }
 }

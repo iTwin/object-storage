@@ -26,7 +26,11 @@ async function run(): Promise<void> {
     .toConstantValue({
       ClientStorage: [
         {
-          instanceName: "instanceName",
+          instanceName: "instanceName1",
+          dependencyName: "azure",
+        },
+        {
+          instanceName: "instanceName2",
           dependencyName: "azure",
         },
       ],
