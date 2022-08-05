@@ -37,7 +37,7 @@ export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDepend
     container.bind(Test).to(ConcreteTest).inSingletonScope();
   }
 
-  protected override bindInstances(
+  protected override _registerInstance(
     container: Container,
     childContainer: Container,
     config: DependencyConfig
@@ -45,7 +45,7 @@ export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDepend
     if (!config.instanceName)
       throw new ConfigError<DependencyConfig>("instanceName");
 
-    this.bindInstance(container, childContainer, Test, config.instanceName);
+    this.bindNamed(container, childContainer, Test, config.instanceName);
   }
 }
 

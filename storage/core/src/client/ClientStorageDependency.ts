@@ -14,7 +14,7 @@ export abstract class ClientStorageDependency extends NamedDependency {
   public static readonly dependencyType = "ClientStorage";
   public readonly dependencyType = ClientStorageDependency.dependencyType;
 
-  protected override bindInstances(
+  protected override _registerInstance(
     container: Container,
     childContainer: Container,
     config: DependencyConfig
@@ -22,7 +22,7 @@ export abstract class ClientStorageDependency extends NamedDependency {
     if (!config.instanceName)
       throw new ConfigError<DependencyConfig>("instanceName");
 
-    this.bindInstance(
+    this.bindNamed(
       container,
       childContainer,
       ClientStorage,

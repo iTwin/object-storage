@@ -8,7 +8,7 @@ import { Dependency } from "./Dependency";
 import { DependencyConfig } from "./DependencyConfig";
 
 export abstract class NamedDependency extends Dependency {
-  protected abstract bindInstances(
+  protected abstract _registerInstance(
     container: Container,
     childContainer: Container,
     config: DependencyConfig
@@ -21,21 +21,19 @@ export abstract class NamedDependency extends Dependency {
     const childContainer = container.createChild();
 
     this.register(childContainer, config);
-    this.bindInstances(container, childContainer, config);
+    this._registerInstance(container, childContainer, config);
   }
 
-  protected bindInstance<TInstance>(
+  protected bindNamed<T>(
     container: Container,
     childContainer: Container,
-    instanceType:
-      | interfaces.Newable<TInstance>
-      | interfaces.Abstract<TInstance>,
+    serviceIdentifier: interfaces.ServiceIdentifier<T>,
     instanceName: string
   ): void {
     container
-      .bind(instanceType)
+      .bind(serviceIdentifier)
       .toDynamicValue(() => {
-        return childContainer.get(instanceType);
+        return childContainer.get(serviceIdentifier);
       })
       .inSingletonScope()
       .whenTargetNamed(instanceName);
