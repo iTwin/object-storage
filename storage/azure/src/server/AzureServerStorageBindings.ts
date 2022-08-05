@@ -44,8 +44,8 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
     container
       .bind<AzureServerStorageConfig>(Types.AzureServer.config)
       .toConstantValue(config);
-
     container.bind(ServerStorage).to(AzureServerStorage).inSingletonScope();
+
     container.bind(BlobServiceClientWrapper).toSelf().inSingletonScope();
     container
       .bind(BlobServiceClient)

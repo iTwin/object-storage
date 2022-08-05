@@ -3,7 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { Dependency } from "./Dependency";
-import { DependencyError } from "./internal";
+import { DependencyError, DependencyTypeError } from "./internal";
+import { NamedDependency } from "./NamedDependency";
 
 export class DependencyFactory {
   private _dependencyMap = new Map<string, Dependency>();
@@ -22,6 +23,17 @@ export class DependencyFactory {
         `dependency "${name}" is not registered`,
         this.dependencyType,
         [...this._dependencyMap.keys()]
+      );
+
+    return dependency;
+  }
+
+  public getNamedDependency(name: string): NamedDependency {
+    const dependency = this.getDependency(name);
+    if (!(dependency instanceof NamedDependency))
+      throw new DependencyTypeError(
+        `dependency "${name}" does not support named dependency instances`,
+        this.dependencyType
       );
 
     return dependency;

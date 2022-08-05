@@ -18,6 +18,12 @@ export class DependencyError extends Error {
   }
 }
 
+export class DependencyTypeError extends Error {
+  constructor(message: string, public readonly dependencyType: string) {
+    super(`${dependencyType} ${message}.`);
+  }
+}
+
 export class ConfigError<T> extends Error {
   constructor(property: keyof T & string) {
     super(`${property} is not defined in configuration`);

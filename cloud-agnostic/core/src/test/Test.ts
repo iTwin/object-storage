@@ -17,6 +17,7 @@ export const testConfigType = Symbol.for("TestConfig");
 @injectable()
 export abstract class Test {
   abstract get property(): string;
+  abstract get instanceName(): string | undefined;
 }
 
 @injectable()
@@ -30,5 +31,9 @@ export class ConcreteTest extends Test {
 
   public get property(): string {
     return this._config.testProperty;
+  }
+
+  public get instanceName(): string | undefined {
+    return this._config.instanceName;
   }
 }

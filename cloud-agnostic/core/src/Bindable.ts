@@ -5,7 +5,7 @@
 import { Container } from "inversify";
 
 import { Dependency } from "./Dependency";
-import { DependenciesConfig } from "./DependencyConfig";
+import { DependenciesConfig, DependencyConfig } from "./DependencyConfig";
 import { DependencyFactory } from "./DependencyFactory";
 import { DependencyError } from "./internal";
 import { Types } from "./Types";
@@ -33,14 +33,34 @@ export abstract class Bindable {
     factory.addDependency(dependencyBindings);
   }
 
+  private bindNamedDependencies(
+    container: Container,
+    factory: DependencyFactory,
+    configs: DependencyConfig[]
+  ): void {
+    for (const configInstance of configs) {
+      factory
+        .getNamedDependency(configInstance.dependencyName)
+        .registerInstance(container, configInstance);
+    }
+  }
+
+  private bindDependency(
+    container: Container,
+    factory: DependencyFactory,
+    config: DependencyConfig
+  ) {
+    factory.getDependency(config.dependencyName).register(container, config);
+  }
+
   protected bindDependencies(container: Container): void {
     const config = container.get<DependenciesConfig>(Types.dependenciesConfig);
 
     this._dependencyFactories.forEach((factory) => {
       const dependencyConfig = config[factory.dependencyType];
-      factory
-        .getDependency(dependencyConfig.dependencyName)
-        .register(container, dependencyConfig);
+      if (Array.isArray(dependencyConfig))
+        this.bindNamedDependencies(container, factory, dependencyConfig);
+      else this.bindDependency(container, factory, dependencyConfig);
     });
   }
 }
