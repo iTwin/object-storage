@@ -31,7 +31,7 @@ export abstract class NamedDependency extends Dependency {
       | interfaces.Newable<TInstance>
       | interfaces.Abstract<TInstance>,
     instanceName: string
-  ) {
+  ): void {
     container
       .bind(instanceType)
       .toDynamicValue(() => {
