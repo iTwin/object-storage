@@ -98,20 +98,32 @@ export async function downloadFromUrl(
 
   switch (transferType) {
     case "buffer":
-      return (await axios.get(url, { responseType: "arraybuffer", signal }))
-        .data as Buffer;
+      const bufferPromise = axios.get(url, {
+        responseType: "arraybuffer",
+        signal,
+      });
+      return (await convertAbortErrorName(bufferPromise)).data as Buffer;
+
     case "stream":
-      return (await axios.get(url, { responseType: "stream", signal }))
-        .data as Readable;
+      const streamPromise = axios.get(url, {
+        responseType: "stream",
+        signal,
+      });
+      return (await convertAbortErrorName(streamPromise)).data as Readable;
+
     case "local":
       const localPath = input.localPath;
       assertLocalFile(localPath);
 
-      const stream = (await axios.get(url, { responseType: "stream", signal }))
-        .data as Readable;
+      const promise = axios.get(url, {
+        responseType: "stream",
+        signal,
+      });
+      const stream = (await convertAbortErrorName(promise)).data as Readable;
       await streamToLocalFile(stream, localPath);
 
       return localPath;
+
     default:
       throw new Error(`Type ${input.transferType} is not supported`);
   }
@@ -137,4 +149,15 @@ export async function uploadToUrl(
 // TODO: switch to using crypto.randomUUID function once support for Node 12.x is dropped.
 export function getRandomString(): string {
   return randomBytes(16).toString("hex");
+}
+
+async function convertAbortErrorName<T>(promise: Promise<T>): Promise<T> {
+  try {
+    return await promise;
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === "CanceledError")
+      error.name = "AbortError";
+
+    throw error;
+  }
 }

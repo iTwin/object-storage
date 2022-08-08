@@ -194,7 +194,8 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         try {
           await downloadPromise;
         } catch (error: unknown) {
-          wasAborted = true;
+          if (error instanceof Error && error.name === "AbortError")
+            wasAborted = true;
         }
 
         expect(wasAborted).to.be.true;
@@ -448,7 +449,8 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         try {
           await downloadPromise;
         } catch (error: unknown) {
-          wasAborted = true;
+          if (error instanceof Error && error.name === "AbortError")
+            wasAborted = true;
         }
 
         expect(wasAborted).to.be.true;
