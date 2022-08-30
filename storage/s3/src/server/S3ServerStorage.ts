@@ -136,6 +136,10 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.list(directory);
   }
 
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    return await this._s3Client.listDirectories();
+  }
+
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (

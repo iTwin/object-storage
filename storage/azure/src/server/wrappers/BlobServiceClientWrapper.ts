@@ -7,7 +7,11 @@ import {
   BlobServiceClient,
   BlockBlobClient,
   ContainerClient,
+  ContainerItem,
+  ServiceListContainersSegmentResponse,
 } from "@azure/storage-blob";
+import { PagedAsyncIterableIterator } from '@azure/core-paging';
+
 import { injectable } from "inversify";
 
 import { ObjectReference } from "@itwin/object-storage-core";
@@ -36,5 +40,9 @@ export class BlobServiceClientWrapper {
     return this._client
       .getContainerClient(reference.baseDirectory)
       .getBlockBlobClient(buildBlobName(reference));
+  }
+
+  public listContainers(): PagedAsyncIterableIterator<ContainerItem, ServiceListContainersSegmentResponse> {
+    return this._client.listContainers();
   }
 }

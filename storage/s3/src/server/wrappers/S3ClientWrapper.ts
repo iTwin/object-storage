@@ -100,7 +100,7 @@ export class S3ClientWrapper {
   }
 
   public async list(
-    directory: BaseDirectory,
+    directory?: BaseDirectory,
     options?: {
       maxResults?: number;
       includeEmptyFiles?: boolean;
@@ -110,7 +110,7 @@ export class S3ClientWrapper {
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
-        Prefix: directory.baseDirectory,
+        Prefix: directory?.baseDirectory,
         MaxKeys: options?.maxResults,
       })
     );
@@ -123,6 +123,16 @@ export class S3ClientWrapper {
     const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
     return nonEmptyReferences;
   }
+
+
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    const references = await this.list();
+    const referencesBaseDirectories = references.map((ref) => ref.baseDirectory);
+    const uniqueBaseDirectories = Array.from(new Set(referencesBaseDirectories).values());
+    const result = uniqueBaseDirectories.map((entry) => <BaseDirectory>{baseDirectory: entry})
+    return result;
+  }
+
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */

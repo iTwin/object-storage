@@ -304,6 +304,47 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
+  describe(`${serverStorage.listDirectories.name}()`, () => {
+    it("should list directories", async () => {
+      const testDirectory1: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory2: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory3: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      await testDirectory1.uploadFile(
+        { objectName: "reference1" },
+        undefined,
+        undefined
+      );
+      await testDirectory2.uploadFile(
+        { objectName: "reference2" },
+        undefined,
+        undefined
+      );
+      await testDirectory3.uploadFile(
+        { objectName: "reference3" },
+        undefined,
+        undefined
+      );
+      const queriedReferences = await serverStorage.listDirectories();
+
+      expect(queriedReferences.length).to.be.equal(3);
+      const queriedReference1 = queriedReferences.find(
+        (ref) => ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
+      );
+      const queriedReference2 = queriedReferences.find(
+        (ref) => ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
+      );
+      const queriedReference3 = queriedReferences.find(
+        (ref) => ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
+      );
+      expect(queriedReference1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedReference2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedReference3).to.be.deep.equal(testDirectory3.baseDirectory);
+    });
+  });
+
   describe(`${serverStorage.deleteBaseDirectory.name}()`, () => {
     it("should delete directory with files", async () => {
       const testDirectory: TestRemoteDirectory =

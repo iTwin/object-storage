@@ -52,6 +52,8 @@ export abstract class ServerStorage
 
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;
 
+  public abstract listDirectories(): Promise<BaseDirectory[]>;
+
   public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
 
   /**
