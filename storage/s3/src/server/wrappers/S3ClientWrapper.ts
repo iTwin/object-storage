@@ -100,7 +100,7 @@ export class S3ClientWrapper {
   }
 
   public async list(
-    directory?: BaseDirectory,
+    directory: BaseDirectory,
     options?: {
       maxResults?: number;
       includeEmptyFiles?: boolean;
@@ -110,7 +110,7 @@ export class S3ClientWrapper {
     const { Contents } = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
-        Prefix: directory?.baseDirectory,
+        Prefix: directory.baseDirectory,
         MaxKeys: options?.maxResults,
       })
     );
