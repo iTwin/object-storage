@@ -131,9 +131,10 @@ export class AzureServerStorage extends ServerStorage {
       directories.push(directory);
     }
 
-    return directories.map((directory) => <BaseDirectory>{ baseDirectory: directory.name } )
+    return directories.map(
+      (directory) => ({ baseDirectory: directory.name } as BaseDirectory)
+    );
   }
-
 
   public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     const containerClient = this._client.getContainerClient(

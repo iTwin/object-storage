@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   BlobClient,
   BlobServiceClient,
@@ -10,8 +11,6 @@ import {
   ContainerItem,
   ServiceListContainersSegmentResponse,
 } from "@azure/storage-blob";
-import { PagedAsyncIterableIterator } from '@azure/core-paging';
-
 import { injectable } from "inversify";
 
 import { ObjectReference } from "@itwin/object-storage-core";
@@ -42,7 +41,10 @@ export class BlobServiceClientWrapper {
       .getBlockBlobClient(buildBlobName(reference));
   }
 
-  public listContainers(): PagedAsyncIterableIterator<ContainerItem, ServiceListContainersSegmentResponse> {
+  public listContainers(): PagedAsyncIterableIterator<
+    ContainerItem,
+    ServiceListContainersSegmentResponse
+  > {
     return this._client.listContainers();
   }
 }

@@ -331,13 +331,16 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
       expect(queriedReferences.length).to.be.equal(3);
       const queriedReference1 = queriedReferences.find(
-        (ref) => ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
+        (ref) =>
+          ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
       );
       const queriedReference2 = queriedReferences.find(
-        (ref) => ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
+        (ref) =>
+          ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
       );
       const queriedReference3 = queriedReferences.find(
-        (ref) => ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
+        (ref) =>
+          ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
       );
       expect(queriedReference1).to.be.deep.equal(testDirectory1.baseDirectory);
       expect(queriedReference2).to.be.deep.equal(testDirectory2.baseDirectory);

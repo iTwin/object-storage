@@ -131,13 +131,13 @@ export class S3ServerStorage extends ServerStorage {
     });
   }
 
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    return this._s3Client.listDirectories();
+  }
+
   /** Max 1000 objects */
   public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     return this._s3Client.list(directory);
-  }
-
-  public async listDirectories(): Promise<BaseDirectory[]> {
-    return await this._s3Client.listDirectories();
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {

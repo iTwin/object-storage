@@ -99,6 +99,46 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
+  public async listDirectories(options?: {
+    maxResults?: number;
+    includeEmptyFiles?: boolean;
+  }): Promise<BaseDirectory[]> {
+    let truncated: boolean | undefined = true;
+    let continuationToken: string | undefined;
+    let references: ObjectReference[] = [];
+    while (truncated) {
+      /* eslint-disable @typescript-eslint/naming-convention */
+      const response = await this._client.send(
+        new ListObjectsV2Command({
+          Bucket: this._bucket,
+          ContinuationToken: continuationToken,
+          MaxKeys: options?.maxResults,
+        })
+      );
+      references = references.concat(
+        response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
+          []
+      );
+      truncated = response.IsTruncated;
+      if (response.IsTruncated) {
+        continuationToken = response.NextContinuationToken;
+      }
+    }
+    if (!options?.includeEmptyFiles) {
+      references = references.filter((ref) => !!ref.objectName);
+    }
+    const referencesBaseDirectories = references.map(
+      (ref) => ref.baseDirectory
+    );
+    const uniqueBaseDirectories = Array.from(
+      new Set(referencesBaseDirectories).values()
+    );
+    const result = uniqueBaseDirectories.map(
+      (entry) => ({ baseDirectory: entry } as BaseDirectory)
+    );
+    return result;
+  }
+
   public async list(
     directory: BaseDirectory,
     options?: {
@@ -122,41 +162,6 @@ export class S3ClientWrapper {
 
     const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
     return nonEmptyReferences;
-  }
-
-
-  public async listDirectories(
-    options?: {
-      maxResults?: number;
-      includeEmptyFiles?: boolean;
-    }
-  ): Promise<BaseDirectory[]> {
-    let truncated: boolean | undefined = true;
-    let continuationToken: string | undefined;
-    let references: ObjectReference[] = [];
-    while (truncated) {
-      const response = await this._client.send(
-        new ListObjectsV2Command({
-          Bucket: this._bucket,
-          ContinuationToken: continuationToken,
-          MaxKeys: options?.maxResults,
-        })
-      );
-      references = references.concat(
-        response.Contents?.map((object) => buildObjectReference(object.Key!)) ?? []
-      );
-      truncated = response.IsTruncated;
-      if (response.IsTruncated) {
-        continuationToken = response.NextContinuationToken;
-      }
-    }
-    if (!(options?.includeEmptyFiles)) {
-      references = references.filter((ref) => !!ref.objectName);
-    }
-    const referencesBaseDirectories = references.map((ref) => ref.baseDirectory);
-    const uniqueBaseDirectories = Array.from(new Set(referencesBaseDirectories).values());
-    const result = uniqueBaseDirectories.map((entry) => <BaseDirectory>{baseDirectory: entry})
-    return result;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
