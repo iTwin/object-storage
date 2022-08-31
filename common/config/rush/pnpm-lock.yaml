@@ -69,7 +69,7 @@ importers:
 
   ../../storage/azure:
     specifiers:
-      '@azure/core-paging': ~1.3.0
+      '@azure/core-paging': ~1.2.1
       '@azure/storage-blob': ~12.2.1
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
@@ -101,7 +101,7 @@ importers:
       webpack: ~5.72.0
       webpack-cli: ~4.9.2
     dependencies:
-      '@azure/core-paging': 1.3.0
+      '@azure/core-paging': 1.2.1
       '@azure/storage-blob': 12.2.1
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core
@@ -1495,10 +1495,11 @@ packages:
       - encoding
     dev: false
 
-  /@azure/core-paging/1.3.0:
-    resolution: {integrity: sha512-H6Tg9eBm0brHqLy0OSAGzxIh1t4UL8eZVrSUMJ60Ra9cwq2pOskFqVpz2pYoHDsBY1jZ4V/P8LRGb5D5pmC6rg==}
+  /@azure/core-paging/1.2.1:
+    resolution: {integrity: sha512-UtH5iMlYsvg+nQYIl4UHlvvSrsBjOlRF4fs0j7mxd3rWdAStrKYrh2durOpHs5C9yZbVhsVDaisoyaf/lL1EVA==}
     engines: {node: '>=12.0.0'}
     dependencies:
+      '@azure/core-asynciterator-polyfill': 1.0.2
       tslib: 2.3.1
     dev: false
 
@@ -1533,7 +1534,7 @@ packages:
       '@azure/abort-controller': 1.0.4
       '@azure/core-http': 1.2.6
       '@azure/core-lro': 1.0.5
-      '@azure/core-paging': 1.3.0
+      '@azure/core-paging': 1.2.1
       '@azure/core-tracing': 1.0.0-preview.9
       '@azure/logger': 1.0.3
       '@opentelemetry/api': 0.10.2
