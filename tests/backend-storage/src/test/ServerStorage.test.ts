@@ -329,7 +329,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       );
       const queriedReferences = await serverStorage.listDirectories();
 
-      expect(queriedReferences.length).to.be.equal(3);
       const queriedReference1 = queriedReferences.find(
         (ref) =>
           ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
