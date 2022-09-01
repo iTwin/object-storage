@@ -99,44 +99,32 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
-  public async listDirectories(options?: {
-    maxResults?: number;
-    includeEmptyFiles?: boolean;
-  }): Promise<BaseDirectory[]> {
+  public async listDirectories(): Promise<BaseDirectory[]> {
     let truncated: boolean | undefined = true;
     let continuationToken: string | undefined;
-    let references: ObjectReference[] = [];
+    let directories: BaseDirectory[] = [];
     while (truncated) {
       /* eslint-disable @typescript-eslint/naming-convention */
       const response = await this._client.send(
         new ListObjectsV2Command({
           Bucket: this._bucket,
           ContinuationToken: continuationToken,
-          MaxKeys: options?.maxResults,
+          Delimiter: "/",
         })
       );
-      references = references.concat(
-        response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
-          []
+      directories = directories.concat(
+        response.CommonPrefixes?.map(
+          (entry) =>
+            ({ baseDirectory: entry.Prefix?.slice(0, -1) } as BaseDirectory)
+        ) ?? []
       );
       truncated = response.IsTruncated;
       if (response.IsTruncated) {
         continuationToken = response.NextContinuationToken;
       }
     }
-    if (!options?.includeEmptyFiles) {
-      references = references.filter((ref) => !!ref.objectName);
-    }
-    const referencesBaseDirectories = references.map(
-      (ref) => ref.baseDirectory
-    );
-    const uniqueBaseDirectories = Array.from(
-      new Set(referencesBaseDirectories).values()
-    );
-    const result = uniqueBaseDirectories.map(
-      (entry) => ({ baseDirectory: entry } as BaseDirectory)
-    );
-    return result;
+    const uniqueBaseDirectories = Array.from(new Set(directories).values());
+    return uniqueBaseDirectories;
   }
 
   public async list(

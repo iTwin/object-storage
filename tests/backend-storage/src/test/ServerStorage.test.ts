@@ -312,38 +312,52 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         await testDirectoryManager.createNew();
       const testDirectory3: TestRemoteDirectory =
         await testDirectoryManager.createNew();
-      await testDirectory1.uploadFile(
-        { objectName: "reference1" },
-        undefined,
-        undefined
-      );
-      await testDirectory2.uploadFile(
-        { objectName: "reference2" },
-        undefined,
-        undefined
-      );
-      await testDirectory3.uploadFile(
-        { objectName: "reference3" },
-        undefined,
-        undefined
-      );
-      const queriedReferences = await serverStorage.listDirectories();
+      const queriedDirectories = await serverStorage.listDirectories();
 
-      const queriedReference1 = queriedReferences.find(
+      const queriedDirectory1 = queriedDirectories.find(
         (ref) =>
           ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
       );
-      const queriedReference2 = queriedReferences.find(
+      const queriedDirectory2 = queriedDirectories.find(
         (ref) =>
           ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
       );
-      const queriedReference3 = queriedReferences.find(
+      const queriedDirectory3 = queriedDirectories.find(
         (ref) =>
           ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
       );
-      expect(queriedReference1).to.be.deep.equal(testDirectory1.baseDirectory);
-      expect(queriedReference2).to.be.deep.equal(testDirectory2.baseDirectory);
-      expect(queriedReference3).to.be.deep.equal(testDirectory3.baseDirectory);
+
+      expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedDirectory3).to.be.deep.equal(testDirectory3.baseDirectory);
+    });
+
+    it("should not list subdirectories", async () => {
+      const testDirectory1: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory2: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      await testDirectory1.uploadFile(
+        { objectName: `test/ref1.obj` },
+        undefined,
+        undefined
+      );
+      const queriedDirectories = await serverStorage.listDirectories();
+
+      const queriedDirectory1 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
+      );
+      const queriedDirectory2 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
+      );
+      const queriedSubDirectory1 = queriedDirectories.find(
+        (ref) => ref.baseDirectory === `${testDirectory1.baseDirectory}/test`
+      );
+      expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedSubDirectory1).to.be.undefined;
     });
   });
 
