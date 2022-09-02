@@ -136,14 +136,16 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   /** Max 1000 objects */
-  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
-    return this._s3Client.list(directory);
+  public async listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]> {
+    return this._s3Client.listObjects(directory);
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
-        await this._s3Client.list(directory, { includeEmptyFiles: true })
+        await this._s3Client.listObjects(directory, { includeEmptyFiles: true })
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }

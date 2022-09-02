@@ -54,7 +54,9 @@ export abstract class ServerStorage
 
   public abstract listDirectories(): Promise<BaseDirectory[]>;
 
-  public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
+  public abstract listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]>;
 
   /**
    * Deletes the specified directory. Note that some storage providers (Azure,

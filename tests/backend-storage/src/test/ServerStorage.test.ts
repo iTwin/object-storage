@@ -273,7 +273,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.list.name}()`, () => {
+  describe(`${serverStorage.listObjects.name}()`, () => {
     it("should list objects", async () => {
       const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
@@ -288,7 +288,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         undefined
       );
 
-      const queriedReferences = await serverStorage.list(
+      const queriedReferences = await serverStorage.listObjects(
         testDirectory.baseDirectory
       );
 

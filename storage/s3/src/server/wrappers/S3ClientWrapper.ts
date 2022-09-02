@@ -127,7 +127,7 @@ export class S3ClientWrapper {
     return uniqueBaseDirectories;
   }
 
-  public async list(
+  public async listObjects(
     directory: BaseDirectory,
     options?: {
       maxResults?: number;
@@ -215,10 +215,13 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, {
-      maxResults: 1,
-      includeEmptyFiles: true,
-    });
+    const filesWithPrefix: ObjectReference[] = await this.listObjects(
+      directory,
+      {
+        maxResults: 1,
+        includeEmptyFiles: true,
+      }
+    );
     return filesWithPrefix.length !== 0;
   }
 

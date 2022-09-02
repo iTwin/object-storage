@@ -136,7 +136,9 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
-  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+  public async listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]> {
     const containerClient = this._client.getContainerClient(
       directory.baseDirectory
     );
