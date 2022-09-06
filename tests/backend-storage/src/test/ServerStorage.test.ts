@@ -304,6 +304,39 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
+  // eslint-disable-next-line deprecation/deprecation
+  describe(`${serverStorage.list.name}()`, () => {
+    it("should list objects. DEPRECATED", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const reference1: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "reference1" },
+        undefined,
+        undefined
+      );
+      const reference2: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "reference2" },
+        undefined,
+        undefined
+      );
+
+      // eslint-disable-next-line deprecation/deprecation
+      const queriedReferences = await serverStorage.list(
+        testDirectory.baseDirectory
+      );
+
+      expect(queriedReferences.length).to.be.equal(2);
+      const queriedReference1 = queriedReferences.find(
+        (ref) => ref.objectName === reference1.objectName
+      );
+      expect(queriedReference1).to.be.deep.equal(reference1);
+      const queriedReference2 = queriedReferences.find(
+        (ref) => ref.objectName === reference2.objectName
+      );
+      expect(queriedReference2).to.be.deep.equal(reference2);
+    });
+  });
+
   describe(`${serverStorage.listDirectories.name}()`, () => {
     it("should list directories", async () => {
       const testDirectory1: TestRemoteDirectory =

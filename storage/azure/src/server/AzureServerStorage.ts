@@ -157,6 +157,10 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
+  /**
+   * @deprecated Use listObjects method instead.
+   */
+  // eslint-disable-next-line deprecation/deprecation
   public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     return this.listObjects(directory);
   }

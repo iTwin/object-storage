@@ -143,6 +143,10 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   /** Max 1000 objects */
+  /**
+   * @deprecated Use listObjects method instead.
+   */
+  // eslint-disable-next-line deprecation/deprecation
   public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
     return this.listObjects(directory);
   }
