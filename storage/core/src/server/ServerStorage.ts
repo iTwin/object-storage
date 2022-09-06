@@ -59,6 +59,11 @@ export abstract class ServerStorage
   ): Promise<ObjectReference[]>;
 
   /**
+   * @deprecated Use listObjects method instead.
+   */
+  public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
+
+  /**
    * Deletes the specified directory. Note that some storage providers (Azure,
    * for example) do not immediately delete all associated resources and cleanup
    * can take up to several minutes. To check if the resource has been deleted

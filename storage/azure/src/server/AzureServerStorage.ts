@@ -157,6 +157,10 @@ export class AzureServerStorage extends ServerStorage {
     );
   }
 
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+    return this.listObjects(directory);
+  }
+
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     return this.handleNotFound(async () => {
       await this._client.getContainerClient(directory.baseDirectory).delete();
