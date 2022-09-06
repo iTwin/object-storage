@@ -61,6 +61,7 @@ export abstract class ServerStorage
   /**
    * @deprecated Use listObjects method instead.
    */
+  // eslint-disable-next-line deprecation/deprecation
   public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
 
   /**

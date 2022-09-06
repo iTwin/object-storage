@@ -109,12 +109,15 @@ export class S3ClientWrapper {
         new ListObjectsV2Command({
           Bucket: this._bucket,
           ContinuationToken: continuationToken,
+          // add delimiter to get list of directories in the response.
+          // See https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html
           Delimiter: "/",
         })
       );
       directories = directories.concat(
         response.CommonPrefixes?.map(
           (entry) =>
+            // removing last character which is a slash to have directory name
             ({ baseDirectory: entry.Prefix?.slice(0, -1) } as BaseDirectory)
         ) ?? []
       );
