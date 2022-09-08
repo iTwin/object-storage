@@ -99,7 +99,38 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
-  public async list(
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    let truncated: boolean | undefined = true;
+    let continuationToken: string | undefined;
+    let directories: BaseDirectory[] = [];
+    while (truncated) {
+      /* eslint-disable @typescript-eslint/naming-convention */
+      const response = await this._client.send(
+        new ListObjectsV2Command({
+          Bucket: this._bucket,
+          ContinuationToken: continuationToken,
+          // add delimiter to get list of directories in the response.
+          // See https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html
+          Delimiter: "/",
+        })
+      );
+      directories = directories.concat(
+        response.CommonPrefixes?.map(
+          (entry) =>
+            // removing last character which is a slash to have directory name
+            ({ baseDirectory: entry.Prefix?.slice(0, -1) } as BaseDirectory)
+        ) ?? []
+      );
+      truncated = response.IsTruncated;
+      if (response.IsTruncated) {
+        continuationToken = response.NextContinuationToken;
+      }
+    }
+    const uniqueBaseDirectories = Array.from(new Set(directories).values());
+    return uniqueBaseDirectories;
+  }
+
+  public async listObjects(
     directory: BaseDirectory,
     options?: {
       maxResults?: number;
@@ -187,10 +218,13 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.list(directory, {
-      maxResults: 1,
-      includeEmptyFiles: true,
-    });
+    const filesWithPrefix: ObjectReference[] = await this.listObjects(
+      directory,
+      {
+        maxResults: 1,
+        includeEmptyFiles: true,
+      }
+    );
     return filesWithPrefix.length !== 0;
   }
 

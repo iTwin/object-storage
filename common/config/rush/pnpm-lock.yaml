@@ -69,6 +69,7 @@ importers:
 
   ../../storage/azure:
     specifiers:
+      '@azure/core-paging': ~1.2.1
       '@azure/storage-blob': ~12.2.1
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
@@ -100,6 +101,7 @@ importers:
       webpack: ~5.72.0
       webpack-cli: ~4.9.2
     dependencies:
+      '@azure/core-paging': 1.2.1
       '@azure/storage-blob': 12.2.1
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core

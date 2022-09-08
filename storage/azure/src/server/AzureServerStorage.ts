@@ -124,7 +124,21 @@ export class AzureServerStorage extends ServerStorage {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    const directoryList = this._client.listContainers();
+    const directories = [];
+    for await (const directory of directoryList) {
+      directories.push(directory);
+    }
+
+    return directories.map(
+      (directory) => ({ baseDirectory: directory.name } as BaseDirectory)
+    );
+  }
+
+  public async listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]> {
     const containerClient = this._client.getContainerClient(
       directory.baseDirectory
     );
@@ -141,6 +155,14 @@ export class AzureServerStorage extends ServerStorage {
         })
       )
     );
+  }
+
+  /**
+   * @deprecated Use listObjects method instead.
+   */
+  // eslint-disable-next-line deprecation/deprecation
+  public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
+    return this.listObjects(directory);
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
