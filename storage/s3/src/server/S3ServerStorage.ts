@@ -142,8 +142,7 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.listObjects(directory);
   }
 
-  /** Max 1000 objects */
-  /**
+  /** Max 1000 objects
    * @deprecated Use listObjects method instead.
    */
   // eslint-disable-next-line deprecation/deprecation
