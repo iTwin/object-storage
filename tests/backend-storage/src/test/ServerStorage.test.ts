@@ -275,65 +275,21 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
   describe(`${serverStorage.listObjects.name}()`, () => {
     it("should list objects", async () => {
-      const testDirectory: TestRemoteDirectory =
-        await testDirectoryManager.createNew();
-      const reference1: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference1" },
-        undefined,
-        undefined
+      await serverStorageListTest(
+        serverStorage,
+        async (directory: BaseDirectory) => serverStorage.listObjects(directory)
       );
-      const reference2: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference2" },
-        undefined,
-        undefined
-      );
-
-      const queriedReferences = await serverStorage.listObjects(
-        testDirectory.baseDirectory
-      );
-
-      expect(queriedReferences.length).to.be.equal(2);
-      const queriedReference1 = queriedReferences.find(
-        (ref) => ref.objectName === reference1.objectName
-      );
-      expect(queriedReference1).to.be.deep.equal(reference1);
-      const queriedReference2 = queriedReferences.find(
-        (ref) => ref.objectName === reference2.objectName
-      );
-      expect(queriedReference2).to.be.deep.equal(reference2);
     });
   });
 
   // eslint-disable-next-line deprecation/deprecation
   describe(`${serverStorage.list.name}()`, () => {
     it("should list objects. DEPRECATED", async () => {
-      const testDirectory: TestRemoteDirectory =
-        await testDirectoryManager.createNew();
-      const reference1: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference1" },
-        undefined,
-        undefined
+      await serverStorageListTest(
+        serverStorage,
+        // eslint-disable-next-line deprecation/deprecation
+        async (directory: BaseDirectory) => serverStorage.list(directory)
       );
-      const reference2: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference2" },
-        undefined,
-        undefined
-      );
-
-      // eslint-disable-next-line deprecation/deprecation
-      const queriedReferences = await serverStorage.list(
-        testDirectory.baseDirectory
-      );
-
-      expect(queriedReferences.length).to.be.equal(2);
-      const queriedReference1 = queriedReferences.find(
-        (ref) => ref.objectName === reference1.objectName
-      );
-      expect(queriedReference1).to.be.deep.equal(reference1);
-      const queriedReference2 = queriedReferences.find(
-        (ref) => ref.objectName === reference2.objectName
-      );
-      expect(queriedReference2).to.be.deep.equal(reference2);
     });
   });
 
@@ -651,3 +607,36 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 });
+
+async function serverStorageListTest(
+  serviceStorage: ServerStorage,
+  func: (directory: BaseDirectory) => Promise<ObjectReference[]>
+): Promise<void> {
+  const testDirectory: TestRemoteDirectory =
+    await testDirectoryManager.createNew();
+  const reference1: ObjectReference = await testDirectory.uploadFile(
+    { objectName: "reference1" },
+    undefined,
+    undefined
+  );
+  const reference2: ObjectReference = await testDirectory.uploadFile(
+    { objectName: "reference2" },
+    undefined,
+    undefined
+  );
+
+  const queriedReferences = await func.call(
+    serviceStorage,
+    testDirectory.baseDirectory
+  );
+
+  expect(queriedReferences.length).to.be.equal(2);
+  const queriedReference1 = queriedReferences.find(
+    (ref) => ref.objectName === reference1.objectName
+  );
+  expect(queriedReference1).to.be.deep.equal(reference1);
+  const queriedReference2 = queriedReferences.find(
+    (ref) => ref.objectName === reference2.objectName
+  );
+  expect(queriedReference2).to.be.deep.equal(reference2);
+}
