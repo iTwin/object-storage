@@ -40,6 +40,7 @@
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
+    "abort-controller": "~3.0.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "fs-extra": "~10.1.0",

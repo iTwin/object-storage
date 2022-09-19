@@ -15,6 +15,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+import type { HttpHandlerOptions } from "@aws-sdk/types";
 import { inject, injectable } from "inversify";
 
 import {
@@ -42,13 +43,17 @@ export class S3ClientWrapper {
     @inject(Types.bucket) protected readonly _bucket: string
   ) {}
 
-  public async download(reference: ObjectReference): Promise<Readable> {
+  public async download(
+    reference: ObjectReference,
+    options?: HttpHandlerOptions
+  ): Promise<Readable> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const { Body } = await this._client.send(
       new GetObjectCommand({
         Bucket: this._bucket,
         Key: buildObjectKey(reference),
-      })
+      }),
+      options
     );
     /* eslint-enable @typescript-eslint/naming-convention */
 

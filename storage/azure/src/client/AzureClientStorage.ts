@@ -6,6 +6,7 @@ import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
+import { BlobDownloadOptions } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
@@ -67,9 +68,13 @@ export class AzureClientStorage extends ClientStorage {
     if (isLocalTransferInput(input))
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
+    const options: BlobDownloadOptions = {
+      abortSignal: input.abortSignal,
+    };
+
     const downloadStream = await this._clientWrapperFactory
       .create(input)
-      .download();
+      .download(options);
 
     return streamToTransferType(
       downloadStream,

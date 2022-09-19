@@ -4,7 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { BlockBlobClient, Metadata } from "@azure/storage-blob";
+import {
+  BlobDownloadOptions,
+  BlockBlobClient,
+  Metadata,
+} from "@azure/storage-blob";
 
 import {
   MultipartUploadData,
@@ -15,8 +19,12 @@ import {
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
-  public async download(): Promise<Readable> {
-    const downloadResponse = await this._client.download();
+  public async download(options?: BlobDownloadOptions): Promise<Readable> {
+    const downloadResponse = await this._client.download(
+      undefined,
+      undefined,
+      options
+    );
     return downloadResponse.readableStreamBody! as Readable;
   }
 

@@ -5,6 +5,7 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
+import type { HttpHandlerOptions } from "@aws-sdk/types";
 import { inject, injectable } from "inversify";
 
 import {
@@ -67,10 +68,17 @@ export class S3ClientStorage extends ClientStorage {
     if (instanceOfUrlTransferInput(input)) return downloadFromUrl(input);
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
+    const options: HttpHandlerOptions = {
+      abortSignal: input.abortSignal,
+    };
+
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) => {
-        const downloadStream = await clientWrapper.download(input.reference);
+        const downloadStream = await clientWrapper.download(
+          input.reference,
+          options
+        );
         return streamToTransferType(
           downloadStream,
           input.transferType,
