@@ -22,6 +22,7 @@ import {
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -98,28 +99,28 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     data: TransferData,
     metadata?: Metadata,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).upload(data, metadata, contentEncoding);
+    ).upload(data, metadata, headers);
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).uploadInMultipleParts(data, options, contentEncoding);
+    ).uploadInMultipleParts(data, options, headers);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {

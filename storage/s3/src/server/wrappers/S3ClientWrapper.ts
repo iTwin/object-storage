@@ -26,6 +26,7 @@ import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -65,7 +66,7 @@ export class S3ClientWrapper {
     reference: ObjectReference,
     data?: TransferData,
     metadata?: Metadata,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const input: PutObjectCommandInput = {
@@ -77,7 +78,7 @@ export class S3ClientWrapper {
     if (data)
       input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
     else input.ContentLength = 0;
-    input.ContentEncoding = contentEncoding;
+    input.ContentEncoding = headers?.contentEncoding;
     await this._client.send(new PutObjectCommand(input));
   }
 
@@ -85,7 +86,7 @@ export class S3ClientWrapper {
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     const { queueSize, partSize, metadata } = options ?? {};
 
@@ -100,7 +101,7 @@ export class S3ClientWrapper {
         Key: buildObjectKey(reference),
         Body: data,
         Metadata: metadata,
-        ContentEncoding: contentEncoding,
+        ContentEncoding: headers?.contentEncoding,
       },
     });
     /* eslint-enable @typescript-eslint/naming-convention */

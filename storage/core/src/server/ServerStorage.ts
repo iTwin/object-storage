@@ -16,7 +16,7 @@ import {
   TransferConfig,
 } from "../common";
 
-import { MultipartUploadData, TransferData } from "./Interfaces";
+import { ContentHeaders, MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage
@@ -42,14 +42,14 @@ export abstract class ServerStorage
     reference: ObjectReference,
     data: TransferData,
     metadata?: Metadata,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void>;
 
   public abstract uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void>;
 
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;

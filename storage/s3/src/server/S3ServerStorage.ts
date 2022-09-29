@@ -12,6 +12,7 @@ import {
   assertFileNotEmpty,
   streamToTransferType,
 } from "@itwin/object-storage-core/lib/server/internal";
+import { ContentHeaders } from "@itwin/object-storage-core"
 
 import {
   BaseDirectory,
@@ -92,7 +93,7 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     data: TransferData,
     metadata?: Metadata,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     let dataToUpload: Readable | Buffer;
@@ -106,7 +107,7 @@ export class S3ServerStorage extends ServerStorage {
       reference,
       dataToUpload,
       metadata,
-      contentEncoding
+      headers,
     );
   }
 
@@ -114,7 +115,7 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     let dataToUpload: Buffer | Readable;
@@ -128,7 +129,7 @@ export class S3ServerStorage extends ServerStorage {
       reference,
       dataToUpload,
       options,
-      contentEncoding
+      headers,
     );
   }
 

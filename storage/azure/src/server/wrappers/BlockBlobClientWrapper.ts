@@ -12,6 +12,7 @@ import {
 } from "@azure/storage-blob";
 
 import {
+  ContentHeaders,
   MultipartUploadData,
   MultipartUploadOptions,
   TransferData,
@@ -29,24 +30,47 @@ export class BlockBlobClientWrapper {
     return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public async upload(data: TransferData, metadata?: Metadata, contentEncoding?: string): Promise<void> {
-    const blobHTTPHeaders: BlobHTTPHeaders | undefined = contentEncoding ? { blobContentEncoding: contentEncoding } : undefined;
+  public async upload(
+    data: TransferData,
+    metadata?: Metadata,
+    headers?: ContentHeaders
+  ): Promise<void> {
+    const blobHTTPHeaders: BlobHTTPHeaders | undefined =
+      headers === undefined
+        ? undefined
+        : {
+            blobContentEncoding: headers.contentEncoding,
+          };
     if (data instanceof Buffer)
-      await this._client.upload(data, data.byteLength, { metadata, blobHTTPHeaders });
+      await this._client.upload(data, data.byteLength, {
+        metadata,
+        blobHTTPHeaders,
+      });
     else if (data instanceof Readable)
-      await this._client.uploadStream(data, undefined, undefined, { metadata, blobHTTPHeaders });
+      await this._client.uploadStream(data, undefined, undefined, {
+        metadata,
+        blobHTTPHeaders,
+      });
     else await this._client.uploadFile(data, { metadata, blobHTTPHeaders });
   }
 
   public async uploadInMultipleParts(
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    contentEncoding?: string
+    headers?: ContentHeaders
   ): Promise<void> {
-    const blobHTTPHeaders: BlobHTTPHeaders | undefined = contentEncoding ? { blobContentEncoding: contentEncoding } : undefined;
+    const blobHTTPHeaders: BlobHTTPHeaders | undefined =
+      headers === undefined
+        ? undefined
+        : {
+            blobContentEncoding: headers.contentEncoding,
+          };
     const { metadata, partSize, queueSize } = options ?? {};
     if (data instanceof Readable)
-      await this._client.uploadStream(data, partSize, queueSize, { metadata, blobHTTPHeaders });
+      await this._client.uploadStream(data, partSize, queueSize, {
+        metadata,
+        blobHTTPHeaders,
+      });
     else
       await this._client.uploadFile(data, {
         metadata,
