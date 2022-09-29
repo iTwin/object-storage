@@ -10,6 +10,7 @@ import { expect } from "chai";
 import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
+  ContentHeaders,
   Metadata,
   ObjectReference,
   TransferData,
@@ -35,6 +36,14 @@ export async function queryAndAssertMetadata(
 ): Promise<void> {
   const { metadata } = await serverStorage.getObjectProperties(reference);
   expect(metadata).to.deep.equal(expectedMetadata);
+}
+
+export async function queryAndAssertHeaders(
+  reference: ObjectReference,
+  expectedHeaders: ContentHeaders
+): Promise<void> {
+  const { contentEncoding } = await serverStorage.getObjectProperties(reference);
+  expect(contentEncoding).to.equal(expectedHeaders.contentEncoding);
 }
 
 export function assertBuffer(

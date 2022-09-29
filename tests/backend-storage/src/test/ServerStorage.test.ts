@@ -12,6 +12,7 @@ import { getRandomString } from "@itwin/object-storage-core/lib/server/internal"
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   ObjectReference,
   ServerStorage,
@@ -24,6 +25,7 @@ import {
   assertLocalFile,
   assertStream,
   checkUploadedFileValidity,
+  queryAndAssertHeaders,
   queryAndAssertMetadata,
   TestRemoteDirectory,
 } from "./utils";
@@ -142,6 +144,34 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         await checkUploadedFileValidity(reference, contentBuffer);
         await queryAndAssertMetadata(reference, metadata);
       });
+
+      it(`should upload a file from ${caseName} with contentEncoding header`, async () => {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-server-upload-metadata.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
+          baseDirectory: testBaseDirectory.baseDirectory,
+          objectName,
+        };
+        const headers: ContentHeaders = {
+          contentEncoding: "test-encoding",
+        };
+
+        await serverStorage.upload(
+          reference,
+          dataCallback(fileToUploadPath),
+          undefined,
+          headers
+        );
+
+        await checkUploadedFileValidity(reference, contentBuffer);
+        await queryAndAssertHeaders(reference, headers);
+      })
     }
 
     it("should fail to upload if specified path contains empty file", async () => {

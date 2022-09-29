@@ -206,7 +206,7 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<ObjectProperties> {
     assertRelativeDirectory(reference.relativeDirectory);
 
-    const { lastModified, contentLength, metadata } = await this._client
+    const { lastModified, contentLength, metadata, _response } = await this._client
       .getBlobClient(reference)
       .getProperties();
 
@@ -215,6 +215,7 @@ export class AzureServerStorage extends ServerStorage {
       reference,
       size: contentLength!,
       metadata,
+      contentEncoding: _response.parsedHeaders.contentEncoding,
     };
   }
 
