@@ -102,7 +102,12 @@ export class S3ServerStorage extends ServerStorage {
     } else {
       dataToUpload = data;
     }
-    return this._s3Client.upload(reference, dataToUpload, metadata, contentEncoding);
+    return this._s3Client.upload(
+      reference,
+      dataToUpload,
+      metadata,
+      contentEncoding
+    );
   }
 
   public async uploadInMultipleParts(
