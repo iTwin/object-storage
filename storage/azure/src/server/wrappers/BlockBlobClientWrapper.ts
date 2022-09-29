@@ -21,6 +21,16 @@ import {
 export class BlockBlobClientWrapper {
   constructor(private readonly _client: BlockBlobClient) {}
 
+  private getBlobHTTPHeaders(
+    headers?: ContentHeaders
+  ): BlobHTTPHeaders | undefined {
+    return headers === undefined
+      ? undefined
+      : {
+          blobContentEncoding: headers.contentEncoding,
+        };
+  }
+
   public async download(options?: BlobDownloadOptions): Promise<Readable> {
     const downloadResponse = await this._client.download(
       undefined,
@@ -35,12 +45,7 @@ export class BlockBlobClientWrapper {
     metadata?: Metadata,
     headers?: ContentHeaders
   ): Promise<void> {
-    const blobHTTPHeaders: BlobHTTPHeaders | undefined =
-      headers === undefined
-        ? undefined
-        : {
-            blobContentEncoding: headers.contentEncoding,
-          };
+    const blobHTTPHeaders = this.getBlobHTTPHeaders(headers);
     if (data instanceof Buffer)
       await this._client.upload(data, data.byteLength, {
         metadata,
@@ -59,12 +64,7 @@ export class BlockBlobClientWrapper {
     options?: MultipartUploadOptions,
     headers?: ContentHeaders
   ): Promise<void> {
-    const blobHTTPHeaders: BlobHTTPHeaders | undefined =
-      headers === undefined
-        ? undefined
-        : {
-            blobContentEncoding: headers.contentEncoding,
-          };
+    const blobHTTPHeaders = this.getBlobHTTPHeaders(headers);
     const { metadata, partSize, queueSize } = options ?? {};
     if (data instanceof Readable)
       await this._client.uploadStream(data, partSize, queueSize, {
