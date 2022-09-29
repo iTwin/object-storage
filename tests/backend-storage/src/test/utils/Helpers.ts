@@ -38,7 +38,7 @@ export async function queryAndAssertMetadata(
   expect(metadata).to.deep.equal(expectedMetadata);
 }
 
-export async function queryAndAssertHeaders(
+export async function queryAndAssertContentEncoding(
   reference: ObjectReference,
   expectedHeaders: ContentHeaders
 ): Promise<void> {

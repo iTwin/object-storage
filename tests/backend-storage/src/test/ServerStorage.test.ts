@@ -25,7 +25,7 @@ import {
   assertLocalFile,
   assertStream,
   checkUploadedFileValidity,
-  queryAndAssertHeaders,
+  queryAndAssertContentEncoding,
   queryAndAssertMetadata,
   TestRemoteDirectory,
 } from "./utils";
@@ -170,7 +170,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         );
 
         await checkUploadedFileValidity(reference, contentBuffer);
-        await queryAndAssertHeaders(reference, headers);
+        await queryAndAssertContentEncoding(reference, headers);
       })
     }
 
