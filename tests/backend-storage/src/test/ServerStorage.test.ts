@@ -273,34 +273,80 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.list.name}()`, () => {
+  describe(`${serverStorage.listObjects.name}()`, () => {
     it("should list objects", async () => {
-      const testDirectory: TestRemoteDirectory =
+      await serverStorageListTest(
+        serverStorage,
+        async (directory: BaseDirectory) => serverStorage.listObjects(directory)
+      );
+    });
+  });
+
+  // eslint-disable-next-line deprecation/deprecation
+  describe(`${serverStorage.list.name}()`, () => {
+    it("should list objects. DEPRECATED", async () => {
+      await serverStorageListTest(
+        serverStorage,
+        // eslint-disable-next-line deprecation/deprecation
+        async (directory: BaseDirectory) => serverStorage.list(directory)
+      );
+    });
+  });
+
+  describe(`${serverStorage.listDirectories.name}()`, () => {
+    it("should list directories", async () => {
+      const testDirectory1: TestRemoteDirectory =
         await testDirectoryManager.createNew();
-      const reference1: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference1" },
+      const testDirectory2: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory3: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const queriedDirectories = await serverStorage.listDirectories();
+
+      const queriedDirectory1 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
+      );
+      const queriedDirectory2 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
+      );
+      const queriedDirectory3 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
+      );
+
+      expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedDirectory3).to.be.deep.equal(testDirectory3.baseDirectory);
+    });
+
+    it("should not list subdirectories", async () => {
+      const testDirectory1: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory2: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      await testDirectory1.uploadFile(
+        { objectName: `test/ref1.obj` },
         undefined,
         undefined
       );
-      const reference2: ObjectReference = await testDirectory.uploadFile(
-        { objectName: "reference2" },
-        undefined,
-        undefined
-      );
+      const queriedDirectories = await serverStorage.listDirectories();
 
-      const queriedReferences = await serverStorage.list(
-        testDirectory.baseDirectory
+      const queriedDirectory1 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
       );
-
-      expect(queriedReferences.length).to.be.equal(2);
-      const queriedReference1 = queriedReferences.find(
-        (ref) => ref.objectName === reference1.objectName
+      const queriedDirectory2 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
       );
-      expect(queriedReference1).to.be.deep.equal(reference1);
-      const queriedReference2 = queriedReferences.find(
-        (ref) => ref.objectName === reference2.objectName
+      const queriedSubDirectory1 = queriedDirectories.find(
+        (ref) => ref.baseDirectory === `${testDirectory1.baseDirectory}/test`
       );
-      expect(queriedReference2).to.be.deep.equal(reference2);
+      expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedSubDirectory1).to.be.undefined;
     });
   });
 
@@ -561,3 +607,36 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 });
+
+async function serverStorageListTest(
+  serviceStorage: ServerStorage,
+  func: (directory: BaseDirectory) => Promise<ObjectReference[]>
+): Promise<void> {
+  const testDirectory: TestRemoteDirectory =
+    await testDirectoryManager.createNew();
+  const reference1: ObjectReference = await testDirectory.uploadFile(
+    { objectName: "reference1" },
+    undefined,
+    undefined
+  );
+  const reference2: ObjectReference = await testDirectory.uploadFile(
+    { objectName: "reference2" },
+    undefined,
+    undefined
+  );
+
+  const queriedReferences = await func.call(
+    serviceStorage,
+    testDirectory.baseDirectory
+  );
+
+  expect(queriedReferences.length).to.be.equal(2);
+  const queriedReference1 = queriedReferences.find(
+    (ref) => ref.objectName === reference1.objectName
+  );
+  expect(queriedReference1).to.be.deep.equal(reference1);
+  const queriedReference2 = queriedReferences.find(
+    (ref) => ref.objectName === reference2.objectName
+  );
+  expect(queriedReference2).to.be.deep.equal(reference2);
+}

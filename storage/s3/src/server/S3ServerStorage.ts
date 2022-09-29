@@ -134,15 +134,29 @@ export class S3ServerStorage extends ServerStorage {
     });
   }
 
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    return this._s3Client.listDirectories();
+  }
+
   /** Max 1000 objects */
+  public async listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]> {
+    return this._s3Client.listObjects(directory);
+  }
+
+  /** Max 1000 objects
+   * @deprecated Use listObjects method instead.
+   */
+  // eslint-disable-next-line deprecation/deprecation
   public async list(directory: BaseDirectory): Promise<ObjectReference[]> {
-    return this._s3Client.list(directory);
+    return this.listObjects(directory);
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
-        await this._s3Client.list(directory, { includeEmptyFiles: true })
+        await this._s3Client.listObjects(directory, { includeEmptyFiles: true })
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }

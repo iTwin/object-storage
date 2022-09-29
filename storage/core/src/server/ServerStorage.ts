@@ -54,6 +54,16 @@ export abstract class ServerStorage
 
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;
 
+  public abstract listDirectories(): Promise<BaseDirectory[]>;
+
+  public abstract listObjects(
+    directory: BaseDirectory
+  ): Promise<ObjectReference[]>;
+
+  /**
+   * @deprecated Use listObjects method instead.
+   */
+  // eslint-disable-next-line deprecation/deprecation
   public abstract list(directory: BaseDirectory): Promise<ObjectReference[]>;
 
   /**

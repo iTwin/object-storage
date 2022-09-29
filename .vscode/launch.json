@@ -21,6 +21,23 @@
       ]
     },
     {
+      "name": "Cloud Agnostic Core Unit tests",
+      "cwd": "${workspaceFolder}/cloud-agnostic/core",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:unit"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
       "name": "-- Backend Unit Tests --"
     },
     {
@@ -245,6 +262,23 @@
     {
       "name": "Client file download without `inversify` sample",
       "cwd": "${workspaceFolder}/samples/lib/without-inversify",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "Run.js"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/samples/lib/**/*.js",
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "Client file download with `inversify` named instances sample",
+      "cwd": "${workspaceFolder}/samples/lib/with-named-instances",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",

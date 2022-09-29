@@ -4,5 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./Bindable";
 export * from "./Dependency";
+export * from "./NamedDependency";
 export * from "./DependencyConfig";
 export * from "./Types";

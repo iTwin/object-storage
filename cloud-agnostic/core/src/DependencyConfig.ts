@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 export interface DependencyConfig {
   dependencyName: string;
+  instanceName?: string;
 }
 
 export interface DependenciesConfig {
-  [dependencyType: string]: DependencyConfig;
+  [dependencyType: string]: DependencyConfig | DependencyConfig[];
 }

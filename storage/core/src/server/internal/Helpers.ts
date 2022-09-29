@@ -90,22 +90,21 @@ export async function downloadFromUrl(
   input: UrlDownloadInput
 ): Promise<TransferData> {
   const { transferType, url } = input;
+
+  // There is an issue with Axios type definitions. Casting should be removed
+  // after upgrading to Axios 1.0
+  // See: https://github.com/axios/axios/pull/4229
+  const signal = input.abortSignal as AbortSignal | undefined;
+
   switch (transferType) {
     case "buffer":
-      return (await axios.get(url, { responseType: "arraybuffer" }))
-        .data as Buffer;
+      return downloadFromUrlAsBuffer(url, signal);
     case "stream":
-      return (await axios.get(url, { responseType: "stream" }))
-        .data as Readable;
+      return downloadFromUrlAsStream(url, signal);
     case "local":
       const localPath = input.localPath;
       assertLocalFile(localPath);
-
-      const stream = (await axios.get(url, { responseType: "stream" }))
-        .data as Readable;
-      await streamToLocalFile(stream, localPath);
-
-      return localPath;
+      return downloadFromUrlToLocalFile(url, localPath, signal);
     default:
       throw new Error(`Type ${input.transferType} is not supported`);
   }
@@ -131,4 +130,56 @@ export async function uploadToUrl(
 // TODO: switch to using crypto.randomUUID function once support for Node 12.x is dropped.
 export function getRandomString(): string {
   return randomBytes(16).toString("hex");
+}
+
+async function downloadFromUrlAsBuffer(
+  url: string,
+  signal?: AbortSignal
+): Promise<Buffer> {
+  let promise = axios.get(url, {
+    responseType: "arraybuffer",
+    signal,
+  });
+  promise = convertAbortErrorName(promise);
+  return (await promise).data as Buffer;
+}
+
+async function downloadFromUrlAsStream(
+  url: string,
+  signal?: AbortSignal
+): Promise<Readable> {
+  let promise = axios.get(url, {
+    responseType: "stream",
+    signal,
+  });
+  promise = convertAbortErrorName(promise);
+  return (await promise).data as Readable;
+}
+
+async function downloadFromUrlToLocalFile(
+  url: string,
+  localPath: string,
+  signal?: AbortSignal
+): Promise<string> {
+  let promise = axios.get(url, {
+    responseType: "stream",
+    signal,
+  });
+  promise = convertAbortErrorName(promise);
+
+  const stream = (await promise).data as Readable;
+  await streamToLocalFile(stream, localPath);
+
+  return localPath;
+}
+
+async function convertAbortErrorName<T>(promise: Promise<T>): Promise<T> {
+  try {
+    return await promise;
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === "CanceledError")
+      error.name = "AbortError";
+
+    throw error;
+  }
 }

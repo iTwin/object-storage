@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
+import { AbortController } from "abort-controller";
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
@@ -163,6 +164,41 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         });
 
         await assertLocalFile(response, contentBuffer);
+      });
+
+      it(`should cancel file download from URL`, async () => {
+        const contentBuffer = Buffer.from("test-download-from-url-to-path");
+        const testDownloadPath: string =
+          await testLocalFileManager.getDownloadsDir();
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        const uploadedFile: ObjectReference = await testDirectory.uploadFile(
+          { objectName: "file-to-download-from-url.txt" },
+          contentBuffer,
+          undefined
+        );
+
+        const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
+        const abortController = new AbortController();
+
+        const downloadPromise = clientStorage.download({
+          url: downloadUrl,
+          transferType: "local",
+          localPath: `${testDownloadPath}/download-url.txt`,
+          abortSignal: abortController.signal,
+        });
+
+        abortController.abort();
+
+        let wasAborted = false;
+        try {
+          await downloadPromise;
+        } catch (error: unknown) {
+          if (error instanceof Error && error.name === "AbortError")
+            wasAborted = true;
+        }
+
+        expect(wasAborted).to.be.true;
       });
     });
   });
@@ -380,6 +416,44 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         });
 
         await assertLocalFile(response, contentBuffer);
+      });
+
+      it(`should cancel file download to path using transfer config`, async () => {
+        const contentBuffer = Buffer.from("test-download-to-path-with-config");
+        const testDownloadPath: string =
+          await testLocalFileManager.getDownloadsDir();
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        const uploadedFile: ObjectReference = await testDirectory.uploadFile(
+          { objectName: "file-to-download-with-config.txt" },
+          contentBuffer,
+          undefined
+        );
+
+        const downloadConfig = await serverStorage.getDownloadConfig(
+          testDirectory.baseDirectory
+        );
+        const abortController = new AbortController();
+
+        const downloadPromise = clientStorage.download({
+          reference: uploadedFile,
+          transferConfig: downloadConfig,
+          transferType: "local",
+          localPath: path.join(testDownloadPath, "download-config.txt"),
+          abortSignal: abortController.signal,
+        });
+
+        abortController.abort();
+
+        let wasAborted = false;
+        try {
+          await downloadPromise;
+        } catch (error: unknown) {
+          if (error instanceof Error && error.name === "AbortError")
+            wasAborted = true;
+        }
+
+        expect(wasAborted).to.be.true;
       });
     });
   });
