@@ -22,6 +22,7 @@ import {
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -97,27 +98,29 @@ export class AzureServerStorage extends ServerStorage {
   public async upload(
     reference: ObjectReference,
     data: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).upload(data, metadata);
+    ).upload(data, metadata, headers);
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).uploadInMultipleParts(data, options);
+    ).uploadInMultipleParts(data, options, headers);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
@@ -203,15 +206,15 @@ export class AzureServerStorage extends ServerStorage {
   ): Promise<ObjectProperties> {
     assertRelativeDirectory(reference.relativeDirectory);
 
-    const { lastModified, contentLength, metadata } = await this._client
-      .getBlobClient(reference)
-      .getProperties();
+    const { lastModified, contentLength, metadata, _response } =
+      await this._client.getBlobClient(reference).getProperties();
 
     return {
       lastModified: lastModified!,
       reference,
       size: contentLength!,
       metadata,
+      contentEncoding: _response.parsedHeaders.contentEncoding,
     };
   }
 

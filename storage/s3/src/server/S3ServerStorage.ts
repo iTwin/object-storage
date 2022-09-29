@@ -15,6 +15,7 @@ import {
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -91,7 +92,8 @@ export class S3ServerStorage extends ServerStorage {
   public async upload(
     reference: ObjectReference,
     data: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     let dataToUpload: Readable | Buffer;
@@ -101,13 +103,14 @@ export class S3ServerStorage extends ServerStorage {
     } else {
       dataToUpload = data;
     }
-    return this._s3Client.upload(reference, dataToUpload, metadata);
+    return this._s3Client.upload(reference, dataToUpload, metadata, headers);
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     let dataToUpload: Buffer | Readable;
@@ -120,7 +123,8 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.uploadInMultipleParts(
       reference,
       dataToUpload,
-      options
+      options,
+      headers
     );
   }
 

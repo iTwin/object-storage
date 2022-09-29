@@ -26,6 +26,7 @@ import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -64,7 +65,8 @@ export class S3ClientWrapper {
   public async upload(
     reference: ObjectReference,
     data?: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    headers?: ContentHeaders
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const input: PutObjectCommandInput = {
@@ -76,13 +78,15 @@ export class S3ClientWrapper {
     if (data)
       input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
     else input.ContentLength = 0;
+    input.ContentEncoding = headers?.contentEncoding;
     await this._client.send(new PutObjectCommand(input));
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    headers?: ContentHeaders
   ): Promise<void> {
     const { queueSize, partSize, metadata } = options ?? {};
 
@@ -97,6 +101,7 @@ export class S3ClientWrapper {
         Key: buildObjectKey(reference),
         Body: data,
         Metadata: metadata,
+        ContentEncoding: headers?.contentEncoding,
       },
     });
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -196,6 +201,7 @@ export class S3ClientWrapper {
       LastModified,
       ContentLength,
       Metadata: metadata,
+      ContentEncoding: contentEncoding,
     } = await this._client.send(
       new HeadObjectCommand({
         Bucket: this._bucket,
@@ -209,6 +215,7 @@ export class S3ClientWrapper {
       lastModified: LastModified!,
       size: ContentLength!,
       metadata,
+      contentEncoding,
     };
   }
 

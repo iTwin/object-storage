@@ -26,12 +26,16 @@ export interface ObjectReference extends ObjectDirectory {
   objectName: string;
 }
 
-export interface ObjectProperties {
+export interface ContentHeaders {
+  contentEncoding?: string;
+}
+
+export type ObjectProperties = ContentHeaders & {
   reference: ObjectReference;
   size: number;
   lastModified: Date;
   metadata?: Metadata;
-}
+};
 
 export interface TransferConfig {
   baseUrl: string;
