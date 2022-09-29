@@ -42,7 +42,9 @@ export async function queryAndAssertContentEncoding(
   reference: ObjectReference,
   expectedHeaders: ContentHeaders
 ): Promise<void> {
-  const { contentEncoding } = await serverStorage.getObjectProperties(reference);
+  const { contentEncoding } = await serverStorage.getObjectProperties(
+    reference
+  );
   expect(contentEncoding).to.equal(expectedHeaders.contentEncoding);
 }
 

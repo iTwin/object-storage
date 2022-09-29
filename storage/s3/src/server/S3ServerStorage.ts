@@ -12,10 +12,10 @@ import {
   assertFileNotEmpty,
   streamToTransferType,
 } from "@itwin/object-storage-core/lib/server/internal";
-import { ContentHeaders } from "@itwin/object-storage-core"
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -103,12 +103,7 @@ export class S3ServerStorage extends ServerStorage {
     } else {
       dataToUpload = data;
     }
-    return this._s3Client.upload(
-      reference,
-      dataToUpload,
-      metadata,
-      headers,
-    );
+    return this._s3Client.upload(reference, dataToUpload, metadata, headers);
   }
 
   public async uploadInMultipleParts(
@@ -129,7 +124,7 @@ export class S3ServerStorage extends ServerStorage {
       reference,
       dataToUpload,
       options,
-      headers,
+      headers
     );
   }
 

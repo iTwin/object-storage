@@ -1,5 +1,3 @@
-import { ContentHeaders } from "../server";
-
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -28,12 +26,16 @@ export interface ObjectReference extends ObjectDirectory {
   objectName: string;
 }
 
+export interface ContentHeaders {
+  contentEncoding?: string;
+}
+
 export type ObjectProperties = ContentHeaders & {
   reference: ObjectReference;
   size: number;
   lastModified: Date;
   metadata?: Metadata;
-}
+};
 
 export interface TransferConfig {
   baseUrl: string;

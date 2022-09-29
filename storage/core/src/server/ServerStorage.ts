@@ -8,6 +8,7 @@ import { injectable } from "inversify";
 
 import {
   BaseDirectory,
+  ContentHeaders,
   Metadata,
   MultipartUploadOptions,
   ObjectDirectory,
@@ -16,7 +17,7 @@ import {
   TransferConfig,
 } from "../common";
 
-import { ContentHeaders, MultipartUploadData, TransferData } from "./Interfaces";
+import { MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage

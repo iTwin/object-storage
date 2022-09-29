@@ -56,7 +56,3 @@ export interface UploadInMultiplePartsInput {
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
 }
-
-export interface ContentHeaders {
-  contentEncoding?: string;
-}

@@ -171,7 +171,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
         await checkUploadedFileValidity(reference, contentBuffer);
         await queryAndAssertContentEncoding(reference, headers);
-      })
+      });
     }
 
     it("should fail to upload if specified path contains empty file", async () => {
