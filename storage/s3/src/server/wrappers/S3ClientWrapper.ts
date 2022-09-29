@@ -59,7 +59,8 @@ export class S3ClientWrapper {
   public async upload(
     reference: ObjectReference,
     data?: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    contentEncoding?: string
   ): Promise<void> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const input: PutObjectCommandInput = {
@@ -71,13 +72,15 @@ export class S3ClientWrapper {
     if (data)
       input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
     else input.ContentLength = 0;
+    input.ContentEncoding = contentEncoding;
     await this._client.send(new PutObjectCommand(input));
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    contentEncoding?: string
   ): Promise<void> {
     const { queueSize, partSize, metadata } = options ?? {};
 
@@ -92,6 +95,7 @@ export class S3ClientWrapper {
         Key: buildObjectKey(reference),
         Body: data,
         Metadata: metadata,
+        ContentEncoding: contentEncoding,
       },
     });
     /* eslint-enable @typescript-eslint/naming-convention */

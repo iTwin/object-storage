@@ -97,27 +97,29 @@ export class AzureServerStorage extends ServerStorage {
   public async upload(
     reference: ObjectReference,
     data: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    contentEncoding?: string
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).upload(data, metadata);
+    ).upload(data, metadata, contentEncoding);
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    contentEncoding?: string
   ): Promise<void> {
     assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
       this._client.getBlockBlobClient(reference)
-    ).uploadInMultipleParts(data, options);
+    ).uploadInMultipleParts(data, options, contentEncoding);
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {

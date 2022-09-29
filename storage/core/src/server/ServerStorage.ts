@@ -41,13 +41,15 @@ export abstract class ServerStorage
   public abstract upload(
     reference: ObjectReference,
     data: TransferData,
-    metadata?: Metadata
+    metadata?: Metadata,
+    contentEncoding?: string
   ): Promise<void>;
 
   public abstract uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    contentEncoding?: string
   ): Promise<void>;
 
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { BlockBlobClient, Metadata } from "@azure/storage-blob";
+import { BlobHTTPHeaders, BlockBlobClient, Metadata } from "@azure/storage-blob";
 
 import {
   MultipartUploadData,
@@ -20,26 +20,30 @@ export class BlockBlobClientWrapper {
     return downloadResponse.readableStreamBody! as Readable;
   }
 
-  public async upload(data: TransferData, metadata?: Metadata): Promise<void> {
+  public async upload(data: TransferData, metadata?: Metadata, contentEncoding?: string): Promise<void> {
+    const blobHTTPHeaders: BlobHTTPHeaders | undefined = contentEncoding ? { blobContentEncoding: contentEncoding } : undefined;
     if (data instanceof Buffer)
-      await this._client.upload(data, data.byteLength, { metadata });
+      await this._client.upload(data, data.byteLength, { metadata, blobHTTPHeaders });
     else if (data instanceof Readable)
-      await this._client.uploadStream(data, undefined, undefined, { metadata });
-    else await this._client.uploadFile(data, { metadata });
+      await this._client.uploadStream(data, undefined, undefined, { metadata, blobHTTPHeaders });
+    else await this._client.uploadFile(data, { metadata, blobHTTPHeaders });
   }
 
   public async uploadInMultipleParts(
     data: MultipartUploadData,
-    options?: MultipartUploadOptions
+    options?: MultipartUploadOptions,
+    contentEncoding?: string
   ): Promise<void> {
+    const blobHTTPHeaders: BlobHTTPHeaders | undefined = contentEncoding ? { blobContentEncoding: contentEncoding } : undefined;
     const { metadata, partSize, queueSize } = options ?? {};
     if (data instanceof Readable)
-      await this._client.uploadStream(data, partSize, queueSize, { metadata });
+      await this._client.uploadStream(data, partSize, queueSize, { metadata, blobHTTPHeaders });
     else
       await this._client.uploadFile(data, {
         metadata,
         blockSize: partSize,
         concurrency: queueSize,
+        blobHTTPHeaders,
       });
   }
 }
