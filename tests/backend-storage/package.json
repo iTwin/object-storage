@@ -54,7 +54,7 @@
     "@types/chai-as-promised": "^7.1.2",
     "@types/fs-extra": "~9.0.13",
     "@types/mocha": "^8.2.2",
-    "@types/node": "~16.6.2",
+    "@types/node": "~18.11.18",
     "@types/yargs": "~15.0.5",
     "cspell": "~5.18.5",
     "eslint": "~7.32.0",
