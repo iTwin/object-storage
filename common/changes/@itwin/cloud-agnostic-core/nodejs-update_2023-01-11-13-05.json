@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/cloud-agnostic-core",
+      "comment": "Updated upper NodeJs version limit",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/cloud-agnostic-core"
+}
