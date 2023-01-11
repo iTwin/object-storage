@@ -8,7 +8,6 @@ parameters:
 
 variables:
   node18Version: '18.13.0'
-  node12Version: '12.17.0'
 
 trigger: none
 
@@ -16,11 +15,11 @@ jobs:
   - job: BuildAndTest
     strategy:
       matrix:
-        linux-node-16:
+        linux-node-18:
           imageName: 'ubuntu-latest'
           nodeVersion: $(node18Version)
           runFrontendIntegrationTests: true
-        windows-node-16:
+        windows-node-18:
           imageName: 'windows-latest'
           nodeVersion: $(node18Version)
           runFrontendIntegrationTests: true
