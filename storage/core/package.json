@@ -8,11 +8,11 @@
     "iTwin platform",
     "Object storage"
   ],
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/core",
   "repository": {
     "type": "git",
     "url": "https://github.com/iTwin/object-storage"
   },
-  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/core",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
@@ -23,7 +23,7 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
