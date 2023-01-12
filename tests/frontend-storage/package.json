@@ -24,7 +24,7 @@
     "build": "tsc --p tsconfig-backend.json 1>&2 && npm run build:frontend",
     "build:frontend": "tsc -p ./cypress/tsconfig.json --noEmit",
     "clean": "rimraf lib && rimraf cypress/support",
-    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
@@ -46,7 +46,7 @@
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
     "@types/express": "~4.17.13",
-    "@types/node": "~16.6.2",
+    "@types/node": "~18.11.18",
     "axios": "~0.27.2",
     "cross-env": "~7.0.3",
     "cspell": "~5.18.5",
@@ -57,6 +57,6 @@
     "typescript": "~4.7.4"
   },
   "engines": {
-    "node": ">=12.20 <17.0.0"
+    "node": ">=12.20 <19.0.0"
   }
 }

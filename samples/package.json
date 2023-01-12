@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
-    "@types/node": "~16.6.2",
+    "@types/node": "~18.11.18",
     "cspell": "~5.18.5",
     "eslint": "~7.32.0",
     "rimraf": "^2.6.2",
@@ -48,6 +48,6 @@
     "typescript": "~4.7.4"
   },
   "engines": {
-    "node": ">=12.20 <17.0.0"
+    "node": ">=12.20 <19.0.0"
   }
 }

@@ -7,8 +7,7 @@ parameters:
   default: true
 
 variables:
-  node16Version: '16.15.0'
-  node12Version: '12.17.0'
+  node18Version: '18.13.0'
 
 trigger: none
 
@@ -16,13 +15,13 @@ jobs:
   - job: BuildAndTest
     strategy:
       matrix:
-        linux-node-16:
+        linux-node-18:
           imageName: 'ubuntu-latest'
-          nodeVersion: $(node16Version)
+          nodeVersion: $(node18Version)
           runFrontendIntegrationTests: true
-        windows-node-16:
+        windows-node-18:
           imageName: 'windows-latest'
-          nodeVersion: $(node16Version)
+          nodeVersion: $(node18Version)
           runFrontendIntegrationTests: true
     pool:
         vmImage: $(imageName)

@@ -7,11 +7,11 @@
     "iTwin",
     "iTwin platform"
   ],
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/cloud-agnostic/core",
   "repository": {
     "type": "git",
     "url": "https://github.com/iTwin/object-storage"
   },
-  "homepage": "https://github.com/iTwin/object-storage/tree/main/cloud-agnostic/core",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
@@ -22,8 +22,8 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "eslint ./src/**/*.ts 1>&2",
-    "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
+    "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
@@ -42,18 +42,18 @@
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^8.2.2",
+    "@types/mocha": "~10.0.1",
     "chai": "^4.2.0",
     "cspell": "~5.18.5",
     "cypress": "~9.5.4",
     "eslint": "~7.32.0",
-    "mocha": "^9.2.1",
+    "mocha": "~10.2.0",
     "nyc": "^14.0.0",
     "rimraf": "^2.6.2",
     "sort-package-json": "~1.53.1",
     "typescript": "~4.7.4"
   },
   "engines": {
-    "node": ">=12.20 <17.0.0"
+    "node": ">=12.20 <19.0.0"
   }
 }

@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
@@ -45,7 +45,7 @@
     "chai-as-promised": "^7.1.1",
     "fs-extra": "~10.1.0",
     "inversify": "~5.0.1",
-    "mocha": "^9.2.1",
+    "mocha": "~10.2.0",
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
@@ -53,8 +53,8 @@
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/fs-extra": "~9.0.13",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "~16.6.2",
+    "@types/mocha": "~10.0.1",
+    "@types/node": "~18.11.18",
     "@types/yargs": "~15.0.5",
     "cspell": "~5.18.5",
     "eslint": "~7.32.0",
@@ -63,6 +63,6 @@
     "typescript": "~4.7.4"
   },
   "engines": {
-    "node": ">=12.20 <17.0.0"
+    "node": ">=12.20 <19.0.0"
   }
 }

@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsc 1>&2 && npx webpack",
     "clean": "rimraf lib && rimraf dist",
-    "lint": "eslint ./src/**/*.ts 1>&2",
+    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:unit": "npm run test:unit:backend",
@@ -55,14 +55,14 @@
     "@itwin/object-storage-tests-frontend": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.2",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "~16.6.2",
+    "@types/mocha": "~10.0.1",
+    "@types/node": "~18.11.18",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cspell": "~5.18.5",
     "dotenv": "~16.0.0",
     "eslint": "~7.32.0",
-    "mocha": "^9.2.1",
+    "mocha": "~10.2.0",
     "npm-run-all": "~4.1.5",
     "nyc": "^14.0.0",
     "rimraf": "^2.6.2",
@@ -73,6 +73,6 @@
     "webpack-cli": "~4.9.2"
   },
   "engines": {
-    "node": ">=12.20 <17.0.0"
+    "node": ">=12.20 <19.0.0"
   }
 }
