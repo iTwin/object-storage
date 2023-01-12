@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-s3",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Object storage implementation base for S3 compatible providers",
   "keywords": [
     "Bentley",
@@ -9,11 +9,11 @@
     "Object storage",
     "S3"
   ],
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/s3",
   "repository": {
     "type": "git",
     "url": "https://github.com/iTwin/object-storage"
   },
-  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/s3",
   "license": "MIT",
   "author": {
     "name": "Bentley Systems, Inc.",
@@ -24,8 +24,8 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "lint": "eslint ./src/**/*.ts --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config 1>&2",
-    "lint-fix": "eslint --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
     "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
     "test:integration:backend": "",
     "test:integration:frontend": "",
@@ -41,11 +41,11 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
   },
   "dependencies": {
+    "@aws-sdk/abort-controller": "3.109.0",
     "@aws-sdk/client-s3": "3.105.0",
     "@aws-sdk/client-sts": "3.105.0",
     "@aws-sdk/lib-storage": "3.105.0",
     "@aws-sdk/s3-request-presigner": "3.105.0",
-    "@aws-sdk/abort-controller": "3.109.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
     "inversify": "~5.0.1",
