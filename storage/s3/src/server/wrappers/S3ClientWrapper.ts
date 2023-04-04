@@ -79,6 +79,8 @@ export class S3ClientWrapper {
       input.Body = data instanceof Readable ? await streamToBuffer(data) : data;
     else input.ContentLength = 0;
     input.ContentEncoding = headers?.contentEncoding;
+    input.CacheControl = headers?.cacheControl;
+    input.ContentType = headers?.contentType;
     await this._client.send(new PutObjectCommand(input));
   }
 
@@ -102,6 +104,7 @@ export class S3ClientWrapper {
         Body: data,
         Metadata: metadata,
         ContentEncoding: headers?.contentEncoding,
+        CacheControl: headers?.cacheControl,
       },
     });
     /* eslint-enable @typescript-eslint/naming-convention */

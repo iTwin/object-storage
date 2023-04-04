@@ -25,6 +25,7 @@ import {
   assertLocalFile,
   assertStream,
   checkUploadedFileValidity,
+  queryAndAssertCacheControl,
   queryAndAssertContentEncoding,
   queryAndAssertMetadata,
   TestRemoteDirectory,
@@ -171,6 +172,34 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
 
         await checkUploadedFileValidity(reference, contentBuffer);
         await queryAndAssertContentEncoding(reference, headers);
+      });
+
+      it(`should upload a file from ${caseName} with cacheControl header`, async () => {
+        const fileToUploadPath: string =
+          await testLocalFileManager.createAndWriteFile(
+            "test-server-upload-metadata.txt",
+            contentBuffer
+          );
+        const testBaseDirectory: BaseDirectory = (
+          await testDirectoryManager.createNew()
+        ).baseDirectory;
+        const reference: ObjectReference = {
+          baseDirectory: testBaseDirectory.baseDirectory,
+          objectName,
+        };
+        const headers: ContentHeaders = {
+          cacheControl: "private",
+        };
+
+        await serverStorage.upload(
+          reference,
+          dataCallback(fileToUploadPath),
+          undefined,
+          headers
+        );
+
+        await checkUploadedFileValidity(reference, contentBuffer);
+        await queryAndAssertCacheControl(reference, headers);
       });
     }
 
