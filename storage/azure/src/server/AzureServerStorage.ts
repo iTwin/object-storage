@@ -215,6 +215,8 @@ export class AzureServerStorage extends ServerStorage {
       size: contentLength!,
       metadata,
       contentEncoding: _response.parsedHeaders.contentEncoding,
+      contentType: _response.parsedHeaders.contentType,
+      cacheControl: _response.parsedHeaders.cacheControl,
     };
   }
 

@@ -38,7 +38,7 @@
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
-    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
+    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
     "@aws-sdk/abort-controller": "3.109.0",

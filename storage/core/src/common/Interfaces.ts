@@ -28,6 +28,8 @@ export interface ObjectReference extends ObjectDirectory {
 
 export interface ContentHeaders {
   contentEncoding?: string;
+  cacheControl?: string;
+  contentType?: string;
 }
 
 export type ObjectProperties = ContentHeaders & {

@@ -28,6 +28,8 @@ export class BlockBlobClientWrapper {
       ? undefined
       : {
           blobContentEncoding: headers.contentEncoding,
+          blobCacheControl: headers.cacheControl,
+          blobContentType: headers.contentType,
         };
   }
 

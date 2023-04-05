@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json",
+  "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js",
   "rules": {
     "no-console": "off",
     "@typescript-eslint/naming-convention": [

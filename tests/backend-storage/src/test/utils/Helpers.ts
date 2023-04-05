@@ -48,6 +48,22 @@ export async function queryAndAssertContentEncoding(
   expect(contentEncoding).to.equal(expectedHeaders.contentEncoding);
 }
 
+export async function queryAndAssertCacheControl(
+  reference: ObjectReference,
+  expectedHeaders: ContentHeaders
+): Promise<void> {
+  const { cacheControl } = await serverStorage.getObjectProperties(reference);
+  expect(cacheControl).to.equal(expectedHeaders.cacheControl);
+}
+
+export async function queryAndAssertContentType(
+  reference: ObjectReference,
+  expectedHeaders: ContentHeaders
+): Promise<void> {
+  const { contentType } = await serverStorage.getObjectProperties(reference);
+  expect(contentType).to.equal(expectedHeaders.contentType);
+}
+
 export function assertBuffer(
   response: TransferData,
   contentBuffer: Buffer

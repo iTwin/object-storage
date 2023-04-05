@@ -33,7 +33,7 @@
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
-    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.json"
+    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
     "inversify": "~5.0.1",
