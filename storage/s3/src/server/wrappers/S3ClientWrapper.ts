@@ -105,6 +105,7 @@ export class S3ClientWrapper {
         Metadata: metadata,
         ContentEncoding: headers?.contentEncoding,
         CacheControl: headers?.cacheControl,
+        ContentType: headers?.contentType,
       },
     });
     /* eslint-enable @typescript-eslint/naming-convention */
