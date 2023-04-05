@@ -53,7 +53,7 @@ export async function queryAndAssertCacheControl(
   expectedHeaders: ContentHeaders
 ): Promise<void> {
   const { cacheControl } = await serverStorage.getObjectProperties(reference);
-  expect(cacheControl).to.equal(expectedHeaders.contentEncoding);
+  expect(cacheControl).to.equal(expectedHeaders.cacheControl);
 }
 
 export async function queryAndAssertContentType(
