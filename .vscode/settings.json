@@ -22,7 +22,6 @@
       "mode": "auto"
     }
   ],
-  // "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.markdownlint": true, // first run the markdown linter
     "editor.action.fixAll": true, // Run the default formatter before eslint, it handles whitespace better
