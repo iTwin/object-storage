@@ -206,6 +206,8 @@ export class S3ClientWrapper {
       ContentLength,
       Metadata: metadata,
       ContentEncoding: contentEncoding,
+      ContentType: contentType,
+      CacheControl: cacheControl,
     } = await this._client.send(
       new HeadObjectCommand({
         Bucket: this._bucket,
@@ -220,6 +222,8 @@ export class S3ClientWrapper {
       size: ContentLength!,
       metadata,
       contentEncoding,
+      contentType,
+      cacheControl,
     };
   }
 
