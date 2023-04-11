@@ -28,7 +28,7 @@ export class FrontendBlockBlobClientWrapper {
   ): Promise<void> {
     const { metadata, partSize, queueSize } = options ?? {};
     const dataBuffer = await streamToBufferFrontend(data);
-    await this._client.uploadBrowserData(dataBuffer, {
+    await this._client.uploadData(dataBuffer, {
       metadata,
       blockSize: partSize,
       concurrency: queueSize,
