@@ -40,7 +40,7 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
-    "@alicloud/pop-core": "~1.7.10",
+    "@alicloud/pop-core": "~1.7.12",
     "@aws-sdk/client-s3": "3.105.0",
     "@itwin/object-storage-core": "workspace:*",
     "@itwin/object-storage-s3": "workspace:*",
