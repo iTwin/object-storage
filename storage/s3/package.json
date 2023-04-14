@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-s3",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Object storage implementation base for S3 compatible providers",
   "keywords": [
     "Bentley",
@@ -41,11 +41,11 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
-    "@aws-sdk/abort-controller": "3.109.0",
-    "@aws-sdk/client-s3": "3.105.0",
-    "@aws-sdk/client-sts": "3.105.0",
-    "@aws-sdk/lib-storage": "3.105.0",
-    "@aws-sdk/s3-request-presigner": "3.105.0",
+    "@aws-sdk/abort-controller": "^3.310.0",
+    "@aws-sdk/client-s3": "^3.312.0",
+    "@aws-sdk/client-sts": "^3.312.0",
+    "@aws-sdk/lib-storage": "^3.312.0",
+    "@aws-sdk/s3-request-presigner": "^3.312.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
     "inversify": "~5.0.1",
