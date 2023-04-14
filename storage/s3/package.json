@@ -52,7 +52,7 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.78.0",
+    "@aws-sdk/types": "^3.310.0",
     "@itwin/object-storage-common-config": "workspace:*",
     "@itwin/object-storage-tests-backend-unit": "workspace:*",
     "@types/chai": "^4.1.7",

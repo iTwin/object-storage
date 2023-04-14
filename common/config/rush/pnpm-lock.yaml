@@ -319,7 +319,7 @@ importers:
       '@aws-sdk/client-sts': ^3.312.0
       '@aws-sdk/lib-storage': ^3.312.0
       '@aws-sdk/s3-request-presigner': ^3.312.0
-      '@aws-sdk/types': 3.78.0
+      '@aws-sdk/types': ^3.310.0
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
@@ -353,7 +353,7 @@ importers:
       inversify: 5.0.5
       reflect-metadata: 0.1.13
     devDependencies:
-      '@aws-sdk/types': 3.78.0
+      '@aws-sdk/types': 3.310.0
       '@itwin/object-storage-common-config': link:../../utils/common-config
       '@itwin/object-storage-tests-backend-unit': link:../../tests/backend-storage-unit
       '@types/chai': 4.3.4
@@ -1331,12 +1331,6 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.5.0
-    dev: false
-
-  /@aws-sdk/types/3.78.0:
-    resolution: {integrity: sha512-I9PTlVNSbwhIgMfmDM5as1tqRIkVZunjVmfogb2WVVPp4CaX0Ll01S0FSMSLL9k6tcQLXqh45pFRjrxCl9WKdQ==}
-    engines: {node: '>= 12.0.0'}
-    dev: true
 
   /@aws-sdk/url-parser/3.310.0:
     resolution: {integrity: sha512-mCLnCaSB9rQvAgx33u0DujLvr4d5yEm/W5r789GblwwQnlNXedVu50QRizMLTpltYWyAUoXjJgQnJHmJMaKXhw==}
