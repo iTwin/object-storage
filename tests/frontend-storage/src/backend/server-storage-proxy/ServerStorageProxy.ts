@@ -18,6 +18,11 @@ import * as Common from "./Common";
 export class ServerStorageProxy extends Bindable {
   public readonly container = new Container();
 
+  private readonly _contentTypeHeader = "content-type";
+  private readonly _contentTypeStream = "application/octet-stream";
+  private readonly _contentTypeJson = "application/json";
+  private readonly _contentTypeText = "text/plain";
+
   constructor() {
     super();
     this.requireDependency(ServerStorageDependency.dependencyType);
@@ -35,7 +40,7 @@ export class ServerStorageProxy extends Bindable {
     app.post(Common.DOWNLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DownloadRequest;
       const result = await serverStorage.download(body.reference, "buffer");
-      response.setHeader("content-type", "application/octet-stream");
+      response.setHeader(this._contentTypeHeader, this._contentTypeStream);
       response.status(200).send(result);
     });
     app.post(Common.UPLOAD_REQUEST_PATH, async (request, response) => {
@@ -70,14 +75,14 @@ export class ServerStorageProxy extends Bindable {
       async (request, response) => {
         const body = request.body as Common.BaseDirectoryExistsRequest;
         const result = await serverStorage.baseDirectoryExists(body.directory);
-        response.setHeader("content-type", "text/plain");
+        response.setHeader(this._contentTypeHeader, this._contentTypeText);
         response.status(200).send(result);
       }
     );
     app.post(Common.OBJECT_EXISTS_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.ObjectExistsRequest;
       const result = await serverStorage.objectExists(body.reference);
-      response.setHeader("content-type", "text/plain");
+      response.setHeader(this._contentTypeHeader, this._contentTypeText);
       response.status(200).send(result);
     });
     app.post(
@@ -85,7 +90,7 @@ export class ServerStorageProxy extends Bindable {
       async (request, response) => {
         const body = request.body as Common.GetObjectPropertiesRequest;
         const result = await serverStorage.getObjectProperties(body.reference);
-        response.setHeader("content-type", "application/json");
+        response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
       }
     );
@@ -97,7 +102,7 @@ export class ServerStorageProxy extends Bindable {
           body.reference,
           body.expiresInSeconds
         );
-        response.setHeader("content-type", "text/plain");
+        response.setHeader(this._contentTypeHeader, this._contentTypeText);
         response.status(200).send(result);
       }
     );
@@ -107,7 +112,7 @@ export class ServerStorageProxy extends Bindable {
         body.reference,
         body.expiresInSeconds
       );
-      response.setHeader("content-type", "text/plain");
+      response.setHeader(this._contentTypeHeader, this._contentTypeText);
       response.status(200).send(result);
     });
     app.post(
@@ -118,7 +123,7 @@ export class ServerStorageProxy extends Bindable {
           body.directory,
           body.expiresInSeconds
         );
-        response.setHeader("content-type", "application/json");
+        response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
       }
     );
@@ -130,7 +135,7 @@ export class ServerStorageProxy extends Bindable {
           body.directory,
           body.expiresInSeconds
         );
-        response.setHeader("content-type", "application/json");
+        response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
       }
     );

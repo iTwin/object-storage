@@ -12,6 +12,10 @@ export class FrontendStorageIntegrationTests {
 
   public async start(): Promise<void> {
     const projectPath = path.resolve(__dirname, "..");
+    const configPath = path.resolve(
+      projectPath,
+      "node_modules/@itwin/object-storage-common-config/cypress.config.ts"
+    );
 
     const supportDir = path.resolve(projectPath, "cypress", "support");
     if (!fs.existsSync(supportDir))
@@ -23,10 +27,12 @@ export class FrontendStorageIntegrationTests {
 
     const cypressConfig: Partial<CypressCommandLine.CypressOpenOptions> = {
       project: projectPath,
-      configFile: "cypress.config.ts",
+      configFile: configPath,
       config: {
+        defaultCommandTimeout: 30000,
         e2e: {
           supportFile: supportFileTargetPath,
+          specPattern: "cypress/integration/**.test.ts",
         },
       },
     };
