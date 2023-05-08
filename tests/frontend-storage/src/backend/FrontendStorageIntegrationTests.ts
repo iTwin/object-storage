@@ -22,16 +22,13 @@ export class FrontendStorageIntegrationTests {
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
     const cypressConfig: Partial<CypressCommandLine.CypressOpenOptions> = {
-      browser: "chrome",
       project: projectPath,
-      configFile: false,
+      configFile: "cypress.config.ts",
       config: {
-        video: false,
-        screenshotOnRunFailure: false,
-        supportFile: supportFileTargetPath,
-        pluginsFile: false,
-        fixturesFolder: false,
-        defaultCommandTimeout: 30000,
+        e2e:
+        {
+            supportFile: supportFileTargetPath
+        }
       },
     };
 
