@@ -4,6 +4,7 @@ export default {
   screenshotsFolder: false,
   video: false,
   e2e: {
-	specPattern: "lib/test/unit/frontend/**.test.js"
+	specPattern: "lib/test/unit/frontend/**.test.js",
+	supportFile: false
   }
 };

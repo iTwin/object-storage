@@ -25,10 +25,9 @@ export class FrontendStorageIntegrationTests {
       project: projectPath,
       configFile: "cypress.config.ts",
       config: {
-        e2e:
-        {
-            supportFile: supportFileTargetPath
-        }
+        e2e: {
+          supportFile: supportFileTargetPath,
+        },
       },
     };
 

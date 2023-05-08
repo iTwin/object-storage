@@ -93,6 +93,7 @@ export class ServerStorageProxy extends Bindable {
           body.reference,
           body.expiresInSeconds
         );
+        response.setHeader("content-type", "text/plain");
         response.status(200).send(result);
       }
     );
@@ -102,6 +103,7 @@ export class ServerStorageProxy extends Bindable {
         body.reference,
         body.expiresInSeconds
       );
+      response.setHeader("content-type", "text/plain");
       response.status(200).send(result);
     });
     app.post(
