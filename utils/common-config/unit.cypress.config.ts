@@ -4,6 +4,7 @@ export default {
   screenshotOnRunFailure: false,
   video: false,
   e2e: {
-	supportFile: false
+    specPattern: "lib/test/unit/frontend/**.test.js",
+    supportFile: false
   }
 };

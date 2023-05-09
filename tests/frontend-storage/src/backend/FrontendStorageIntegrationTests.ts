@@ -14,7 +14,7 @@ export class FrontendStorageIntegrationTests {
     const projectPath = path.resolve(__dirname, "..");
     const configPath = path.resolve(
       projectPath,
-      "node_modules/@itwin/object-storage-common-config/cypress.config.ts"
+      "node_modules/@itwin/object-storage-common-config/integration.cypress.config.ts"
     );
 
     const supportDir = path.resolve(projectPath, "cypress", "support");
@@ -29,9 +29,7 @@ export class FrontendStorageIntegrationTests {
       project: projectPath,
       configFile: configPath,
       config: {
-        defaultCommandTimeout: 30000,
         e2e: {
-          specPattern: "cypress/integration/**.test.ts",
           supportFile: supportFileTargetPath,
         },
       },

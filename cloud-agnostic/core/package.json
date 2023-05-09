@@ -29,7 +29,7 @@
     "test:integration:frontend": "",
     "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
     "test:unit:backend": "mocha lib/**/*.test.js",
-    "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/cypress.config.ts -c specPattern=lib/test/**test.js"
+    "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/unit.cypress.config.ts -c specPattern=lib/test/**test.js"
   },
   "prettier": "@itwin/object-storage-common-config/prettier.json",
   "eslintConfig": {
