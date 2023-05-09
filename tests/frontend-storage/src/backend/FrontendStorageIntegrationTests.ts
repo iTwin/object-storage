@@ -31,8 +31,8 @@ export class FrontendStorageIntegrationTests {
       config: {
         defaultCommandTimeout: 30000,
         e2e: {
-          supportFile: supportFileTargetPath,
           specPattern: "cypress/integration/**.test.ts",
+          supportFile: supportFileTargetPath,
         },
       },
     };
