@@ -31,7 +31,7 @@ Local development workflows mostly utilize `rush` commands which run a specific 
 
 ### Running Tests
 
-- `rush test` command runs unit tests for all packages that have unit tests. The tests should pass with no additional setup.
+- `rush test:unit` command runs unit tests for all packages that have unit tests. The tests should pass with no additional setup.
 - `rush test:integration:backend` and `rush test:integration:frontend` commands run integration tests for packages that have them. Please see the `IntegrationTests.md` files for instructions specific to each package.
 
 ## Usage examples
