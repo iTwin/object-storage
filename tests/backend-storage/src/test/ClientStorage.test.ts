@@ -30,6 +30,7 @@ import {
   testUploadFromStreamToUrl,
   testUploadFromStreamWithConfig,
   testUploadToUrl,
+  testUploadToUrlWithColon,
   testUploadToUrlWithMetadata,
   testUploadToUrlWithRelativeDir,
   testUploadWithConfig,
@@ -454,6 +455,34 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         }
 
         expect(wasAborted).to.be.true;
+      });
+    });
+
+    it(`should be able to upload a file with directory with colon in name`, async () => {
+      const contentBuffer = Buffer.from("test-url-upload-content");
+      const fileToUploadPath: string =
+        await testLocalFileManager.createAndWriteFile(
+          "test-client-url-upload-metadata.txt",
+          contentBuffer
+        );
+      await testUploadToUrlWithColon({
+        testedStorage: clientStorage,
+        dataToUpload: fileToUploadPath,
+        dataToAssert: contentBuffer,
+      });
+    });
+
+    it(`should be able to upload a file with directory with multiple non ntfs characters in name`, async () => {
+      const contentBuffer = Buffer.from("test-url-upload-content");
+      const fileToUploadPath: string =
+        await testLocalFileManager.createAndWriteFile(
+          "test-client-url-upload-metadata.txt",
+          contentBuffer
+        );
+      await testUploadToUrlWithMultipleIllegalCharacters({
+        testedStorage: clientStorage,
+        dataToUpload: fileToUploadPath,
+        dataToAssert: contentBuffer,
       });
     });
   });

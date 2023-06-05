@@ -186,6 +186,46 @@ export async function testUploadToUrlWithMetadata(
   await queryAndAssertMetadata(reference, metadata);
 }
 
+export async function testUploadToUrlWithColon(
+  params: TestCase
+): Promise<void> {
+  const testBaseDirectory: BaseDirectory = (
+    await testDirectoryManager.createNew()
+  ).baseDirectory;
+  const reference: ObjectReference = {
+    baseDirectory: testBaseDirectory.baseDirectory,
+    objectName: "test-uploa:d-to-url",
+  };
+
+  const uploadUrl = await serverStorage.getUploadUrl(reference);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    url: uploadUrl,
+  });
+
+  await checkUploadedFileValidity(reference, params.dataToAssert);
+}
+
+export async function testUploadToUrlWithMultipleIllegalCharacters(
+  params: TestCase
+): Promise<void> {
+  const testBaseDirectory: BaseDirectory = (
+    await testDirectoryManager.createNew()
+  ).baseDirectory;
+  const reference: ObjectReference = {
+    baseDirectory: testBaseDirectory.baseDirectory,
+    objectName: 'test-uploa:d-to-url-1/<>:"',
+  };
+
+  const uploadUrl = await serverStorage.getUploadUrl(reference);
+  await params.testedStorage.upload({
+    data: params.dataToUpload,
+    url: uploadUrl,
+  });
+
+  await checkUploadedFileValidity(reference, params.dataToAssert);
+}
+
 export async function testUploadFromBufferWithConfig(
   testedStorage: ClientStorage
 ): Promise<void> {
