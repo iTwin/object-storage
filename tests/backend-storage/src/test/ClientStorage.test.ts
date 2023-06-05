@@ -32,6 +32,7 @@ import {
   testUploadToUrl,
   testUploadToUrlWithColon,
   testUploadToUrlWithMetadata,
+  testUploadToUrlWithMultipleIllegalCharacters,
   testUploadToUrlWithRelativeDir,
   testUploadWithConfig,
   testUploadWithMetadataFromBufferToUrl,
