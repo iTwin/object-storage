@@ -473,7 +473,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
       });
     });
 
-    it(`should be able to upload a file with directory with multiple non ntfs characters in name`, async () => {
+    it(`should be able to upload a file with directory with multiple illegal characters in name`, async () => {
       const contentBuffer = Buffer.from("test-url-upload-content");
       const fileToUploadPath: string =
         await testLocalFileManager.createAndWriteFile(

@@ -194,7 +194,7 @@ export async function testUploadToUrlWithColon(
   ).baseDirectory;
   const reference: ObjectReference = {
     baseDirectory: testBaseDirectory.baseDirectory,
-    objectName: "test-uploa:d-to-url",
+    objectName: "test-upload-to-url:",
   };
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
@@ -214,7 +214,7 @@ export async function testUploadToUrlWithMultipleIllegalCharacters(
   ).baseDirectory;
   const reference: ObjectReference = {
     baseDirectory: testBaseDirectory.baseDirectory,
-    objectName: 'test-uploa:d-to-url-1/<>:"',
+    objectName: 'test-upload-to-url-1:/<>:"',
   };
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
