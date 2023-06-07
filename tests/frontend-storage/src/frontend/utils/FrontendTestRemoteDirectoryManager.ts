@@ -8,7 +8,7 @@ import { FrontendServerStorageProxy } from "../../backend/server-storage-proxy/F
 
 declare global {
   interface Crypto {
-    randomUUID: () => string;
+    randomUUID: () => `${string}-${string}-${string}-${string}-${string}`;
   }
 }
 
