@@ -51,7 +51,7 @@
     "@itwin/object-storage-core": "workspace:*",
     "@itwin/object-storage-s3": "workspace:*",
     "inversify": "~5.0.1",
-    "minio": "^7.0.33",
+    "minio": "~7.0.33",
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
@@ -62,7 +62,7 @@
     "@itwin/object-storage-tests-frontend": "workspace:*",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.2",
-    "@types/minio": "^7.0.18",
+    "@types/minio": "~7.0.11",
     "@types/mocha": "~10.0.1",
     "@types/node": "~18.11.18",
     "@types/sinon": "~10.0.11",
