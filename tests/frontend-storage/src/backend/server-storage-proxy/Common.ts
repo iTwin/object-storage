@@ -58,7 +58,7 @@ export interface GetDownloadUrlRequest {
   reference: ObjectReference;
   options?: {
     expiresInSeconds?: number;
-    expiresOn?: Date;
+    expiresOn?: number;
   };
 }
 
@@ -67,7 +67,7 @@ export interface GetUploadUrlRequest {
   reference: ObjectReference;
   options?: {
     expiresInSeconds?: number;
-    expiresOn?: Date;
+    expiresOn?: number;
   };
 }
 
@@ -76,7 +76,7 @@ export interface GetDownloadConfigRequest {
   directory: ObjectDirectory;
   options?: {
     expiresInSeconds?: number;
-    expiresOn?: Date;
+    expiresOn?: number;
   };
 }
 
@@ -85,6 +85,6 @@ export interface GetUploadConfigRequest {
   directory: ObjectDirectory;
   options?: {
     expiresInSeconds?: number;
-    expiresOn?: Date;
+    expiresOn?: number;
   };
 }
