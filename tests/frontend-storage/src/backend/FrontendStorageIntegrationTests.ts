@@ -12,6 +12,10 @@ export class FrontendStorageIntegrationTests {
 
   public async start(): Promise<void> {
     const projectPath = path.resolve(__dirname, "..");
+    const configPath = path.resolve(
+      projectPath,
+      "node_modules/@itwin/object-storage-common-config/integration.cypress.config.ts"
+    );
 
     const supportDir = path.resolve(projectPath, "cypress", "support");
     if (!fs.existsSync(supportDir))
@@ -22,16 +26,12 @@ export class FrontendStorageIntegrationTests {
     fs.copyFileSync(this._supportFileSourcePath, supportFileTargetPath);
 
     const cypressConfig: Partial<CypressCommandLine.CypressOpenOptions> = {
-      browser: "chrome",
       project: projectPath,
-      configFile: false,
+      configFile: configPath,
       config: {
-        video: false,
-        screenshotOnRunFailure: false,
-        supportFile: supportFileTargetPath,
-        pluginsFile: false,
-        fixturesFolder: false,
-        defaultCommandTimeout: 30000,
+        e2e: {
+          supportFile: supportFileTargetPath,
+        },
       },
     };
 

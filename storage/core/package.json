@@ -52,7 +52,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cspell": "~5.18.5",
-    "cypress": "~9.5.4",
+    "cypress": "~12.11.0",
     "eslint": "~7.32.0",
     "mocha": "~10.2.0",
     "nyc": "^14.0.0",

@@ -40,7 +40,7 @@
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
-    "cypress": "~9.5.4",
+    "cypress": "~12.11.0",
     "inversify": "~5.0.1"
   },
   "devDependencies": {
