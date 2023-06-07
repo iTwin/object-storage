@@ -100,7 +100,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetDownloadUrlRequest;
         const result = await serverStorage.getDownloadUrl(
           body.reference,
-          body.expiresInSeconds
+          body.options
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeText);
         response.status(200).send(result);
@@ -110,7 +110,7 @@ export class ServerStorageProxy extends Bindable {
       const body = request.body as Common.GetUploadUrlRequest;
       const result = await serverStorage.getUploadUrl(
         body.reference,
-        body.expiresInSeconds
+        body.options
       );
       response.setHeader(this._contentTypeHeader, this._contentTypeText);
       response.status(200).send(result);
@@ -121,7 +121,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetDownloadConfigRequest;
         const result = await serverStorage.getDownloadConfig(
           body.directory,
-          body.expiresInSeconds
+          body.options
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
@@ -133,7 +133,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetUploadConfigRequest;
         const result = await serverStorage.getUploadConfig(
           body.directory,
-          body.expiresInSeconds
+          body.options
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);

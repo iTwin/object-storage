@@ -16,3 +16,21 @@ export async function createAndUseClient<TResult>(
     clientWrapper.releaseResources();
   }
 }
+
+export function getExpiresIn(options?: {
+  expiresInSeconds?: number;
+  expiresOn?: Date;
+}): number {
+  if (options?.expiresInSeconds && options?.expiresOn) {
+    throw new Error(
+      "Only one of 'expiresInSeconds' and 'expiresOn' can be specified."
+    );
+  }
+  if (options?.expiresInSeconds) {
+    return Math.floor(options.expiresInSeconds);
+  }
+  if (options?.expiresOn) {
+    return Math.floor((options.expiresOn.getTime() - Date.now()) / 1000);
+  }
+  return 60 * 60; // expires in one hour by default
+}

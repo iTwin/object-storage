@@ -19,6 +19,8 @@ import {
 
 import { Types } from "../common";
 
+import { getExpiresIn } from "./internal";
+
 @injectable()
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: S3Client;
@@ -31,7 +33,10 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -41,7 +46,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: expiresInSeconds,
+        expiresIn: getExpiresIn(options),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -49,7 +54,10 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -59,7 +67,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: expiresInSeconds,
+        expiresIn: getExpiresIn(options),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */

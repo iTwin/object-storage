@@ -112,22 +112,34 @@ export abstract class ServerStorage
 
   public abstract getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string>;
   public abstract getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string>;
 
   /** Azure will only be limited to baseDirectory. */
   public abstract getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<TransferConfig>;
   /** Azure will only be limited to baseDirectory. */
   public abstract getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<TransferConfig>;
 
   /**
@@ -141,21 +153,33 @@ export abstract class ServerStorage
 export interface PresignedUrlProvider {
   getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string>;
   getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<string>;
 }
 
 export interface TransferConfigProvider {
   getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<TransferConfig>;
   getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<TransferConfig>;
 }

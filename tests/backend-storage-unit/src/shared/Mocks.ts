@@ -10,10 +10,22 @@ import {
 } from "@itwin/object-storage-core";
 
 export const mockPresignedUrlProvider: PresignedUrlProvider = {
-  getDownloadUrl: (_reference: ObjectReference, _expiresInSeconds?: number) => {
+  getDownloadUrl: (
+    _reference: ObjectReference,
+    _options: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
+  ) => {
     throw new Error("Not implemented.");
   },
-  getUploadUrl: (_reference: ObjectReference, _expiresInSeconds?: number) => {
+  getUploadUrl: (
+    _reference: ObjectReference,
+    _options: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
+  ) => {
     throw new Error("Not implemented.");
   },
 };
@@ -21,13 +33,19 @@ export const mockPresignedUrlProvider: PresignedUrlProvider = {
 export const mockTransferConfigProvider: TransferConfigProvider = {
   getDownloadConfig: (
     _directory: ObjectDirectory,
-    _expiresInSeconds?: number
+    _options: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ) => {
     throw new Error("Not implemented.");
   },
   getUploadConfig: (
     _directory: ObjectDirectory,
-    _expiresInSeconds?: number
+    _options: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ) => {
     throw new Error("Not implemented.");
   },

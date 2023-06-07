@@ -56,23 +56,35 @@ export interface GetObjectPropertiesRequest {
 export const GET_DOWNLOAD_URL_REQUEST_PATH = `${BASE_PATH}/getDownloadUrl`;
 export interface GetDownloadUrlRequest {
   reference: ObjectReference;
-  expiresInSeconds?: number;
+  options?: {
+    expiresInSeconds?: number;
+    expiresOn?: Date;
+  };
 }
 
 export const GET_UPLOAD_URL_REQUEST_PATH = `${BASE_PATH}/getUploadUrl`;
 export interface GetUploadUrlRequest {
   reference: ObjectReference;
-  expiresInSeconds?: number;
+  options?: {
+    expiresInSeconds?: number;
+    expiresOn?: Date;
+  };
 }
 
 export const GET_DOWNLOAD_CONFIG_REQUEST_PATH = `${BASE_PATH}/getDownloadConfig`;
 export interface GetDownloadConfigRequest {
   directory: ObjectDirectory;
-  expiresInSeconds?: number;
+  options?: {
+    expiresInSeconds?: number;
+    expiresOn?: Date;
+  };
 }
 
 export const GET_UPLOAD_CONFIG_REQUEST_PATH = `${BASE_PATH}/getUploadConfig`;
 export interface GetUploadConfigRequest {
   directory: ObjectDirectory;
-  expiresInSeconds?: number;
+  options?: {
+    expiresInSeconds?: number;
+    expiresOn?: Date;
+  };
 }

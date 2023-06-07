@@ -7,6 +7,7 @@ import { inject, injectable } from "inversify";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
+import { getExpiresIn } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
   ObjectDirectory,
@@ -33,7 +34,10 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds = 3600
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -57,7 +61,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: expiresInSeconds,
+        DurationSeconds: getExpiresIn(options),
       },
       {
         method: "POST",
@@ -80,7 +84,10 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds = 3600
+    options?: {
+      expiresInSeconds?: number;
+      expiresOn?: Date;
+    }
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -104,7 +111,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: expiresInSeconds,
+        DurationSeconds: getExpiresIn(options),
       },
       {
         method: "POST",

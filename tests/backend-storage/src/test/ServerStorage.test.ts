@@ -694,6 +694,74 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await queryAndAssertMetadata(uploadedFile, updatedMetadata2);
     });
   });
+
+  [
+    serverStorage.getDownloadConfig.bind(serverStorage),
+    serverStorage.getUploadConfig.bind(serverStorage),
+  ].forEach((getTransferConfig) => {
+    describe(`${getTransferConfig.name}()`, () => {
+      it("should throw if both expiresInSeconds and expiresOn are set", async () => {
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        await expect(
+          getTransferConfig(testDirectory.baseDirectory, {
+            expiresInSeconds: 1,
+            expiresOn: new Date(),
+          })
+        ).to.eventually.be.rejectedWith(
+          Error,
+          "Only one of 'expiresInSeconds' and 'expiresOn' can be specified."
+        );
+      });
+
+      it("should use expiresInSeconds if set", async () => {
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        const expiresInSeconds = 1000;
+        const downloadConfig = await getTransferConfig(
+          testDirectory.baseDirectory,
+          {
+            expiresInSeconds,
+          }
+        );
+
+        expect(downloadConfig.expiration).to.be.approximately(
+          Date.now() / 1000 + expiresInSeconds,
+          10
+        );
+      });
+
+      it("should use expiresOn if set", async () => {
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        const expiresOn = new Date(Date.now() + 1000);
+        const downloadConfig = await getTransferConfig(
+          testDirectory.baseDirectory,
+          {
+            expiresOn,
+          }
+        );
+
+        expect(downloadConfig.expiration.getTime()).to.be.approximately(
+          expiresOn.getTime(),
+          10_000
+        );
+      });
+
+      it("should expire in one hour if neither expiresOn nor expiresInSecond is set", async () => {
+        const testDirectory: TestRemoteDirectory =
+          await testDirectoryManager.createNew();
+        const downloadConfig = await getTransferConfig(
+          testDirectory.baseDirectory
+        );
+
+        expect(downloadConfig.expiration.getTime()).to.be.approximately(
+          Date.now() + 60 * 60 * 1000,
+          10_000
+        );
+      });
+    });
+  });
 });
 
 async function serverStorageListTest(

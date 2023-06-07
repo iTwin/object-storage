@@ -35,7 +35,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { AzureTransferConfig, Types } from "../common";
-import { buildBlobName, buildExpiresOn } from "../common/internal";
+import { buildBlobName, getExpiryDate } from "../common/internal";
 
 import { buildSASParameters } from "./internal";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
@@ -222,7 +222,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds = 3600
+    expiry: { expiresInSeconds?: number; expiresOn?: Date }
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -230,7 +230,7 @@ export class AzureServerStorage extends ServerStorage {
     const parameters = buildSASParameters(
       reference.baseDirectory,
       "read",
-      buildExpiresOn(expiresInSeconds),
+      getExpiryDate(expiry),
       this._config.accountName,
       this._config.accountKey,
       buildBlobName(reference)
@@ -241,7 +241,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds = 3600
+    expiry: { expiresInSeconds?: number; expiresOn?: Date }
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -249,7 +249,7 @@ export class AzureServerStorage extends ServerStorage {
     const parameters = buildSASParameters(
       reference.baseDirectory,
       "write",
-      buildExpiresOn(expiresInSeconds),
+      getExpiryDate(expiry),
       this._config.accountName,
       this._config.accountKey,
       buildBlobName(reference)
@@ -260,11 +260,11 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds = 3600
+    expiry: { expiresInSeconds?: number; expiresOn?: Date }
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
-    const expiresOn = buildExpiresOn(expiresInSeconds);
+    const expiresOn = getExpiryDate(expiry);
     const parameters = buildSASParameters(
       directory.baseDirectory,
       "read",
@@ -282,11 +282,11 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds = 3600
+    expiry: { expiresInSeconds?: number; expiresOn?: Date }
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
-    const expiresOn = buildExpiresOn(expiresInSeconds);
+    const expiresOn = getExpiryDate(expiry);
     const parameters = buildSASParameters(
       directory.baseDirectory,
       "write",
