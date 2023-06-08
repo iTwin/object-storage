@@ -28,6 +28,7 @@ import {
   TransferConfigProvider,
   TransferData,
   TransferType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
 } from "@itwin/object-storage-core";
 
@@ -44,6 +45,7 @@ export interface S3ServerStorageConfig {
 }
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class S3ServerStorage extends ServerStorage {
   private readonly _presignedUrlProvider: PresignedUrlProvider;
   private readonly _transferConfigProvider: TransferConfigProvider;
@@ -51,8 +53,10 @@ export class S3ServerStorage extends ServerStorage {
 
   public constructor(
     s3Client: S3ClientWrapper,
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.Server.presignedUrlProvider)
     presignedUrlProvider: PresignedUrlProvider,
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.Server.transferConfigProvider)
     transferConfigProvider: TransferConfigProvider
   ) {

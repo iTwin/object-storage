@@ -29,19 +29,13 @@ steps:
   - script: node common/scripts/install-run-rush.js test:unit --verbose
     displayName: rush test:unit
 
-  - script: node common/scripts/install-run-rush.js test:integration:backend --verbose
+  - script: node common/scripts/install-run-rush.js test:integration:backend --only tag:integration-tested --verbose
     displayName: rush test:integration:backend
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
-      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
-      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
-      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)
 
-  - script: node common/scripts/install-run-rush.js test:integration:frontend --verbose
+  - script: node common/scripts/install-run-rush.js test:integration:frontend --only tag:integration-tested --verbose
     displayName: rush test:integration:frontend
     condition: and(succeeded(), eq(variables.runFrontendIntegrationTests, true))
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
-      TEST_OSS_ACCESS_KEY: $(TEST_OSS_ACCESS_KEY)
-      TEST_OSS_SECRET_KEY: $(TEST_OSS_SECRET_KEY)
-      TEST_OSS_ROLE_ARN: $(TEST_OSS_ROLE_ARN)

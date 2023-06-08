@@ -14,6 +14,7 @@ import { buildBlobUrl } from "../../common/internal";
 import { FrontendBlockBlobClientWrapper } from "./FrontendBlockBlobClientWrapper";
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class FrontendBlockBlobClientWrapperFactory {
   public create(
     input: UrlTransferInput | AzureTransferConfigInput

@@ -16,6 +16,7 @@ import {
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
@@ -32,6 +33,7 @@ import {
 } from "./wrappers";
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
     @inject(Types.Frontend.clientWrapperFactory)

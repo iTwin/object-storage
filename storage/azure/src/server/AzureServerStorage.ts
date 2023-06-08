@@ -34,6 +34,7 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AzureTransferConfig, Types } from "../common";
 import { buildBlobName, buildExpiresOn } from "../common/internal";
 
@@ -47,11 +48,13 @@ export interface AzureServerStorageConfig {
 }
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class AzureServerStorage extends ServerStorage {
   private readonly _config: AzureServerStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.AzureServer.config) config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {

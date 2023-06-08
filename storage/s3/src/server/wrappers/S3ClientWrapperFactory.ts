@@ -11,6 +11,7 @@ import { assertS3TransferConfig, createS3Client } from "../../common/internal";
 import { S3ClientWrapper } from "./S3ClientWrapper";
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class S3ClientWrapperFactory {
   public create(transferConfig: TransferConfig): S3ClientWrapper {
     assertS3TransferConfig(transferConfig);

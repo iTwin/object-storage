@@ -16,6 +16,7 @@ import {
 } from "../server";
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class ClientStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }

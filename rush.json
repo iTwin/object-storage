@@ -23,23 +23,25 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@itwin/object-storage-azure",
-      "projectFolder": "storage/azure",
-      "shouldPublish": true
-    },
-    {
       "packageName": "@itwin/object-storage-s3",
       "projectFolder": "storage/s3",
       "shouldPublish": true
     },
     {
-      "packageName": "@itwin/object-storage-oss",
-      "projectFolder": "storage/oss",
-      "shouldPublish": true
+      "packageName": "@itwin/object-storage-azure",
+      "projectFolder": "storage/azure",
+      "shouldPublish": true,
+      "tags": [ "integration-tested" ]
     },
     {
       "packageName": "@itwin/object-storage-minio",
       "projectFolder": "storage/minio",
+      "shouldPublish": true,
+      "tags": [ "integration-tested" ]
+    },
+    {
+      "packageName": "@itwin/object-storage-oss",
+      "projectFolder": "storage/oss",
       "shouldPublish": true
     },
     {

@@ -10,6 +10,7 @@ import {
   FrontendTransferData,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
 } from "@itwin/object-storage-core/lib/frontend";
 
@@ -21,6 +22,7 @@ import {
 import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
     @inject(Types.Frontend.clientWrapperFactory)

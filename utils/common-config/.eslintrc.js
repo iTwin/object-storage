@@ -15,6 +15,12 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/no-unused-vars": ["error",
+      {
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_|inject|injectable",
+      }],
     "@itwin/no-internal-barrel-imports": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "warn",

@@ -21,6 +21,7 @@ export abstract class Test {
 }
 
 @injectable()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class ConcreteTest extends Test {
   constructor(
     @inject(testConfigType)
