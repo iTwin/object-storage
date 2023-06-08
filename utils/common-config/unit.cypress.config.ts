@@ -13,4 +13,4 @@ export default defineConfig({
     specPattern: "lib/test/unit/frontend/**.test.js",
     supportFile: false
   }
-})
+});
