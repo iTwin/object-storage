@@ -27,11 +27,9 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Types } from "../../common";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class FrontendS3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,

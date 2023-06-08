@@ -34,7 +34,6 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AzureTransferConfig, Types } from "../common";
 import { buildBlobName, buildExpiresOn } from "../common/internal";
 
@@ -48,7 +47,6 @@ export interface AzureServerStorageConfig {
 }
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class AzureServerStorage extends ServerStorage {
   private readonly _config: AzureServerStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
@@ -223,6 +221,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadUrl(
     reference: ObjectReference,
     expiresInSeconds = 3600
@@ -242,6 +241,7 @@ export class AzureServerStorage extends ServerStorage {
     return `${blobClient.url}?${parameters}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadUrl(
     reference: ObjectReference,
     expiresInSeconds = 3600
@@ -261,6 +261,7 @@ export class AzureServerStorage extends ServerStorage {
     return `${blobClient.url}?${parameters}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
@@ -283,6 +284,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600

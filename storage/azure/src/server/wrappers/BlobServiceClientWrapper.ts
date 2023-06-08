@@ -18,7 +18,6 @@ import { ObjectReference } from "@itwin/object-storage-core";
 import { buildBlobName } from "../../common/internal";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class BlobServiceClientWrapper {
   private readonly _client: BlobServiceClient;
 

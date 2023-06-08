@@ -20,7 +20,6 @@ import {
 import { MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class ServerStorage
   implements PresignedUrlProvider, TransferConfigProvider
 {

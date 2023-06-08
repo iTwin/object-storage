@@ -3,12 +3,15 @@ require("@rushstack/eslint-patch/modern-module-resolution");
 module.exports = {
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@itwin",
-    "mocha"
+    "mocha",
+    "@typescript-eslint",
+    "import",
+    "deprecation"
   ],
   "extends": [
-    "plugin:@itwin/itwinjs-recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
   "parserOptions": {
     "project": "tsconfig.json",

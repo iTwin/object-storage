@@ -11,7 +11,6 @@ import { FrontendS3ClientWrapper } from "@itwin/object-storage-s3/lib/frontend";
 import { createOssS3ClientFrontend } from "../internal";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class FrontendOssS3ClientWrapperFactory {
   public create(transferConfig: TransferConfig): FrontendS3ClientWrapper {
     assertS3TransferConfig(transferConfig);

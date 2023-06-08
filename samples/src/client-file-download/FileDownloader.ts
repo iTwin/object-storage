@@ -12,7 +12,6 @@ import { ClientStorage } from "@itwin/object-storage-core";
  * making this class cloud agnostic.
  */
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class FileDownloader {
   constructor(private _storage: ClientStorage) {}
 

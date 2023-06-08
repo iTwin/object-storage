@@ -22,6 +22,7 @@ const bundledSetupScript = path.resolve(
   "..",
   "..",
   "dist",
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   bundledScriptFileName
 );
 

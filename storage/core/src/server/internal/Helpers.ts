@@ -46,6 +46,7 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
     const chunks = Array<Uint8Array>();
     stream.on("data", (data) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       chunks.push(data instanceof Buffer ? data : Buffer.from(data))
     );
     stream.on("end", () => resolve(Buffer.concat(chunks)));
@@ -82,7 +83,11 @@ export async function streamToTransferType(
     case "buffer":
       return streamToBuffer(stream);
     default:
-      throw new Error(`Type '${transferType}' is not supported`);
+      throw new Error(
+        `Type '${
+          transferType === undefined ? "undefined" : transferType
+        }' is not supported`
+      );
   }
 }
 

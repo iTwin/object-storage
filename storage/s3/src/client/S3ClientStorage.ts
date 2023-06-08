@@ -23,7 +23,6 @@ import {
 import {
   ClientStorage,
   TransferData,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
   UrlDownloadInput,
   UrlUploadInput,
@@ -39,7 +38,6 @@ import {
 import { createAndUseClient } from "../server/internal";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class S3ClientStorage extends ClientStorage {
   constructor(
     @inject(Types.Client.clientWrapperFactory)

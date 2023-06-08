@@ -17,11 +17,9 @@ import {
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Types } from "../common";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: S3Client;
   private readonly _bucket: string;

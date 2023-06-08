@@ -15,12 +15,10 @@ import {
 import {
   S3ServerStorageConfig,
   S3TransferConfig,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
 } from "@itwin/object-storage-s3";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class OssTransferConfigProvider implements TransferConfigProvider {
   private readonly _config: S3ServerStorageConfig;
   private readonly _client: Core;

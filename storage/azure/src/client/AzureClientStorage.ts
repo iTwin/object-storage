@@ -19,7 +19,6 @@ import {
 import {
   ClientStorage,
   TransferData,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Types,
   UrlDownloadInput,
   UrlUploadInput,
@@ -33,7 +32,6 @@ import {
 import { BlockBlobClientWrapperFactory } from "../server/wrappers";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class AzureClientStorage extends ClientStorage {
   constructor(
     @inject(Types.Client.clientWrapperFactory)

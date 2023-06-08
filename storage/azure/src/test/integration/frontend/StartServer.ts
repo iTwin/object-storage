@@ -11,7 +11,7 @@ import { ServerStorageProxy } from "@itwin/object-storage-tests-frontend";
 import { AzureServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-async function run(): Promise<void> {
+function run(): void {
   const backendServer = new ServerStorageProxy();
 
   backendServer.container
@@ -24,8 +24,7 @@ async function run(): Promise<void> {
       },
     });
   backendServer.useBindings(AzureServerStorageBindings);
-  return backendServer.start({ port: 1221 });
+  backendServer.start({ port: 1221 });
 }
 
-// eslint-disable-next-line
-run().catch((err) => console.error(err));
+run();

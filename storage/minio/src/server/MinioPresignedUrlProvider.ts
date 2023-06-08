@@ -11,11 +11,9 @@ import {
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Types } from "@itwin/object-storage-s3";
 
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class MinioPresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: Client;
   private readonly _bucket: string;

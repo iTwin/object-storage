@@ -57,7 +57,7 @@
     "@types/node": "~18.11.18",
     "@types/yargs": "~15.0.5",
     "cspell": "~5.18.5",
-    "eslint": "~7.32.0",
+    "eslint": "^8.42.0",
     "rimraf": "^2.6.2",
     "sort-package-json": "~1.53.1",
     "typescript": "^5.1.3"

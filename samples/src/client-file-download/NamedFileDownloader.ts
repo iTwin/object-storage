@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import { inject, injectable, named } from "inversify";
 
 import { ClientStorage } from "@itwin/object-storage-core";
@@ -14,7 +14,6 @@ import { ClientStorage } from "@itwin/object-storage-core";
  * using instance name (which is described in the configuration as instanceName property)
  */
 @injectable()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class NamedFileDownloader {
   constructor(
     @inject(ClientStorage)
