@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+// cSpell:ignore unsignable pnpm
 import { defineConfig } from "cypress"
 import * as webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
 import baseConfig from "./unit.cypress.config";
