@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-azure",
-  "version": "1.6.0",
+  "version": "2.0.0-dev.1",
   "description": "Object storage implementation using Azure Blob Storage",
   "keywords": [
     "Bentley",
