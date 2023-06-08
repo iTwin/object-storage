@@ -13,6 +13,8 @@ import {
 import {
   assertTransferConfig,
   buildObjectKey,
+  ExpiryOptions,
+  secondsInHour,
 } from "@itwin/object-storage-core/lib/common/internal";
 
 import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
@@ -43,10 +45,7 @@ export function buildBlobName(reference: ObjectReference): string {
   return (relativeDirectory ? `${relativeDirectory}/` : "") + objectName;
 }
 
-export function getExpiryDate(options?: {
-  expiresInSeconds?: number;
-  expiresOn?: Date;
-}): Date {
+export function getExpiryDate(options?: ExpiryOptions): Date {
   if (options?.expiresInSeconds && options?.expiresOn) {
     throw new Error(
       "Only one of 'expiresInSeconds' and 'expiresOn' can be specified."
@@ -58,5 +57,5 @@ export function getExpiryDate(options?: {
   if (options?.expiresOn) {
     return options.expiresOn;
   }
-  return new Date(Date.now() + 60 * 60 * 1000); // expires in one hour by default
+  return new Date(Date.now() + secondsInHour * 1000); // expires in one hour by default
 }

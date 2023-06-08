@@ -15,6 +15,17 @@ import {
   UrlTransferInput,
 } from "../Interfaces";
 
+export const secondsInHour = 60 * 60;
+export type ExpiryOptions =
+  | {
+      expiresInSeconds?: never;
+      expiresOn?: Date;
+    }
+  | {
+      expiresOn?: never;
+      expiresInSeconds?: number;
+    };
+
 export function metadataToHeaders(
   metadata: Metadata,
   prefix: string

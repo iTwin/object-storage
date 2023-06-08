@@ -8,6 +8,10 @@ import * as path from "path";
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
+import {
+  ExpiryOptions,
+  secondsInHour,
+} from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
@@ -707,7 +711,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           getTransferConfig(testDirectory.baseDirectory, {
             expiresInSeconds: 1,
             expiresOn: new Date(),
-          })
+          } as unknown as ExpiryOptions)
         ).to.eventually.be.rejectedWith(
           Error,
           "Only one of 'expiresInSeconds' and 'expiresOn' can be specified."
@@ -725,16 +729,16 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           }
         );
 
-        expect(downloadConfig.expiration).to.be.approximately(
-          Date.now() / 1000 + expiresInSeconds,
-          10
+        expect(downloadConfig.expiration.getTime()).to.be.approximately(
+          Date.now() + expiresInSeconds * 1000,
+          10_000
         );
       });
 
       it("should use expiresOn if set", async () => {
         const testDirectory: TestRemoteDirectory =
           await testDirectoryManager.createNew();
-        const expiresOn = new Date(Date.now() + 1000);
+        const expiresOn = new Date(Date.now() + 1_000_000);
         const downloadConfig = await getTransferConfig(
           testDirectory.baseDirectory,
           {
@@ -756,7 +760,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         );
 
         expect(downloadConfig.expiration.getTime()).to.be.approximately(
-          Date.now() + 60 * 60 * 1000,
+          Date.now() + secondsInHour * 1000,
           10_000
         );
       });

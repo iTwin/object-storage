@@ -13,6 +13,7 @@ import {
   assertRelativeDirectory,
   buildObjectKey,
   buildObjectReference,
+  ExpiryOptions,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
@@ -222,7 +223,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiry: { expiresInSeconds?: number; expiresOn?: Date }
+    expiry: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -241,7 +242,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiry: { expiresInSeconds?: number; expiresOn?: Date }
+    expiry: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -260,7 +261,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiry: { expiresInSeconds?: number; expiresOn?: Date }
+    expiry: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -282,7 +283,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiry: { expiresInSeconds?: number; expiresOn?: Date }
+    expiry: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 

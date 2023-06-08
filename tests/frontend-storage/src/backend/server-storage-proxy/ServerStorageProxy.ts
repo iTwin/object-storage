@@ -7,6 +7,8 @@ import * as path from "path";
 import * as express from "express";
 import { Container } from "inversify";
 
+import { ExpiryOptions } from "@itwin/object-storage-core/lib/common/internal";
+
 import { Bindable } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
@@ -148,12 +150,21 @@ export class ServerStorageProxy extends Bindable {
     });
   }
 
-  private parseOptions(options?: {expiresInSeconds?: number, expiresOn?: number}): {expiresInSeconds?: number, expiresOn?: Date} | undefined {
-    if(options === undefined)
-      return options;
+  private parseOptions(options?: {
+    expiresInSeconds?: number;
+    expiresOn?: number;
+  }): ExpiryOptions | undefined {
+    if (options === undefined) return options;
+    if (
+      options.expiresInSeconds !== undefined &&
+      options.expiresOn !== undefined
+    )
+      throw new Error(
+        "Both expiresInSeconds and expiresOn cannot be specified"
+      );
     return {
       ...options,
-      expiresOn: options.expiresOn ? new Date(options.expiresOn) : undefined
-    };
+      expiresOn: options.expiresOn ? new Date(options.expiresOn) : undefined,
+    } as ExpiryOptions;
   }
 }

@@ -7,7 +7,10 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
-import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertRelativeDirectory,
+  ExpiryOptions,
+} from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   streamToTransferType,
@@ -197,10 +200,7 @@ export class S3ServerStorage extends ServerStorage {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -209,10 +209,7 @@ export class S3ServerStorage extends ServerStorage {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -221,10 +218,7 @@ export class S3ServerStorage extends ServerStorage {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -233,10 +227,7 @@ export class S3ServerStorage extends ServerStorage {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 

@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { ExpiryOptions } from "@itwin/object-storage-core/lib/common/internal";
+
 import {
   ObjectDirectory,
   ObjectReference,
@@ -10,43 +12,19 @@ import {
 } from "@itwin/object-storage-core";
 
 export const mockPresignedUrlProvider: PresignedUrlProvider = {
-  getDownloadUrl: (
-    _reference: ObjectReference,
-    _options: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
-  ) => {
+  getDownloadUrl: (_reference: ObjectReference, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
-  getUploadUrl: (
-    _reference: ObjectReference,
-    _options: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
-  ) => {
+  getUploadUrl: (_reference: ObjectReference, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
 };
 
 export const mockTransferConfigProvider: TransferConfigProvider = {
-  getDownloadConfig: (
-    _directory: ObjectDirectory,
-    _options: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
-  ) => {
+  getDownloadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
-  getUploadConfig: (
-    _directory: ObjectDirectory,
-    _options: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
-  ) => {
+  getUploadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
 };

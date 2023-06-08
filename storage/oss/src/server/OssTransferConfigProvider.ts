@@ -5,9 +5,12 @@
 import * as Core from "@alicloud/pop-core";
 import { inject, injectable } from "inversify";
 
-import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  buildObjectDirectoryString,
+  ExpiryOptions,
+} from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
-import { getExpiresIn } from "@itwin/object-storage-s3/lib/server/internal";
+import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
   ObjectDirectory,
@@ -34,10 +37,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -61,7 +61,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: getExpiresIn(options),
+        DurationSeconds: getExpiresInSeconds(options),
       },
       {
         method: "POST",
@@ -84,10 +84,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -111,7 +108,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: getExpiresIn(options),
+        DurationSeconds: getExpiresInSeconds(options),
       },
       {
         method: "POST",

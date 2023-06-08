@@ -5,8 +5,11 @@
 import { inject, injectable } from "inversify";
 import { Client } from "minio";
 
-import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
-import { getExpiresIn } from "@itwin/object-storage-s3/lib/server/internal";
+import {
+  buildObjectKey,
+  ExpiryOptions,
+} from "@itwin/object-storage-core/lib/common/internal";
+import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
   ObjectReference,
@@ -26,29 +29,23 @@ export class MinioPresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedGetObject(
       this._bucket,
       buildObjectKey(reference),
-      getExpiresIn(options)
+      getExpiresInSeconds(options)
     );
   }
 
   public async getUploadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedPutObject(
       this._bucket,
       buildObjectKey(reference),
-      getExpiresIn(options)
+      getExpiresInSeconds(options)
     );
   }
 }

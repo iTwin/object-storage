@@ -16,6 +16,7 @@ import {
   ObjectReference,
   TransferConfig,
 } from "../common";
+import { ExpiryOptions } from "../common/internal";
 
 import { MultipartUploadData, TransferData } from "./Interfaces";
 
@@ -112,34 +113,22 @@ export abstract class ServerStorage
 
   public abstract getDownloadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string>;
   public abstract getUploadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string>;
 
   /** Azure will only be limited to baseDirectory. */
   public abstract getDownloadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig>;
   /** Azure will only be limited to baseDirectory. */
   public abstract getUploadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig>;
 
   /**
@@ -153,33 +142,21 @@ export abstract class ServerStorage
 export interface PresignedUrlProvider {
   getDownloadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string>;
   getUploadUrl(
     reference: ObjectReference,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<string>;
 }
 
 export interface TransferConfigProvider {
   getDownloadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig>;
   getUploadConfig(
     directory: ObjectDirectory,
-    options?: {
-      expiresInSeconds?: number;
-      expiresOn?: Date;
-    }
+    options?: ExpiryOptions
   ): Promise<TransferConfig>;
 }
