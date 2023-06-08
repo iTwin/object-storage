@@ -15,7 +15,7 @@ import {
   UrlTransferInput,
 } from "../Interfaces";
 
-export const secondsInHour = 60 * 60;
+export const defaultExpiresInSeconds = 60 * 60;
 export type ExpiryOptions =
   | {
       expiresInSeconds?: never;

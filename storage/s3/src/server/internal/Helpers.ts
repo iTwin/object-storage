@@ -3,8 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  defaultExpiresInSeconds,
   ExpiryOptions,
-  secondsInHour,
 } from "@itwin/object-storage-core/lib/common/internal";
 
 import { S3ClientWrapper } from "../wrappers";
@@ -35,5 +35,5 @@ export function getExpiresInSeconds(options?: ExpiryOptions): number {
     return Math.floor((options.expiresOn.getTime() - Date.now()) / 1000);
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- false positive
-  return secondsInHour; // expires in one hour by default
+  return defaultExpiresInSeconds; // expires in one hour by default
 }

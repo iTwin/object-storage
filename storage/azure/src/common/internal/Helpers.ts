@@ -13,8 +13,8 @@ import {
 import {
   assertTransferConfig,
   buildObjectKey,
+  defaultExpiresInSeconds,
   ExpiryOptions,
-  secondsInHour,
 } from "@itwin/object-storage-core/lib/common/internal";
 
 import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
@@ -57,5 +57,5 @@ export function getExpiryDate(options?: ExpiryOptions): Date {
   if (options?.expiresOn) {
     return options.expiresOn;
   }
-  return new Date(Date.now() + secondsInHour * 1000); // expires in one hour by default
+  return new Date(Date.now() + defaultExpiresInSeconds * 1000); // expires in one hour by default
 }

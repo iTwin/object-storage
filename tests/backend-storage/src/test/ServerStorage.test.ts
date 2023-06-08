@@ -9,8 +9,8 @@ import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
 import {
+  defaultExpiresInSeconds,
   ExpiryOptions,
-  secondsInHour,
 } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
@@ -760,7 +760,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         );
 
         expect(downloadConfig.expiration.getTime()).to.be.approximately(
-          Date.now() + secondsInHour * 1000,
+          Date.now() + defaultExpiresInSeconds * 1000,
           10_000
         );
       });
