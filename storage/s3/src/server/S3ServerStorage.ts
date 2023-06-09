@@ -7,10 +7,7 @@ import { Readable } from "stream";
 
 import { inject, injectable } from "inversify";
 
-import {
-  assertRelativeDirectory,
-  ExpiryOptions,
-} from "@itwin/object-storage-core/lib/common/internal";
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   streamToTransferType,
@@ -19,6 +16,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  ExpiryOptions,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,

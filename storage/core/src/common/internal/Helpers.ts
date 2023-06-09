@@ -16,15 +16,6 @@ import {
 } from "../Interfaces";
 
 export const defaultExpiresInSeconds = 60 * 60;
-export type ExpiryOptions =
-  | {
-      expiresInSeconds?: never;
-      expiresOn?: Date;
-    }
-  | {
-      expiresOn?: never;
-      expiresInSeconds?: number;
-    };
 
 export function metadataToHeaders(
   metadata: Metadata,

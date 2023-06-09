@@ -16,9 +16,8 @@ import {
   ObjectReference,
   TransferConfig,
 } from "../common";
-import { ExpiryOptions } from "../common/internal";
 
-import { MultipartUploadData, TransferData } from "./Interfaces";
+import { ExpiryOptions, MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage

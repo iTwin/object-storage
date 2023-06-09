@@ -5,14 +5,12 @@
 import * as Core from "@alicloud/pop-core";
 import { inject, injectable } from "inversify";
 
-import {
-  buildObjectDirectoryString,
-  ExpiryOptions,
-} from "@itwin/object-storage-core/lib/common/internal";
+import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
+  ExpiryOptions,
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";

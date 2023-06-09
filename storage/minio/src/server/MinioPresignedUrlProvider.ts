@@ -5,13 +5,11 @@
 import { inject, injectable } from "inversify";
 import { Client } from "minio";
 
-import {
-  buildObjectKey,
-  ExpiryOptions,
-} from "@itwin/object-storage-core/lib/common/internal";
+import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
+  ExpiryOptions,
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";

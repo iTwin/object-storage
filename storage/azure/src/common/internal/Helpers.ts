@@ -14,8 +14,9 @@ import {
   assertTransferConfig,
   buildObjectKey,
   defaultExpiresInSeconds,
-  ExpiryOptions,
 } from "@itwin/object-storage-core/lib/common/internal";
+
+import { ExpiryOptions } from "@itwin/object-storage-core";
 
 import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
 

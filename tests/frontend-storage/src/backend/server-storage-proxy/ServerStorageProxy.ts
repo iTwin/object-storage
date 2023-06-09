@@ -7,12 +7,11 @@ import * as path from "path";
 import * as express from "express";
 import { Container } from "inversify";
 
-import { ExpiryOptions } from "@itwin/object-storage-core/lib/common/internal";
-
 import { Bindable } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
+  ExpiryOptions,
 } from "@itwin/object-storage-core";
 
 import * as Common from "./Common";

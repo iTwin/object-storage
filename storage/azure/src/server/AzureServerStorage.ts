@@ -13,7 +13,6 @@ import {
   assertRelativeDirectory,
   buildObjectKey,
   buildObjectReference,
-  ExpiryOptions,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
@@ -24,6 +23,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  ExpiryOptions,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
