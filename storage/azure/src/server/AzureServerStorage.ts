@@ -225,7 +225,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiry: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -245,7 +245,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadUrl(
     reference: ObjectReference,
-    expiry: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
@@ -265,7 +265,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiry: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -288,7 +288,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiry: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 

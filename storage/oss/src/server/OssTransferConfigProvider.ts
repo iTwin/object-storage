@@ -38,7 +38,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -62,7 +62,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: getExpiresInSeconds(options),
+        DurationSeconds: getExpiresInSeconds(expiry),
       },
       {
         method: "POST",
@@ -85,7 +85,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -109,7 +109,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
         Policy: JSON.stringify(policy),
-        DurationSeconds: getExpiresInSeconds(options),
+        DurationSeconds: getExpiresInSeconds(expiry),
       },
       {
         method: "POST",

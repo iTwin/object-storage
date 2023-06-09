@@ -113,22 +113,22 @@ export abstract class ServerStorage
 
   public abstract getDownloadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string>;
   public abstract getUploadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string>;
 
   /** Azure will only be limited to baseDirectory. */
   public abstract getDownloadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
   /** Azure will only be limited to baseDirectory. */
   public abstract getUploadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 
   /**
@@ -142,21 +142,21 @@ export abstract class ServerStorage
 export interface PresignedUrlProvider {
   getDownloadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string>;
   getUploadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string>;
 }
 
 export interface TransferConfigProvider {
   getDownloadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
   getUploadConfig(
     directory: ObjectDirectory,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 }

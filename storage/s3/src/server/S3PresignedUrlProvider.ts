@@ -37,7 +37,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -47,7 +47,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: getExpiresInSeconds(options),
+        expiresIn: getExpiresInSeconds(expiry),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -55,7 +55,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -65,7 +65,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: getExpiresInSeconds(options),
+        expiresIn: getExpiresInSeconds(expiry),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */

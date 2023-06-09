@@ -30,23 +30,23 @@ export class MinioPresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedGetObject(
       this._bucket,
       buildObjectKey(reference),
-      getExpiresInSeconds(options)
+      getExpiresInSeconds(expiry)
     );
   }
 
   public async getUploadUrl(
     reference: ObjectReference,
-    options?: ExpiryOptions
+    expiry?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedPutObject(
       this._bucket,
       buildObjectKey(reference),
-      getExpiresInSeconds(options)
+      getExpiresInSeconds(expiry)
     );
   }
 }
