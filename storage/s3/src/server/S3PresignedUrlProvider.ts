@@ -13,11 +13,14 @@ import { inject, injectable } from "inversify";
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 
 import {
+  ExpiryOptions,
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
 
 import { Types } from "../common";
+
+import { getExpiresInSeconds } from "./internal";
 
 @injectable()
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
@@ -32,7 +35,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -42,7 +45,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: expiresInSeconds,
+        expiresIn: getExpiresInSeconds(expiry),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -50,7 +53,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string> {
     /* eslint-disable @typescript-eslint/naming-convention */
     return getSignedUrl(
@@ -60,7 +63,7 @@ export class S3PresignedUrlProvider implements PresignedUrlProvider {
         Key: buildObjectKey(reference),
       }),
       {
-        expiresIn: expiresInSeconds,
+        expiresIn: getExpiresInSeconds(expiry),
       }
     );
     /* eslint-enable @typescript-eslint/naming-convention */

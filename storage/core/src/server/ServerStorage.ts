@@ -17,7 +17,7 @@ import {
   TransferConfig,
 } from "../common";
 
-import { MultipartUploadData, TransferData } from "./Interfaces";
+import { ExpiryOptions, MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage
@@ -112,22 +112,22 @@ export abstract class ServerStorage
 
   public abstract getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string>;
   public abstract getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string>;
 
   /** Azure will only be limited to baseDirectory. */
   public abstract getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
   /** Azure will only be limited to baseDirectory. */
   public abstract getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 
   /**
@@ -141,21 +141,21 @@ export abstract class ServerStorage
 export interface PresignedUrlProvider {
   getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string>;
   getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<string>;
 }
 
 export interface TransferConfigProvider {
   getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
   getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 }

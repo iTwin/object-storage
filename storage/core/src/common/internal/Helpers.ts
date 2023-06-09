@@ -15,6 +15,8 @@ import {
   UrlTransferInput,
 } from "../Interfaces";
 
+export const defaultExpiresInSeconds = 60 * 60;
+
 export function metadataToHeaders(
   metadata: Metadata,
   prefix: string

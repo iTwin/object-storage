@@ -8,7 +8,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import { TransferConfig } from "@itwin/object-storage-core/lib/common";
 
 import { S3TransferConfig } from "../../../common";
-import { assertS3TransferConfig } from "../../../common/internal/Helpers";
+import { assertS3TransferConfig } from "../../../common/internal";
 
 use(chaiAsPromised);
 

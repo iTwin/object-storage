@@ -11,6 +11,7 @@ import { Bindable } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
+  ExpiryOptions,
 } from "@itwin/object-storage-core";
 
 import * as Common from "./Common";
@@ -109,7 +110,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetDownloadUrlRequest;
         const result = await serverStorage.getDownloadUrl(
           body.reference,
-          body.expiresInSeconds
+          this.parseOptions(body.options)
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeText);
         response.status(200).send(result);
@@ -120,7 +121,7 @@ export class ServerStorageProxy extends Bindable {
       const body = request.body as Common.GetUploadUrlRequest;
       const result = await serverStorage.getUploadUrl(
         body.reference,
-        body.expiresInSeconds
+        this.parseOptions(body.options)
       );
       response.setHeader(this._contentTypeHeader, this._contentTypeText);
       response.status(200).send(result);
@@ -132,7 +133,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetDownloadConfigRequest;
         const result = await serverStorage.getDownloadConfig(
           body.directory,
-          body.expiresInSeconds
+          this.parseOptions(body.options)
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
@@ -145,7 +146,7 @@ export class ServerStorageProxy extends Bindable {
         const body = request.body as Common.GetUploadConfigRequest;
         const result = await serverStorage.getUploadConfig(
           body.directory,
-          body.expiresInSeconds
+          this.parseOptions(body.options)
         );
         response.setHeader(this._contentTypeHeader, this._contentTypeJson);
         response.status(200).send(result);
@@ -158,5 +159,23 @@ export class ServerStorageProxy extends Bindable {
         `Test storage server started at http://localhost:${config.port}`
       );
     });
+  }
+
+  private parseOptions(options?: {
+    expiresInSeconds?: number;
+    expiresOn?: number;
+  }): ExpiryOptions | undefined {
+    if (options === undefined) return options;
+    if (
+      options.expiresInSeconds !== undefined &&
+      options.expiresOn !== undefined
+    )
+      throw new Error(
+        "Both expiresInSeconds and expiresOn cannot be specified"
+      );
+    return {
+      ...options,
+      expiresOn: options.expiresOn ? new Date(options.expiresOn) : undefined,
+    } as ExpiryOptions;
   }
 }

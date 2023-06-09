@@ -56,3 +56,13 @@ export interface UploadInMultiplePartsInput {
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
 }
+
+export type ExpiryOptions =
+  | {
+      expiresInSeconds?: never;
+      expiresOn?: Date;
+    }
+  | {
+      expiresOn?: never;
+      expiresInSeconds?: number;
+    };

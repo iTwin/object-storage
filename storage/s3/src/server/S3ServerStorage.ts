@@ -16,6 +16,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  ExpiryOptions,
   Metadata,
   MultipartUploadData,
   MultipartUploadOptions,
@@ -199,50 +200,38 @@ export class S3ServerStorage extends ServerStorage {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
-    return this._presignedUrlProvider.getDownloadUrl(
-      reference,
-      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
+    return this._presignedUrlProvider.getDownloadUrl(reference, options);
   }
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<string> {
     assertRelativeDirectory(reference.relativeDirectory);
 
-    return this._presignedUrlProvider.getUploadUrl(
-      reference,
-      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
+    return this._presignedUrlProvider.getUploadUrl(reference, options);
   }
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<TransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
-    return this._transferConfigProvider.getDownloadConfig(
-      directory,
-      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
+    return this._transferConfigProvider.getDownloadConfig(directory, options);
   }
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<TransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
-    return this._transferConfigProvider.getUploadConfig(
-      directory,
-      expiresInSeconds ? Math.floor(expiresInSeconds) : undefined
-    );
+    return this._transferConfigProvider.getUploadConfig(directory, options);
   }
 
   public releaseResources(): void {

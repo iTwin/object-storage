@@ -6,8 +6,10 @@ import { inject, injectable } from "inversify";
 import { Client } from "minio";
 
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
+import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
+  ExpiryOptions,
   ObjectReference,
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
@@ -26,23 +28,23 @@ export class MinioPresignedUrlProvider implements PresignedUrlProvider {
 
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiresInSeconds = 3600
+    expiry?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedGetObject(
       this._bucket,
       buildObjectKey(reference),
-      expiresInSeconds
+      getExpiresInSeconds(expiry)
     );
   }
 
   public async getUploadUrl(
     reference: ObjectReference,
-    expiresInSeconds = 3600
+    expiry?: ExpiryOptions
   ): Promise<string> {
     return this._client.presignedPutObject(
       this._bucket,
       buildObjectKey(reference),
-      expiresInSeconds
+      getExpiresInSeconds(expiry)
     );
   }
 }

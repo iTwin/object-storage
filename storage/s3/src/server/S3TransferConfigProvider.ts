@@ -9,12 +9,14 @@ import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/commo
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
+  ExpiryOptions,
   ObjectDirectory,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
 import { S3TransferConfig, Types } from "../common";
 
+import { getExpiresInSeconds } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 
 @injectable()
@@ -33,7 +35,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
 
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -53,7 +55,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
 
     const { Credentials } = await this._client.send(
       new AssumeRoleCommand({
-        DurationSeconds: expiresInSeconds,
+        DurationSeconds: getExpiresInSeconds(options),
         Policy: JSON.stringify(policy),
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
@@ -76,7 +78,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
 
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiresInSeconds?: number
+    options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -96,7 +98,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
 
     const { Credentials } = await this._client.send(
       new AssumeRoleCommand({
-        DurationSeconds: expiresInSeconds,
+        DurationSeconds: getExpiresInSeconds(options),
         Policy: JSON.stringify(policy),
         RoleArn: this._config.roleArn,
         RoleSessionName: getRandomString(),
