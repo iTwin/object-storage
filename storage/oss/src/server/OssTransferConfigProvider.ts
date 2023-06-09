@@ -29,6 +29,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public constructor(
     client: Core,
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.S3Server.config) config: S3ServerStorageConfig
   ) {
     this._config = config;

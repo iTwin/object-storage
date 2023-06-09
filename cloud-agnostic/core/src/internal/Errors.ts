@@ -11,7 +11,7 @@ export class DependencyError extends Error {
     super(
       `${dependencyType} ${message}.${
         registered && registered.length > 0
-          ? ` Registered dependencies: ${registered}`
+          ? ` Registered dependencies: ${registered.join(", ")}`
           : ""
       }`
     );

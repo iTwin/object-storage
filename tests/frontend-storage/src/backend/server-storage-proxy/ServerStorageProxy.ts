@@ -39,12 +39,14 @@ export class ServerStorageProxy extends Bindable {
     app.use(express.static(publicDir));
     app.use(express.json());
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     app.post(Common.DOWNLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DownloadRequest;
       const result = await serverStorage.download(body.reference, "buffer");
       response.setHeader(this._contentTypeHeader, this._contentTypeStream);
       response.status(200).send(result);
     });
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     app.post(Common.UPLOAD_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.UploadRequest;
       const dataBuffer = Buffer.from(body.data);
@@ -53,6 +55,7 @@ export class ServerStorageProxy extends Bindable {
     });
     app.post(
       Common.CREATE_BASE_DIRECTORY_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.CreateBaseDirectoryRequest;
         await serverStorage.createBaseDirectory(body.directory);
@@ -61,12 +64,14 @@ export class ServerStorageProxy extends Bindable {
     );
     app.post(
       Common.DELETE_BASE_DIRECTORY_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.DeleteBaseDirectoryRequest;
         await serverStorage.deleteBaseDirectory(body.directory);
         response.status(204).send();
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     app.post(Common.DELETE_OBJECT_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.DeleteObjectRequest;
       await serverStorage.deleteObject(body.reference);
@@ -74,6 +79,7 @@ export class ServerStorageProxy extends Bindable {
     });
     app.post(
       Common.BASE_DIRECTORY_EXISTS_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.BaseDirectoryExistsRequest;
         const result = await serverStorage.baseDirectoryExists(body.directory);
@@ -81,6 +87,7 @@ export class ServerStorageProxy extends Bindable {
         response.status(200).send(result);
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     app.post(Common.OBJECT_EXISTS_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.ObjectExistsRequest;
       const result = await serverStorage.objectExists(body.reference);
@@ -89,6 +96,7 @@ export class ServerStorageProxy extends Bindable {
     });
     app.post(
       Common.GET_OBJECT_PROPERTIES_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.GetObjectPropertiesRequest;
         const result = await serverStorage.getObjectProperties(body.reference);
@@ -98,6 +106,7 @@ export class ServerStorageProxy extends Bindable {
     );
     app.post(
       Common.GET_DOWNLOAD_URL_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.GetDownloadUrlRequest;
         const result = await serverStorage.getDownloadUrl(
@@ -108,6 +117,7 @@ export class ServerStorageProxy extends Bindable {
         response.status(200).send(result);
       }
     );
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     app.post(Common.GET_UPLOAD_URL_REQUEST_PATH, async (request, response) => {
       const body = request.body as Common.GetUploadUrlRequest;
       const result = await serverStorage.getUploadUrl(
@@ -119,6 +129,7 @@ export class ServerStorageProxy extends Bindable {
     });
     app.post(
       Common.GET_DOWNLOAD_CONFIG_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.GetDownloadConfigRequest;
         const result = await serverStorage.getDownloadConfig(
@@ -131,6 +142,7 @@ export class ServerStorageProxy extends Bindable {
     );
     app.post(
       Common.GET_UPLOAD_CONFIG_REQUEST_PATH,
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (request, response) => {
         const body = request.body as Common.GetUploadConfigRequest;
         const result = await serverStorage.getUploadConfig(

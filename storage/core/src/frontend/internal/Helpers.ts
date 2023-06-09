@@ -30,7 +30,11 @@ export async function streamToTransferTypeFrontend(
       return stream;
 
     default:
-      throw new Error(`Type '${transferType}' is not supported`);
+      throw new Error(
+        `Type '${
+          transferType === undefined ? "undefined" : transferType
+        }' is not supported`
+      );
   }
 }
 
@@ -50,7 +54,11 @@ export async function downloadFromUrlFrontend(
       const blobResponse = await axios.get(url, { responseType: "blob" });
       return (blobResponse.data as Blob).stream();
     default:
-      throw new Error(`Type '${transferType}' is not supported`);
+      throw new Error(
+        `Type '${
+          transferType === undefined ? "undefined" : transferType
+        }' is not supported`
+      );
   }
 }
 

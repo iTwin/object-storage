@@ -17,12 +17,9 @@ export function createMinioS3ClientFrontend(config: {
 }): S3Client {
   const { baseUrl, region, accessKey, secretKey, sessionToken } = config;
 
-  // https://github.com/aws/aws-sdk-js-v3/issues/3660
   const endpointUrl = new URL(baseUrl);
   const endpoint = {
-    protocol: endpointUrl.protocol.slice(0, -1), // "http:" -> "http"
-    hostname: `${endpointUrl.hostname}:${endpointUrl.port}`,
-    path: endpointUrl.pathname,
+    url: endpointUrl,
   };
 
   return new S3Client({

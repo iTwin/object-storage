@@ -3,18 +3,27 @@ require("@rushstack/eslint-patch/modern-module-resolution");
 module.exports = {
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@itwin",
-    "mocha"
+    "mocha",
+    "@typescript-eslint",
+    "import",
+    "deprecation"
   ],
   "extends": [
-    "plugin:@itwin/itwinjs-recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
   ],
   "parserOptions": {
     "project": "tsconfig.json",
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/no-unused-vars": ["error",
+      {
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_|inject|injectable",
+      }],
     "@itwin/no-internal-barrel-imports": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "warn",
