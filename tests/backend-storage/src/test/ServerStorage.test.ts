@@ -430,7 +430,9 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
       );
       const queriedSubDirectory1 = queriedDirectories.find(
-        (ref) => ref.baseDirectory === `${testDirectory1.baseDirectory}/test`
+        (ref) =>
+          ref.baseDirectory ===
+          `${testDirectory1.baseDirectory.baseDirectory}/test`
       );
       expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
       expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
@@ -470,7 +472,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.deleteObject.name}()`, async () => {
+  describe(`${serverStorage.deleteObject.name}()`, () => {
     it("should delete object", async () => {
       const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();

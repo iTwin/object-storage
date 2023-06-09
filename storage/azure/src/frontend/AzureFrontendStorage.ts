@@ -57,6 +57,7 @@ export class AzureFrontendStorage extends FrontendStorage {
       case "stream":
         return downloadBlob.stream();
       default:
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new Error(`Transfer type ${input.transferType} is unsupported`);
     }
   }

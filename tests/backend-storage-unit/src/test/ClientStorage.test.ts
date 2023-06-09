@@ -52,7 +52,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${clientStorage.upload.name}()`, async () => {
+  describe(`${clientStorage.upload.name}()`, () => {
     it("should throw if relativeDirectory is invalid (buffer)", async () => {
       await testRelativeDirectoryValidation(async () =>
         clientStorage.upload({
@@ -81,7 +81,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${clientStorage.uploadInMultipleParts.name}()`, async () => {
+  describe(`${clientStorage.uploadInMultipleParts.name}()`, () => {
     it("should throw if relativeDirectory is invalid (stream)", async () => {
       await testRelativeDirectoryValidation(async () =>
         clientStorage.uploadInMultipleParts({

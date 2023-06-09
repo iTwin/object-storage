@@ -32,7 +32,11 @@ export class FrontendServerStorageProxy {
       })
       .catch((error: AxiosError) => {
         throw new Error(
-          `${FrontendServerStorageProxy.name} ERROR: ${error.response?.status} "${url}"`
+          `${FrontendServerStorageProxy.name} ERROR: ${
+            error.response?.status === undefined
+              ? "undefined"
+              : error.response?.status
+          } "${url}"`
         );
       });
   }

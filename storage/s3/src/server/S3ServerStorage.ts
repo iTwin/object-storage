@@ -51,8 +51,10 @@ export class S3ServerStorage extends ServerStorage {
 
   public constructor(
     s3Client: S3ClientWrapper,
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.Server.presignedUrlProvider)
     presignedUrlProvider: PresignedUrlProvider,
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.Server.transferConfigProvider)
     transferConfigProvider: TransferConfigProvider
   ) {

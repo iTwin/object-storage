@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { expect } from "chai";
 import { Container } from "inversify";
-import { it } from "mocha";
 
 import { Dependency, DependencyConfig } from "@itwin/cloud-agnostic-core";
 import { ServerStorageDependency } from "@itwin/object-storage-core";

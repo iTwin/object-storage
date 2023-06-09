@@ -13,6 +13,8 @@
     "types": [
       "cypress"
     ],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "inlineSources": false
   }
 }

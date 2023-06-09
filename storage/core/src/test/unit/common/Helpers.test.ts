@@ -112,8 +112,10 @@ describe("Helper functions", () => {
     });
 
     [undefined, "", "foo", "foo/bar", "foo/bar/baz"].forEach(
-      (relativeDirectory) => {
-        it(`should not throw if relative directory is valid (${relativeDirectory})`, () => {
+      (relativeDirectory: string | undefined) => {
+        it(`should not throw if relative directory is valid (${
+          relativeDirectory === undefined ? "undefined" : relativeDirectory
+        })`, () => {
           const testedFunction = () =>
             assertRelativeDirectory(relativeDirectory);
           expect(testedFunction).to.not.throw();

@@ -18,6 +18,7 @@ export class MinioPresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: Client;
   private readonly _bucket: string;
 
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   public constructor(client: Client, @inject(Types.bucket) bucket: string) {
     this._client = client;
     this._bucket = bucket;

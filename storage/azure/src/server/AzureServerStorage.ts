@@ -52,6 +52,7 @@ export class AzureServerStorage extends ServerStorage {
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
+    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.AzureServer.config) config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {
@@ -220,6 +221,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadUrl(
     reference: ObjectReference,
     expiresInSeconds = 3600
@@ -239,6 +241,7 @@ export class AzureServerStorage extends ServerStorage {
     return `${blobClient.url}?${parameters}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadUrl(
     reference: ObjectReference,
     expiresInSeconds = 3600
@@ -258,6 +261,7 @@ export class AzureServerStorage extends ServerStorage {
     return `${blobClient.url}?${parameters}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
@@ -280,6 +284,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadConfig(
     directory: ObjectDirectory,
     expiresInSeconds = 3600
