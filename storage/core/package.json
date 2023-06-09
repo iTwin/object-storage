@@ -52,6 +52,7 @@
     "cspell": "~5.18.5",
     "cypress": "^12.13.0",
     "eslint": "^8.42.0",
+    "inversify": "^6.0.1",
     "mocha": "~10.2.0",
     "nyc": "^14.0.0",
     "reflect-metadata": "~0.1.13",
