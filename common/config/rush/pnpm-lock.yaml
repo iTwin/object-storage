@@ -47,7 +47,7 @@ importers:
       '@itwin/object-storage-azure': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       cspell: ~5.18.5
       eslint: ^8.42.0
       inversify: ^6.0.1
@@ -83,7 +83,7 @@ importers:
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       '@types/sinon': ~10.0.11
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
@@ -144,7 +144,7 @@ importers:
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       axios: ~0.27.2
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
@@ -196,7 +196,7 @@ importers:
       '@types/chai-as-promised': ^7.1.2
       '@types/minio': ~7.0.11
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       '@types/sinon': ~10.0.11
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
@@ -267,7 +267,7 @@ importers:
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
       cspell: ~5.18.5
@@ -333,7 +333,7 @@ importers:
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       '@types/sinon': ~10.0.11
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
@@ -390,7 +390,7 @@ importers:
       '@types/chai-as-promised': ^7.1.2
       '@types/fs-extra': ~9.0.13
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       '@types/yargs': ~15.0.5
       abort-controller: ~3.0.0
       chai: ^4.2.0
@@ -436,7 +436,7 @@ importers:
       '@types/chai': ^4.1.7
       '@types/chai-as-promised': ^7.1.2
       '@types/mocha': ~10.0.1
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       chai: ^4.2.0
       chai-as-promised: ^7.1.1
       cspell: ~5.18.5
@@ -471,7 +471,7 @@ importers:
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
       '@types/express': ~4.17.13
-      '@types/node': ~18.11.18
+      '@types/node': ^18.11.18
       axios: ~0.27.2
       cross-env: ~7.0.3
       cspell: ~5.18.5
