@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-oss",
-  "version": "2.0.0-dev.1",
+  "version": "2.0.0-dev.2",
   "description": "Object storage implementation using OSS",
   "keywords": [
     "Bentley",
