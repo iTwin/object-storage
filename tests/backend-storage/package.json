@@ -46,7 +46,7 @@
     "fs-extra": "~10.1.0",
     "inversify": "^6.0.1",
     "mocha": "~10.2.0",
-    "reflect-metadata": "~0.1.13"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",

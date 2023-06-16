@@ -36,7 +36,7 @@
     "@itwin/object-storage-azure": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
     "inversify": "^6.0.1",
-    "reflect-metadata": "~0.1.13"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
