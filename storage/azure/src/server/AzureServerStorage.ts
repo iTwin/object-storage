@@ -6,7 +6,7 @@ import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { RestError } from "@azure/storage-blob";
+import { ContainerItem, RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
 import {
@@ -129,16 +129,21 @@ export class AzureServerStorage extends ServerStorage {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async listDirectories(): Promise<BaseDirectory[]> {
-    const directoryList = this._client.listContainers();
-    const directories = [];
-    for await (const directory of directoryList) {
-      directories.push(directory);
-    }
+  public async listDirectoriesAsync(
+    maxPageSize = 1000,
+    continuationToken?: string
+  ): Promise<[BaseDirectory[], string]> {
+    const iterator = this._client.listContainers().byPage({
+      maxPageSize: maxPageSize,
+      continuationToken: continuationToken,
+    });
 
-    return directories.map(
-      (directory) => ({ baseDirectory: directory.name } as BaseDirectory)
+    const response = (await iterator.next()).value;
+    const directories = response.containerItems.map(
+      (directory: ContainerItem) =>
+        ({ baseDirectory: directory.name } as BaseDirectory)
     );
+    return [directories, response.continuationToken];
   }
 
   public async listObjects(
