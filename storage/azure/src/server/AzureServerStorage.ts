@@ -6,14 +6,10 @@ import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { ContainerItem, RestError } from "@azure/storage-blob";
+import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
-import {
-  assertRelativeDirectory,
-  buildObjectKey,
-  buildObjectReference,
-} from "@itwin/object-storage-core/lib/common/internal";
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   assertLocalFile,
@@ -30,6 +26,7 @@ import {
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
+  EntityPageListIterator,
   ServerStorage,
   TransferData,
   TransferType,
@@ -129,42 +126,30 @@ export class AzureServerStorage extends ServerStorage {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async listDirectoriesAsync(
-    maxPageSize = 1000,
-    continuationToken?: string
-  ): Promise<[BaseDirectory[], string]> {
-    const iterator = this._client.listContainers().byPage({
-      maxPageSize: maxPageSize,
-      continuationToken: continuationToken,
-    });
-
-    const response = (await iterator.next()).value;
-    const directories = response.containerItems.map(
-      (directory: ContainerItem) =>
-        ({ baseDirectory: directory.name } as BaseDirectory)
-    );
-    return [directories, response.continuationToken];
+  public getListDirectoriesPagedIterator(
+    maxPageSize = 1000
+  ): EntityPageListIterator<BaseDirectory> {
+    const pageIterator: EntityPageListIterator<BaseDirectory> =
+      new EntityPageListIterator(() =>
+        this._client.getDirectoriesNextPage({ maxPageSize: maxPageSize })
+      );
+    return pageIterator;
   }
 
-  public async listObjects(
-    directory: BaseDirectory
-  ): Promise<ObjectReference[]> {
-    const containerClient = this._client.getContainerClient(
-      directory.baseDirectory
-    );
-    const iter = containerClient.listBlobsFlat();
-
-    const names = Array<string>();
-    for await (const item of iter) names.push(item.name);
-
-    return names.map((name) =>
-      buildObjectReference(
-        buildObjectKey({
-          ...directory,
-          objectName: name,
+  public getListObjectsPagedIterator(
+    directory: BaseDirectory,
+    options: {
+      maxPageSize: 1000;
+      includeEmptyFiles?: boolean;
+    }
+  ): EntityPageListIterator<ObjectReference> {
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() =>
+        this._client.getObjectsNextPage(directory, {
+          maxPageSize: options.maxPageSize,
         })
-      )
-    );
+      );
+    return pageIterator;
   }
 
   /**
@@ -313,7 +298,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void {}
+  public releaseResources(): void { }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

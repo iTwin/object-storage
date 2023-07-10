@@ -31,6 +31,7 @@ import {
   MultipartUploadData,
   MultipartUploadOptions,
   ObjectProperties,
+  EntityCollectionPage,
   ObjectReference,
   TransferData,
 } from "@itwin/object-storage-core";
@@ -113,10 +114,10 @@ export class S3ClientWrapper {
     await upload.done();
   }
 
-  public async listDirectoriesPage(options: {
+  public async getDirectoriesNextPage(options: {
     maxPageSize: number;
     continuationToken?: string;
-  }): Promise<[BaseDirectory[], string]> {
+  }): Promise<EntityCollectionPage<BaseDirectory>> {
     /* eslint-disable @typescript-eslint/naming-convention */
     const response = await this._client.send(
       new ListObjectsV2Command({
@@ -136,32 +137,58 @@ export class S3ClientWrapper {
       ) ?? [];
     const continuationToken = response.NextContinuationToken;
     const uniqueBaseDirectories = Array.from(new Set(directories).values());
-    return [uniqueBaseDirectories, continuationToken ? continuationToken : ""];
+    const ret: EntityCollectionPage<BaseDirectory> = {
+      entities: uniqueBaseDirectories,
+      next:
+        continuationToken == undefined
+          ? undefined
+          : () =>
+            this.getDirectoriesNextPage({
+              maxPageSize: options.maxPageSize,
+              continuationToken: continuationToken,
+            }),
+    };
+    return ret;
   }
 
-  public async listObjects(
+  public async getObjectsNextPage(
     directory: BaseDirectory,
-    options?: {
-      maxResults?: number;
+    options: {
+      maxPageSize: number;
+      continuationToken?: string;
       includeEmptyFiles?: boolean;
     }
-  ): Promise<ObjectReference[]> {
+  ): Promise<EntityCollectionPage<ObjectReference>> {
     /* eslint-disable @typescript-eslint/naming-convention */
-    const { Contents } = await this._client.send(
+    const response = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
         Prefix: directory.baseDirectory,
-        MaxKeys: options?.maxResults,
+        ContinuationToken: options.continuationToken,
+        MaxKeys: options.maxPageSize,
       })
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
-
-    const references =
-      Contents?.map((object) => buildObjectReference(object.Key!)) ?? [];
-    if (options?.includeEmptyFiles) return references;
-
-    const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
-    return nonEmptyReferences;
+    /* eslint-disable @typescript-eslint/naming-convention */
+    let references =
+      response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
+      [];
+    const continuationToken = response.NextContinuationToken;
+    if (!options?.includeEmptyFiles) {
+      references = references.filter((ref) => !!ref.objectName);
+    }
+    const ret: EntityCollectionPage<ObjectReference> = {
+      entities: references,
+      next:
+        continuationToken == undefined
+          ? undefined
+          : () =>
+            this.getObjectsNextPage(directory, {
+              maxPageSize: options.maxPageSize,
+              continuationToken: continuationToken,
+              includeEmptyFiles: options.includeEmptyFiles,
+            }),
+    };
+    return ret;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
@@ -233,14 +260,12 @@ export class S3ClientWrapper {
   }
 
   public async prefixExists(directory: BaseDirectory): Promise<boolean> {
-    const filesWithPrefix: ObjectReference[] = await this.listObjects(
-      directory,
-      {
-        maxResults: 1,
+    const filesWithPrefix: EntityCollectionPage<ObjectReference> =
+      await this.getObjectsNextPage(directory, {
+        maxPageSize: 1,
         includeEmptyFiles: true,
-      }
-    );
-    return filesWithPrefix.length !== 0;
+      });
+    return filesWithPrefix.entities.length !== 0;
   }
 
   public releaseResources(): void {

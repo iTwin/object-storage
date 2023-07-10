@@ -17,12 +17,16 @@ import {
   TransferConfig,
 } from "../common";
 
-import { ExpiryOptions, MultipartUploadData, TransferData } from "./Interfaces";
+import {
+  ExpiryOptions,
+  MultipartUploadData,
+  TransferData,
+  EntityPageListIterator,
+} from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage
-  implements PresignedUrlProvider, TransferConfigProvider
-{
+  implements PresignedUrlProvider, TransferConfigProvider {
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"
@@ -58,15 +62,10 @@ export abstract class ServerStorage
   public async listDirectories(): Promise<BaseDirectory[]> {
     let allDirectories: BaseDirectory[] = [];
     const maxPageSize = 1000;
-    let continuationToken: string | undefined = undefined;
-    while (continuationToken == undefined && continuationToken != "") {
-      const res: [BaseDirectory[], string] = await this.listDirectoriesAsync(
-        maxPageSize,
-        continuationToken
-      );
-      allDirectories = [...allDirectories, ...res[0]];
-      continuationToken = res[1];
-    }
+    const directoriesIterator =
+      this.getListDirectoriesPagedIterator(maxPageSize);
+    for await (const entityPage of directoriesIterator)
+      allDirectories = [...allDirectories, ...entityPage];
     return allDirectories;
   }
 
@@ -74,19 +73,35 @@ export abstract class ServerStorage
    * Get list of directories
    * @param maxPageSize Max number of directories returned in the page 1000
    * by default
-   * @param continuationToken Token to continuate current pagination
-   * (not needed in first call)
    * @returns {Promise<[BaseDirectory[], string]>} Tuple of List of directories
    * and continuation token, token is empty if all object were listed
    */
-  public abstract listDirectoriesAsync(
-    maxPageSize: number,
-    continuationToken?: string
-  ): Promise<[BaseDirectory[], string]>;
+  public abstract getListDirectoriesPagedIterator(
+    maxPageSize: number
+  ): EntityPageListIterator<BaseDirectory>;
 
-  public abstract listObjects(
-    directory: BaseDirectory
-  ): Promise<ObjectReference[]>;
+  public async listObjects(
+    directory: BaseDirectory,
+    listEmptyFiles = false
+  ): Promise<ObjectReference[]> {
+    let allObjects: ObjectReference[] = [];
+    const maxPageSize = 1000;
+    const objectsIterator = this.getListObjectsPagedIterator(directory, {
+      maxPageSize: maxPageSize,
+      includeEmptyFiles: listEmptyFiles,
+    });
+    for await (const entityPage of objectsIterator)
+      allObjects = [...allObjects, ...entityPage];
+    return allObjects;
+  }
+
+  public abstract getListObjectsPagedIterator(
+    directory: BaseDirectory,
+    options: {
+      maxPageSize: number;
+      includeEmptyFiles?: boolean;
+    }
+  ): EntityPageListIterator<ObjectReference>;
 
   /**
    * @deprecated Use listObjects method instead.

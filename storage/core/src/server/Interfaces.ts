@@ -57,12 +57,56 @@ export interface UploadInMultiplePartsInput {
   options?: MultipartUploadOptions;
 }
 
+/** Abstraction for a single entity page returned by the API. */
+export interface EntityCollectionPage<TEntity> {
+  /** Current page entities. */
+  entities: TEntity[];
+  /** Function to retrieve the next page of the entities. If `undefined` the current page is last. */
+  next?: () => Promise<EntityCollectionPage<TEntity>>;
+}
+
+/** Function to query an entity page. */
+export type EntityPageQueryFunc<TEntity> = () => Promise<
+  EntityCollectionPage<TEntity>
+>;
+
+export class EntityPageListIterator<TEntity>
+  implements AsyncIterableIterator<TEntity[]>
+{
+  private _entityPages: AsyncIterableIterator<TEntity[]>;
+
+  constructor(pageQueryFunc: EntityPageQueryFunc<TEntity>) {
+    this._entityPages = this.queryPages(pageQueryFunc);
+  }
+
+  public [Symbol.asyncIterator](): AsyncIterableIterator<TEntity[]> {
+    return this;
+  }
+
+  public async next(): Promise<IteratorResult<TEntity[]>> {
+    return this._entityPages.next();
+  }
+
+  private async *queryPages(
+    pageQueryFunc: EntityPageQueryFunc<TEntity>
+  ): AsyncIterableIterator<TEntity[]> {
+    let nextPageQueryFunc: EntityPageQueryFunc<TEntity> | undefined =
+      pageQueryFunc;
+
+    while (nextPageQueryFunc) {
+      const entityPage: EntityCollectionPage<TEntity> =
+        await nextPageQueryFunc();
+      nextPageQueryFunc = entityPage.next;
+      yield entityPage.entities;
+    }
+  }
+}
 export type ExpiryOptions =
   | {
-      expiresInSeconds?: never;
-      expiresOn?: Date;
-    }
+    expiresInSeconds?: never;
+    expiresOn?: Date;
+  }
   | {
-      expiresOn?: never;
-      expiresInSeconds?: number;
-    };
+    expiresOn?: never;
+    expiresInSeconds?: number;
+  };

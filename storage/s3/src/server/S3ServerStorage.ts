@@ -29,6 +29,7 @@ import {
   TransferConfigProvider,
   TransferData,
   TransferType,
+  EntityPageListIterator,
   Types,
 } from "@itwin/object-storage-core";
 
@@ -138,21 +139,28 @@ export class S3ServerStorage extends ServerStorage {
     });
   }
 
-  public async listDirectoriesAsync(
-    maxPageSize = 1000,
-    continuationToken?: string
-  ): Promise<[BaseDirectory[], string]> {
-    return this._s3Client.listDirectoriesPage({
-      maxPageSize,
-      continuationToken,
-    });
+  public getListDirectoriesPagedIterator(
+    maxPageSize = 1000
+  ): EntityPageListIterator<BaseDirectory> {
+    const pageIterator: EntityPageListIterator<BaseDirectory> =
+      new EntityPageListIterator(() =>
+        this._s3Client.getDirectoriesNextPage({ maxPageSize: maxPageSize })
+      );
+    return pageIterator;
   }
 
-  /** Max 1000 objects */
-  public async listObjects(
-    directory: BaseDirectory
-  ): Promise<ObjectReference[]> {
-    return this._s3Client.listObjects(directory);
+  public getListObjectsPagedIterator(
+    directory: BaseDirectory,
+    options: {
+      maxPageSize: 1000;
+      includeEmptyFiles?: boolean;
+    }
+  ): EntityPageListIterator<ObjectReference> {
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() =>
+        this._s3Client.getObjectsNextPage(directory, options)
+      );
+    return pageIterator;
   }
 
   /** Max 1000 objects
@@ -166,7 +174,7 @@ export class S3ServerStorage extends ServerStorage {
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
     await Promise.all(
       (
-        await this._s3Client.listObjects(directory, { includeEmptyFiles: true })
+        await this.listObjects(directory, true)
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }

@@ -442,17 +442,17 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  describe(`${serverStorage.listDirectoriesAsync.name}()`, () => {
+  describe(`${serverStorage.getListDirectoriesPagedIterator.name}()`, () => {
     it("should not list more than maxPageSize directories", async () => {
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
       const maxPageSize = 2;
-      const queriedDirectories = await serverStorage.listDirectoriesAsync(
-        maxPageSize
-      );
+      const queriedDirectoriesIterator =
+        serverStorage.getListDirectoriesPagedIterator(maxPageSize);
 
-      expect(queriedDirectories[0].length).to.be.lte(maxPageSize);
+      for await (const entityPage of queriedDirectoriesIterator)
+        expect(entityPage.length).to.be.lte(maxPageSize);
     });
   });
 
