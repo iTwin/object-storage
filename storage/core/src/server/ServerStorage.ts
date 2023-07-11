@@ -26,8 +26,7 @@ import {
 
 @injectable()
 export abstract class ServerStorage
-  implements PresignedUrlProvider, TransferConfigProvider
-{
+  implements PresignedUrlProvider, TransferConfigProvider {
   public abstract download(
     reference: ObjectReference,
     transferType: "buffer"
@@ -72,7 +71,7 @@ export abstract class ServerStorage
    * @param maxPageSize Max number of directories returned in the page 1000
    * by default
    * @returns {EntityPageListIterator<BaseDirectory>} Paged iterator to list
-   * directories with pagesize of maximum size of maxPageSize.
+   * directories.
    */
   public abstract getListDirectoriesPagedIterator(
     maxPageSize: number
@@ -100,10 +99,10 @@ export abstract class ServerStorage
 
   /**
    * Get list of objects iterator
-   * @param maxPageSize Max number of directories returned in the page 1000
+   * @param maxPageSize Max number of objects returned in the page 1000
    * by default
-   * @returns {EntityPageListIterator<BaseDirectory>} Paged iterator to list
-   * objects with pagesize of maximum size of maxPageSize.
+   * @returns {EntityPageListIterator<ObjectReference>} Paged iterator to list
+   * objects.
    */
   public abstract getListObjectsPagedIterator(
     directory: BaseDirectory,
