@@ -63,7 +63,7 @@ export class BlobServiceClientWrapper {
       (directory: ContainerItem) =>
         ({ baseDirectory: directory.name } as BaseDirectory)
     );
-    const ret: EntityCollectionPage<BaseDirectory> = {
+    const page: EntityCollectionPage<BaseDirectory> = {
       entities: directories,
       next:
         response.continuationToken == ""
@@ -74,7 +74,7 @@ export class BlobServiceClientWrapper {
                 continuationToken: response.continuationToken,
               }),
     };
-    return ret;
+    return page;
   }
 
   public async getObjectsNextPage(
@@ -102,7 +102,7 @@ export class BlobServiceClientWrapper {
       )
     );
 
-    const ret: EntityCollectionPage<ObjectReference> = {
+    const page: EntityCollectionPage<ObjectReference> = {
       entities: objects,
       next:
         response.continuationToken == ""
@@ -113,6 +113,6 @@ export class BlobServiceClientWrapper {
                 continuationToken: response.continuationToken,
               }),
     };
-    return ret;
+    return page;
   }
 }

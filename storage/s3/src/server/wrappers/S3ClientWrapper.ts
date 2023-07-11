@@ -137,7 +137,7 @@ export class S3ClientWrapper {
       ) ?? [];
     const continuationToken = response.NextContinuationToken;
     const uniqueBaseDirectories = Array.from(new Set(directories).values());
-    const ret: EntityCollectionPage<BaseDirectory> = {
+    const page: EntityCollectionPage<BaseDirectory> = {
       entities: uniqueBaseDirectories,
       next:
         continuationToken == undefined
@@ -148,7 +148,7 @@ export class S3ClientWrapper {
                 continuationToken: continuationToken,
               }),
     };
-    return ret;
+    return page;
   }
 
   public async getObjectsNextPage(
@@ -176,7 +176,7 @@ export class S3ClientWrapper {
     if (!options?.includeEmptyFiles) {
       references = references.filter((ref) => !!ref.objectName);
     }
-    const ret: EntityCollectionPage<ObjectReference> = {
+    const page: EntityCollectionPage<ObjectReference> = {
       entities: references,
       next:
         continuationToken == undefined
@@ -188,7 +188,7 @@ export class S3ClientWrapper {
                 includeEmptyFiles: options.includeEmptyFiles,
               }),
     };
-    return ret;
+    return page;
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
