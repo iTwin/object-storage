@@ -372,6 +372,54 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
+  describe(`${serverStorage.getListObjectsPagedIterator.name}()`, () => {
+    it("Should list objects without exceeding maxPageSize per page.", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      await createObjectsReferences(testDirectory, 3);
+      const maxPageSize = 2;
+      const queriedObjectsIterator = serverStorage.getListObjectsPagedIterator(
+        testDirectory.baseDirectory,
+        maxPageSize
+      );
+      for await (const entityPage of queriedObjectsIterator)
+        expect(entityPage.length).to.be.lte(maxPageSize);
+    });
+
+    it("Should list created objects without duplicates", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const createdObjects = 3;
+      const references: ObjectReference[] = await createObjectsReferences(
+        testDirectory,
+        createdObjects
+      );
+      const uniqueObjects = new Set<string>();
+      let queriedObjects: ObjectReference[] = [];
+      const maxPageSize = 2;
+      const queriedObjectsIterator = serverStorage.getListObjectsPagedIterator(
+        testDirectory.baseDirectory,
+        maxPageSize
+      );
+
+      for await (const entityPage of queriedObjectsIterator) {
+        entityPage.forEach((entry: ObjectReference) =>
+          uniqueObjects.add(entry.objectName)
+        );
+        queriedObjects = [...queriedObjects, ...entityPage];
+      }
+      expect(uniqueObjects.size).to.be.gte(createdObjects);
+
+      for (const reference of references) {
+        const queriedObject = queriedObjects.find(
+          (ref) => ref.objectName === reference.objectName
+        );
+        expect(queriedObject).to.be.deep.equal(reference);
+      }
+      expect(queriedObjects.length).to.be.equal(uniqueObjects.size);
+    });
+  });
+
   // eslint-disable-next-line deprecation/deprecation
   describe(`${serverStorage.list.name}()`, () => {
     it("should list objects. DEPRECATED", async () => {
@@ -443,16 +491,54 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 
   describe(`${serverStorage.getListDirectoriesPagedIterator.name}()`, () => {
-    it("should not list more than maxPageSize directories", async () => {
+    it("Should list directories without exceeding maxPageSize per page.", async () => {
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
       const maxPageSize = 2;
       const queriedDirectoriesIterator =
         serverStorage.getListDirectoriesPagedIterator(maxPageSize);
-
       for await (const entityPage of queriedDirectoriesIterator)
         expect(entityPage.length).to.be.lte(maxPageSize);
+    });
+
+    it("Should list created directories without duplicates", async () => {
+      const testDirectory1: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory2: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const testDirectory3: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const uniqueDirectories = new Set<string>();
+      let queriedDirectories: BaseDirectory[] = [];
+      const maxPageSize = 2;
+      const queriedDirectoriesIterator =
+        serverStorage.getListDirectoriesPagedIterator(maxPageSize);
+
+      for await (const entityPage of queriedDirectoriesIterator) {
+        entityPage.forEach((entry: BaseDirectory) =>
+          uniqueDirectories.add(entry.baseDirectory)
+        );
+        queriedDirectories = [...queriedDirectories, ...entityPage];
+      }
+      expect(uniqueDirectories.size).to.be.gte(3);
+
+      const queriedDirectory1 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory1.baseDirectory.baseDirectory
+      );
+      const queriedDirectory2 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory2.baseDirectory.baseDirectory
+      );
+      const queriedDirectory3 = queriedDirectories.find(
+        (ref) =>
+          ref.baseDirectory === testDirectory3.baseDirectory.baseDirectory
+      );
+      expect(queriedDirectory1).to.be.deep.equal(testDirectory1.baseDirectory);
+      expect(queriedDirectory2).to.be.deep.equal(testDirectory2.baseDirectory);
+      expect(queriedDirectory3).to.be.deep.equal(testDirectory3.baseDirectory);
+      expect(queriedDirectories.length).to.be.equal(uniqueDirectories.size);
     });
   });
 
@@ -782,21 +868,32 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 });
 
+async function createObjectsReferences(
+  testDirectory: TestRemoteDirectory,
+  n: number
+): Promise<ObjectReference[]> {
+  const references: ObjectReference[] = [];
+  for (let i = 0; i < n; i++) {
+    references.push(
+      await testDirectory.uploadFile(
+        { objectName: `reference${i}` },
+        undefined,
+        undefined
+      )
+    );
+  }
+  return references;
+}
+
 async function serverStorageListTest(
   serviceStorage: ServerStorage,
   func: (directory: BaseDirectory) => Promise<ObjectReference[]>
 ): Promise<void> {
   const testDirectory: TestRemoteDirectory =
     await testDirectoryManager.createNew();
-  const reference1: ObjectReference = await testDirectory.uploadFile(
-    { objectName: "reference1" },
-    undefined,
-    undefined
-  );
-  const reference2: ObjectReference = await testDirectory.uploadFile(
-    { objectName: "reference2" },
-    undefined,
-    undefined
+  const references: ObjectReference[] = await createObjectsReferences(
+    testDirectory,
+    2
   );
 
   const queriedReferences = await func.call(
@@ -804,13 +901,11 @@ async function serverStorageListTest(
     testDirectory.baseDirectory
   );
 
-  expect(queriedReferences.length).to.be.equal(2);
-  const queriedReference1 = queriedReferences.find(
-    (ref) => ref.objectName === reference1.objectName
-  );
-  expect(queriedReference1).to.be.deep.equal(reference1);
-  const queriedReference2 = queriedReferences.find(
-    (ref) => ref.objectName === reference2.objectName
-  );
-  expect(queriedReference2).to.be.deep.equal(reference2);
+  expect(queriedReferences.length).to.be.equal(references.length);
+  for (const reference of references) {
+    const queriedReference = queriedReferences.find(
+      (ref) => ref.objectName === reference.objectName
+    );
+    expect(queriedReference).to.be.deep.equal(reference);
+  }
 }
