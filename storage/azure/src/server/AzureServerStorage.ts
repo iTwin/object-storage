@@ -138,16 +138,11 @@ export class AzureServerStorage extends ServerStorage {
 
   public getListObjectsPagedIterator(
     directory: BaseDirectory,
-    options: {
-      maxPageSize: 1000;
-      includeEmptyFiles?: boolean;
-    }
+    maxPageSize = 1000
   ): EntityPageListIterator<ObjectReference> {
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
-        this._client.getObjectsNextPage(directory, {
-          maxPageSize: options.maxPageSize,
-        })
+        this._client.getObjectsNextPage(directory, { maxPageSize: maxPageSize })
       );
     return pageIterator;
   }

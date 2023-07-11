@@ -61,47 +61,53 @@ export abstract class ServerStorage
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;
 
   public async listDirectories(): Promise<BaseDirectory[]> {
-    let allDirectories: BaseDirectory[] = [];
     const maxPageSize = 1000;
     const directoriesIterator =
       this.getListDirectoriesPagedIterator(maxPageSize);
-    for await (const entityPage of directoriesIterator)
-      allDirectories = [...allDirectories, ...entityPage];
-    return allDirectories;
+    return await this.listAllEntriesFromIterator(directoriesIterator);
   }
 
   /**
-   * Get list of directories
+   * Get list of directories iterator
    * @param maxPageSize Max number of directories returned in the page 1000
    * by default
-   * @returns {Promise<[BaseDirectory[], string]>} Tuple of List of directories
-   * and continuation token, token is empty if all object were listed
+   * @returns {EntityPageListIterator<BaseDirectory>} Paged iterator to list
+   * directories with pagesize of maximum size of maxPageSize.
    */
   public abstract getListDirectoriesPagedIterator(
     maxPageSize: number
   ): EntityPageListIterator<BaseDirectory>;
 
   public async listObjects(
-    directory: BaseDirectory,
-    listEmptyFiles = false
+    directory: BaseDirectory
   ): Promise<ObjectReference[]> {
-    let allObjects: ObjectReference[] = [];
     const maxPageSize = 1000;
-    const objectsIterator = this.getListObjectsPagedIterator(directory, {
-      maxPageSize: maxPageSize,
-      includeEmptyFiles: listEmptyFiles,
-    });
-    for await (const entityPage of objectsIterator)
-      allObjects = [...allObjects, ...entityPage];
-    return allObjects;
+    const objectsIterator = this.getListObjectsPagedIterator(
+      directory,
+      maxPageSize
+    );
+    return await this.listAllEntriesFromIterator(objectsIterator);
   }
 
+  protected async listAllEntriesFromIterator<TEntry>(
+    pageIterator: EntityPageListIterator<TEntry>
+  ): Promise<TEntry[]> {
+    let allEntries: TEntry[] = [];
+    for await (const entityPage of pageIterator)
+      allEntries = [...allEntries, ...entityPage];
+    return allEntries;
+  }
+
+  /**
+   * Get list of objects iterator
+   * @param maxPageSize Max number of directories returned in the page 1000
+   * by default
+   * @returns {EntityPageListIterator<BaseDirectory>} Paged iterator to list
+   * objects with pagesize of maximum size of maxPageSize.
+   */
   public abstract getListObjectsPagedIterator(
     directory: BaseDirectory,
-    options: {
-      maxPageSize: number;
-      includeEmptyFiles?: boolean;
-    }
+    maxPageSize: number
   ): EntityPageListIterator<ObjectReference>;
 
   /**

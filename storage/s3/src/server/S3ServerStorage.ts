@@ -151,14 +151,13 @@ export class S3ServerStorage extends ServerStorage {
 
   public getListObjectsPagedIterator(
     directory: BaseDirectory,
-    options: {
-      maxPageSize: 1000;
-      includeEmptyFiles?: boolean;
-    }
+    maxPageSize = 1000
   ): EntityPageListIterator<ObjectReference> {
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
-        this._s3Client.getObjectsNextPage(directory, options)
+        this._s3Client.getObjectsNextPage(directory, {
+          maxPageSize: maxPageSize,
+        })
       );
     return pageIterator;
   }
@@ -172,9 +171,14 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
+    const options = { maxPageSize: 1000, includeEmptyFiles: true };
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() =>
+        this._s3Client.getObjectsNextPage(directory, options)
+      );
     await Promise.all(
       (
-        await this.listObjects(directory, true)
+        await this.listAllEntriesFromIterator(pageIterator)
       ).map(async (file) => this._s3Client.deleteObject(file))
     );
   }
