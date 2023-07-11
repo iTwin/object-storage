@@ -69,10 +69,10 @@ export class BlobServiceClientWrapper {
         response.continuationToken == ""
           ? undefined
           : () =>
-            this.getDirectoriesNextPage({
-              maxPageSize: options.maxPageSize,
-              continuationToken: response.continuationToken,
-            }),
+              this.getDirectoriesNextPage({
+                maxPageSize: options.maxPageSize,
+                continuationToken: response.continuationToken,
+              }),
     };
     return ret;
   }
@@ -108,10 +108,10 @@ export class BlobServiceClientWrapper {
         response.continuationToken == ""
           ? undefined
           : () =>
-            this.getObjectsNextPage(directory, {
-              maxPageSize: options.maxPageSize,
-              continuationToken: response.continuationToken,
-            }),
+              this.getObjectsNextPage(directory, {
+                maxPageSize: options.maxPageSize,
+                continuationToken: response.continuationToken,
+              }),
     };
     return ret;
   }

@@ -298,7 +298,7 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  public releaseResources(): void { }
+  public releaseResources(): void {}
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

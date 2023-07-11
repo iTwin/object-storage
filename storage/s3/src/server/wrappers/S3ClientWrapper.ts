@@ -143,10 +143,10 @@ export class S3ClientWrapper {
         continuationToken == undefined
           ? undefined
           : () =>
-            this.getDirectoriesNextPage({
-              maxPageSize: options.maxPageSize,
-              continuationToken: continuationToken,
-            }),
+              this.getDirectoriesNextPage({
+                maxPageSize: options.maxPageSize,
+                continuationToken: continuationToken,
+              }),
     };
     return ret;
   }
@@ -182,11 +182,11 @@ export class S3ClientWrapper {
         continuationToken == undefined
           ? undefined
           : () =>
-            this.getObjectsNextPage(directory, {
-              maxPageSize: options.maxPageSize,
-              continuationToken: continuationToken,
-              includeEmptyFiles: options.includeEmptyFiles,
-            }),
+              this.getObjectsNextPage(directory, {
+                maxPageSize: options.maxPageSize,
+                continuationToken: continuationToken,
+                includeEmptyFiles: options.includeEmptyFiles,
+              }),
     };
     return ret;
   }

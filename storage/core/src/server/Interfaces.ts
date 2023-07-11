@@ -103,10 +103,10 @@ export class EntityPageListIterator<TEntity>
 }
 export type ExpiryOptions =
   | {
-    expiresInSeconds?: never;
-    expiresOn?: Date;
-  }
+      expiresInSeconds?: never;
+      expiresOn?: Date;
+    }
   | {
-    expiresOn?: never;
-    expiresInSeconds?: number;
-  };
+      expiresOn?: never;
+      expiresInSeconds?: number;
+    };
