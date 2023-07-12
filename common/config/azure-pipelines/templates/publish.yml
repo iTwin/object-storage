@@ -18,10 +18,8 @@ steps:
     displayName: Ensure consistent version across all packages
     
   - powershell: |
-      # Get the new dev version number. (Hint this is different than the overall version number used elsewhere)
-      $json = Get-Content -Raw -Path cloud-agnostic/core/package.json | ConvertFrom-Json
-      
-      $newVersion = $json.version
+      $cloudAgnosticCorePackageJson = Get-Content -Raw -Path cloud-agnostic/core/package.json | ConvertFrom-Json
+      $newVersion = $cloudAgnosticCorePackageJson.version
       $npmTag = If ($newVersion -match "dev") {"nightly"} Else {"latest"}
       Write-Host "##vso[task.setvariable variable=resolvedNpmTag;]$npmTag"
 
