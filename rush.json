@@ -15,34 +15,34 @@
     {
       "packageName": "@itwin/cloud-agnostic-core",
       "projectFolder": "cloud-agnostic/core",
-      "shouldPublish": true
+      "versionPolicyName": "lockStepVersionObjectStorage"
     },
     {
       "packageName": "@itwin/object-storage-core",
       "projectFolder": "storage/core",
-      "shouldPublish": true
+      "versionPolicyName": "lockStepVersionObjectStorage"
     },
     {
       "packageName": "@itwin/object-storage-s3",
       "projectFolder": "storage/s3",
-      "shouldPublish": true
+      "versionPolicyName": "lockStepVersionObjectStorage"
     },
     {
       "packageName": "@itwin/object-storage-azure",
       "projectFolder": "storage/azure",
-      "shouldPublish": true,
+      "versionPolicyName": "lockStepVersionObjectStorage",
       "tags": [ "integration-tested" ]
     },
     {
       "packageName": "@itwin/object-storage-minio",
       "projectFolder": "storage/minio",
-      "shouldPublish": true,
+      "versionPolicyName": "lockStepVersionObjectStorage",
       "tags": [ "integration-tested" ]
     },
     {
       "packageName": "@itwin/object-storage-oss",
       "projectFolder": "storage/oss",
-      "shouldPublish": true
+      "versionPolicyName": "lockStepVersionObjectStorage"
     },
     {
       "packageName": "@itwin/object-storage-tests-backend",
