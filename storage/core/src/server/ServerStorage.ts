@@ -17,7 +17,12 @@ import {
   TransferConfig,
 } from "../common";
 
-import { ExpiryOptions, MultipartUploadData, TransferData } from "./Interfaces";
+import {
+  ExpiryOptions,
+  MultipartUploadData,
+  TransferData,
+  EntityPageListIterator,
+} from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage
@@ -55,11 +60,55 @@ export abstract class ServerStorage
 
   public abstract createBaseDirectory(directory: BaseDirectory): Promise<void>;
 
-  public abstract listDirectories(): Promise<BaseDirectory[]>;
+  public async listDirectories(): Promise<BaseDirectory[]> {
+    const maxPageSize = 1000;
+    const directoriesIterator =
+      this.getListDirectoriesPagedIterator(maxPageSize);
+    return await this.listAllEntriesFromIterator(directoriesIterator);
+  }
 
-  public abstract listObjects(
+  /**
+   * Get list of directories iterator
+   * @param maxPageSize Max number of directories returned in the page 1000
+   * by default
+   * @returns {EntityPageListIterator<BaseDirectory>} Paged iterator to list
+   * directories.
+   */
+  public abstract getListDirectoriesPagedIterator(
+    maxPageSize: number
+  ): EntityPageListIterator<BaseDirectory>;
+
+  public async listObjects(
     directory: BaseDirectory
-  ): Promise<ObjectReference[]>;
+  ): Promise<ObjectReference[]> {
+    const maxPageSize = 1000;
+    const objectsIterator = this.getListObjectsPagedIterator(
+      directory,
+      maxPageSize
+    );
+    return await this.listAllEntriesFromIterator(objectsIterator);
+  }
+
+  protected async listAllEntriesFromIterator<TEntry>(
+    pageIterator: EntityPageListIterator<TEntry>
+  ): Promise<TEntry[]> {
+    let allEntries: TEntry[] = [];
+    for await (const entityPage of pageIterator)
+      allEntries = [...allEntries, ...entityPage];
+    return allEntries;
+  }
+
+  /**
+   * Get list of objects iterator
+   * @param maxPageSize Max number of objects returned in the page 1000
+   * by default
+   * @returns {EntityPageListIterator<ObjectReference>} Paged iterator to list
+   * objects.
+   */
+  public abstract getListObjectsPagedIterator(
+    directory: BaseDirectory,
+    maxPageSize: number
+  ): EntityPageListIterator<ObjectReference>;
 
   /**
    * @deprecated Use listObjects method instead.

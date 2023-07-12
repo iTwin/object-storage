@@ -9,11 +9,7 @@ import { Readable } from "stream";
 import { RestError } from "@azure/storage-blob";
 import { inject, injectable } from "inversify";
 
-import {
-  assertRelativeDirectory,
-  buildObjectKey,
-  buildObjectReference,
-} from "@itwin/object-storage-core/lib/common/internal";
+import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   assertLocalFile,
@@ -30,6 +26,7 @@ import {
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
+  EntityPageListIterator,
   ServerStorage,
   TransferData,
   TransferType,
@@ -129,37 +126,25 @@ export class AzureServerStorage extends ServerStorage {
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
-  public async listDirectories(): Promise<BaseDirectory[]> {
-    const directoryList = this._client.listContainers();
-    const directories = [];
-    for await (const directory of directoryList) {
-      directories.push(directory);
-    }
-
-    return directories.map(
-      (directory) => ({ baseDirectory: directory.name } as BaseDirectory)
-    );
+  public getListDirectoriesPagedIterator(
+    maxPageSize = 1000
+  ): EntityPageListIterator<BaseDirectory> {
+    const pageIterator: EntityPageListIterator<BaseDirectory> =
+      new EntityPageListIterator(() =>
+        this._client.getDirectoriesNextPage({ maxPageSize: maxPageSize })
+      );
+    return pageIterator;
   }
 
-  public async listObjects(
-    directory: BaseDirectory
-  ): Promise<ObjectReference[]> {
-    const containerClient = this._client.getContainerClient(
-      directory.baseDirectory
-    );
-    const iter = containerClient.listBlobsFlat();
-
-    const names = Array<string>();
-    for await (const item of iter) names.push(item.name);
-
-    return names.map((name) =>
-      buildObjectReference(
-        buildObjectKey({
-          ...directory,
-          objectName: name,
-        })
-      )
-    );
+  public getListObjectsPagedIterator(
+    directory: BaseDirectory,
+    maxPageSize = 1000
+  ): EntityPageListIterator<ObjectReference> {
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() =>
+        this._client.getObjectsNextPage(directory, { maxPageSize: maxPageSize })
+      );
+    return pageIterator;
   }
 
   /**
