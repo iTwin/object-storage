@@ -26,8 +26,6 @@ steps:
       Write-Host New version is $newVersion and it will be tagged using $npmTag tag
     displayName: Resolve version tag
 
-  - script: echo $(resolvedNpmTag)
-
   - script: node common/scripts/install-run-rush.js publish --publish --include-all --set-access-level public --tag $(resolvedNpmTag)
     displayName: rush publish package
     condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
