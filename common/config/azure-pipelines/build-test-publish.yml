@@ -12,31 +12,31 @@ variables:
 trigger: none
 
 jobs:
-  # - job: BuildAndTest
-  #   strategy:
-  #     matrix:
-  #       linux-node-18:
-  #         imageName: 'ubuntu-latest'
-  #         nodeVersion: $(node18Version)
-  #         runFrontendIntegrationTests: true
-  #       windows-node-18:
-  #         imageName: 'windows-latest'
-  #         nodeVersion: $(node18Version)
-  #         runFrontendIntegrationTests: true
-  #   pool:
-  #       vmImage: $(imageName)
-  #   variables:
-  #     - group: object-storage - Integration Tests Variables
-  #   workspace:
-  #     clean: all
+  - job: BuildAndTest
+    strategy:
+      matrix:
+        linux-node-18:
+          imageName: 'ubuntu-latest'
+          nodeVersion: $(node18Version)
+          runFrontendIntegrationTests: true
+        windows-node-18:
+          imageName: 'windows-latest'
+          nodeVersion: $(node18Version)
+          runFrontendIntegrationTests: true
+    pool:
+        vmImage: $(imageName)
+    variables:
+      - group: object-storage - Integration Tests Variables
+    workspace:
+      clean: all
 
-  #   steps:
-  #   - template: templates/build-test.yml
-  #     parameters:
-  #       runRushAudit: ${{ parameters.runRushAudit }}
+    steps:
+    - template: templates/build-test.yml
+      parameters:
+        runRushAudit: ${{ parameters.runRushAudit }}
 
   - job: Publish
-    # dependsOn: BuildAndTest
+    dependsOn: BuildAndTest
     pool: 
       vmImage: 'windows-latest'
    
