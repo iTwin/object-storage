@@ -9,9 +9,9 @@ To configure both backend and frontend tests create a `.env` file in `storage/az
 - `TEST_AZURE_STORAGE_ACCOUNT_NAME` - test Azure storage account name.
 - `TEST_AZURE_STORAGE_ACCOUNT_KEY` - test Azure storage account key.
 - `TEST_AZURE_STORAGE_BASE_URL` - test Azure storage account base url. Usually will be equal to something like `https://<YOUR_ACCOUNT_NAME>.blob.core.windows.net`.
-- `TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_NAME` - secondary test Azure storage account name (used for testing copying, can be the same as the first account if not testing cross-region copying)
-- `TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_KEY` - secondary test Azure storage account key.
-- `TEST_SECONDARY_AZURE_STORAGE_BASE_URL` - secondary test Azure account base url.
+- `TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_NAME` - (optional) secondary test Azure storage account name.
+- `TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_KEY` - (optional) secondary test Azure storage account key.
+- `TEST_SECONDARY_AZURE_STORAGE_BASE_URL` - (optional) secondary test Azure account base url.
 
 ## Backend tests
 

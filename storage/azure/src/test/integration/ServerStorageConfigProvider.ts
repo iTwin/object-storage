@@ -44,9 +44,15 @@ export class ServerStorageConfigProvider {
     dotenv.config({ path: envFilePath });
 
     const config: AzureServerStorageConfig = {
-      accountName: process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_NAME!,
-      accountKey: process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_KEY!,
-      baseUrl: process.env.TEST_SECONDARY_AZURE_STORAGE_BASE_URL!,
+      accountName:
+        process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_NAME ??
+        process.env.TEST_AZURE_STORAGE_ACCOUNT_NAME!,
+      accountKey:
+        process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_KEY ??
+        process.env.TEST_AZURE_STORAGE_ACCOUNT_KEY!,
+      baseUrl:
+        process.env.TEST_SECONDARY_AZURE_STORAGE_BASE_URL ??
+        process.env.TEST_AZURE_STORAGE_BASE_URL!,
     };
     return config;
   }

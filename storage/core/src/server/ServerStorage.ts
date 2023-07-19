@@ -155,7 +155,7 @@ export abstract class ServerStorage
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
    * @param {ObjectReference} sourceReference object reference in the source storage.
    * @param {ObjectReference} targetReference object reference in the target storage.
-   * @returns `true` if the resource has not been deleted, `false` otherwise.
+   * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
   public abstract copyObject(
