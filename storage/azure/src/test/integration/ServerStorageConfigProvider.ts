@@ -29,4 +29,25 @@ export class ServerStorageConfigProvider {
     };
     return config;
   }
+
+  public getSecondary(): AzureServerStorageConfig {
+    const envFilePath = path.resolve(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "src",
+      "test",
+      "integration",
+      ".env"
+    );
+    dotenv.config({ path: envFilePath });
+
+    const config: AzureServerStorageConfig = {
+      accountName: process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_NAME!,
+      accountKey: process.env.TEST_SECONDARY_AZURE_STORAGE_ACCOUNT_KEY!,
+      baseUrl: process.env.TEST_SECONDARY_AZURE_STORAGE_BASE_URL!,
+    };
+    return config;
+  }
 }

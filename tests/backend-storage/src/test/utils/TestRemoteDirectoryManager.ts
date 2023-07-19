@@ -4,23 +4,21 @@
  *--------------------------------------------------------------------------------------------*/
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
-import { BaseDirectory } from "@itwin/object-storage-core";
-
-import { config } from "../Config";
+import { BaseDirectory, ServerStorage } from "@itwin/object-storage-core";
 
 import { TestRemoteDirectory } from "./TestRemoteDirectory";
 
-const { serverStorage } = config;
-
 export class TestRemoteDirectoryManager {
   private _createdDirectories: BaseDirectory[] = [];
+
+  public constructor(private _serverStorage: ServerStorage) {}
 
   public async createNew(): Promise<TestRemoteDirectory> {
     const newDirectory: BaseDirectory = {
       baseDirectory: `integration-tests-${getRandomString()}`,
     };
     this.addForDelete(newDirectory);
-    await serverStorage.createBaseDirectory(newDirectory);
+    await this._serverStorage.createBaseDirectory(newDirectory);
     return new TestRemoteDirectory(newDirectory);
   }
 
@@ -30,7 +28,7 @@ export class TestRemoteDirectoryManager {
 
   public async purgeCreatedDirectories(): Promise<void> {
     for (const directoryToDelete of this._createdDirectories)
-      await serverStorage.deleteBaseDirectory(directoryToDelete);
+      await this._serverStorage.deleteBaseDirectory(directoryToDelete);
     this._createdDirectories = [];
   }
 }

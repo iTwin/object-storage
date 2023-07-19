@@ -202,6 +202,22 @@ export class S3ClientWrapper {
     /* eslint-enable @typescript-eslint/naming-convention */
   }
 
+  public async copyObject(
+    bucket: string,
+    sourceReference: ObjectReference,
+    targetReference: ObjectReference
+  ): Promise<void> {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    await this._client.send(
+      new CopyObjectCommand({
+        CopySource: `${bucket}/${buildObjectKey(sourceReference)}`,
+        Bucket: this._bucket,
+        Key: buildObjectKey(targetReference),
+      })
+    );
+    /* eslint-enable @typescript-eslint/naming-convention */
+  }
+
   public async updateMetadata(
     reference: ObjectReference,
     metadata: Metadata
@@ -266,6 +282,10 @@ export class S3ClientWrapper {
         includeEmptyFiles: true,
       });
     return filesWithPrefix.entities.length !== 0;
+  }
+
+  public get bucketName(): string {
+    return this._bucket;
   }
 
   public releaseResources(): void {

@@ -31,7 +31,6 @@ export function createS3Client(config: {
       secretAccessKey: secretKey,
       sessionToken,
     },
-    forcePathStyle: true,
   });
 }
 
