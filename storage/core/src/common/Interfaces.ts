@@ -52,3 +52,10 @@ export interface ConfigTransferInput {
   reference: ObjectReference;
   transferConfig: TransferConfig;
 }
+
+export interface Permissions {
+  read?: boolean;
+  write?: boolean;
+  list?: boolean;
+  delete?: boolean;
+}

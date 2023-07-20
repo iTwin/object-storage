@@ -11,12 +11,13 @@ import { getRandomString } from "@itwin/object-storage-core/lib/server/internal"
 import {
   ExpiryOptions,
   ObjectDirectory,
+  Permissions,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
 import { S3TransferConfig, Types } from "../common";
 
-import { getExpiresInSeconds } from "./internal";
+import { getActionsFromPermissions, getExpiresInSeconds } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 
 @injectable()
@@ -87,6 +88,51 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         {
           Effect: "Allow",
           Action: ["s3:PutObject"],
+          Resource: [
+            `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
+              directory
+            )}/*`,
+          ],
+        },
+      ],
+    };
+
+    const { Credentials } = await this._client.send(
+      new AssumeRoleCommand({
+        DurationSeconds: getExpiresInSeconds(options),
+        Policy: JSON.stringify(policy),
+        RoleArn: this._config.roleArn,
+        RoleSessionName: getRandomString(),
+      })
+    );
+    /* eslint-enable @typescript-eslint/naming-convention */
+
+    return {
+      authentication: {
+        accessKey: Credentials!.AccessKeyId!,
+        secretKey: Credentials!.SecretAccessKey!,
+        sessionToken: Credentials!.SessionToken!,
+      },
+      expiration: Credentials!.Expiration!,
+      baseUrl: this._config.baseUrl,
+      region: this._config.region,
+      bucket: this._config.bucket,
+    };
+  }
+
+  public async getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    permissions?: Permissions,
+    options?: ExpiryOptions
+  ): Promise<S3TransferConfig> {
+    const actions = getActionsFromPermissions(permissions);
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const policy = {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Action: actions,
           Resource: [
             `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
               directory

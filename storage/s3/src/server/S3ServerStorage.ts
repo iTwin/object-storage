@@ -31,6 +31,7 @@ import {
   TransferType,
   EntityPageListIterator,
   Types,
+  Permissions,
 } from "@itwin/object-storage-core";
 
 import { S3ClientWrapper } from "./wrappers";
@@ -250,6 +251,21 @@ export class S3ServerStorage extends ServerStorage {
     assertRelativeDirectory(directory.relativeDirectory);
 
     return this._transferConfigProvider.getUploadConfig(directory, options);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    permissions?: Permissions,
+    options?: ExpiryOptions
+  ): Promise<TransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
+    return this._transferConfigProvider.getDirectoryAccessConfig(
+      directory,
+      permissions,
+      options
+    );
   }
 
   public releaseResources(): void {

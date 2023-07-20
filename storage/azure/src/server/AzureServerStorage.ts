@@ -27,6 +27,7 @@ import {
   ObjectProperties,
   ObjectReference,
   EntityPageListIterator,
+  Permissions,
   ServerStorage,
   TransferData,
   TransferType,
@@ -35,7 +36,10 @@ import {
 import { AzureTransferConfig, Types } from "../common";
 import { buildBlobName, getExpiryDate } from "../common/internal";
 
-import { buildSASParameters } from "./internal";
+import {
+  buildBlobSASParameters,
+  buildContainerSASParameters,
+} from "./internal";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
 export interface AzureServerStorageConfig {
@@ -215,7 +219,7 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(reference.relativeDirectory);
 
     const blobClient = this._client.getBlockBlobClient(reference);
-    const parameters = buildSASParameters(
+    const parameters = buildBlobSASParameters(
       reference.baseDirectory,
       "read",
       getExpiryDate(expiry),
@@ -235,7 +239,7 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(reference.relativeDirectory);
 
     const blobClient = this._client.getBlockBlobClient(reference);
-    const parameters = buildSASParameters(
+    const parameters = buildBlobSASParameters(
       reference.baseDirectory,
       "write",
       getExpiryDate(expiry),
@@ -255,7 +259,7 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
-    const parameters = buildSASParameters(
+    const parameters = buildBlobSASParameters(
       directory.baseDirectory,
       "read",
       expiresOn,
@@ -278,12 +282,36 @@ export class AzureServerStorage extends ServerStorage {
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
-    const parameters = buildSASParameters(
+    const parameters = buildBlobSASParameters(
       directory.baseDirectory,
       "write",
       expiresOn,
       this._config.accountName,
       this._config.accountKey
+    );
+
+    return {
+      authentication: parameters,
+      expiration: expiresOn,
+      baseUrl: this._config.baseUrl,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    permissions?: Permissions,
+    expiry?: ExpiryOptions
+  ): Promise<AzureTransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
+    const expiresOn = getExpiryDate(expiry);
+    const parameters = buildContainerSASParameters(
+      directory.baseDirectory,
+      expiresOn,
+      this._config.accountName,
+      this._config.accountKey,
+      permissions
     );
 
     return {

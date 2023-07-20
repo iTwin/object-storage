@@ -14,6 +14,7 @@ import {
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
+  Permissions,
   TransferConfig,
 } from "../common";
 
@@ -179,6 +180,12 @@ export abstract class ServerStorage
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 
+  public abstract getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    permissions?: Permissions,
+    expiry?: ExpiryOptions
+  ): Promise<TransferConfig>;
+
   /**
    * Closes underlying resources, sockets for example. Clients should call this
    * method after an instance of this class is not used anymore to free the
@@ -205,6 +212,11 @@ export interface TransferConfigProvider {
   ): Promise<TransferConfig>;
   getUploadConfig(
     directory: ObjectDirectory,
+    expiry?: ExpiryOptions
+  ): Promise<TransferConfig>;
+  getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    permissions?: Permissions,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 }

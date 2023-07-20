@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import * as Core from "@alicloud/pop-core";
 
+import { Permissions } from "@itwin/object-storage-core";
+
 export function createCore(config: {
   accessKey: string;
   secretKey: string;
@@ -17,4 +19,37 @@ export function createCore(config: {
     endpoint: stsBaseUrl,
     apiVersion: "2015-04-01",
   });
+}
+
+export function getActionsFromPermissions(permissions?: Permissions): string[] {
+  const actions: string[] = permissions
+    ? getActionsFromRequestedPermissions(permissions)
+    : getAllActions();
+
+  return actions;
+}
+
+function getActionsFromRequestedPermissions(
+  permissions: Permissions
+): string[] {
+  const actions: string[] = [];
+  if (permissions.read) actions.push("oss:GetObject");
+  if (permissions.write) actions.push("oss:PutObject");
+  if (permissions.delete) actions.push("oss:DeleteObject", "oss:DeleteObjects");
+  if (permissions.list) actions.push("oss:ListObjects", "oss:ListObjectsV2");
+
+  return actions;
+}
+
+function getAllActions(): string[] {
+  const actions: string[] = [
+    "oss:GetObject",
+    "oss:PutObject",
+    "oss:DeleteObject",
+    "oss:DeleteObjects",
+    "oss:ListObjects",
+    "oss:ListObjectsV2",
+  ];
+
+  return actions;
 }
