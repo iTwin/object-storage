@@ -46,11 +46,13 @@ export class StorageIntegrationTests extends Bindable {
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const serverStorage = this.container.get(ServerStorage);
+    const serverStorage = this.container.getNamed(ServerStorage, "primary");
+    const serverStorage2 = this.container.getNamed(ServerStorage, "secondary");
     const clientStorage = this.container.get(ClientStorage);
 
     setOptions({
       serverStorage,
+      serverStorage2,
       clientStorage,
     });
 

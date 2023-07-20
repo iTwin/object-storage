@@ -14,10 +14,18 @@ const dependencyName = "azure";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerStorage: {
-    dependencyName,
-    ...new ServerStorageConfigProvider().get(),
-  },
+  ServerStorage: [
+    {
+      dependencyName,
+      instanceName: "primary",
+      ...new ServerStorageConfigProvider().get(),
+    },
+    {
+      dependencyName,
+      instanceName: "secondary",
+      ...new ServerStorageConfigProvider().getSecondary(),
+    },
+  ],
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,

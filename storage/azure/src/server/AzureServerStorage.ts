@@ -293,6 +293,27 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
+  public async copyObject(
+    sourceStorage: ServerStorage,
+    sourceReference: ObjectReference,
+    targetReference: ObjectReference
+  ): Promise<void> {
+    assertRelativeDirectory(sourceReference.relativeDirectory);
+    assertRelativeDirectory(targetReference.relativeDirectory);
+
+    if (!(sourceStorage instanceof AzureServerStorage)) {
+      throw new Error(
+        `Source storage must be an instance of ${AzureServerStorage.name} to use ${AzureServerStorage.prototype.copyObject.name} method.`
+      );
+    }
+
+    const sourceUrl = await sourceStorage.getDownloadUrl(sourceReference);
+    const targetBlobClient = this._client.getBlobClient(targetReference);
+
+    const copyPoller = await targetBlobClient.beginCopyFromURL(sourceUrl);
+    await copyPoller.pollUntilDone();
+  }
+
   public releaseResources(): void {}
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {

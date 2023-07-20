@@ -29,6 +29,12 @@ function runMinio() {
   );
   if (!fs.existsSync(testBucketFilePath))
     fs.mkdirSync(testBucketFilePath, { recursive: true });
+  const testBucket2FilePath = path.join(
+    testStorageDirectory,
+    constants.minioTestBucket2Name
+  );
+  if (!fs.existsSync(testBucket2FilePath))
+    fs.mkdirSync(testBucket2FilePath, { recursive: true });
 
   const { targetFilePath } = constants.resolveFileProperties();
   const childProcess = child_process.spawn(targetFilePath, [
