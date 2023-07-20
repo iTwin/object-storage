@@ -12,7 +12,6 @@ import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/interna
 import {
   ExpiryOptions,
   ObjectDirectory,
-  Permissions,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 import {
@@ -21,7 +20,7 @@ import {
   Types,
 } from "@itwin/object-storage-s3";
 
-import { getActionsFromPermissions } from "./internal";
+import { getActions } from "./internal";
 
 @injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {
@@ -133,10 +132,9 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    permissions?: Permissions,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    const actions = getActionsFromPermissions(permissions);
+    const actions = getActions();
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",

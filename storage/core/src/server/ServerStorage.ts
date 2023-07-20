@@ -14,7 +14,6 @@ import {
   ObjectDirectory,
   ObjectProperties,
   ObjectReference,
-  Permissions,
   TransferConfig,
 } from "../common";
 
@@ -182,7 +181,6 @@ export abstract class ServerStorage
 
   public abstract getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    permissions?: Permissions,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 
@@ -216,7 +214,6 @@ export interface TransferConfigProvider {
   ): Promise<TransferConfig>;
   getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    permissions?: Permissions,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 }

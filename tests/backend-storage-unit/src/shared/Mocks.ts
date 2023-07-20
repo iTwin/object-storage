@@ -7,7 +7,6 @@ import {
   ExpiryOptions,
   ObjectDirectory,
   ObjectReference,
-  Permissions,
   PresignedUrlProvider,
   TransferConfig,
   TransferConfigProvider,
@@ -31,7 +30,6 @@ export const mockTransferConfigProvider: TransferConfigProvider = {
   },
   getDirectoryAccessConfig: function (
     _directory: ObjectDirectory,
-    _permissions?: Permissions,
     _expiry?: ExpiryOptions | undefined
   ): Promise<TransferConfig> {
     throw new Error("Not implemented.");

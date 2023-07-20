@@ -27,7 +27,6 @@ import {
   ObjectProperties,
   ObjectReference,
   EntityPageListIterator,
-  Permissions,
   ServerStorage,
   TransferData,
   TransferType,
@@ -300,7 +299,6 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    permissions?: Permissions,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
@@ -310,8 +308,7 @@ export class AzureServerStorage extends ServerStorage {
       directory.baseDirectory,
       expiresOn,
       this._config.accountName,
-      this._config.accountKey,
-      permissions
+      this._config.accountKey
     );
 
     return {

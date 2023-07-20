@@ -9,8 +9,6 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
-import { Permissions } from "@itwin/object-storage-core";
-
 export function buildBlobSASParameters(
   containerName: string,
   readOrWrite: "read" | "write",
@@ -39,10 +37,9 @@ export function buildContainerSASParameters(
   containerName: string,
   expiresOn: Date,
   accountName: string,
-  accountKey: string,
-  requestedPermissions?: Permissions
+  accountKey: string
 ): string {
-  const permissions = getContainerSASPermissions(requestedPermissions);
+  const permissions = getContainerSASPermissions();
   const parameters = generateBlobSASQueryParameters(
     {
       containerName,
@@ -55,27 +52,7 @@ export function buildContainerSASParameters(
   return parameters.toString();
 }
 
-function getContainerSASPermissions(requestedPermissions?: Permissions) {
-  const permissions = requestedPermissions
-    ? getRequestedPermissions(requestedPermissions)
-    : getAllPermissions();
-
-  return permissions;
-}
-
-function getRequestedPermissions(
-  requestedPermissions: Permissions
-): ContainerSASPermissions {
-  const permissions = new ContainerSASPermissions();
-  permissions.read = requestedPermissions?.read ?? false;
-  permissions.write = requestedPermissions?.write ?? false;
-  permissions.delete = requestedPermissions?.delete ?? false;
-  permissions.list = requestedPermissions?.list ?? false;
-
-  return permissions;
-}
-
-function getAllPermissions(): ContainerSASPermissions {
+function getContainerSASPermissions() {
   const permissions = new ContainerSASPermissions();
   permissions.read = true;
   permissions.write = true;

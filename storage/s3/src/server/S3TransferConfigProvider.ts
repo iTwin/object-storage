@@ -11,13 +11,12 @@ import { getRandomString } from "@itwin/object-storage-core/lib/server/internal"
 import {
   ExpiryOptions,
   ObjectDirectory,
-  Permissions,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
 import { S3TransferConfig, Types } from "../common";
 
-import { getActionsFromPermissions, getExpiresInSeconds } from "./internal";
+import { getActions, getExpiresInSeconds } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 
 @injectable()
@@ -122,10 +121,9 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
 
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    permissions?: Permissions,
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    const actions = getActionsFromPermissions(permissions);
+    const actions = getActions();
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "2012-10-17",
