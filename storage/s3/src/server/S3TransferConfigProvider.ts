@@ -135,6 +135,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
             `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
               directory
             )}/*`,
+            `arn:aws:s3:::${this._config.bucket}`,
           ],
         },
       ],
