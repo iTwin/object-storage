@@ -279,8 +279,8 @@ export class S3ServerStorage extends ServerStorage {
   public get bucketName(): string {
     return this._s3Client.bucketName;
   }
-  
-    // eslint-disable-next-line @typescript-eslint/require-await
+
+  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
     options?: ExpiryOptions
