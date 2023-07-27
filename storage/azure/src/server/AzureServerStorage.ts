@@ -295,8 +295,8 @@ export class AzureServerStorage extends ServerStorage {
       baseUrl: this._config.baseUrl,
     };
   }
-  
-    public async copyObject(
+
+  public async copyObject(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
     targetReference: ObjectReference
@@ -315,7 +315,6 @@ export class AzureServerStorage extends ServerStorage {
 
     const copyPoller = await targetBlobClient.beginCopyFromURL(sourceUrl);
     await copyPoller.pollUntilDone();
-
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
