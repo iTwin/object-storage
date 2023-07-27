@@ -25,8 +25,10 @@ import { testDirectoryManager, testLocalFileManager } from "./Global.test";
 import {
   assertBuffer,
   assertLocalFile,
+  assertQueriedObjectsList,
   assertStream,
   checkUploadedFileValidity,
+  createObjectsReferences,
   queryAndAssertCacheControl,
   queryAndAssertContentEncoding,
   queryAndAssertContentType,
@@ -868,23 +870,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 });
 
-async function createObjectsReferences(
-  testDirectory: TestRemoteDirectory,
-  n: number
-): Promise<ObjectReference[]> {
-  const references: ObjectReference[] = [];
-  for (let i = 0; i < n; i++) {
-    references.push(
-      await testDirectory.uploadFile(
-        { objectName: `reference${i}` },
-        undefined,
-        undefined
-      )
-    );
-  }
-  return references;
-}
-
 async function serverStorageListTest(
   serviceStorage: ServerStorage,
   func: (directory: BaseDirectory) => Promise<ObjectReference[]>
@@ -901,11 +886,5 @@ async function serverStorageListTest(
     testDirectory.baseDirectory
   );
 
-  expect(queriedReferences.length).to.be.equal(references.length);
-  for (const reference of references) {
-    const queriedReference = queriedReferences.find(
-      (ref) => ref.objectName === reference.objectName
-    );
-    expect(queriedReference).to.be.deep.equal(reference);
-  }
+  assertQueriedObjectsList(queriedReferences, references);
 }

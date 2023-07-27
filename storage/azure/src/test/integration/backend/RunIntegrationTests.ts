@@ -13,16 +13,13 @@ import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 const dependencyName = "azure";
 
 const config = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName,
     ...new ServerStorageConfigProvider().get(),
   },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,
   },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName,
   },

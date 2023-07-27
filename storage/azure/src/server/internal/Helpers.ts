@@ -58,9 +58,6 @@ function getContainerSASPermissions() {
   permissions.write = true;
   permissions.delete = true;
   permissions.list = true;
-  permissions.add = true;
-  permissions.create = true;
-  permissions.move = true;
 
   return permissions;
 }

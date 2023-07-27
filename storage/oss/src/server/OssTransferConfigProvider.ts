@@ -29,7 +29,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public constructor(
     client: Core,
-    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.S3Server.config) config: S3ServerStorageConfig
   ) {
     this._config = config;
@@ -40,7 +39,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
       Statement: [
@@ -68,7 +66,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         method: "POST",
       }
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
 
     return {
       authentication: {
@@ -87,7 +84,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
       Statement: [
@@ -115,7 +111,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         method: "POST",
       }
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
 
     return {
       authentication: {
@@ -135,7 +130,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const actions = getActions();
-    /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
       Statement: [
@@ -146,6 +140,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
             `acs:oss:*:*:${this._config.bucket}/${buildObjectDirectoryString(
               directory
             )}/*`,
+            `acs:oss:*:*:${this._config.bucket}`,
           ],
         },
       ],
@@ -163,7 +158,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         method: "POST",
       }
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
 
     return {
       authentication: {
@@ -179,7 +173,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
   }
 }
 
-/* eslint-disable @typescript-eslint/naming-convention */
 interface AssumeRoleResponse {
   RequestId: string;
   AssumedRoleUser: {
@@ -193,4 +186,3 @@ interface AssumeRoleResponse {
     Expiration: string;
   };
 }
-/* eslint-enable @typescript-eslint/naming-convention */

@@ -8,31 +8,30 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import { Container } from "inversify";
 import { createStubInstance } from "sinon";
 
-import { Types } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { AzureClientStorageBindings } from "../../../client";
+import { Types } from "../../../common";
 import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
+  BlobClientWrapperFactory,
   BlobServiceClientWrapper,
   BlockBlobClientWrapperFactory,
+  ContainerClientWrapperFactory,
 } from "../../../server";
 
 const dependencyName = "azure";
 const azureTestConfig = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
     dependencyName,
     accountName: "testAccountName",
     accountKey: "testAccountKey",
     baseUrl: "testBaseUrl",
   },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,
   },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName,
   },
@@ -64,10 +63,22 @@ class TestAzureClientStorageBindings extends AzureClientStorageBindings {
     const mockBlockBlobClientWrapperFactory = createStubInstance(
       BlockBlobClientWrapperFactory
     );
+    const mockBlobClientWrapperFactory = createStubInstance(
+      BlobClientWrapperFactory
+    );
+    const mockContainerClientWrapperFactory = createStubInstance(
+      ContainerClientWrapperFactory
+    );
 
     container
-      .rebind(Types.Client.clientWrapperFactory)
+      .rebind(Types.Client.blockBlobClientWrapperFactory)
       .toConstantValue(mockBlockBlobClientWrapperFactory);
+    container
+      .rebind(Types.Client.blobClientWrapperFactory)
+      .toConstantValue(mockBlobClientWrapperFactory);
+    container
+      .rebind(Types.Client.containerClientWrapperFactory)
+      .toConstantValue(mockContainerClientWrapperFactory);
   }
 }
 

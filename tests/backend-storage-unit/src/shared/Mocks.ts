@@ -8,7 +8,6 @@ import {
   ObjectDirectory,
   ObjectReference,
   PresignedUrlProvider,
-  TransferConfig,
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
@@ -28,10 +27,10 @@ export const mockTransferConfigProvider: TransferConfigProvider = {
   getUploadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
-  getDirectoryAccessConfig: function (
+  getDirectoryAccessConfig: (
     _directory: ObjectDirectory,
-    _expiry?: ExpiryOptions | undefined
-  ): Promise<TransferConfig> {
+    _expiry?: ExpiryOptions
+  ) => {
     throw new Error("Not implemented.");
   },
 };

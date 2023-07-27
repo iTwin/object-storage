@@ -24,9 +24,7 @@ export function getActions(): string[] {
     "oss:GetObject",
     "oss:PutObject",
     "oss:DeleteObject",
-    "oss:DeleteObjects",
     "oss:ListObjects",
-    "oss:ListObjectsV2",
   ];
 
   return actions;

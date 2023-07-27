@@ -22,6 +22,10 @@ import {
 
 import {
   ClientStorage,
+  ConfigTransferInput,
+  DirectoryTransferConfigInput,
+  EntityPageListIterator,
+  ObjectReference,
   TransferData,
   Types,
   UrlDownloadInput,
@@ -137,5 +141,41 @@ export class S3ClientStorage extends ClientStorage {
           input.options
         )
     );
+  }
+
+  public async deleteObject(input: ConfigTransferInput): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
+    return createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) => {
+        await clientWrapper.deleteObject(input.reference);
+      }
+    );
+  }
+
+  public getListObjectsPagedIterator(
+    input: DirectoryTransferConfigInput,
+    maxPageSize = 1000
+  ): EntityPageListIterator<ObjectReference> {
+    const options = {
+      maxPageSize: maxPageSize,
+    };
+
+    const pageQueryFunc = createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) => {
+        return await clientWrapper.getObjectsNextPage(
+          input.baseDirectory,
+          options
+        );
+      }
+    );
+
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() => pageQueryFunc);
+
+    return pageIterator;
   }
 }

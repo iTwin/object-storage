@@ -9,6 +9,7 @@ import { injectable } from "inversify";
 import {
   BaseDirectory,
   ContentHeaders,
+  EntityPageListIterator,
   Metadata,
   MultipartUploadOptions,
   ObjectDirectory,
@@ -17,12 +18,7 @@ import {
   TransferConfig,
 } from "../common";
 
-import {
-  ExpiryOptions,
-  MultipartUploadData,
-  TransferData,
-  EntityPageListIterator,
-} from "./Interfaces";
+import { ExpiryOptions, MultipartUploadData, TransferData } from "./Interfaces";
 
 @injectable()
 export abstract class ServerStorage

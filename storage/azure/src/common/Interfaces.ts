@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  DirectoryTransferConfigInput,
   ObjectReference,
   TransferConfig,
 } from "@itwin/object-storage-core/lib/common";
@@ -14,4 +15,9 @@ export interface AzureTransferConfig extends TransferConfig {
 export interface AzureTransferConfigInput {
   transferConfig: AzureTransferConfig;
   reference: ObjectReference;
+}
+
+export interface AzureDirectoryTransferConfigInput
+  extends DirectoryTransferConfigInput {
+  transferConfig: AzureTransferConfig;
 }

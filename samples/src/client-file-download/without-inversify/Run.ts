@@ -4,7 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   AzureClientStorage,
+  BlobClientWrapperFactory,
   BlockBlobClientWrapperFactory,
+  ContainerClientWrapperFactory,
 } from "@itwin/object-storage-azure";
 
 import { App } from "./App";
@@ -14,8 +16,14 @@ import { App } from "./App";
  * `AzureClientStorage` which is passed to `App` constructor.
  */
 async function run(): Promise<void> {
-  const blobClientWrapperFactory = new BlockBlobClientWrapperFactory();
-  const clientStorage = new AzureClientStorage(blobClientWrapperFactory);
+  const blobClientWrapperFactory = new BlobClientWrapperFactory();
+  const blockBlobClientWrapperFactory = new BlockBlobClientWrapperFactory();
+  const containerClientWrapperFactory = new ContainerClientWrapperFactory();
+  const clientStorage = new AzureClientStorage(
+    blobClientWrapperFactory,
+    blockBlobClientWrapperFactory,
+    containerClientWrapperFactory
+  );
   const app = new App(clientStorage);
   return app.start();
 }

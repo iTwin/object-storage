@@ -18,7 +18,11 @@ import {
 
 import { ExpiryOptions } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
+import {
+  AzureDirectoryTransferConfigInput,
+  AzureTransferConfig,
+  AzureTransferConfigInput,
+} from "../Interfaces";
 
 export function assertAzureTransferConfig(
   transferConfig: TransferConfig | AzureTransferConfig
@@ -39,6 +43,15 @@ export function buildBlobUrl(input: AzureTransferConfigInput): string {
   assertAzureTransferConfig(input.transferConfig);
   const { authentication, baseUrl } = input.transferConfig;
   return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
+}
+
+export function buildContainerUrl(
+  input: AzureDirectoryTransferConfigInput
+): string {
+  assertAzureTransferConfig(input.transferConfig);
+  const { authentication, baseUrl } = input.transferConfig;
+  const baseDirectory: string = input.baseDirectory.baseDirectory;
+  return `${baseUrl}/${baseDirectory}?${authentication}`;
 }
 
 export function buildBlobName(reference: ObjectReference): string {

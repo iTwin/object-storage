@@ -6,7 +6,7 @@ import "reflect-metadata";
 
 import { Container } from "inversify";
 
-import { ClientStorage, Types } from "@itwin/object-storage-core";
+import { ClientStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
@@ -16,7 +16,12 @@ import {
   AzureClientStorage,
   AzureClientStorageBindings,
 } from "../../../client";
-import { BlockBlobClientWrapperFactory } from "../../../server/wrappers";
+import { Types } from "../../../common";
+import {
+  BlobClientWrapperFactory,
+  BlockBlobClientWrapperFactory,
+  ContainerClientWrapperFactory,
+} from "../../../server/wrappers";
 
 describe(`${AzureClientStorageBindings.name}`, () => {
   const clientBindings = new AzureClientStorageBindings();
@@ -29,12 +34,30 @@ describe(`${AzureClientStorageBindings.name}`, () => {
         expectedCtor: AzureClientStorage,
       },
       {
-        testedClassIdentifier: Types.Client.clientWrapperFactory.toString(),
+        testedClassIdentifier:
+          Types.Client.blockBlobClientWrapperFactory.toString(),
         testedFunction: (container: Container) =>
           container.get<BlockBlobClientWrapperFactory>(
-            Types.Client.clientWrapperFactory
+            Types.Client.blockBlobClientWrapperFactory
           ),
         expectedCtor: BlockBlobClientWrapperFactory,
+      },
+      {
+        testedClassIdentifier: Types.Client.blobClientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
+          container.get<BlobClientWrapperFactory>(
+            Types.Client.blobClientWrapperFactory
+          ),
+        expectedCtor: BlobClientWrapperFactory,
+      },
+      {
+        testedClassIdentifier:
+          Types.Client.containerClientWrapperFactory.toString(),
+        testedFunction: (container: Container) =>
+          container.get<ContainerClientWrapperFactory>(
+            Types.Client.containerClientWrapperFactory
+          ),
+        expectedCtor: ContainerClientWrapperFactory,
       },
     ];
     testBindings(clientBindings, undefined, bindingsTestCases);

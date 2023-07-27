@@ -18,24 +18,36 @@ import {
 
 import {
   ClientStorage,
+  EntityPageListIterator,
+  ObjectReference,
   TransferData,
-  Types,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
 
+import {
+  AzureDirectoryTransferConfigInput,
+  AzureTransferConfigInput,
+} from "../common";
+import { Types } from "../common";
 import {
   AzureConfigDownloadInput,
   AzureConfigUploadInput,
   AzureUploadInMultiplePartsInput,
 } from "../server";
 import { BlockBlobClientWrapperFactory } from "../server/wrappers";
+import { BlobClientWrapperFactory } from "../server/wrappers/BlobClientWrapper/BlobClientWrapperFactory";
+import { ContainerClientWrapperFactory } from "../server/wrappers/ContainerClientWrapper/ContainerClientWrapperFactory";
 
 @injectable()
 export class AzureClientStorage extends ClientStorage {
   constructor(
-    @inject(Types.Client.clientWrapperFactory)
-    private _clientWrapperFactory: BlockBlobClientWrapperFactory
+    @inject(Types.Client.blobClientWrapperFactory)
+    private _blobClientWrapperFactory: BlobClientWrapperFactory,
+    @inject(Types.Client.blockBlobClientWrapperFactory)
+    private _blockBlobClientWrapperFactory: BlockBlobClientWrapperFactory,
+    @inject(Types.Client.containerClientWrapperFactory)
+    private _containerClientWrapperFactory: ContainerClientWrapperFactory
   ) {
     super();
   }
@@ -72,7 +84,7 @@ export class AzureClientStorage extends ClientStorage {
       abortSignal: input.abortSignal,
     };
 
-    const downloadStream = await this._clientWrapperFactory
+    const downloadStream = await this._blockBlobClientWrapperFactory
       .create(input)
       .download(options);
 
@@ -90,7 +102,7 @@ export class AzureClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
-    return this._clientWrapperFactory
+    return this._blockBlobClientWrapperFactory
       .create(input)
       .upload(input.data, input.metadata);
   }
@@ -102,8 +114,30 @@ export class AzureClientStorage extends ClientStorage {
       assertRelativeDirectory(input.reference.relativeDirectory);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
-    return this._clientWrapperFactory
+    return this._blockBlobClientWrapperFactory
       .create(input)
       .uploadInMultipleParts(input.data, input.options);
+  }
+
+  public async deleteObject(input: AzureTransferConfigInput): Promise<void> {
+    if ("reference" in input)
+      assertRelativeDirectory(input.reference.relativeDirectory);
+
+    const blobClient = this._blobClientWrapperFactory.create(input);
+    await blobClient.delete();
+  }
+
+  public getListObjectsPagedIterator(
+    input: AzureDirectoryTransferConfigInput,
+    maxPageSize = 1000
+  ): EntityPageListIterator<ObjectReference> {
+    const containerClient = this._containerClientWrapperFactory.create(input);
+    const pageIterator: EntityPageListIterator<ObjectReference> =
+      new EntityPageListIterator(() =>
+        containerClient.getObjectsNextPage(input, {
+          maxPageSize: maxPageSize,
+        })
+      );
+    return pageIterator;
   }
 }
