@@ -42,9 +42,7 @@ export function getActions(): string[] {
     "s3:GetObject",
     "s3:PutObject",
     "s3:DeleteObject",
-    "s3:DeleteObjects",
-    "s3:ListObjects",
-    "s3:ListObjectsV2",
+    "s3:ListBucket",
   ];
 
   return actions;
