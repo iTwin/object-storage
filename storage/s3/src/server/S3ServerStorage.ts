@@ -252,7 +252,35 @@ export class S3ServerStorage extends ServerStorage {
     return this._transferConfigProvider.getUploadConfig(directory, options);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
+  /**
+   * Copying from a different region is only available on AWS.
+   */
+  public copyObject(
+    sourceStorage: ServerStorage,
+    sourceReference: ObjectReference,
+    targetReference: ObjectReference
+  ): Promise<void> {
+    assertRelativeDirectory(sourceReference.relativeDirectory);
+    assertRelativeDirectory(targetReference.relativeDirectory);
+
+    if (!(sourceStorage instanceof S3ServerStorage)) {
+      throw new Error(
+        `Source storage must be an instance of ${S3ServerStorage.name} to use ${S3ServerStorage.prototype.copyObject.name} method.`
+      );
+    }
+
+    return this._s3Client.copyObject(
+      sourceStorage.bucketName,
+      sourceReference,
+      targetReference
+    );
+  }
+
+  public get bucketName(): string {
+    return this._s3Client.bucketName;
+  }
+  
+    // eslint-disable-next-line @typescript-eslint/require-await
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
     options?: ExpiryOptions

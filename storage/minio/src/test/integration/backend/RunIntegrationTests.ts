@@ -14,10 +14,19 @@ const dependencyName = "minio";
 const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerStorage: {
-    dependencyName,
-    ...serverStorageConfig,
-  },
+  ServerStorage: [
+    {
+      dependencyName,
+      instanceName: "primary",
+      ...serverStorageConfig,
+    },
+    {
+      dependencyName,
+      instanceName: "secondary",
+      ...serverStorageConfig,
+      bucket: `${serverStorageConfig.bucket}-2`,
+    },
+  ],
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName,

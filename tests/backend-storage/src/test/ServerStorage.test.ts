@@ -21,7 +21,11 @@ import {
 } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
-import { testDirectoryManager, testLocalFileManager } from "./Global.test";
+import {
+  secondaryTestDirectoryManager,
+  testDirectoryManager,
+  testLocalFileManager,
+} from "./Global.test";
 import {
   assertBuffer,
   assertLocalFile,
@@ -38,7 +42,7 @@ import {
 
 use(chaiAsPromised);
 
-const { serverStorage } = config;
+const { serverStorage, serverStorage2 } = config;
 
 describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   describe(`${serverStorage.createBaseDirectory.name}()`, () => {
@@ -692,6 +696,113 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
+  describe(`${serverStorage.copyObject.name}()`, () => {
+    it("should copy object", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "test-copy1.txt" },
+        undefined,
+        undefined
+      );
+      const targetReference: ObjectReference = {
+        baseDirectory: sourceReference.baseDirectory,
+        objectName: "test-copy2.txt",
+      };
+
+      await serverStorage.copyObject(
+        serverStorage,
+        sourceReference,
+        targetReference
+      );
+
+      await expect(serverStorage.objectExists(sourceReference)).to.eventually.be
+        .true;
+      await expect(serverStorage.objectExists(targetReference)).to.eventually.be
+        .true;
+    });
+
+    it("should copy object with relative directory", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference: ObjectReference = await testDirectory.uploadFile(
+        {
+          objectName: "test-copy-relative1.txt",
+          relativeDirectory: "relative",
+        },
+        undefined,
+        undefined
+      );
+      const targetReference: ObjectReference = {
+        baseDirectory: sourceReference.baseDirectory,
+        relativeDirectory: "relative-1/relative-2",
+        objectName: "test-copy-relative2.txt",
+      };
+      await serverStorage.copyObject(
+        serverStorage,
+        sourceReference,
+        targetReference
+      );
+      await expect(serverStorage.objectExists(sourceReference)).to.eventually.be
+        .true;
+      await expect(serverStorage.objectExists(targetReference)).to.eventually.be
+        .true;
+    });
+
+    it("should copy object with metadata", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "test-copy-metadata1.txt" },
+        undefined,
+        { test: "test-metadata" }
+      );
+      const targetReference: ObjectReference = {
+        baseDirectory: sourceReference.baseDirectory,
+        objectName: "test-copy-metadata2.txt",
+      };
+
+      await serverStorage.copyObject(
+        serverStorage,
+        sourceReference,
+        targetReference
+      );
+
+      await expect(serverStorage.objectExists(sourceReference)).to.eventually.be
+        .true;
+      await expect(serverStorage.objectExists(targetReference)).to.eventually.be
+        .true;
+      await queryAndAssertMetadata(targetReference, { test: "test-metadata" });
+    });
+
+    it("should copy object to another storage", async () => {
+      const testDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const secondaryTestDirectory =
+        await secondaryTestDirectoryManager.createNew();
+      const sourceReference: ObjectReference = await testDirectory.uploadFile(
+        { objectName: "test-copy-storage1.txt" },
+        undefined,
+        undefined
+      );
+      const targetReference: ObjectReference = {
+        baseDirectory: secondaryTestDirectory.baseDirectory.baseDirectory,
+        objectName: "test-copy-storage2.txt",
+      };
+
+      await serverStorage2.copyObject(
+        serverStorage,
+        sourceReference,
+        targetReference
+      );
+
+      await expect(serverStorage.objectExists(sourceReference)).to.eventually.be
+        .true;
+      await expect(serverStorage2.objectExists(targetReference)).to.eventually
+        .be.true;
+    });
+  });
+
   describe(`${serverStorage.download.name}()`, () => {
     const contentBuffer = Buffer.from("test-download");
 
@@ -764,7 +875,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         metadata,
       } = await serverStorage.getObjectProperties(uploadedFile);
 
-      expect(Date.now() - lastModified.getTime() < 60 * 1000).to.be.true; // not older than 1 minute
+      expect(Date.now() - lastModified.getTime()).to.be.lessThan(60 * 1000); // not older than 1 minute
       expect(queriedReference).to.equal(uploadedFile);
       expect(size === data.byteLength);
       expect(metadata?.test).to.be.equal("test-metadata");

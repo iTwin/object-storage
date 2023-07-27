@@ -4,9 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
+import { config } from "./Config";
 import { TestLocalFileManager, TestRemoteDirectoryManager } from "./utils";
 
-export const testDirectoryManager = new TestRemoteDirectoryManager();
+export const testDirectoryManager = new TestRemoteDirectoryManager(
+  config.serverStorage
+);
+export const secondaryTestDirectoryManager = new TestRemoteDirectoryManager(
+  config.serverStorage2
+);
 export const testLocalFileManager = new TestLocalFileManager(
   path.join(process.cwd(), "lib", "tempFiles")
 );
@@ -14,6 +20,7 @@ export const testLocalFileManager = new TestLocalFileManager(
 beforeEach(async () => {
   await Promise.all([
     testDirectoryManager.purgeCreatedDirectories(),
+    secondaryTestDirectoryManager.purgeCreatedDirectories(),
     testLocalFileManager.purgeCreatedFiles(),
   ]);
 });
@@ -21,6 +28,7 @@ beforeEach(async () => {
 after(async () => {
   await Promise.all([
     testDirectoryManager.purgeCreatedDirectories(),
+    secondaryTestDirectoryManager.purgeCreatedDirectories(),
     testLocalFileManager.purgeCreatedFiles(),
   ]);
 });

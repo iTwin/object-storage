@@ -15,6 +15,7 @@ const minioExecutablePathLinux = path.join(minioExecutablePath, "minio");
 const minioServerCommand = "server";
 const minioStorageFolder = "storage";
 const minioTestBucketName = "integration-test";
+const minioTestBucket2Name = "integration-test-2";
 
 function resolveFileProperties() {
   const commonFileProperties = {
@@ -43,5 +44,6 @@ module.exports = {
   minioServerCommand,
   minioStorageFolder,
   minioTestBucketName,
+  minioTestBucket2Name,
   resolveFileProperties
 };

@@ -6,6 +6,7 @@ import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
 
 interface StorageIntegrationTestsConfig {
   serverStorage: ServerStorage;
+  serverStorage2: ServerStorage;
   clientStorage: ClientStorage;
 }
 
