@@ -8,7 +8,11 @@ import { AbortController } from "abort-controller";
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
+import {
+  BaseDirectory,
+  ClientStorage,
+  ObjectReference,
+} from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 import { testDirectoryManager, testLocalFileManager } from "./Global.test";
@@ -204,257 +208,334 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   });
 
   describe("TransferConfigProvider", () => {
-    describe(`${clientStorage.upload.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
-      it("should fail to upload with config if specified path contains empty file", async () => {
-        const emptyFilePath: string =
-          await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
+    const uploadTestCases = [
+      {
+        transferConfigType: serverStorage.getUploadConfig.name,
+        getTransferConfigCallback: (directory: string) =>
+          serverStorage.getUploadConfig({ baseDirectory: directory }),
+      },
+      {
+        transferConfigType: serverStorage.getDirectoryAccessConfig.name,
+        getTransferConfigCallback: (directory: string) =>
+          serverStorage.getDirectoryAccessConfig({ baseDirectory: directory }),
+      },
+    ];
 
-        const uploadPromise = clientStorage.upload({
-          data: emptyFilePath,
-          reference: {
-            baseDirectory: "test-directory",
-            objectName: "test-object-name",
-          },
-          transferConfig: {
-            baseUrl: "test-url",
-            expiration: new Date(),
-          },
-        });
+    for (const testCase of uploadTestCases) {
+      describe(`${clientStorage.upload.name}() & ${testCase.transferConfigType}()`, () => {
+        it("should fail to upload with config if specified path contains empty file", async () => {
+          const emptyFilePath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-empty-file.txt"
+            );
 
-        await expect(uploadPromise).to.eventually.be.rejectedWith(
-          Error,
-          "Provided path is an empty file."
-        );
-      });
+          const uploadPromise = clientStorage.upload({
+            data: emptyFilePath,
+            reference: {
+              baseDirectory: "test-directory",
+              objectName: "test-object-name",
+            },
+            transferConfig: {
+              baseUrl: "test-url",
+              expiration: new Date(),
+            },
+          });
 
-      it(`should upload a file from buffer using transfer config`, async () => {
-        await testUploadFromBufferWithConfig(clientStorage);
-      });
-
-      it(`should upload a file from stream using transfer config`, async () => {
-        await testUploadFromStreamWithConfig(clientStorage);
-      });
-
-      it(`should upload a file from path using transfer config`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-upload-with-from-file-with-config`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-url-upload-metadata.txt",
-            buffer
+          await expect(uploadPromise).to.eventually.be.rejectedWith(
+            Error,
+            "Provided path is an empty file."
           );
-        await testUploadWithConfig({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
         });
-      });
 
-      it(`should upload a file with relative directory from buffer using transfer config`, async () => {
-        await testUploadWithRelativeDirFromBufferWithConfig(clientStorage);
-      });
-
-      it(`should upload a file with relative directory from stream using transfer config`, async () => {
-        await testUploadWithRelativeDirFromStreamWithConfig(clientStorage);
-      });
-
-      it(`should upload a file with relative directory from path using transfer config`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-upload-with-relative-dir-with-from-file-with-config`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-url-upload-metadata.txt",
-            buffer
+        it(`should upload a file from buffer using transfer config`, async () => {
+          await testUploadFromBufferWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
           );
-        await testUploadWithRelativeDirWithConfig({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
         });
-      });
 
-      it(`should upload a file from buffer with metadata using transfer config`, async () => {
-        await testUploadWithMetadataFromBufferWithConfig(clientStorage);
-      });
-
-      it(`should upload a file from stream with metadata using transfer config`, async () => {
-        await testUploadWithMetadataFromStreamWithConfig(clientStorage);
-      });
-
-      it(`should upload a file from path with metadata using transfer config`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-upload-with-metadata-with-from-file-with-config`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-url-upload-metadata.txt",
-            buffer
+        it(`should upload a file from stream using transfer config`, async () => {
+          await testUploadFromStreamWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
           );
-        await testUploadWithMetadataWithConfig({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
-        });
-      });
-    });
-
-    describe(`${clientStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
-      it("should fail to upload in multiple parts if specified path contains empty file", async () => {
-        const emptyFilePath: string =
-          await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
-
-        const uploadPromise = clientStorage.uploadInMultipleParts({
-          data: emptyFilePath,
-          reference: {
-            baseDirectory: "test-directory",
-            objectName: "test-object-name",
-          },
-          transferConfig: {
-            baseUrl: "test-url",
-            expiration: new Date(),
-          },
         });
 
-        await expect(uploadPromise).to.eventually.be.rejectedWith(
-          Error,
-          "Provided path is an empty file."
-        );
-      });
-
-      it(`should upload a file from stream in multiple parts`, async () => {
-        await testMultipartUploadFromStream(clientStorage);
-      });
-
-      it(`should upload a file from path in multiple parts`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-multipart-upload-from-file`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-config-multipart-upload.txt",
-            buffer
+        it(`should upload a file from path using transfer config`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-upload-with-from-file-with-config`
           );
-        await testMultipartUpload({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-url-upload-metadata.txt",
+              buffer
+            );
+          await testUploadWithConfig({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
         });
-      });
 
-      it(`should upload a file with relative directory from stream in multiple parts`, async () => {
-        await testMultipartUploadWithRelativeDirFromStream(clientStorage);
-      });
-
-      it(`should upload a file with relative directory from path in multiple parts`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-multipart-upload-with-relative-dir-from-file`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-config-multipart-upload-relative-dir.txt",
-            buffer
+        it(`should upload a file with relative directory from buffer using transfer config`, async () => {
+          await testUploadWithRelativeDirFromBufferWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
           );
-        await testMultipartUploadWithRelativeDir({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
         });
-      });
 
-      it(`should upload a file from stream with metadata in multiple parts`, async () => {
-        await testMultipartUploadWithMetadataFromStream(clientStorage);
-      });
-
-      it(`should upload a file from path with metadata in multiple parts`, async () => {
-        const buffer = Buffer.from(
-          `${clientStorage.constructor.name}-test-multipart-upload-with-metadata-from-file`
-        );
-        const fileToUploadPath: string =
-          await testLocalFileManager.createAndWriteFile(
-            "test-client-config-multipart-upload-metadata.txt",
-            buffer
+        it(`should upload a file with relative directory from stream using transfer config`, async () => {
+          await testUploadWithRelativeDirFromStreamWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
           );
-        await testMultipartUploadWithMetadata({
-          testedStorage: clientStorage,
-          dataToUpload: fileToUploadPath,
-          dataToAssert: buffer,
-        });
-      });
-    });
-
-    describe(`${clientStorage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
-      it(`should download a file to buffer using transfer config`, async () => {
-        await testDownloadToBufferWithConfig(clientStorage);
-      });
-
-      it(`should download a file to stream using transfer config`, async () => {
-        await testDownloadToStreamWithConfig(clientStorage);
-      });
-
-      it(`should download a file to path using transfer config`, async () => {
-        const contentBuffer = Buffer.from("test-download-to-path-with-config");
-        const testDownloadPath: string =
-          await testLocalFileManager.getDownloadsDir();
-        const testDirectory: TestRemoteDirectory =
-          await testDirectoryManager.createNew();
-        const uploadedFile: ObjectReference = await testDirectory.uploadFile(
-          { objectName: "file-to-download-with-config.txt" },
-          contentBuffer,
-          undefined
-        );
-
-        const downloadConfig = await serverStorage.getDownloadConfig(
-          testDirectory.baseDirectory
-        );
-        const response = await clientStorage.download({
-          reference: uploadedFile,
-          transferConfig: downloadConfig,
-          transferType: "local",
-          localPath: path.join(testDownloadPath, "download-config.txt"),
         });
 
-        await assertLocalFile(response, contentBuffer);
-      });
-
-      it(`should cancel file download to path using transfer config`, async () => {
-        const contentBuffer = Buffer.from("test-download-to-path-with-config");
-        const testDownloadPath: string =
-          await testLocalFileManager.getDownloadsDir();
-        const testDirectory: TestRemoteDirectory =
-          await testDirectoryManager.createNew();
-        const uploadedFile: ObjectReference = await testDirectory.uploadFile(
-          { objectName: "file-to-download-with-config.txt" },
-          contentBuffer,
-          undefined
-        );
-
-        const downloadConfig = await serverStorage.getDownloadConfig(
-          testDirectory.baseDirectory
-        );
-        const abortController = new AbortController();
-
-        const downloadPromise = clientStorage.download({
-          reference: uploadedFile,
-          transferConfig: downloadConfig,
-          transferType: "local",
-          localPath: path.join(testDownloadPath, "download-config.txt"),
-          abortSignal: abortController.signal,
+        it(`should upload a file with relative directory from path using transfer config`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-upload-with-relative-dir-with-from-file-with-config`
+          );
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-url-upload-metadata.txt",
+              buffer
+            );
+          await testUploadWithRelativeDirWithConfig({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
         });
 
-        abortController.abort();
+        it(`should upload a file from buffer with metadata using transfer config`, async () => {
+          await testUploadWithMetadataFromBufferWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
 
-        let wasAborted = false;
-        try {
-          await downloadPromise;
-        } catch (error: unknown) {
-          if (error instanceof Error && error.name === "AbortError")
-            wasAborted = true;
-        }
+        it(`should upload a file from stream with metadata using transfer config`, async () => {
+          await testUploadWithMetadataFromStreamWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
 
-        expect(wasAborted).to.be.true;
+        it(`should upload a file from path with metadata using transfer config`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-upload-with-metadata-with-from-file-with-config`
+          );
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-url-upload-metadata.txt",
+              buffer
+            );
+          await testUploadWithMetadataWithConfig({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
+        });
       });
-    });
+
+      describe(`${clientStorage.uploadInMultipleParts.name}() & ${testCase.transferConfigType}()`, () => {
+        it("should fail to upload in multiple parts if specified path contains empty file", async () => {
+          const emptyFilePath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-empty-file.txt"
+            );
+
+          const uploadPromise = clientStorage.uploadInMultipleParts({
+            data: emptyFilePath,
+            reference: {
+              baseDirectory: "test-directory",
+              objectName: "test-object-name",
+            },
+            transferConfig: {
+              baseUrl: "test-url",
+              expiration: new Date(),
+            },
+          });
+
+          await expect(uploadPromise).to.eventually.be.rejectedWith(
+            Error,
+            "Provided path is an empty file."
+          );
+        });
+
+        it(`should upload a file from stream in multiple parts`, async () => {
+          await testMultipartUploadFromStream(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
+
+        it(`should upload a file from path in multiple parts`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-multipart-upload-from-file`
+          );
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-config-multipart-upload.txt",
+              buffer
+            );
+          await testMultipartUpload({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
+        });
+
+        it(`should upload a file with relative directory from stream in multiple parts`, async () => {
+          await testMultipartUploadWithRelativeDirFromStream(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
+
+        it(`should upload a file with relative directory from path in multiple parts`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-multipart-upload-with-relative-dir-from-file`
+          );
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-config-multipart-upload-relative-dir.txt",
+              buffer
+            );
+          await testMultipartUploadWithRelativeDir({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
+        });
+
+        it(`should upload a file from stream with metadata in multiple parts`, async () => {
+          await testMultipartUploadWithMetadataFromStream(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
+
+        it(`should upload a file from path with metadata in multiple parts`, async () => {
+          const buffer = Buffer.from(
+            `${clientStorage.constructor.name}-test-multipart-upload-with-metadata-from-file`
+          );
+          const fileToUploadPath: string =
+            await testLocalFileManager.createAndWriteFile(
+              "test-client-config-multipart-upload-metadata.txt",
+              buffer
+            );
+          await testMultipartUploadWithMetadata({
+            testedStorage: clientStorage,
+            dataToUpload: fileToUploadPath,
+            dataToAssert: buffer,
+            getTransferConfigCallback: testCase.getTransferConfigCallback,
+          });
+        });
+      });
+    }
+
+    const downloadTestCases = [
+      {
+        transferConfigType: serverStorage.getDownloadConfig.name,
+        getTransferConfigCallback: (directory: BaseDirectory) =>
+          serverStorage.getDownloadConfig(directory),
+      },
+      {
+        transferConfigType: serverStorage.getDirectoryAccessConfig.name,
+        getTransferConfigCallback: (directory: BaseDirectory) =>
+          serverStorage.getDirectoryAccessConfig(directory),
+      },
+    ];
+
+    for (const testCase of downloadTestCases) {
+      describe(`${clientStorage.download.name}() & ${testCase.transferConfigType}()`, () => {
+        it(`should download a file to buffer using transfer config`, async () => {
+          await testDownloadToBufferWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
+
+        it(`should download a file to stream using transfer config`, async () => {
+          await testDownloadToStreamWithConfig(
+            clientStorage,
+            testCase.getTransferConfigCallback
+          );
+        });
+
+        it(`should download a file to path using transfer config`, async () => {
+          const contentBuffer = Buffer.from(
+            "test-download-to-path-with-config"
+          );
+          const testDownloadPath: string =
+            await testLocalFileManager.getDownloadsDir();
+          const testDirectory: TestRemoteDirectory =
+            await testDirectoryManager.createNew();
+          const uploadedFile: ObjectReference = await testDirectory.uploadFile(
+            { objectName: "file-to-download-with-config.txt" },
+            contentBuffer,
+            undefined
+          );
+
+          const downloadConfig = await testCase.getTransferConfigCallback(
+            testDirectory.baseDirectory
+          );
+          const response = await clientStorage.download({
+            reference: uploadedFile,
+            transferConfig: downloadConfig,
+            transferType: "local",
+            localPath: path.join(testDownloadPath, "download-config.txt"),
+          });
+
+          await assertLocalFile(response, contentBuffer);
+        });
+
+        it(`should cancel file download to path using transfer config`, async () => {
+          const contentBuffer = Buffer.from(
+            "test-download-to-path-with-config"
+          );
+          const testDownloadPath: string =
+            await testLocalFileManager.getDownloadsDir();
+          const testDirectory: TestRemoteDirectory =
+            await testDirectoryManager.createNew();
+          const uploadedFile: ObjectReference = await testDirectory.uploadFile(
+            { objectName: "file-to-download-with-config.txt" },
+            contentBuffer,
+            undefined
+          );
+
+          const downloadConfig = await testCase.getTransferConfigCallback(
+            testDirectory.baseDirectory
+          );
+          const abortController = new AbortController();
+
+          const downloadPromise = clientStorage.download({
+            reference: uploadedFile,
+            transferConfig: downloadConfig,
+            transferType: "local",
+            localPath: path.join(testDownloadPath, "download-config.txt"),
+            abortSignal: abortController.signal,
+          });
+
+          abortController.abort();
+
+          let wasAborted = false;
+          try {
+            await downloadPromise;
+          } catch (error: unknown) {
+            if (error instanceof Error && error.name === "AbortError")
+              wasAborted = true;
+          }
+
+          expect(wasAborted).to.be.true;
+        });
+      });
+    }
   });
 });

@@ -36,3 +36,14 @@ export function getExpiresInSeconds(options?: ExpiryOptions): number {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- false positive
   return defaultExpiresInSeconds; // expires in one hour by default
 }
+
+export function getActions(): string[] {
+  const actions: string[] = [
+    "s3:GetObject",
+    "s3:PutObject",
+    "s3:DeleteObject",
+    "s3:ListBucket",
+  ];
+
+  return actions;
+}

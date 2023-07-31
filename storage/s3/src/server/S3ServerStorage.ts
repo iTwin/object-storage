@@ -252,6 +252,19 @@ export class S3ServerStorage extends ServerStorage {
     return this._transferConfigProvider.getUploadConfig(directory, options);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    options?: ExpiryOptions
+  ): Promise<TransferConfig> {
+    assertRelativeDirectory(directory.relativeDirectory);
+
+    return this._transferConfigProvider.getDirectoryAccessConfig(
+      directory,
+      options
+    );
+  }
+
   /**
    * Copying from a different region is only available on AWS.
    */

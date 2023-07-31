@@ -146,4 +146,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       );
     });
   });
+
+  describe(`${serverStorage.getDirectoryAccessConfig.name}()`, () => {
+    it("should throw if relativeDirectory is invalid", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        serverStorage.getDirectoryAccessConfig(Constants.invalidObjectReference)
+      );
+    });
+  });
 });

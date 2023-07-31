@@ -18,6 +18,8 @@ import {
 
 import { config } from "../Config";
 
+import { TestRemoteDirectory } from "./TestRemoteDirectory";
+
 const { serverStorage } = config;
 
 export async function checkUploadedFileValidity(
@@ -86,4 +88,34 @@ export async function assertLocalFile(
   contentBuffer: Buffer
 ): Promise<void> {
   expect(contentBuffer.equals(await promises.readFile(response as string)));
+}
+
+export async function createObjectsReferences(
+  testDirectory: TestRemoteDirectory,
+  n: number
+): Promise<ObjectReference[]> {
+  const references: ObjectReference[] = [];
+  for (let i = 0; i < n; i++) {
+    references.push(
+      await testDirectory.uploadFile(
+        { objectName: `reference${i}` },
+        undefined,
+        undefined
+      )
+    );
+  }
+  return references;
+}
+
+export function assertQueriedObjects(
+  queriedReferences: ObjectReference[],
+  uploadedReferences: ObjectReference[]
+): void {
+  expect(queriedReferences.length).to.be.equal(uploadedReferences.length);
+  for (const uploadedReference of uploadedReferences) {
+    const queriedReference = queriedReferences.find(
+      (ref) => ref.objectName === uploadedReference.objectName
+    );
+    expect(queriedReference).to.be.deep.equal(uploadedReference);
+  }
 }

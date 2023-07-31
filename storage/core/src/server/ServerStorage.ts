@@ -193,6 +193,11 @@ export abstract class ServerStorage
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
 
+  public abstract getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    expiry?: ExpiryOptions
+  ): Promise<TransferConfig>;
+
   /**
    * Closes underlying resources, sockets for example. Clients should call this
    * method after an instance of this class is not used anymore to free the
@@ -218,6 +223,10 @@ export interface TransferConfigProvider {
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;
   getUploadConfig(
+    directory: ObjectDirectory,
+    expiry?: ExpiryOptions
+  ): Promise<TransferConfig>;
+  getDirectoryAccessConfig(
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig>;

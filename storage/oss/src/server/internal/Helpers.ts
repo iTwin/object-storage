@@ -18,3 +18,14 @@ export function createCore(config: {
     apiVersion: "2015-04-01",
   });
 }
+
+export function getActions(): string[] {
+  const actions: string[] = [
+    "oss:GetObject",
+    "oss:PutObject",
+    "oss:DeleteObject",
+    "oss:ListObjects",
+  ];
+
+  return actions;
+}
