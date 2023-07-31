@@ -208,21 +208,21 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   });
 
   describe("TransferConfigProvider", () => {
-    const uploadTestCases = [
+    const transferConfigTypesForUpload = [
       {
-        transferConfigType: serverStorage.getUploadConfig.name,
+        getConfigFunctionName: serverStorage.getUploadConfig.name,
         getTransferConfigCallback: (directory: string) =>
           serverStorage.getUploadConfig({ baseDirectory: directory }),
       },
       {
-        transferConfigType: serverStorage.getDirectoryAccessConfig.name,
+        getConfigFunctionName: serverStorage.getDirectoryAccessConfig.name,
         getTransferConfigCallback: (directory: string) =>
           serverStorage.getDirectoryAccessConfig({ baseDirectory: directory }),
       },
     ];
 
-    for (const testCase of uploadTestCases) {
-      describe(`${clientStorage.upload.name}() & ${testCase.transferConfigType}()`, () => {
+    for (const transferConfigType of transferConfigTypesForUpload) {
+      describe(`${clientStorage.upload.name}() & ${transferConfigType.getConfigFunctionName}()`, () => {
         it("should fail to upload with config if specified path contains empty file", async () => {
           const emptyFilePath: string =
             await testLocalFileManager.createAndWriteFile(
@@ -250,14 +250,14 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         it(`should upload a file from buffer using transfer config`, async () => {
           await testUploadFromBufferWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
         it(`should upload a file from stream using transfer config`, async () => {
           await testUploadFromStreamWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -274,21 +274,22 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
 
         it(`should upload a file with relative directory from buffer using transfer config`, async () => {
           await testUploadWithRelativeDirFromBufferWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
         it(`should upload a file with relative directory from stream using transfer config`, async () => {
           await testUploadWithRelativeDirFromStreamWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -305,21 +306,22 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
 
         it(`should upload a file from buffer with metadata using transfer config`, async () => {
           await testUploadWithMetadataFromBufferWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
         it(`should upload a file from stream with metadata using transfer config`, async () => {
           await testUploadWithMetadataFromStreamWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -336,12 +338,13 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
       });
 
-      describe(`${clientStorage.uploadInMultipleParts.name}() & ${testCase.transferConfigType}()`, () => {
+      describe(`${clientStorage.uploadInMultipleParts.name}() & ${transferConfigType.getConfigFunctionName}()`, () => {
         it("should fail to upload in multiple parts if specified path contains empty file", async () => {
           const emptyFilePath: string =
             await testLocalFileManager.createAndWriteFile(
@@ -369,7 +372,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         it(`should upload a file from stream in multiple parts`, async () => {
           await testMultipartUploadFromStream(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -386,14 +389,15 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
 
         it(`should upload a file with relative directory from stream in multiple parts`, async () => {
           await testMultipartUploadWithRelativeDirFromStream(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -410,14 +414,15 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
 
         it(`should upload a file from stream with metadata in multiple parts`, async () => {
           await testMultipartUploadWithMetadataFromStream(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -434,38 +439,39 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             testedStorage: clientStorage,
             dataToUpload: fileToUploadPath,
             dataToAssert: buffer,
-            getTransferConfigCallback: testCase.getTransferConfigCallback,
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
           });
         });
       });
     }
 
-    const downloadTestCases = [
+    const transferConfigTypesForDownload = [
       {
-        transferConfigType: serverStorage.getDownloadConfig.name,
+        getConfigFunctionName: serverStorage.getDownloadConfig.name,
         getTransferConfigCallback: (directory: BaseDirectory) =>
           serverStorage.getDownloadConfig(directory),
       },
       {
-        transferConfigType: serverStorage.getDirectoryAccessConfig.name,
+        getConfigFunctionName: serverStorage.getDirectoryAccessConfig.name,
         getTransferConfigCallback: (directory: BaseDirectory) =>
           serverStorage.getDirectoryAccessConfig(directory),
       },
     ];
 
-    for (const testCase of downloadTestCases) {
-      describe(`${clientStorage.download.name}() & ${testCase.transferConfigType}()`, () => {
+    for (const transferConfigType of transferConfigTypesForDownload) {
+      describe(`${clientStorage.download.name}() & ${transferConfigType.getConfigFunctionName}()`, () => {
         it(`should download a file to buffer using transfer config`, async () => {
           await testDownloadToBufferWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
         it(`should download a file to stream using transfer config`, async () => {
           await testDownloadToStreamWithConfig(
             clientStorage,
-            testCase.getTransferConfigCallback
+            transferConfigType.getTransferConfigCallback
           );
         });
 
@@ -483,9 +489,10 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             undefined
           );
 
-          const downloadConfig = await testCase.getTransferConfigCallback(
-            testDirectory.baseDirectory
-          );
+          const downloadConfig =
+            await transferConfigType.getTransferConfigCallback(
+              testDirectory.baseDirectory
+            );
           const response = await clientStorage.download({
             reference: uploadedFile,
             transferConfig: downloadConfig,
@@ -510,9 +517,10 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             undefined
           );
 
-          const downloadConfig = await testCase.getTransferConfigCallback(
-            testDirectory.baseDirectory
-          );
+          const downloadConfig =
+            await transferConfigType.getTransferConfigCallback(
+              testDirectory.baseDirectory
+            );
           const abortController = new AbortController();
 
           const downloadPromise = clientStorage.download({
