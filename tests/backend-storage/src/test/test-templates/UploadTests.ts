@@ -15,13 +15,13 @@ import {
   TransferData,
 } from "@itwin/object-storage-core";
 
-import { config } from "../Config";
-import { testDirectoryManager, testLocalFileManager } from "../Global.test";
+import { config } from "../../shared/test/Config";
 import {
+  TestRemoteDirectory,
   checkUploadedFileValidity,
   queryAndAssertMetadata,
-  TestRemoteDirectory,
-} from "../utils";
+} from "../../shared/utils";
+import { testDirectoryManager, testLocalFileManager } from "../Global.test";
 
 const { serverStorage } = config;
 

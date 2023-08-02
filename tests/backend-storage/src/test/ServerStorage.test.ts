@@ -20,13 +20,9 @@ import {
   ServerStorage,
 } from "@itwin/object-storage-core";
 
-import { config } from "./Config";
+import { config } from "../shared/test/Config";
 import {
-  secondaryTestDirectoryManager,
-  testDirectoryManager,
-  testLocalFileManager,
-} from "./Global.test";
-import {
+  TestRemoteDirectory,
   assertBuffer,
   assertLocalFile,
   assertQueriedObjects,
@@ -37,8 +33,13 @@ import {
   queryAndAssertContentEncoding,
   queryAndAssertContentType,
   queryAndAssertMetadata,
-  TestRemoteDirectory,
-} from "./utils";
+} from "../shared/utils";
+
+import {
+  secondaryTestDirectoryManager,
+  testDirectoryManager,
+  testLocalFileManager,
+} from "./Global.test";
 
 use(chaiAsPromised);
 

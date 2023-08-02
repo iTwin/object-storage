@@ -16,16 +16,15 @@ import {
   TransferData,
 } from "@itwin/object-storage-core";
 
-import { config } from "../Config";
+import { config } from "../test/Config";
 
 import { TestRemoteDirectory } from "./TestRemoteDirectory";
-
-const { serverStorage } = config;
 
 export async function checkUploadedFileValidity(
   reference: ObjectReference,
   contentBuffer: Buffer
 ): Promise<void> {
+  const { serverStorage } = config;
   expect(await serverStorage.objectExists(reference)).to.be.true;
 
   const downloadedBuffer = await serverStorage.download(reference, "buffer");
@@ -36,6 +35,7 @@ export async function queryAndAssertMetadata(
   reference: ObjectReference,
   expectedMetadata: Metadata
 ): Promise<void> {
+  const { serverStorage } = config;
   const { metadata } = await serverStorage.getObjectProperties(reference);
   expect(metadata).to.deep.equal(expectedMetadata);
 }
@@ -44,6 +44,7 @@ export async function queryAndAssertContentEncoding(
   reference: ObjectReference,
   expectedHeaders: ContentHeaders
 ): Promise<void> {
+  const { serverStorage } = config;
   const { contentEncoding } = await serverStorage.getObjectProperties(
     reference
   );
@@ -54,6 +55,7 @@ export async function queryAndAssertCacheControl(
   reference: ObjectReference,
   expectedHeaders: ContentHeaders
 ): Promise<void> {
+  const { serverStorage } = config;
   const { cacheControl } = await serverStorage.getObjectProperties(reference);
   expect(cacheControl).to.equal(expectedHeaders.cacheControl);
 }
@@ -62,6 +64,7 @@ export async function queryAndAssertContentType(
   reference: ObjectReference,
   expectedHeaders: ContentHeaders
 ): Promise<void> {
+  const { serverStorage } = config;
   const { contentType } = await serverStorage.getObjectProperties(reference);
   expect(contentType).to.equal(expectedHeaders.contentType);
 }

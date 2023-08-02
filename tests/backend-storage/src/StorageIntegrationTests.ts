@@ -20,7 +20,7 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { setOptions } from "./test/Config";
+import { setOptions } from "./shared/test/Config";
 
 export class StorageIntegrationTests extends Bindable {
   public readonly container = new Container();

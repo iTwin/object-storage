@@ -12,7 +12,6 @@ import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: [
     {
       dependencyName: "oss",
@@ -25,12 +24,10 @@ const config = {
       ...serverStorageConfig,
     },
   ],
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
     dependencyName: "s3",
     bucket: serverStorageConfig.bucket,
   },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
     dependencyName: "s3",
     bucket: serverStorageConfig.bucket,

@@ -33,7 +33,9 @@
     "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
     "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
-    "test:integration:backend": "node lib/test/integration/backend/RunIntegrationTests.js",
+    "test:integration:backend": "npm run test:integration:backend:common && npm run test:integration:backend:local",
+    "test:integration:backend:local": "mocha lib/test/integration/backend/**/*.test.js --color --exit -t 30000",
+    "test:integration:backend:common": "node lib/test/integration/backend/RunIntegrationTests.js",
     "test:integration:frontend": "npm-run-all -p -r test:integration:frontend:startServer test:integration:frontend:runTests ",
     "test:integration:frontend:runTests": "wait-on tcp:1221 -t 30000 && node lib/test/integration/frontend/RunIntegrationTests.js",
     "test:integration:frontend:startServer": "node lib/test/integration/frontend/StartServer.js"

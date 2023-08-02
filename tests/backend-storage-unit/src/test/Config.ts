@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
 
-interface StorageIntegrationTestsConfig {
+interface StorageUnitTestsConfig {
   serverStorage: ServerStorage;
   clientStorage: ClientStorage;
 }
 
-export let config: StorageIntegrationTestsConfig;
+export let config: StorageUnitTestsConfig;
 
-export function setOptions(options: StorageIntegrationTestsConfig): void {
+export function setOptions(options: StorageUnitTestsConfig): void {
   config = {
     ...config,
     ...options,

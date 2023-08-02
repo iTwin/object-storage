@@ -10,9 +10,7 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core";
 
-import { config } from "../Config";
-
-const { serverStorage } = config;
+import { config } from "../test/Config";
 
 export class TestRemoteDirectory {
   constructor(public readonly baseDirectory: BaseDirectory) {}
@@ -29,6 +27,7 @@ export class TestRemoteDirectory {
       ...reference,
     };
 
+    const { serverStorage } = config;
     await serverStorage.upload(objectReference, contentToUpload, metadata);
     return objectReference;
   }
