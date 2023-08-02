@@ -33,7 +33,7 @@
     "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
     "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/s3.unit.cypress.config.ts",
     "test:unit:frontend:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/s3.unit.cypress.config.ts",
-    "test:integration:backend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:backend:runTests",
+    "test:integration:backend": "npm run test:integration:downloadMinio && npm-run-all -p -r test:integration:startMinio test:integration:backend:runTests:local test:integration:backend:runTests:common",
     "test:integration:backend:runTests": "wait-on tcp:9000 -t 30000 && npm run test:integration:backend:common && npm run test:integration:backend:local",
     "test:integration:backend:runTests:local": "mocha lib/test/integration/backend/**/*.test.js --color --exit -t 30000",
     "test:integration:backend:runTests:common": "node lib/test/integration/backend/RunIntegrationTests.js",
