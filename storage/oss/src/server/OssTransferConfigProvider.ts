@@ -20,6 +20,8 @@ import {
   Types,
 } from "@itwin/object-storage-s3";
 
+import { getActions } from "./internal";
+
 @injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {
   private readonly _config: S3ServerStorageConfig;
@@ -27,7 +29,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
 
   public constructor(
     client: Core,
-    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @inject(Types.S3Server.config) config: S3ServerStorageConfig
   ) {
     this._config = config;
@@ -38,7 +39,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
       Statement: [
@@ -66,7 +66,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         method: "POST",
       }
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
 
     return {
       authentication: {
@@ -85,7 +84,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "1",
       Statement: [
@@ -113,7 +111,53 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
         method: "POST",
       }
     );
-    /* eslint-enable @typescript-eslint/naming-convention */
+
+    return {
+      authentication: {
+        accessKey: Credentials.AccessKeyId,
+        secretKey: Credentials.AccessKeySecret,
+        sessionToken: Credentials.SecurityToken,
+      },
+      expiration: new Date(Credentials.Expiration),
+      baseUrl: this._config.baseUrl,
+      region: this._config.region,
+      bucket: this._config.bucket,
+    };
+  }
+
+  public async getDirectoryAccessConfig(
+    directory: ObjectDirectory,
+    expiry?: ExpiryOptions
+  ): Promise<S3TransferConfig> {
+    const actions = getActions();
+    const policy = {
+      Version: "1",
+      Statement: [
+        {
+          Effect: "Allow",
+          Action: actions,
+          Resource: [
+            `acs:oss:*:*:${this._config.bucket}/${buildObjectDirectoryString(
+              directory
+            )}/*`,
+            `acs:oss:*:*:${this._config.bucket}`,
+          ],
+        },
+      ],
+    };
+
+    const { Credentials } = await this._client.request<AssumeRoleResponse>(
+      "AssumeRole",
+      {
+        RoleArn: this._config.roleArn,
+        RoleSessionName: getRandomString(),
+        Policy: JSON.stringify(policy),
+        DurationSeconds: getExpiresInSeconds(expiry),
+      },
+      {
+        method: "POST",
+      }
+    );
 
     return {
       authentication: {
@@ -129,7 +173,6 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
   }
 }
 
-/* eslint-disable @typescript-eslint/naming-convention */
 interface AssumeRoleResponse {
   RequestId: string;
   AssumedRoleUser: {
@@ -143,4 +186,3 @@ interface AssumeRoleResponse {
     Expiration: string;
   };
 }
-/* eslint-enable @typescript-eslint/naming-convention */

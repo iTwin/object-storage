@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as path from "path";
 
+import { TestRemoteDirectoryManager } from "../utils";
+
 import { config } from "./Config";
-import { TestLocalFileManager, TestRemoteDirectoryManager } from "./utils";
+import { TestLocalFileManager } from "./utils/TestLocalFileManager";
 
 export const testDirectoryManager = new TestRemoteDirectoryManager(
   config.serverStorage

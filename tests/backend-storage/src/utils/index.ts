@@ -4,5 +4,4 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./Helpers";
 export * from "./TestRemoteDirectory";
-export * from "./TestLocalFileManager";
 export * from "./TestRemoteDirectoryManager";

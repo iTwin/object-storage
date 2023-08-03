@@ -27,4 +27,10 @@ export const mockTransferConfigProvider: TransferConfigProvider = {
   getUploadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
     throw new Error("Not implemented.");
   },
+  getDirectoryAccessConfig: (
+    _directory: ObjectDirectory,
+    _expiry?: ExpiryOptions
+  ) => {
+    throw new Error("Not implemented.");
+  },
 };

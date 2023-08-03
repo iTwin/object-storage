@@ -19,7 +19,7 @@ export class TestRemoteDirectoryManager {
     };
     this.addForDelete(newDirectory);
     await this._serverStorage.createBaseDirectory(newDirectory);
-    return new TestRemoteDirectory(newDirectory);
+    return new TestRemoteDirectory(this._serverStorage, newDirectory);
   }
 
   public addForDelete(directory: BaseDirectory): void {

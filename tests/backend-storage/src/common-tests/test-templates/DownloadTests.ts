@@ -2,11 +2,17 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ClientStorage, ObjectReference } from "@itwin/object-storage-core";
+import {
+  BaseDirectory,
+  ClientStorage,
+  ObjectReference,
+  TransferConfig,
+} from "@itwin/object-storage-core";
 
+import { TestRemoteDirectory } from "../../utils";
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
-import { assertBuffer, assertStream, TestRemoteDirectory } from "../utils";
+import { assertBuffer, assertStream } from "../utils/Helpers";
 
 const { serverStorage } = config;
 
@@ -53,7 +59,10 @@ export async function testDownloadFromUrlToStream(
 }
 
 export async function testDownloadToBufferWithConfig(
-  testedStorage: ClientStorage
+  testedStorage: ClientStorage,
+  getTransferConfigCallback: (
+    directory: BaseDirectory
+  ) => Promise<TransferConfig>
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-buffer-with-config");
   const testDirectory: TestRemoteDirectory =
@@ -64,7 +73,7 @@ export async function testDownloadToBufferWithConfig(
     undefined
   );
 
-  const downloadConfig = await serverStorage.getDownloadConfig(
+  const downloadConfig = await getTransferConfigCallback(
     testDirectory.baseDirectory
   );
   const response = await testedStorage.download({
@@ -77,7 +86,10 @@ export async function testDownloadToBufferWithConfig(
 }
 
 export async function testDownloadToStreamWithConfig(
-  testedStorage: ClientStorage
+  testedStorage: ClientStorage,
+  getTransferConfigCallback: (
+    directory: BaseDirectory
+  ) => Promise<TransferConfig>
 ): Promise<void> {
   const contentBuffer = Buffer.from("test-download-to-stream-with-config");
   const testDirectory: TestRemoteDirectory =
@@ -88,7 +100,7 @@ export async function testDownloadToStreamWithConfig(
     undefined
   );
 
-  const downloadConfig = await serverStorage.getDownloadConfig(
+  const downloadConfig = await getTransferConfigCallback(
     testDirectory.baseDirectory
   );
   const response = await testedStorage.download({
