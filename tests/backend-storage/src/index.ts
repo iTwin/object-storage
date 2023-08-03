@@ -2,5 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export * from "./StorageIntegrationTests";
-export * from "./shared";
+export * from "./common-tests";
+export * from "./storage-specific-test-utils";
+export * from "./utils";

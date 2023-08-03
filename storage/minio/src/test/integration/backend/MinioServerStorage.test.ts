@@ -14,38 +14,70 @@ import {
   buildObjectKey,
   buildObjectReference,
 } from "@itwin/object-storage-core/lib/common/internal";
-import { assertS3TransferConfig } from "@itwin/object-storage-s3/lib/common/internal";
+import {
+  assertS3TransferConfig,
+  createStsClient,
+} from "@itwin/object-storage-s3/lib/common/internal";
 
 import { ObjectReference, TransferConfig } from "@itwin/object-storage-core";
-import { S3TransferConfig } from "@itwin/object-storage-s3";
 import {
-  InternalStorageIntegrationTests,
+  S3ClientWrapper,
+  S3TransferConfig,
+  S3TransferConfigProvider,
+} from "@itwin/object-storage-s3";
+import {
   TestRemoteDirectory,
   TestRemoteDirectoryManager,
   testDeleteObjectWithTransferConfig,
   testListObjectsWithTransferConfig,
 } from "@itwin/object-storage-tests-backend";
 
-import { MinioServerStorageBindings } from "../../../server";
+import { MinioPresignedUrlProvider, MinioServerStorage } from "../../../server";
+import { createClient } from "../../../server/internal";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-describe("MinioServerStorage internal tests", () => {
+describe(`${MinioServerStorage.name} internal tests`, () => {
   const serverStorageConfig = new ServerStorageConfigProvider().get();
-  const config = {
-    ServerStorage: {
-      dependencyName: "minio",
-      instanceName: "primary",
-      ...serverStorageConfig,
-    },
+
+  const serverStorage = createMinioServerStorage();
+  const testDirectoryManager = new TestRemoteDirectoryManager(serverStorage);
+
+  const deleteFunction = async (
+    reference: ObjectReference,
+    transferConfig: TransferConfig
+  ) => {
+    assertS3TransferConfig(transferConfig);
+    const client = createMinioS3Client(transferConfig);
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: serverStorageConfig.bucket,
+        Key: buildObjectKey(reference),
+      })
+    );
   };
 
-  const testInfrastructure = new InternalStorageIntegrationTests(
-    config,
-    MinioServerStorageBindings
-  );
-  const testDirectoryManager = new TestRemoteDirectoryManager(
-    testInfrastructure.serverStorage
-  );
+  const listFunction = async (
+    baseDirectory: string,
+    transferConfig: TransferConfig
+  ) => {
+    assertS3TransferConfig(transferConfig);
+    const client = createMinioS3Client(transferConfig);
+
+    const response = await client.send(
+      new ListObjectsV2Command({
+        Bucket: serverStorageConfig.bucket,
+        Prefix: baseDirectory,
+        MaxKeys: 100,
+      })
+    );
+
+    const references =
+      response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
+      [];
+
+    const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
+    return nonEmptyReferences;
+  };
 
   beforeEach(async () => {
     await testDirectoryManager.purgeCreatedDirectories();
@@ -56,57 +88,78 @@ describe("MinioServerStorage internal tests", () => {
   });
 
   it(`should delete object using transfer config`, async () => {
-    const deleteFunction = async (
-      reference: ObjectReference,
-      transferConfig: TransferConfig
-    ) => {
-      assertS3TransferConfig(transferConfig);
-      const client = createMinioS3Client(transferConfig);
-      await client.send(
-        new DeleteObjectCommand({
-          Bucket: config.ServerStorage.bucket,
-          Key: buildObjectKey(reference),
-        })
-      );
-    };
-
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testDeleteObjectWithTransferConfig(testDirectory, deleteFunction);
+    await testDeleteObjectWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      deleteFunction
+    );
   });
 
   it(`should list objects using transfer config`, async () => {
-    const listFunction = async (
-      baseDirectory: string,
-      transferConfig: TransferConfig
-    ) => {
-      assertS3TransferConfig(transferConfig);
-      const client = createMinioS3Client(transferConfig);
-
-      const response = await client.send(
-        new ListObjectsV2Command({
-          Bucket: config.ServerStorage.bucket,
-          Prefix: baseDirectory,
-          MaxKeys: 100,
-        })
-      );
-
-      const references =
-        response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
-        [];
-
-      const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
-      return nonEmptyReferences;
-    };
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testListObjectsWithTransferConfig(testDirectory, listFunction);
+    await testListObjectsWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      listFunction
+    );
   });
 
+  function createMinioServerStorage() {
+    const { baseUrl, region, accessKey, secretKey, bucket, stsBaseUrl } =
+      serverStorageConfig;
+
+    const endpointUrl = new URL(baseUrl);
+    const endpoint = {
+      url: endpointUrl,
+    };
+
+    const s3Client = new S3Client({
+      endpoint,
+      region,
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+      },
+      forcePathStyle: true,
+    });
+
+    const clientWrapper = new S3ClientWrapper(s3Client, bucket);
+
+    const minioClient = createClient({
+      accessKey,
+      baseUrl,
+      secretKey,
+    });
+    const presignedUrlProvider = new MinioPresignedUrlProvider(
+      minioClient,
+      bucket
+    );
+
+    const stsClient = createStsClient({
+      stsBaseUrl,
+      region,
+      accessKey,
+      secretKey,
+    });
+    const transferConfigProvider = new S3TransferConfigProvider(
+      stsClient,
+      serverStorageConfig
+    );
+
+    return new MinioServerStorage(
+      clientWrapper,
+      presignedUrlProvider,
+      transferConfigProvider
+    );
+  }
+
   function createMinioS3Client(transferConfig: S3TransferConfig): S3Client {
-    const { baseUrl, region } = config.ServerStorage;
+    const { baseUrl, region } = serverStorageConfig;
     const { accessKey, secretKey, sessionToken } =
       transferConfig.authentication;
 

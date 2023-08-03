@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { BlobClient, ContainerClient } from "@azure/storage-blob";
+import {
+  BlobClient,
+  BlobServiceClient,
+  ContainerClient,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 
 import {
   buildObjectKey,
@@ -13,7 +18,6 @@ import {
 
 import { ObjectReference, TransferConfig } from "@itwin/object-storage-core";
 import {
-  InternalStorageIntegrationTests,
   TestRemoteDirectory,
   TestRemoteDirectoryManager,
   testDeleteObjectWithTransferConfig,
@@ -24,26 +28,47 @@ import {
   assertAzureTransferConfig,
   buildBlobUrl,
 } from "../../../common/internal";
-import { AzureServerStorageBindings } from "../../../server";
+import { AzureServerStorage, BlobServiceClientWrapper } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-describe("AzureServerStorage internal tests", () => {
-  const serverStorageConfig = new ServerStorageConfigProvider().get();
-  const config = {
-    ServerStorage: {
-      dependencyName: "azure",
-      instanceName: "primary",
-      ...serverStorageConfig,
-    },
+describe(`${AzureServerStorage.name} internal tests`, () => {
+  const serverStorage = createAzureServerStorage();
+  const testDirectoryManager = new TestRemoteDirectoryManager(serverStorage);
+
+  const deleteFunction = async (
+    reference: ObjectReference,
+    transferConfig: TransferConfig
+  ) => {
+    assertAzureTransferConfig(transferConfig);
+    const blobUrl = buildBlobUrl({
+      transferConfig,
+      reference,
+    });
+    const blobClient = new BlobClient(blobUrl);
+    await blobClient.delete();
   };
 
-  const testInfrastructure = new InternalStorageIntegrationTests(
-    config,
-    AzureServerStorageBindings
-  );
-  const testDirectoryManager = new TestRemoteDirectoryManager(
-    testInfrastructure.serverStorage
-  );
+  const listFunction = async (
+    baseDirectory: string,
+    transferConfig: TransferConfig
+  ) => {
+    assertAzureTransferConfig(transferConfig);
+    const containerUrl = buildContainerUrl(baseDirectory, transferConfig);
+    const containerClient = new ContainerClient(containerUrl);
+
+    const iter = containerClient.listBlobsFlat();
+    const names = Array<string>();
+    for await (const item of iter) names.push(item.name);
+
+    return names.map((name) =>
+      buildObjectReference(
+        buildObjectKey({
+          baseDirectory: baseDirectory,
+          objectName: name,
+        })
+      )
+    );
+  };
 
   beforeEach(async () => {
     await testDirectoryManager.purgeCreatedDirectories();
@@ -54,52 +79,43 @@ describe("AzureServerStorage internal tests", () => {
   });
 
   it(`should delete object using transfer config`, async () => {
-    const deleteFunction = async (
-      reference: ObjectReference,
-      transferConfig: TransferConfig
-    ) => {
-      assertAzureTransferConfig(transferConfig);
-      const blobUrl = buildBlobUrl({
-        transferConfig,
-        reference,
-      });
-      const blobClient = new BlobClient(blobUrl);
-      await blobClient.delete();
-    };
-
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testDeleteObjectWithTransferConfig(testDirectory, deleteFunction);
+    await testDeleteObjectWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      deleteFunction
+    );
   });
 
   it(`should list objects using transfer config`, async () => {
-    const listFunction = async (
-      baseDirectory: string,
-      transferConfig: TransferConfig
-    ) => {
-      assertAzureTransferConfig(transferConfig);
-      const containerUrl = buildContainerUrl(baseDirectory, transferConfig);
-      const containerClient = new ContainerClient(containerUrl);
-
-      const iter = containerClient.listBlobsFlat();
-      const names = Array<string>();
-      for await (const item of iter) names.push(item.name);
-
-      return names.map((name) =>
-        buildObjectReference(
-          buildObjectKey({
-            baseDirectory: baseDirectory,
-            objectName: name,
-          })
-        )
-      );
-    };
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testListObjectsWithTransferConfig(testDirectory, listFunction);
+    await testListObjectsWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      listFunction
+    );
   });
+
+  function createAzureServerStorage() {
+    const serverStorageConfig = new ServerStorageConfigProvider().get();
+    const credentials = new StorageSharedKeyCredential(
+      serverStorageConfig.accountName,
+      serverStorageConfig.accountKey
+    );
+    const blobServiceClient = new BlobServiceClient(
+      serverStorageConfig.baseUrl,
+      credentials
+    );
+
+    return new AzureServerStorage(
+      serverStorageConfig,
+      new BlobServiceClientWrapper(blobServiceClient)
+    );
+  }
 
   function buildContainerUrl(
     baseDirectory: string,

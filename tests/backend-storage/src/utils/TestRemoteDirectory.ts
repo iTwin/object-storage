@@ -8,12 +8,14 @@ import {
   BaseDirectory,
   Metadata,
   ObjectReference,
+  ServerStorage,
 } from "@itwin/object-storage-core";
 
-import { config } from "../test/Config";
-
 export class TestRemoteDirectory {
-  constructor(public readonly baseDirectory: BaseDirectory) {}
+  constructor(
+    private _serverStorage: ServerStorage,
+    public readonly baseDirectory: BaseDirectory
+  ) {}
 
   public async uploadFile(
     reference: Pick<ObjectReference, "relativeDirectory" | "objectName">,
@@ -27,8 +29,11 @@ export class TestRemoteDirectory {
       ...reference,
     };
 
-    const { serverStorage } = config;
-    await serverStorage.upload(objectReference, contentToUpload, metadata);
+    await this._serverStorage.upload(
+      objectReference,
+      contentToUpload,
+      metadata
+    );
     return objectReference;
   }
 }

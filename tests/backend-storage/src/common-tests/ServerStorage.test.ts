@@ -20,26 +20,28 @@ import {
   ServerStorage,
 } from "@itwin/object-storage-core";
 
-import { config } from "../shared/test/Config";
 import {
   TestRemoteDirectory,
-  assertBuffer,
-  assertLocalFile,
   assertQueriedObjects,
-  assertStream,
-  checkUploadedFileValidity,
   createObjectsReferences,
-  queryAndAssertCacheControl,
-  queryAndAssertContentEncoding,
-  queryAndAssertContentType,
-  queryAndAssertMetadata,
-} from "../shared/utils";
+} from "../utils";
 
+import { config } from "./Config";
 import {
   secondaryTestDirectoryManager,
   testDirectoryManager,
   testLocalFileManager,
 } from "./Global.test";
+import {
+  assertBuffer,
+  assertLocalFile,
+  assertStream,
+  checkUploadedFileValidity,
+  queryAndAssertCacheControl,
+  queryAndAssertContentEncoding,
+  queryAndAssertContentType,
+  queryAndAssertMetadata,
+} from "./utils";
 
 use(chaiAsPromised);
 

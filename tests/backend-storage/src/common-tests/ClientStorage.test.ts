@@ -14,9 +14,9 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core";
 
-import { config } from "../shared/test/Config";
-import { TestRemoteDirectory, assertLocalFile } from "../shared/utils";
+import { TestRemoteDirectory } from "../utils";
 
+import { config } from "./Config";
 import { testDirectoryManager, testLocalFileManager } from "./Global.test";
 import {
   testDownloadFromUrlToBuffer,
@@ -50,6 +50,7 @@ import {
   testUploadWithRelativeDirFromStreamWithConfig,
   testUploadWithRelativeDirWithConfig,
 } from "./test-templates/UploadTests";
+import { assertLocalFile } from "./utils";
 
 use(chaiAsPromised);
 

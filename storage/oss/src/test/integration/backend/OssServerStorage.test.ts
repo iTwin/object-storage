@@ -14,38 +14,75 @@ import {
   buildObjectKey,
   buildObjectReference,
 } from "@itwin/object-storage-core/lib/common/internal";
-import { assertS3TransferConfig } from "@itwin/object-storage-s3/lib/common/internal";
-
-import { ObjectReference, TransferConfig } from "@itwin/object-storage-core";
-import { S3TransferConfig } from "@itwin/object-storage-s3";
 import {
-  InternalStorageIntegrationTests,
+  assertS3TransferConfig,
+  createS3Client,
+} from "@itwin/object-storage-s3/lib/common/internal";
+
+import {
+  ObjectReference,
+  ServerStorage,
+  TransferConfig,
+} from "@itwin/object-storage-core";
+import {
+  S3ClientWrapper,
+  S3PresignedUrlProvider,
+  S3ServerStorage,
+  S3TransferConfig,
+} from "@itwin/object-storage-s3";
+import {
   TestRemoteDirectory,
   TestRemoteDirectoryManager,
   testDeleteObjectWithTransferConfig,
   testListObjectsWithTransferConfig,
 } from "@itwin/object-storage-tests-backend";
 
-import { OssServerStorageBindings } from "../../../server";
+import { OssTransferConfigProvider } from "../../../server";
+import { createCore } from "../../../server/internal";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
-describe("OssServerStorage internal tests", () => {
+describe(`Oss${ServerStorage.name} internal tests`, () => {
   const serverStorageConfig = new ServerStorageConfigProvider().get();
-  const config = {
-    ServerStorage: {
-      dependencyName: "oss",
-      instanceName: "primary",
-      ...serverStorageConfig,
-    },
+
+  const serverStorage = createOssServerStorage();
+  const testDirectoryManager = new TestRemoteDirectoryManager(serverStorage);
+
+  const deleteFunction = async (
+    reference: ObjectReference,
+    transferConfig: TransferConfig
+  ) => {
+    assertS3TransferConfig(transferConfig);
+    const client = createOssS3Client(transferConfig);
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: serverStorageConfig.bucket,
+        Key: buildObjectKey(reference),
+      })
+    );
   };
 
-  const testInfrastructure = new InternalStorageIntegrationTests(
-    config,
-    OssServerStorageBindings
-  );
-  const testDirectoryManager = new TestRemoteDirectoryManager(
-    testInfrastructure.serverStorage
-  );
+  const listFunction = async (
+    baseDirectory: string,
+    transferConfig: TransferConfig
+  ) => {
+    assertS3TransferConfig(transferConfig);
+    const client = createOssS3Client(transferConfig);
+
+    const response = await client.send(
+      new ListObjectsV2Command({
+        Bucket: serverStorageConfig.bucket,
+        Prefix: baseDirectory,
+        MaxKeys: 100,
+      })
+    );
+
+    const references =
+      response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
+      [];
+
+    const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
+    return nonEmptyReferences;
+  };
 
   beforeEach(async () => {
     await testDirectoryManager.purgeCreatedDirectories();
@@ -56,68 +93,59 @@ describe("OssServerStorage internal tests", () => {
   });
 
   it(`should delete object using transfer config`, async () => {
-    const deleteFunction = async (
-      reference: ObjectReference,
-      transferConfig: TransferConfig
-    ) => {
-      assertS3TransferConfig(transferConfig);
-      const client = createOssS3Client(transferConfig);
-      await client.send(
-        new DeleteObjectCommand({
-          Bucket: config.ServerStorage.bucket,
-          Key: buildObjectKey(reference),
-        })
-      );
-    };
-
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testDeleteObjectWithTransferConfig(testDirectory, deleteFunction);
+    await testDeleteObjectWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      deleteFunction
+    );
   });
 
   it(`should list objects using transfer config`, async () => {
-    const listFunction = async (
-      baseDirectory: string,
-      transferConfig: TransferConfig
-    ) => {
-      assertS3TransferConfig(transferConfig);
-      const client = createOssS3Client(transferConfig);
-
-      const response = await client.send(
-        new ListObjectsV2Command({
-          Bucket: config.ServerStorage.bucket,
-          Prefix: baseDirectory,
-          MaxKeys: 100,
-        })
-      );
-
-      const references =
-        response.Contents?.map((object) => buildObjectReference(object.Key!)) ??
-        [];
-
-      const nonEmptyReferences = references.filter((ref) => !!ref.objectName);
-      return nonEmptyReferences;
-    };
     const testDirectory: TestRemoteDirectory =
       await testDirectoryManager.createNew();
 
-    await testListObjectsWithTransferConfig(testDirectory, listFunction);
+    await testListObjectsWithTransferConfig(
+      serverStorage,
+      testDirectory,
+      listFunction
+    );
   });
 
+  function createOssServerStorage() {
+    const { baseUrl, region, accessKey, secretKey, bucket, stsBaseUrl } =
+      serverStorageConfig;
+
+    const s3Config = { baseUrl, region, accessKey, secretKey };
+    const client = createS3Client(s3Config);
+    const clientWrapper = new S3ClientWrapper(client, bucket);
+
+    const presignedUrlProvider = new S3PresignedUrlProvider(client, bucket);
+    const rpcClient = createCore({
+      accessKey,
+      secretKey,
+      stsBaseUrl,
+    });
+    const transferConfigProvider = new OssTransferConfigProvider(
+      rpcClient,
+      serverStorageConfig
+    );
+
+    return new S3ServerStorage(
+      clientWrapper,
+      presignedUrlProvider,
+      transferConfigProvider
+    );
+  }
+
   function createOssS3Client(transferConfig: S3TransferConfig): S3Client {
-    const { baseUrl, region } = config.ServerStorage;
+    const { baseUrl, region } = serverStorageConfig;
     const { accessKey, secretKey, sessionToken } =
       transferConfig.authentication;
 
-    return new S3Client({
-      endpoint: baseUrl,
-      region,
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretKey,
-        sessionToken,
-      },
-    });
+    const s3Config = { baseUrl, region, accessKey, secretKey, sessionToken };
+    return createS3Client(s3Config);
   }
 });

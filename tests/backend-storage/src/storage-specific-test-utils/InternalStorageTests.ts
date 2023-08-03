@@ -5,25 +5,28 @@
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 
-import { ObjectReference, TransferConfig } from "@itwin/object-storage-core";
+import {
+  ObjectReference,
+  ServerStorage,
+  TransferConfig,
+} from "@itwin/object-storage-core";
 
-import { TestRemoteDirectory } from "../../utils";
+import { TestRemoteDirectory } from "../utils";
 import {
   assertQueriedObjects,
   createObjectsReferences,
-} from "../../utils/Helpers";
-import { config } from "../Config";
+} from "../utils/Helpers";
 
 use(chaiAsPromised);
 
 export async function testDeleteObjectWithTransferConfig(
+  serverStorage: ServerStorage,
   testDirectory: TestRemoteDirectory,
   deleteFunction: (
     reference: ObjectReference,
     transferConfig: TransferConfig
   ) => Promise<void>
 ): Promise<void> {
-  const { serverStorage } = config;
   const contentBuffer = Buffer.from("test-delete-object-with-config");
   const uploadedFile: ObjectReference = await testDirectory.uploadFile(
     { objectName: "test-delete-object-with-config.txt" },
@@ -41,13 +44,13 @@ export async function testDeleteObjectWithTransferConfig(
 }
 
 export async function testListObjectsWithTransferConfig(
+  serverStorage: ServerStorage,
   testDirectory: TestRemoteDirectory,
   listFunction: (
     baseDirectory: string,
     transferConfig: TransferConfig
   ) => Promise<ObjectReference[]>
 ): Promise<void> {
-  const { serverStorage } = config;
   const references = await createObjectsReferences(testDirectory, 3);
   const baseDirectory = testDirectory.baseDirectory;
   const transferConfig = await serverStorage.getDirectoryAccessConfig(

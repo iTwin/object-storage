@@ -9,13 +9,10 @@ import {
   TransferConfig,
 } from "@itwin/object-storage-core";
 
-import { config } from "../../shared/test/Config";
-import {
-  TestRemoteDirectory,
-  assertBuffer,
-  assertStream,
-} from "../../shared/utils";
+import { TestRemoteDirectory } from "../../utils";
+import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
+import { assertBuffer, assertStream } from "../utils";
 
 const { serverStorage } = config;
 

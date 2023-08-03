@@ -20,7 +20,7 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { setOptions } from "./shared/test/Config";
+import { setOptions } from "./Config";
 
 export class StorageIntegrationTests extends Bindable {
   public readonly container = new Container();
@@ -65,7 +65,7 @@ export class StorageIntegrationTests extends Bindable {
     };
 
     const mocha = new Mocha(mochaOptions);
-    const testDirectory = join(__dirname, "test");
+    const testDirectory = __dirname;
 
     readdirSync(testDirectory)
       .filter((file) => file.toLowerCase().endsWith("test.js"))
