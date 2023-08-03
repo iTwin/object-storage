@@ -41,7 +41,7 @@ import {
   queryAndAssertContentEncoding,
   queryAndAssertContentType,
   queryAndAssertMetadata,
-} from "./utils";
+} from "./utils/Helpers";
 
 use(chaiAsPromised);
 

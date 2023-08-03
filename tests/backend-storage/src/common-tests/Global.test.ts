@@ -7,7 +7,7 @@ import * as path from "path";
 import { TestRemoteDirectoryManager } from "../utils";
 
 import { config } from "./Config";
-import { TestLocalFileManager } from "./utils";
+import { TestLocalFileManager } from "./utils/TestLocalFileManager";
 
 export const testDirectoryManager = new TestRemoteDirectoryManager(
   config.serverStorage

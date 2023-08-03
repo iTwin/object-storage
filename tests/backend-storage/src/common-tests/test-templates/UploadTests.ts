@@ -18,7 +18,10 @@ import {
 import { TestRemoteDirectory } from "../../utils";
 import { config } from "../Config";
 import { testDirectoryManager, testLocalFileManager } from "../Global.test";
-import { checkUploadedFileValidity, queryAndAssertMetadata } from "../utils";
+import {
+  checkUploadedFileValidity,
+  queryAndAssertMetadata,
+} from "../utils/Helpers";
 
 const { serverStorage } = config;
 

@@ -12,7 +12,7 @@ import {
 import { TestRemoteDirectory } from "../../utils";
 import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
-import { assertBuffer, assertStream } from "../utils";
+import { assertBuffer, assertStream } from "../utils/Helpers";
 
 const { serverStorage } = config;
 

@@ -50,7 +50,7 @@ import {
   testUploadWithRelativeDirFromStreamWithConfig,
   testUploadWithRelativeDirWithConfig,
 } from "./test-templates/UploadTests";
-import { assertLocalFile } from "./utils";
+import { assertLocalFile } from "./utils/Helpers";
 
 use(chaiAsPromised);
 

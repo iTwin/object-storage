@@ -10,22 +10,9 @@ interface StorageIntegrationTestsConfig {
   clientStorage: ClientStorage;
 }
 
-interface InternalStorageIntegrationTestsConfig {
-  serverStorage: ServerStorage;
-}
-
 export let config: StorageIntegrationTestsConfig;
 
 export function setOptions(options: StorageIntegrationTestsConfig): void {
-  config = {
-    ...config,
-    ...options,
-  };
-}
-
-export function setOptionsForInternalTests(
-  options: InternalStorageIntegrationTestsConfig
-): void {
   config = {
     ...config,
     ...options,
