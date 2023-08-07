@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-minio",
-  "version": "2.1.0-dev.2",
+  "version": "2.1.0",
   "description": "Object storage implementation using Minio",
   "keywords": [
     "Bentley",
