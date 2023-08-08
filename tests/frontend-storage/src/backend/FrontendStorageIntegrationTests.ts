@@ -8,7 +8,10 @@ import * as path from "path";
 import * as cypress from "cypress";
 
 export class FrontendStorageIntegrationTests {
-  constructor(private readonly _supportFileSourcePath: string) {}
+  constructor(
+    private readonly _supportFileSourcePath: string,
+    private readonly _envVariables?: object
+  ) {}
 
   public async start(): Promise<void> {
     const projectPath = path.resolve(__dirname, "..");
@@ -32,6 +35,7 @@ export class FrontendStorageIntegrationTests {
         e2e: {
           supportFile: supportFileTargetPath,
         },
+        env: this._envVariables,
       },
     };
 

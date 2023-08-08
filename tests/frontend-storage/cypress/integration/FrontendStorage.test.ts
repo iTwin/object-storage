@@ -39,7 +39,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
   after(async () => {
     await directoryManager.purgeCreatedDirectories();
   });
-  
+
   describe("PresignedUrlProvider", () => {
     describe(`${frontendStorage.upload.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
       it("should upload a file from buffer to URL", async () => {
@@ -48,9 +48,13 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       it("should upload a file with relative dir from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test, { useRelativeDir: true })
       });
-      it("should upload a file with metadata from buffer to URL", async () => {
-        await testUploadFromBufferToUrl(test, { useMetadata: true })
-      });
+
+      if (!Cypress.env("SKIP_FILE_WITH_METADATA_UPLOAD_TO_URL")) {
+        it("should upload a file with metadata from buffer to URL", async () => {
+          await testUploadFromBufferToUrl(test, { useMetadata: true })
+        });
+      }
+
     });
     describe(`${frontendStorage.download.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
       it("should download a file to buffer from URL", async () => {
@@ -105,9 +109,9 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
   async function testRelativeDirectoryValidation(promise: Promise<any>): Promise<void> {
     let caughtError: unknown | undefined = undefined;
     try { await promise; }
-    catch(error) { caughtError = error; }
+    catch (error) { caughtError = error; }
     expect(caughtError).to.not.be.undefined;
-    expect( (caughtError as Error).message ).to.equal("Relative directory cannot contain backslashes.");
+    expect((caughtError as Error).message).to.equal("Relative directory cannot contain backslashes.");
   }
   const invalidRelativeDirInput = {
     reference: {
@@ -130,7 +134,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
         })
       );
     });
-    
+
     it("should throw if relativeDirectory is invalid (stream)", async () => {
       await testRelativeDirectoryValidation(
         frontendStorage.download({

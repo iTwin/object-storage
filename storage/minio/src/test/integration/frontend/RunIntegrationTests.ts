@@ -28,7 +28,14 @@ const bundledSetupScript = path.resolve(
   bundledScriptFileName
 );
 
-const tests = new FrontendStorageIntegrationTests(bundledSetupScript);
+// There is a known bug with newest versions of MinIO which now behaves in the same manner as AWS S3.
+// File upload with metadata using signed URL does not work because we do not include metadata headers when
+// signing the url.
+// For now we do not run these tests.
+// Bug #1255566
+const tests = new FrontendStorageIntegrationTests(bundledSetupScript, {
+  SKIP_FILE_WITH_METADATA_UPLOAD_TO_URL: "1",
+});
 tests.start().catch((err) => {
   process.exitCode = 1;
   throw err;
