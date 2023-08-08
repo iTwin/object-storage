@@ -28,7 +28,8 @@ export class StorageIntegrationTests extends Bindable {
   constructor(
     config: DependenciesConfig,
     serverStorageDependency: new () => ServerStorageDependency,
-    clientStorageDependency: new () => ClientStorageDependency
+    clientStorageDependency: new () => ClientStorageDependency,
+    private readonly _mochaGrepPattern?: string
   ) {
     super();
 
@@ -59,6 +60,7 @@ export class StorageIntegrationTests extends Bindable {
     const mochaOptions: Mocha.MochaOptions = {
       timeout: 999999,
       color: true,
+      grep: this._mochaGrepPattern,
       reporterOptions: {
         mochaFile: "lib/test/junit_results.xml",
       },
