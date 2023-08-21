@@ -806,6 +806,201 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
+  describe(`${serverStorage.copyDirectory.name}()`, () => {
+    it("should copy objects", async () => {
+      const sourceTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference1: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy1.txt" },
+          undefined,
+          undefined
+        );
+      const sourceReference2: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy2.txt" },
+          undefined,
+          undefined
+        );
+      const sourceReference3: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy3.txt" },
+          undefined,
+          undefined
+        );
+      const targetTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+
+      await serverStorage.copyDirectory(
+        serverStorage,
+        sourceTestDirectory.baseDirectory,
+        targetTestDirectory.baseDirectory
+      );
+
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference1.objectName,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference2.objectName,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference3.objectName,
+        })
+      ).to.eventually.be.true;
+    });
+
+    it("should copy objects with relative directories", async () => {
+      const sourceTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference1: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          {
+            objectName: "test-copy1.txt",
+            relativeDirectory: "relative-1",
+          },
+          undefined,
+          undefined
+        );
+      const sourceReference2: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy2.txt" },
+          undefined,
+          undefined
+        );
+      const sourceReference3: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          {
+            objectName: "test-copy3.txt",
+            relativeDirectory: "relative-1/relative-2",
+          },
+          undefined,
+          undefined
+        );
+      const targetTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+
+      await serverStorage.copyDirectory(
+        serverStorage,
+        sourceTestDirectory.baseDirectory,
+        targetTestDirectory.baseDirectory,
+        undefined,
+        { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
+      );
+
+      await expect(
+        serverStorage.objectExists({
+          ...sourceReference1,
+          baseDirectory: targetTestDirectory.baseDirectory.baseDirectory,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...sourceReference2,
+          baseDirectory: targetTestDirectory.baseDirectory.baseDirectory,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...sourceReference3,
+          baseDirectory: targetTestDirectory.baseDirectory.baseDirectory,
+        })
+      ).to.eventually.be.true;
+    });
+
+    it("should copy objects with limited parallelism", async () => {
+      const sourceTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const objectsCount = 10;
+      for (let i = 0; i < objectsCount; i++) {
+        await sourceTestDirectory.uploadFile(
+          { objectName: `test-copy${i}.txt` },
+          undefined,
+          undefined
+        );
+      }
+      const targetTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+
+      await serverStorage.copyDirectory(
+        serverStorage,
+        sourceTestDirectory.baseDirectory,
+        targetTestDirectory.baseDirectory,
+        undefined,
+        { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
+      );
+
+      for (let i = 0; i < objectsCount; i++) {
+        await expect(
+          serverStorage.objectExists({
+            ...targetTestDirectory.baseDirectory,
+            objectName: `test-copy${i}.txt`,
+          })
+        ).to.eventually.be.true;
+      }
+    });
+
+    it("should copy objects with predicate", async () => {
+      const sourceTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+      const sourceReference1: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy1.txt" },
+          undefined,
+          undefined
+        );
+      const sourceReference2: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy2.txt" },
+          undefined,
+          undefined
+        );
+      const sourceReference3: ObjectReference =
+        await sourceTestDirectory.uploadFile(
+          { objectName: "test-copy3.txt" },
+          undefined,
+          undefined
+        );
+      const targetTestDirectory: TestRemoteDirectory =
+        await testDirectoryManager.createNew();
+
+      await serverStorage.copyDirectory(
+        serverStorage,
+        sourceTestDirectory.baseDirectory,
+        targetTestDirectory.baseDirectory,
+        (object) =>
+          object.objectName === sourceReference1.objectName ||
+          object.objectName === sourceReference3.objectName
+      );
+
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference1.objectName,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference2.objectName,
+        })
+      ).to.eventually.be.false;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: sourceReference3.objectName,
+        })
+      ).to.eventually.be.true;
+    });
+  });
+
   describe(`${serverStorage.download.name}()`, () => {
     const contentBuffer = Buffer.from("test-download");
 
