@@ -183,6 +183,29 @@ export abstract class ServerStorage
     }
   }
 
+  private buildTaskKey(sourceReference: ObjectReference): string {
+    return sourceReference.relativeDirectory
+      ? `${sourceReference.baseDirectory}/${sourceReference.relativeDirectory}/${sourceReference.objectName}`
+      : `${sourceReference.baseDirectory}/${sourceReference.objectName}`;
+  }
+
+  private async copyObjectWithKey(
+    sourceStorage: ServerStorage,
+    sourceReference: ObjectReference,
+    targetDirectory: BaseDirectory
+  ): Promise<string> {
+    const newTaskKey = this.buildTaskKey(sourceReference);
+    try {
+      await this.copyObject(sourceStorage, sourceReference, {
+        ...sourceReference,
+        baseDirectory: targetDirectory.baseDirectory,
+      });
+      return newTaskKey;
+    } catch (error) {
+      throw { key: newTaskKey, error };
+    }
+  }
+
   /**
    * Copies objects from a base directory in another {@link ServerStorage} instance to this storage.
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
@@ -206,22 +229,10 @@ export abstract class ServerStorage
   ): Promise<void> {
     const taskMap = new Map<string, Promise<string>>();
     const errors: unknown[] = [];
-    const taskFactory = async (object: ObjectReference) => {
-      const newTaskKey = `${object.baseDirectory}/${object.objectName}`;
-      try {
-        await this.copyObject(sourceStorage, object, {
-          ...object,
-          baseDirectory: targetDirectory.baseDirectory,
-        });
-        return newTaskKey;
-      } catch (error) {
-        throw { key: newTaskKey, error };
-      }
-    };
 
     const handleSingleTask = async () => {
       try {
-        const [key] = await Promise.race(taskMap);
+        const key = await Promise.race(taskMap.values());
         taskMap.delete(key);
       } catch (error) {
         taskMap.delete((error as { key: string }).key);
@@ -238,16 +249,11 @@ export abstract class ServerStorage
       copyOptions.maxPageSize,
       predicate
     )) {
-      await this.copyObject(sourceStorage, object, {
-        ...targetDirectory,
-        objectName: object.objectName,
-      });
-
       taskMap.set(
-        `${object.baseDirectory}/${object.objectName}`,
-        taskFactory(object)
+        this.buildTaskKey(object),
+        this.copyObjectWithKey(sourceStorage, object, targetDirectory)
       );
-
+      await this.copyObjectWithKey(sourceStorage, object, targetDirectory);
       if (taskMap.size >= copyOptions.maxConcurrency) {
         await handleSingleTask();
       }
