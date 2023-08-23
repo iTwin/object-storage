@@ -253,7 +253,6 @@ export abstract class ServerStorage
         this.buildTaskKey(object),
         this.copyObjectWithKey(sourceStorage, object, targetDirectory)
       );
-      await this.copyObjectWithKey(sourceStorage, object, targetDirectory);
       if (taskMap.size >= copyOptions.maxConcurrency) {
         await handleSingleTask();
       }
