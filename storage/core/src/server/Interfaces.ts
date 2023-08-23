@@ -110,3 +110,9 @@ export type ExpiryOptions =
       expiresOn?: never;
       expiresInSeconds?: number;
     };
+
+export interface CopyOptions {
+  maxPageSize: number;
+  maxConcurrency: number;
+  continueOnError: boolean;
+}

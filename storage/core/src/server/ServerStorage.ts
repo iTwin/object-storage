@@ -22,6 +22,7 @@ import {
   MultipartUploadData,
   TransferData,
   EntityPageListIterator,
+  CopyOptions,
 } from "./Interfaces";
 
 @injectable()
@@ -163,6 +164,107 @@ export abstract class ServerStorage
     sourceReference: ObjectReference,
     targetReference: ObjectReference
   ): Promise<void>;
+
+  private async *listObjectsFiltered(
+    sourceStorage: ServerStorage,
+    sourceDirectory: BaseDirectory,
+    maxPageSize: number,
+    predicate?: (objectReference: ObjectReference) => boolean
+  ): AsyncGenerator<ObjectReference> {
+    for await (const objectPage of sourceStorage.getListObjectsPagedIterator(
+      sourceDirectory,
+      maxPageSize
+    )) {
+      for (const object of objectPage) {
+        if (predicate ? predicate(object) : true) {
+          yield object;
+        }
+      }
+    }
+  }
+
+  private buildTaskKey(sourceReference: ObjectReference): string {
+    return sourceReference.relativeDirectory
+      ? `${sourceReference.baseDirectory}/${sourceReference.relativeDirectory}/${sourceReference.objectName}`
+      : `${sourceReference.baseDirectory}/${sourceReference.objectName}`;
+  }
+
+  private async copyObjectWithKey(
+    sourceStorage: ServerStorage,
+    sourceReference: ObjectReference,
+    targetDirectory: BaseDirectory
+  ): Promise<string> {
+    const newTaskKey = this.buildTaskKey(sourceReference);
+    try {
+      await this.copyObject(sourceStorage, sourceReference, {
+        ...sourceReference,
+        baseDirectory: targetDirectory.baseDirectory,
+      });
+      return newTaskKey;
+    } catch (error) {
+      throw { key: newTaskKey, error };
+    }
+  }
+
+  /**
+   * Copies objects from a base directory in another {@link ServerStorage} instance to this storage.
+   * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
+   * @param {BaseDirectory} sourceDirectory base directory in the source storage that will be copied.
+   * @param {BaseDirectory} targetDirectory base directory in the target storage.
+   * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
+   * objects from the sourceDirectory will be copied.
+   * @returns {Promise<void>}
+   * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
+   */
+  public async copyDirectory(
+    sourceStorage: ServerStorage,
+    sourceDirectory: BaseDirectory,
+    targetDirectory: BaseDirectory,
+    predicate?: (objectReference: ObjectReference) => boolean,
+    copyOptions: CopyOptions = {
+      maxPageSize: 100,
+      maxConcurrency: 50,
+      continueOnError: true,
+    }
+  ): Promise<void> {
+    const taskMap = new Map<string, Promise<string>>();
+    const errors: unknown[] = [];
+
+    const handleSingleTask = async () => {
+      try {
+        const key = await Promise.race(taskMap.values());
+        taskMap.delete(key);
+      } catch (error) {
+        taskMap.delete((error as { key: string }).key);
+        if (!copyOptions.continueOnError) {
+          throw error;
+        }
+        errors.push(error);
+      }
+    };
+
+    for await (const object of this.listObjectsFiltered(
+      sourceStorage,
+      sourceDirectory,
+      copyOptions.maxPageSize,
+      predicate
+    )) {
+      taskMap.set(
+        this.buildTaskKey(object),
+        this.copyObjectWithKey(sourceStorage, object, targetDirectory)
+      );
+      if (taskMap.size >= copyOptions.maxConcurrency) {
+        await handleSingleTask();
+      }
+    }
+
+    while (taskMap.size > 0) {
+      await handleSingleTask();
+    }
+    if (errors.length > 0) {
+      throw new AggregateError(errors);
+    }
+  }
 
   public abstract updateMetadata(
     reference: ObjectReference,
