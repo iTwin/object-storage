@@ -62,9 +62,12 @@ export async function streamToLocalFile(
 
   return new Promise<void>((resolve, reject) => {
     const fileStream = createWriteStream(destinationPath);
-    stream.pipe(fileStream);
+
     stream.on("error", reject);
+    fileStream.on("error", reject);
     fileStream.on("finish", resolve);
+
+    stream.pipe(fileStream);
   });
 }
 
