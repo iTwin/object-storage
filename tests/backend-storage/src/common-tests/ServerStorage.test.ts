@@ -892,7 +892,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         sourceTestDirectory.baseDirectory,
         targetTestDirectory.baseDirectory,
         undefined,
-        undefined,
         { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
       );
 
@@ -935,7 +934,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         sourceTestDirectory.baseDirectory,
         targetTestDirectory.baseDirectory,
         undefined,
-        undefined,
         { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
       );
 
@@ -976,16 +974,15 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.copyDirectory(
         serverStorage,
         sourceTestDirectory.baseDirectory,
-        targetTestDirectory.baseDirectory,
-        (object) =>
-          object.objectName === sourceReference1.objectName ||
-          object.objectName === sourceReference3.objectName,
         (object: ObjectReference) => {
           return {
             ...targetTestDirectory.baseDirectory,
             objectName: `2-${object.objectName}`,
           };
-        }
+        },
+        (object) =>
+          object.objectName === sourceReference1.objectName ||
+          object.objectName === sourceReference3.objectName
       );
 
       await expect(

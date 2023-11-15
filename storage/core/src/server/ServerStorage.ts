@@ -207,20 +207,20 @@ export abstract class ServerStorage
    * Copies objects from a base directory in another {@link ServerStorage} instance to this storage.
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
    * @param {BaseDirectory} sourceDirectory base directory in the source storage that will be copied.
-   * @param {BaseDirectory} targetDirectory base directory in the target storage.
+   * @param {BaseDirectory} target base directory in the target storage or a callback to generate object
+   * reference in the target storage.
    * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
    * objects from the sourceDirectory will be copied.
-   * @param {Function} renameCallback optional callback to rename objects as they are copied. If
-   * specified, targetDirectory argument will be ignored.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
   public async copyDirectory(
     sourceStorage: ServerStorage,
     sourceDirectory: BaseDirectory,
-    targetDirectory: BaseDirectory,
+    target:
+      | BaseDirectory
+      | ((objectReference: ObjectReference) => ObjectReference),
     predicate?: (objectReference: ObjectReference) => boolean,
-    renameCallback?: (objectReference: ObjectReference) => ObjectReference,
     copyOptions: CopyOptions = {
       maxPageSize: 100,
       maxConcurrency: 50,
@@ -249,12 +249,13 @@ export abstract class ServerStorage
       copyOptions.maxPageSize,
       predicate
     )) {
-      const targetReference = renameCallback
-        ? renameCallback(sourceReference)
-        : {
-            ...sourceReference,
-            baseDirectory: targetDirectory.baseDirectory,
-          };
+      const targetReference =
+        target instanceof Function
+          ? target(sourceReference)
+          : {
+              ...sourceReference,
+              baseDirectory: target.baseDirectory,
+            };
       taskMap.set(
         this.buildTaskKey(sourceReference),
         this.copyObjectWithKey(sourceStorage, sourceReference, targetReference)
