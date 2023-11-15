@@ -192,14 +192,11 @@ export abstract class ServerStorage
   private async copyObjectWithKey(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetDirectory: BaseDirectory
+    targetReference: ObjectReference
   ): Promise<string> {
     const newTaskKey = this.buildTaskKey(sourceReference);
     try {
-      await this.copyObject(sourceStorage, sourceReference, {
-        ...sourceReference,
-        baseDirectory: targetDirectory.baseDirectory,
-      });
+      await this.copyObject(sourceStorage, sourceReference, targetReference);
       return newTaskKey;
     } catch (error) {
       throw { key: newTaskKey, error };
@@ -213,6 +210,8 @@ export abstract class ServerStorage
    * @param {BaseDirectory} targetDirectory base directory in the target storage.
    * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
    * objects from the sourceDirectory will be copied.
+   * @param {Function} renameCallback optional callback to rename objects as they are copied. If
+   * specified, targetDirectory argument will be ignored.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
@@ -221,6 +220,7 @@ export abstract class ServerStorage
     sourceDirectory: BaseDirectory,
     targetDirectory: BaseDirectory,
     predicate?: (objectReference: ObjectReference) => boolean,
+    renameCallback?: (objectReference: ObjectReference) => ObjectReference,
     copyOptions: CopyOptions = {
       maxPageSize: 100,
       maxConcurrency: 50,
@@ -243,15 +243,21 @@ export abstract class ServerStorage
       }
     };
 
-    for await (const object of this.listObjectsFiltered(
+    for await (const sourceReference of this.listObjectsFiltered(
       sourceStorage,
       sourceDirectory,
       copyOptions.maxPageSize,
       predicate
     )) {
+      const targetReference = renameCallback
+        ? renameCallback(sourceReference)
+        : {
+            ...sourceReference,
+            baseDirectory: targetDirectory.baseDirectory,
+          };
       taskMap.set(
-        this.buildTaskKey(object),
-        this.copyObjectWithKey(sourceStorage, object, targetDirectory)
+        this.buildTaskKey(sourceReference),
+        this.copyObjectWithKey(sourceStorage, sourceReference, targetReference)
       );
       if (taskMap.size >= copyOptions.maxConcurrency) {
         await handleSingleTask();

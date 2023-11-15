@@ -892,6 +892,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         sourceTestDirectory.baseDirectory,
         targetTestDirectory.baseDirectory,
         undefined,
+        undefined,
         { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
       );
 
@@ -933,6 +934,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         serverStorage,
         sourceTestDirectory.baseDirectory,
         targetTestDirectory.baseDirectory,
+        undefined,
         undefined,
         { maxConcurrency: 3, maxPageSize: 5, continueOnError: true }
       );
@@ -977,7 +979,13 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         targetTestDirectory.baseDirectory,
         (object) =>
           object.objectName === sourceReference1.objectName ||
-          object.objectName === sourceReference3.objectName
+          object.objectName === sourceReference3.objectName,
+        (object: ObjectReference) => {
+          return {
+            ...targetTestDirectory.baseDirectory,
+            objectName: `2-${object.objectName}`,
+          };
+        }
       );
 
       await expect(
@@ -985,7 +993,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           ...targetTestDirectory.baseDirectory,
           objectName: sourceReference1.objectName,
         })
-      ).to.eventually.be.true;
+      ).to.eventually.be.false;
       await expect(
         serverStorage.objectExists({
           ...targetTestDirectory.baseDirectory,
@@ -996,6 +1004,18 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         serverStorage.objectExists({
           ...targetTestDirectory.baseDirectory,
           objectName: sourceReference3.objectName,
+        })
+      ).to.eventually.be.false;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: `2-${sourceReference1.objectName}`,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: `2-${sourceReference3.objectName}`,
         })
       ).to.eventually.be.true;
     });
