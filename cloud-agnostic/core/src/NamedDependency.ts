@@ -7,6 +7,13 @@ import { Container, interfaces } from "inversify";
 import { Dependency } from "./Dependency";
 import { DependencyConfig } from "./DependencyConfig";
 
+export class NamedInstance<T> {
+  constructor(
+    public readonly instance: T,
+    public readonly instanceName: string
+  ) {}
+}
+
 export abstract class NamedDependency extends Dependency {
   protected abstract _registerInstance(
     container: Container,
@@ -30,6 +37,15 @@ export abstract class NamedDependency extends Dependency {
     serviceIdentifier: interfaces.ServiceIdentifier<T>,
     instanceName: string
   ): void {
+    container
+      .bind(NamedInstance<T>)
+      .toDynamicValue(() => {
+        return new NamedInstance<T>(
+          childContainer.get(serviceIdentifier),
+          instanceName
+        );
+      })
+      .inSingletonScope();
     container
       .bind(serviceIdentifier)
       .toDynamicValue(() => {

@@ -5,7 +5,7 @@
 import { expect } from "chai";
 import { Container } from "inversify";
 
-import { Bindable, DependenciesConfig } from "..";
+import { Bindable, DependenciesConfig, NamedInstance } from "..";
 import { DependencyError, DependencyTypeError } from "../internal";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
@@ -127,7 +127,7 @@ describe(`${Bindable.name}`, () => {
     validateTestObject(test, testConfigWithOneInstance[0]);
   });
 
-  it(`should resolve multiple registered named dependency instance`, () => {
+  it(`should resolve multiple registered named dependency instances by name`, () => {
     const setup = new TestSetupWithNamedInstances(
       new Container(),
       dependenciesConfigWithMultipleInstances
@@ -146,5 +146,22 @@ describe(`${Bindable.name}`, () => {
 
     validateTestObject(test, testConfigWithMultipleInstances[0]);
     validateTestObject(test2, testConfigWithMultipleInstances[1]);
+  });
+
+  it(`should resolve multiple registered named dependency instances as array`, () => {
+    const setup = new TestSetupWithNamedInstances(
+      new Container(),
+      dependenciesConfigWithMultipleInstances
+    );
+
+    setup.start();
+
+    const tests: NamedInstance<Test>[] = setup.container.getAll(
+      NamedInstance<Test>
+    );
+
+    expect(tests.length).to.be.equal(2);
+    validateTestObject(tests[0]?.instance, testConfigWithMultipleInstances[0]);
+    validateTestObject(tests[1]?.instance, testConfigWithMultipleInstances[1]);
   });
 });

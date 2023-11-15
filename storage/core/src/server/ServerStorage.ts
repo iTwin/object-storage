@@ -192,14 +192,11 @@ export abstract class ServerStorage
   private async copyObjectWithKey(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetDirectory: BaseDirectory
+    targetReference: ObjectReference
   ): Promise<string> {
     const newTaskKey = this.buildTaskKey(sourceReference);
     try {
-      await this.copyObject(sourceStorage, sourceReference, {
-        ...sourceReference,
-        baseDirectory: targetDirectory.baseDirectory,
-      });
+      await this.copyObject(sourceStorage, sourceReference, targetReference);
       return newTaskKey;
     } catch (error) {
       throw { key: newTaskKey, error };
@@ -210,7 +207,8 @@ export abstract class ServerStorage
    * Copies objects from a base directory in another {@link ServerStorage} instance to this storage.
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
    * @param {BaseDirectory} sourceDirectory base directory in the source storage that will be copied.
-   * @param {BaseDirectory} targetDirectory base directory in the target storage.
+   * @param {BaseDirectory} target base directory in the target storage or a callback to generate object
+   * reference in the target storage.
    * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
    * objects from the sourceDirectory will be copied.
    * @returns {Promise<void>}
@@ -219,7 +217,9 @@ export abstract class ServerStorage
   public async copyDirectory(
     sourceStorage: ServerStorage,
     sourceDirectory: BaseDirectory,
-    targetDirectory: BaseDirectory,
+    target:
+      | BaseDirectory
+      | ((objectReference: ObjectReference) => ObjectReference),
     predicate?: (objectReference: ObjectReference) => boolean,
     copyOptions: CopyOptions = {
       maxPageSize: 100,
@@ -243,15 +243,22 @@ export abstract class ServerStorage
       }
     };
 
-    for await (const object of this.listObjectsFiltered(
+    for await (const sourceReference of this.listObjectsFiltered(
       sourceStorage,
       sourceDirectory,
       copyOptions.maxPageSize,
       predicate
     )) {
+      const targetReference =
+        target instanceof Function
+          ? target(sourceReference)
+          : {
+              ...sourceReference,
+              baseDirectory: target.baseDirectory,
+            };
       taskMap.set(
-        this.buildTaskKey(object),
-        this.copyObjectWithKey(sourceStorage, object, targetDirectory)
+        this.buildTaskKey(sourceReference),
+        this.copyObjectWithKey(sourceStorage, sourceReference, targetReference)
       );
       if (taskMap.size >= copyOptions.maxConcurrency) {
         await handleSingleTask();

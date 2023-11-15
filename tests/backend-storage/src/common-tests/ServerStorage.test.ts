@@ -974,7 +974,12 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       await serverStorage.copyDirectory(
         serverStorage,
         sourceTestDirectory.baseDirectory,
-        targetTestDirectory.baseDirectory,
+        (object: ObjectReference) => {
+          return {
+            ...targetTestDirectory.baseDirectory,
+            objectName: `2-${object.objectName}`,
+          };
+        },
         (object) =>
           object.objectName === sourceReference1.objectName ||
           object.objectName === sourceReference3.objectName
@@ -985,7 +990,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
           ...targetTestDirectory.baseDirectory,
           objectName: sourceReference1.objectName,
         })
-      ).to.eventually.be.true;
+      ).to.eventually.be.false;
       await expect(
         serverStorage.objectExists({
           ...targetTestDirectory.baseDirectory,
@@ -996,6 +1001,18 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         serverStorage.objectExists({
           ...targetTestDirectory.baseDirectory,
           objectName: sourceReference3.objectName,
+        })
+      ).to.eventually.be.false;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: `2-${sourceReference1.objectName}`,
+        })
+      ).to.eventually.be.true;
+      await expect(
+        serverStorage.objectExists({
+          ...targetTestDirectory.baseDirectory,
+          objectName: `2-${sourceReference3.objectName}`,
         })
       ).to.eventually.be.true;
     });
