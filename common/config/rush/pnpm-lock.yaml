@@ -72,7 +72,7 @@ importers:
   ../../storage/azure:
     specifiers:
       '@azure/core-paging': ~1.5.0
-      '@azure/storage-blob': ~12.13.0
+      '@azure/storage-blob': ~12.17.0
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
@@ -104,7 +104,7 @@ importers:
       webpack-cli: ~4.9.2
     dependencies:
       '@azure/core-paging': 1.5.0
-      '@azure/storage-blob': 12.13.0
+      '@azure/storage-blob': 12.17.0
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
       '@itwin/object-storage-core': link:../core
     devDependencies:
@@ -1270,8 +1270,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@azure/storage-blob/12.13.0:
-    resolution: {integrity: sha512-t3Q2lvBMJucgTjQcP5+hvEJMAsJSk0qmAnjDLie2td017IiduZbbC9BOcFfmwzR6y6cJdZOuewLCNFmEx9IrXA==}
+  /@azure/storage-blob/12.17.0:
+    resolution: {integrity: sha512-sM4vpsCpcCApagRW5UIjQNlNylo02my2opgp0Emi8x888hZUvJ3dN69Oq20cEGXkMUWnoCrBaB0zyS3yeB87sQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
