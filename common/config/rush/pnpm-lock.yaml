@@ -12,17 +12,17 @@ importers:
     specifiers:
       '@itwin/object-storage-common-config': workspace:*
       '@types/chai': ^4.3.8
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       chai: ^4.3.10
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       cypress: ^12.13.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
+      mocha: ^10.2.0
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     devDependencies:
       '@itwin/object-storage-common-config': link:../../utils/common-config
@@ -47,12 +47,12 @@ importers:
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
       '@types/node': ^18.11.18
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       eslint: ^8.42.0
       inversify: ^6.0.1
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@itwin/cloud-agnostic-core': link:../cloud-agnostic/core
@@ -71,8 +71,8 @@ importers:
 
   ../../storage/azure:
     specifiers:
-      '@azure/core-paging': ~1.5.0
-      '@azure/storage-blob': ~12.17.0
+      '@azure/core-paging': ^1.5.0
+      '@azure/storage-blob': ^12.17.0
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
@@ -81,27 +81,27 @@ importers:
       '@itwin/object-storage-tests-frontend': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
-      '@types/sinon': ~10.0.11
+      '@types/sinon': ^10.0.11
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       cypress: ^12.13.0
-      dotenv: ~16.0.0
+      dotenv: ^16.0.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
-      npm-run-all: ~4.1.5
+      mocha: ^10.2.0
+      npm-run-all: ^4.1.5
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sinon: ~14.0.0
-      sort-package-json: ~1.53.1
+      sinon: ^14.0.0
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
-      wait-on: ~7.2.0
-      webpack: ~5.72.0
-      webpack-cli: ~4.9.2
+      wait-on: ^7.2.0
+      webpack: ^5.72.0
+      webpack-cli: ^4.9.2
     dependencies:
       '@azure/core-paging': 1.5.0
       '@azure/storage-blob': 12.17.0
@@ -142,20 +142,20 @@ importers:
       '@itwin/object-storage-common-config': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
-      axios: ~1.6.5
+      axios: ^1.6.5
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       cypress: ^12.13.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
+      mocha: ^10.2.0
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
@@ -193,28 +193,28 @@ importers:
       '@itwin/object-storage-tests-frontend': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/minio': ~7.0.11
-      '@types/mocha': ~10.0.1
+      '@types/minio': ^7.0.11
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
-      '@types/sinon': ~10.0.11
+      '@types/sinon': ^10.0.11
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       cypress: ^12.13.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      minio: ~7.1.0
-      mocha: ~10.2.0
-      npm-run-all: ~4.1.5
+      minio: ^7.1.0
+      mocha: ^10.2.0
+      npm-run-all: ^4.1.5
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sinon: ~14.0.0
-      sort-package-json: ~1.53.1
+      sinon: ^14.0.0
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
-      wait-on: ~7.2.0
-      webpack: ~5.72.0
-      webpack-cli: ~4.9.2
+      wait-on: ^7.2.0
+      webpack: ^5.72.0
+      webpack-cli: ^4.9.2
     dependencies:
       '@aws-sdk/client-s3': 3.485.0
       '@itwin/object-storage-core': link:../core
@@ -254,7 +254,7 @@ importers:
 
   ../../storage/oss:
     specifiers:
-      '@alicloud/pop-core': ~1.7.12
+      '@alicloud/pop-core': ^1.7.12
       '@aws-sdk/client-s3': ^3.347.1
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
@@ -265,24 +265,24 @@ importers:
       '@itwin/object-storage-tests-frontend': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
-      dotenv: ~16.0.0
+      cspell: ^5.18.5
+      dotenv: ^16.0.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
-      npm-run-all: ~4.1.5
+      mocha: ^10.2.0
+      npm-run-all: ^4.1.5
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
-      wait-on: ~7.2.0
-      webpack: ~5.72.0
-      webpack-cli: ~4.9.2
+      wait-on: ^7.2.0
+      webpack: ^5.72.0
+      webpack-cli: ^4.9.2
     dependencies:
       '@alicloud/pop-core': 1.7.13
       '@aws-sdk/client-s3': 3.485.0
@@ -331,21 +331,21 @@ importers:
       '@itwin/object-storage-tests-backend-unit': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
-      '@types/sinon': ~10.0.11
+      '@types/sinon': ^10.0.11
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       cypress: ^12.13.0
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
+      mocha: ^10.2.0
       nyc: ^14.0.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sinon: ~14.0.0
-      sort-package-json: ~1.53.1
+      sinon: ^14.0.0
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@aws-sdk/abort-controller': 3.374.0
@@ -387,21 +387,21 @@ importers:
       '@itwin/object-storage-core': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/fs-extra': ~9.0.13
-      '@types/mocha': ~10.0.1
+      '@types/fs-extra': ^9.0.13
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
-      '@types/yargs': ~15.0.5
-      abort-controller: ~3.0.0
+      '@types/yargs': ^15.0.5
+      abort-controller: ^3.0.0
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       eslint: ^8.42.0
-      fs-extra: ~10.1.0
+      fs-extra: ^10.1.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
+      mocha: ^10.2.0
       reflect-metadata: ^0.1.13
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
@@ -434,16 +434,16 @@ importers:
       '@itwin/object-storage-core': workspace:*
       '@types/chai': ^4.3.8
       '@types/chai-as-promised': ^7.1.2
-      '@types/mocha': ~10.0.1
+      '@types/mocha': ^10.0.1
       '@types/node': ^18.11.18
       chai: ^4.3.10
       chai-as-promised: ^7.1.1
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       eslint: ^8.42.0
       inversify: ^6.0.1
-      mocha: ~10.2.0
+      mocha: ^10.2.0
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
@@ -469,17 +469,17 @@ importers:
       '@itwin/cloud-agnostic-core': workspace:*
       '@itwin/object-storage-common-config': workspace:*
       '@itwin/object-storage-core': workspace:*
-      '@types/express': ~4.17.13
+      '@types/express': ^4.17.13
       '@types/node': ^18.11.18
-      axios: ~1.6.5
-      cross-env: ~7.0.3
-      cspell: ~5.18.5
+      axios: ^1.6.5
+      cross-env: ^7.0.3
+      cspell: ^5.18.5
       cypress: ^12.13.0
       eslint: ^8.42.0
-      express: ~4.18.0
+      express: ^4.18.0
       inversify: ^6.0.1
       rimraf: ^2.6.2
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     dependencies:
       '@itwin/cloud-agnostic-core': link:../../cloud-agnostic/core
@@ -504,17 +504,17 @@ importers:
       '@rushstack/eslint-patch': ^1.2.0
       '@typescript-eslint/eslint-plugin': ^5.59.9
       '@typescript-eslint/parser': ^5.59.9
-      cspell: ~5.18.5
+      cspell: ^5.18.5
       eslint: ^8.42.0
       eslint-config-prettier: ^8.8.0
       eslint-import-resolver-node: ^0.3.7
       eslint-plugin-deprecation: ^1.4.1
       eslint-plugin-import: ^2.27.5
       eslint-plugin-mocha: ^10.1.0
-      eslint-plugin-prefer-arrow: ~1.2.3
+      eslint-plugin-prefer-arrow: ^1.2.3
       eslint-plugin-prettier: ^4.2.1
       prettier: ^2.8.8
-      sort-package-json: ~1.53.1
+      sort-package-json: ^1.53.1
       typescript: ^5.1.3
     devDependencies:
       '@rushstack/eslint-patch': 1.6.1
@@ -6672,6 +6672,7 @@ packages:
 
   /glob/7.2.0:
     resolution: {integrity: sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -6682,6 +6683,7 @@ packages:
 
   /glob/7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -6969,6 +6971,7 @@ packages:
 
   /inflight/1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
