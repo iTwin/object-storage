@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-core",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Core generic object storage interfaces",
   "keywords": [
     "Bentley",
