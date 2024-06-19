@@ -26,7 +26,7 @@ const azureTestConfig = {
     dependencyName,
     accountName: "testAccountName",
     accountKey: "testAccountKey",
-    baseUrl: "testBaseUrl",
+    baseUrl: "https://testBaseUrl.com",
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
