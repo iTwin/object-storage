@@ -47,11 +47,19 @@ export class FrontendStorageIntegrationTests {
     }
   }
 
-  private didCypressLaunchFail(result: CypressCommandLine.CypressFailedRunResult | CypressCommandLine.CypressRunResult): boolean {
+  private didCypressLaunchFail(
+    result:
+      | CypressCommandLine.CypressFailedRunResult
+      | CypressCommandLine.CypressRunResult
+  ): boolean {
     return "status" in result && result.status === "failed";
   }
 
-  private didCypressTestsFail(result: CypressCommandLine.CypressFailedRunResult | CypressCommandLine.CypressRunResult): boolean {
+  private didCypressTestsFail(
+    result:
+      | CypressCommandLine.CypressFailedRunResult
+      | CypressCommandLine.CypressRunResult
+  ): boolean {
     return "totalFailed" in result && result.totalFailed > 0;
   }
 }
