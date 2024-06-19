@@ -42,7 +42,7 @@
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "inversify": "^6.0.1",
-    "mocha": "^10.2.0"
+    "mocha": "^10.4.0"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
