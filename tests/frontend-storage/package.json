@@ -47,7 +47,7 @@
     "@itwin/object-storage-common-config": "workspace:*",
     "@types/express": "^4.17.13",
     "@types/node": "^18.11.18",
-    "axios": "^1.6.5",
+    "axios": "^1.7.4",
     "cross-env": "^7.0.3",
     "cspell": "^5.18.5",
     "eslint": "^8.42.0",
