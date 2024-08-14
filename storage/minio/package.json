@@ -52,7 +52,7 @@
     "@aws-sdk/client-s3": "^3.347.1",
     "@itwin/object-storage-core": "workspace:*",
     "@itwin/object-storage-s3": "workspace:*",
-    "minio": "^7.1.0"
+    "minio": "^8.0.1"
   },
   "devDependencies": {
     "@cypress/webpack-batteries-included-preprocessor": "^3.0.3",
@@ -64,7 +64,6 @@
     "@itwin/object-storage-tests-frontend": "workspace:*",
     "@types/chai": "^4.3.8",
     "@types/chai-as-promised": "^7.1.2",
-    "@types/minio": "^7.0.11",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
     "@types/sinon": "^10.0.11",
