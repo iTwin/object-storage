@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-s3",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Object storage implementation base for S3 compatible providers",
   "keywords": [
     "Bentley",
