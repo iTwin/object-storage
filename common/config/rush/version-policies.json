@@ -2,7 +2,7 @@
   {
     "definitionName": "lockStepVersion",
     "policyName": "lockStepVersionObjectStorage",
-    "version": "2.2.4",
+    "version": "2.2.5",
     "nextBump": "prerelease"
   }
 ]
