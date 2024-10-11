@@ -129,6 +129,24 @@
       ]
     },
     {
+      "name": "Backend Google Integration tests",
+      "cwd": "${workspaceFolder}/storage/google",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "test:integration:backend"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/*/*/lib/**/*.js"
+      ],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/storage/google/src/test/.env"
+    },
+    {
       "name": "Backend OSS Integration tests",
       "cwd": "${workspaceFolder}/storage/oss",
       "type": "pwa-node",

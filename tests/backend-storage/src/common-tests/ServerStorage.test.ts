@@ -382,7 +382,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 
   describe(`${serverStorage.getListObjectsPagedIterator.name}()`, () => {
-    it("Should list objects without exceeding maxPageSize per page.", async () => {
+    it("should list objects without exceeding maxPageSize per page.", async () => {
       const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       await createObjectsReferences(testDirectory, 3);
@@ -395,7 +395,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         expect(entityPage.length).to.be.lte(maxPageSize);
     });
 
-    it("Should list created objects without duplicates", async () => {
+    it("should list created objects without duplicates", async () => {
       const testDirectory: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const createdObjects = 3;
@@ -500,7 +500,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
   });
 
   describe(`${serverStorage.getListDirectoriesPagedIterator.name}()`, () => {
-    it("Should list directories without exceeding maxPageSize per page.", async () => {
+    it("should list directories without exceeding maxPageSize per page.", async () => {
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
       await testDirectoryManager.createNew();
@@ -511,7 +511,7 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
         expect(entityPage.length).to.be.lte(maxPageSize);
     });
 
-    it("Should list created directories without duplicates", async () => {
+    it("should list created directories without duplicates", async () => {
       const testDirectory1: TestRemoteDirectory =
         await testDirectoryManager.createNew();
       const testDirectory2: TestRemoteDirectory =

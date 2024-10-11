@@ -33,6 +33,12 @@
       "tags": [ "integration-tested" ]
     },
     {
+      "packageName": "@itwin/object-storage-google",
+      "projectFolder": "storage/google",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "tags": [ "integration-tested" ]
+    },
+    {
       "packageName": "@itwin/object-storage-minio",
       "projectFolder": "storage/minio",
       "versionPolicyName": "lockStepVersionObjectStorage",

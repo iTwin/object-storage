@@ -1,5 +1,5 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "language": "en",
   "ignorePaths": [
     "node_modules/**",
@@ -12,12 +12,13 @@
     "**/cypress/support/**"
   ],
   "words": [
-    "itwin",
-    "inversify",
-    "minio",
     "alicloud",
+    "Downscoped",
+    "iframes",
+    "inversify",
+    "itwin",
     "kbps",
-    "presigner",
-    "iframes"
+    "minio",
+    "presigner"
   ]
 }

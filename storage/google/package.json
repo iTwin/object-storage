@@ -1,0 +1,87 @@
+{
+  "name": "@itwin/object-storage-google",
+  "version": "2.2.5",
+  "description": "Object storage implementation using Azure Blob Storage",
+  "keywords": [
+    "Bentley",
+    "iTwin",
+    "iTwin platform",
+    "Object storage",
+    "Azure"
+  ],
+  "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/google",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/object-storage"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "https://www.bentley.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib && rimraf dist",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell \"**\" --config ./node_modules/@itwin/object-storage-common-config/cspell.json",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
+    "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@itwin/object-storage-common-config/unit.cypress.config.ts",
+    "test:unit:frontend:debug": "cypress open --browser chrome --config-file node_modules/@itwin/object-storage-common-config/unit.cypress.config.ts",
+    "test:unit:backend": "npm run test:unit:backend:common && npm run test:unit:backend:local",
+    "test:unit:backend:local": "mocha lib/test/unit/backend/**/*.test.js --color --exit",
+    "test:unit:backend:common": "node lib/test/unit/backend/RunCommonUnitTests.js",
+    "test:integration:backend": "npm run test:integration:backend:common && npm run test:integration:backend:local",
+    "test:integration:backend:local": "mocha lib/test/integration/backend/**/*.test.js --color --exit -t 30000",
+    "test:integration:backend:common": "node lib/test/integration/backend/RunIntegrationTests.js",
+    "test:integration:frontend": "npm-run-all -p -r test:integration:frontend:startServer test:integration:frontend:runTests ",
+    "test:integration:frontend:runTests": "wait-on tcp:1221 -t 30000 && node lib/test/integration/frontend/RunIntegrationTests.js",
+    "test:integration:frontend:startServer": "node lib/test/integration/frontend/StartServer.js"
+  },
+  "prettier": "@itwin/object-storage-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.12.1",
+    "@google-cloud/storage-control": "^0.2.0",
+    "@itwin/cloud-agnostic-core": "workspace:*",
+    "@itwin/object-storage-core": "workspace:*",
+    "google-auth-library": "^9.14.0"
+  },
+  "devDependencies": {
+    "@itwin/object-storage-common-config": "workspace:*",
+    "@itwin/object-storage-tests-backend": "workspace:*",
+    "@itwin/object-storage-tests-backend-unit": "workspace:*",
+    "@itwin/object-storage-tests-frontend": "workspace:*",
+    "@types/chai": "^4.3.8",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.18",
+    "@types/sinon": "^10.0.11",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "cspell": "^5.18.5",
+    "cypress": "^13.12.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.42.0",
+    "inversify": "^6.0.1",
+    "mocha": "^10.4.0",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^14.0.0",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^2.6.2",
+    "sinon": "^14.0.0",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^5.1.3",
+    "wait-on": "^7.2.0",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "peerDependencies": {
+    "inversify": "^6.0.1",
+    "reflect-metadata": "^0.1.13"
+  }
+}
