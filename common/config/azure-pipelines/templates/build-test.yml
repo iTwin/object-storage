@@ -10,13 +10,11 @@ steps:
       versionSpec: $(nodeVersion)
       checkLatest: true
 
-  - script: echo $(TEST_GOOGLE_SECURE_FILE_NAME)
-
-  # - task: DownloadSecureFile@1
-  #   name: DownloadGCPAuthFile
-  #   displayName: 'Download GCP Secure Auth File'
-  #   inputs:
-  #     secureFile: $(TEST_GOOGLE_SECURE_FILE_NAME)
+  - task: DownloadSecureFile@1
+    name: DownloadGCPAuthFile
+    displayName: 'Download GCP Secure Auth File'
+    inputs:
+      secureFile: ${{ TEST_GOOGLE_SECURE_FILE_NAME }}
 
   - script: node common/scripts/install-run-rush.js install --purge
     displayName: rush install
