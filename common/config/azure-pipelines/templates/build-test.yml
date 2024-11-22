@@ -14,7 +14,7 @@ steps:
     name: DownloadGCPAuthFile
     displayName: 'Download GCP Secure Auth File'
     inputs:
-      secureFile: $(GCP_SERVICE_ACCOUNT_KEY_FILE)
+      secureFile: $(TEST_GOOGLE_SECURE_FILE_NAME)
 
   - script: node common/scripts/install-run-rush.js install --purge
     displayName: rush install
