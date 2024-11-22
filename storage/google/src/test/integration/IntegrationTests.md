@@ -8,7 +8,7 @@ To configure backend tests create a `.env` file in `storage/google/src/test/inte
 
 - `TEST_GOOGLE_BUCKET_NAME` - test bucket name.
 - `TEST_GOOGLE_PROJECT_ID` - id of the Google Cloud project.
-- `TEST_SECONDARY_GOOGLE_BUCKET_NAME` - name of secondary test bucket.
+- `TEST_GOOGLE_SECONDARY_BUCKET_NAME` - name of secondary test bucket.
 
 ## Backend tests
 

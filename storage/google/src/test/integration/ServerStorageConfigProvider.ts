@@ -29,7 +29,7 @@ export class ServerStorageConfigProvider {
     const config: GoogleStorageConfig & SecondaryBucket = {
       bucketName: process.env.TEST_GOOGLE_BUCKET_NAME!,
       projectId: process.env.TEST_GOOGLE_PROJECT_ID!,
-      secondaryBucketName: process.env.TEST_SECONDARY_GOOGLE_BUCKET_NAME!,
+      secondaryBucketName: process.env.TEST_GOOGLE_SECONDARY_BUCKET_NAME!,
     };
     return config;
   }
