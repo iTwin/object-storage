@@ -14,7 +14,7 @@ steps:
     name: DownloadGCPAuthFile
     displayName: 'Download GCP Secure Auth File'
     inputs:
-      secureFile: ${{ TEST_GOOGLE_SECURE_FILE_NAME }}
+      secureFile: 'object-storage-tests-connection.json'
 
   - script: node common/scripts/install-run-rush.js install --purge
     displayName: rush install
