@@ -98,6 +98,7 @@ export class GoogleServerStorage extends ServerStorage {
     metadata?: Metadata,
     headers?: ContentHeaders
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     await this._storage.uploadFile(reference, data, metadata, headers);
@@ -109,6 +110,7 @@ export class GoogleServerStorage extends ServerStorage {
     options?: MultipartUploadOptions,
     headers?: ContentHeaders
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     await this._storage.uploadFile(
@@ -166,6 +168,7 @@ export class GoogleServerStorage extends ServerStorage {
   }
 
   public override deleteObject(reference: ObjectReference): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return this._storage.deleteFile(reference);
   }
 
@@ -180,6 +183,7 @@ export class GoogleServerStorage extends ServerStorage {
   public override async objectExists(
     reference: ObjectReference
   ): Promise<boolean> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return await this._storage.fileExists(reference);
   }
 
@@ -199,12 +203,14 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return await this._storage.updateMetadata(reference, metadata);
   }
 
   public override async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return await this._storage.getObjectProperties(reference);
   }
 
@@ -212,6 +218,7 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return await this._storage.getSignedUrl("read", reference, expiry);
   }
 
@@ -219,6 +226,7 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
+    assertRelativeDirectory(reference.relativeDirectory);
     return await this._storage.getSignedUrl("write", reference, expiry);
   }
 

@@ -8,7 +8,7 @@ import {
   FrontendTransferData,
   FrontendTransferType,
   FrontendUrlDownloadInput,
-} from "../FrontendInterfaces";
+} from "@itwin/object-storage-core/lib/frontend";
 
 export const uploadFileSizeLimit = 5_000_000_000; // 5GB
 
@@ -70,9 +70,13 @@ export async function downloadFromUrlFrontend(
 export async function uploadToUrlFrontend(
   url: string,
   data: FrontendTransferData,
+  method: "POST" | "PUT",
   headers?: Record<string, string>
 ): Promise<void> {
-  await axios.put(url, data, {
+  await axios.request({
+    url,
+    method,
+    data,
     headers,
   });
 }

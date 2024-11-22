@@ -10,6 +10,12 @@ steps:
       versionSpec: $(nodeVersion)
       checkLatest: true
 
+  - task: DownloadSecureFile@1
+    name: DownloadGCPAuthFile
+    displayName: 'Download GCP Secure Auth File'
+    inputs:
+      secureFile: $(GCP_SERVICE_ACCOUNT_KEY_FILE)
+
   - script: node common/scripts/install-run-rush.js install --purge
     displayName: rush install
 
@@ -33,9 +39,11 @@ steps:
     displayName: rush test:integration:backend
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+      GOOGLE_APPLICATION_CREDENTIALS: $(DownloadGCPAuthFile.secureFilePath)
 
   - script: node common/scripts/install-run-rush.js test:integration:frontend --only tag:integration-tested --verbose
     displayName: rush test:integration:frontend
     condition: and(succeeded(), eq(variables.runFrontendIntegrationTests, true))
     env:
       TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+      GOOGLE_APPLICATION_CREDENTIALS: $(DownloadGCPAuthFile.secureFilePath)

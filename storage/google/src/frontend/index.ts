@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "../common";
-export * from "./wrappers";
-export * from "./Interfaces";
-export * from "./GoogleServerStorage";
-export * from "./GoogleServerStorageBindings";
+export * from "./FrontendInterfaces";
+export * from "./GoogleFrontendStorage";
+export * from "./GoogleFrontendStorageBindings";

@@ -155,7 +155,15 @@ export class StorageWrapper {
     metadata: Metadata
   ): Promise<void> {
     const [updatedMetadata] = await this.fileObject(reference).getMetadata();
-    updatedMetadata.metadata = metadata;
+    if (updatedMetadata.metadata == null) updatedMetadata.metadata = {};
+    for (const key of Object.keys(updatedMetadata.metadata)) {
+      if (key in metadata) continue;
+      updatedMetadata.metadata[key] = null;
+    }
+    for (const key of Object.keys(metadata)) {
+      updatedMetadata.metadata[key] = metadata[key];
+    }
+
     await this.fileObject(reference).setMetadata(updatedMetadata);
   }
 

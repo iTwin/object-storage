@@ -9,15 +9,14 @@ import {
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { StorageWrapperFactory } from "../common/wrappers";
-
 import { GoogleClientStorage } from "./GoogleClientStorage";
+import { ClientStorageWrapperFactory } from "./wrappers";
 
 export class GoogleClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "google";
 
   public override register(container: Container): void {
-    container.bind(StorageWrapperFactory).toSelf().inSingletonScope();
+    container.bind(ClientStorageWrapperFactory).toSelf().inSingletonScope();
     container.bind(ClientStorage).to(GoogleClientStorage).inSingletonScope();
   }
 }

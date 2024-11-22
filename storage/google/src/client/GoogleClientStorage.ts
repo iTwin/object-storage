@@ -7,7 +7,10 @@ import { Readable } from "stream";
 
 import { injectable } from "inversify";
 
-import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertRelativeDirectory,
+  instanceOfUrlTransferInput,
+} from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   assertLocalFile,
@@ -28,11 +31,12 @@ import {
   GoogleConfigUploadInput,
   GoogleUploadInMultiplePartsInput,
 } from "../server";
-import { StorageWrapperFactory } from "../server/wrappers";
+
+import { ClientStorageWrapperFactory } from "./wrappers";
 
 @injectable()
 export class GoogleClientStorage extends ClientStorage {
-  public constructor(private _storageFactory: StorageWrapperFactory) {
+  public constructor(private _storageFactory: ClientStorageWrapperFactory) {
     super();
   }
 
@@ -59,6 +63,7 @@ export class GoogleClientStorage extends ClientStorage {
     input: UrlDownloadInput | GoogleConfigDownloadInput
   ): Promise<TransferData> {
     if (instanceOfUrlTransferInput(input)) return await downloadFromUrl(input);
+    assertRelativeDirectory(input.reference.relativeDirectory);
     if (input.transferType === "local") {
       assertLocalFile(input.localPath);
     }
@@ -76,9 +81,12 @@ export class GoogleClientStorage extends ClientStorage {
   public override async upload(
     input: UrlUploadInput | GoogleConfigUploadInput
   ): Promise<void> {
+    const isUrlTransfer = instanceOfUrlTransferInput(input);
+    if (!isUrlTransfer)
+      assertRelativeDirectory(input.reference.relativeDirectory);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
-    if (instanceOfUrlTransferInput(input))
+    if (isUrlTransfer)
       return uploadToUrl(input.url, input.data, input.metadata);
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
@@ -88,6 +96,7 @@ export class GoogleClientStorage extends ClientStorage {
   public override async uploadInMultipleParts(
     input: GoogleUploadInMultiplePartsInput
   ): Promise<void> {
+    assertRelativeDirectory(input.reference.relativeDirectory);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);

@@ -22,7 +22,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc 1>&2",
+    "build": "tsc 1>&2 && npx webpack",
     "clean": "rimraf lib && rimraf dist",
     "lint": "eslint --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@itwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
@@ -49,6 +49,7 @@
     "@google-cloud/storage-control": "^0.2.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
+    "axios": "^1.7.4",
     "google-auth-library": "^9.14.0"
   },
   "devDependencies": {
@@ -63,7 +64,7 @@
     "@types/sinon": "^10.0.11",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
-    "cspell": "^5.18.5",
+    "cspell": "^8.16.0",
     "cypress": "^13.12.0",
     "dotenv": "^16.0.0",
     "eslint": "^8.42.0",
@@ -83,5 +84,13 @@
   "peerDependencies": {
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13"
+  },
+  "peerDependenciesMeta": {
+    "inversify": {
+      "optional": true
+    },
+    "reflect-metadata": {
+      "optional": true
+    }
   }
 }

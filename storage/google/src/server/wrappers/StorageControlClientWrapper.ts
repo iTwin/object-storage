@@ -147,7 +147,7 @@ export class StorageControlClientWrapper {
     const { token, expirationTime } = await downscopedClient.getAccessToken();
     return {
       baseUrl: this.bucketUri,
-      authentication: token!,
+      authentication: `Bearer ${token!}`,
       expiration: new Date(expirationTime!),
       bucketName: this._config.bucketName,
     };
