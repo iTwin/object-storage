@@ -26,7 +26,7 @@ function run(): void {
       },
     });
   backendServer.useBindings(GoogleServerStorageBindings);
-  backendServer.start({ port: 1221 });
+  backendServer.start({ port: 1224 });
 }
 
 run();

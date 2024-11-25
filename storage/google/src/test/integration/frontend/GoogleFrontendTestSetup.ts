@@ -17,6 +17,6 @@ const config = {
 const setup = new FrontendStorageTestSetup(
   config,
   GoogleFrontendStorageBindings,
-  "http://localhost:1221"
+  "http://localhost:1224"
 );
 setup.setGlobals();
