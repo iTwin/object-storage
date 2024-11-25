@@ -10,8 +10,10 @@ import { Readable } from "stream";
 import axios from "axios";
 
 import { ConfigTransferInput, UrlTransferInput } from "../../common";
+import { defaultExpiresInSeconds } from "../../common/internal";
 import {
   ConfigDownloadInput,
+  ExpiryOptions,
   TransferData,
   TransferType,
   UrlDownloadInput,
@@ -54,6 +56,10 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
   });
 }
 
+export function bufferToStream(buffer: Buffer): Readable {
+  return Readable.from(buffer);
+}
+
 export async function streamToLocalFile(
   stream: Readable,
   destinationPath: string
@@ -69,6 +75,24 @@ export async function streamToLocalFile(
 
     stream.pipe(fileStream);
   });
+}
+
+export function bufferToTransferType(
+  buffer: Buffer,
+  transferType: "buffer" | "stream"
+): TransferData {
+  switch (transferType) {
+    case "stream":
+      return bufferToStream(buffer);
+    case "buffer":
+      return buffer;
+    default:
+      throw new Error(
+        `Type '${
+          transferType === undefined ? "undefined" : transferType
+        }' is not supported`
+      );
+  }
 }
 
 export async function streamToTransferType(
@@ -190,4 +214,19 @@ async function convertAbortErrorName<T>(promise: Promise<T>): Promise<T> {
 
     throw error;
   }
+}
+
+export function getExpiryDate(options?: ExpiryOptions): Date {
+  if (options?.expiresInSeconds && options?.expiresOn) {
+    throw new Error(
+      "Only one of 'expiresInSeconds' and 'expiresOn' can be specified."
+    );
+  }
+  if (options?.expiresInSeconds) {
+    return new Date(Date.now() + options.expiresInSeconds * 1000);
+  }
+  if (options?.expiresOn) {
+    return options.expiresOn;
+  }
+  return new Date(Date.now() + defaultExpiresInSeconds * 1000); // expires in one hour by default
 }

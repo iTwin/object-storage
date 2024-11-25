@@ -1,23 +1,24 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "language": "en",
   "ignorePaths": [
-    "node_modules/**",
-    "src/assets/**",
-    "lib/**",
-    "dist/**",
+    "**/node_modules/**",
+    "**/src/assets/**",
+    "**/lib/**",
+    "**/dist/**",
     "*.log",
     "tsconfig.json",
     "package.json",
     "**/cypress/support/**"
   ],
   "words": [
-    "itwin",
-    "inversify",
-    "minio",
     "alicloud",
+    "Downscoped",
+    "iframes",
+    "inversify",
+    "itwin",
     "kbps",
-    "presigner",
-    "iframes"
+    "minio",
+    "presigner"
   ]
 }

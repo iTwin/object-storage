@@ -10,8 +10,6 @@ import {
   FrontendUrlDownloadInput,
 } from "../FrontendInterfaces";
 
-export const uploadFileSizeLimit = 5_000_000_000; // 5GB
-
 export async function streamToBufferFrontend(
   stream: ReadableStream
 ): Promise<ArrayBuffer> {
@@ -39,19 +37,24 @@ export async function streamToTransferTypeFrontend(
 }
 
 export async function downloadFromUrlFrontend(
-  input: FrontendUrlDownloadInput
+  input: FrontendUrlDownloadInput,
+  headers?: Record<string, string>
 ): Promise<FrontendTransferData> {
   const { transferType, url } = input;
   switch (transferType) {
     case "buffer":
       const bufferResponse = await axios.get(url, {
         responseType: "arraybuffer",
+        headers,
       });
       return bufferResponse.data as ArrayBuffer;
 
     case "stream":
       // https://github.com/axios/axios/issues/479
-      const blobResponse = await axios.get(url, { responseType: "blob" });
+      const blobResponse = await axios.get(url, {
+        responseType: "blob",
+        headers,
+      });
       return (blobResponse.data as Blob).stream();
     default:
       throw new Error(
@@ -65,9 +68,13 @@ export async function downloadFromUrlFrontend(
 export async function uploadToUrlFrontend(
   url: string,
   data: FrontendTransferData,
+  method: "POST" | "PUT",
   headers?: Record<string, string>
 ): Promise<void> {
-  await axios.put(url, data, {
+  await axios.request({
+    url,
+    method,
+    data,
     headers,
   });
 }

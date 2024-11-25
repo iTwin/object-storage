@@ -11,13 +11,11 @@ import { inject, injectable } from "inversify";
 import {
   assertRelativeDirectory,
   instanceOfUrlTransferInput,
-  metadataToHeaders,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   downloadFromUrl,
   streamToTransferType,
-  uploadToUrl,
 } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
@@ -36,6 +34,8 @@ import {
   S3UploadInMultiplePartsInput,
 } from "../server";
 import { createAndUseClient } from "../server/internal";
+
+import { handleS3UrlUpload } from "./internal/Helpers";
 
 @injectable()
 export class S3ClientStorage extends ClientStorage {
@@ -91,6 +91,8 @@ export class S3ClientStorage extends ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
+    if (instanceOfUrlTransferInput(input)) return handleS3UrlUpload(input);
+
     let { data } = input;
     const { metadata } = input;
 
@@ -102,19 +104,11 @@ export class S3ClientStorage extends ClientStorage {
       data = createReadStream(data);
     }
 
-    if (instanceOfUrlTransferInput(input))
-      return uploadToUrl(
-        input.url,
-        data,
-        metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
-      );
-    else {
-      return createAndUseClient(
-        () => this._clientWrapperFactory.create(input.transferConfig),
-        async (clientWrapper: S3ClientWrapper) =>
-          clientWrapper.upload(input.reference, data, metadata)
-      );
-    }
+    return createAndUseClient(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: S3ClientWrapper) =>
+        clientWrapper.upload(input.reference, data, metadata)
+    );
   }
 
   public async uploadInMultipleParts(

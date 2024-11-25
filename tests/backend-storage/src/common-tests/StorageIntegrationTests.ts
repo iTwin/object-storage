@@ -73,10 +73,10 @@ export class StorageIntegrationTests extends Bindable {
       .filter((file) => file.toLowerCase().endsWith("test.js"))
       .forEach((file) => mocha.addFile(join(testDirectory, file)));
 
-    return new Promise<void>((resolve) =>
+    return new Promise<void>((resolve, reject) =>
       mocha.run((failures: number) => {
         process.exitCode = failures ? 1 : 0;
-        serverStorage.releaseResources();
+        serverStorage.releaseResources().catch((error) => reject(error));
         resolve();
       })
     );

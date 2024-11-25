@@ -13,6 +13,7 @@ import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/i
 import {
   assertFileNotEmpty,
   assertLocalFile,
+  getExpiryDate,
   streamToTransferType,
 } from "@itwin/object-storage-core/lib/server/internal";
 
@@ -33,7 +34,7 @@ import {
 } from "@itwin/object-storage-core";
 
 import { AzureTransferConfig, Types } from "../common";
-import { buildBlobName, getExpiryDate } from "../common/internal";
+import { buildBlobName } from "../common/internal";
 
 import {
   buildBlobSASParameters,
@@ -339,7 +340,7 @@ export class AzureServerStorage extends ServerStorage {
     await copyPoller.pollUntilDone();
   }
 
-  public releaseResources(): void {}
+  public override async releaseResources(): Promise<void> {}
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {

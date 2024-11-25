@@ -293,7 +293,8 @@ export class S3ServerStorage extends ServerStorage {
     return this._s3Client.bucketName;
   }
 
-  public releaseResources(): void {
+  public releaseResources(): Promise<void> {
     this._s3Client.releaseResources();
+    return Promise.resolve();
   }
 }

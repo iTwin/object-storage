@@ -33,9 +33,11 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
   before(() => {
     cy.visit(`${serverBaseUrl}/index.html`);
   });
+
   beforeEach(async () => {
     await directoryManager.purgeCreatedDirectories();
   });
+
   after(async () => {
     await directoryManager.purgeCreatedDirectories();
   });
@@ -45,21 +47,23 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       it("should upload a file from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test);
       });
+
       it("should upload a file with relative dir from buffer to URL", async () => {
         await testUploadFromBufferToUrl(test, { useRelativeDir: true })
       });
 
-      if (!Cypress.env("SKIP_FILE_WITH_METADATA_UPLOAD_TO_URL")) {
-        it("should upload a file with metadata from buffer to URL", async () => {
-          await testUploadFromBufferToUrl(test, { useMetadata: true })
-        });
-      }
+      it("should upload a file with metadata from buffer to URL", async function  () {
+        if (Cypress.env("SKIP_FILE_WITH_METADATA_UPLOAD_TO_URL"))
+          this.skip();
+        await testUploadFromBufferToUrl(test, { useMetadata: true })
+      });
 
     });
     describe(`${frontendStorage.download.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
       it("should download a file to buffer from URL", async () => {
         await testDownloadFromUrlToBuffer(test);
       });
+
       it(`should download a file to stream from URL`, async () => {
         await testDownloadFromUrlToStream(test);
       });
@@ -71,28 +75,39 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
       it("should upload a file from buffer using transfer config", async () => {
         await testUploadFromBufferWithConfig(test);
       });
+
       it(`should upload a file with relative directory from buffer using transfer config`, async () => {
         await testUploadFromBufferWithConfig(test, { useRelativeDir: true });
       });
-      it(`should upload a file from buffer with metadata using transfer config`, async () => {
+
+      it(`should upload a file from buffer with metadata using transfer config`, async function () {
+        if (Cypress.env("SKIP_FILE_WITH_METADATA_UPLOAD_WITH_CONFIG"))
+          this.skip();
         await testUploadFromBufferWithConfig(test, { useMetadata: true });
       });
     });
+
     describe(`${frontendStorage.uploadInMultipleParts.name}() & ${serverStorage.getUploadConfig.name}()`, () => {
       it(`should upload a file from stream in multiple parts`, async () => {
         await testUploadMultipart(test);
       });
+
       it(`should upload a file with relative directory from stream in multiple parts`, async () => {
         await testUploadMultipart(test, { useRelativeDir: true });
       });
-      it(`should upload a file from stream with metadata in multiple parts`, async () => {
+
+      it(`should upload a file from stream with metadata in multiple parts`, async function () {
+        if (Cypress.env("SKIP_FILE_WITH_METADATA_UPLOAD_WITH_CONFIG"))
+          this.skip();
         await testUploadMultipart(test, { useMetadata: true });
       });
     })
+
     describe(`${frontendStorage.download.name}() & ${serverStorage.getDownloadConfig.name}()`, () => {
       it(`should download a file to buffer using transfer config`, async () => {
         await testDownloadToBufferWithConfig(test);
       });
+
       it(`should download a file to stream using transfer config`, async () => {
         await testDownloadToStreamWithConfig(test);
       });
@@ -113,6 +128,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
     expect(caughtError).to.not.be.undefined;
     expect((caughtError as Error).message).to.equal("Relative directory cannot contain backslashes.");
   }
+
   const invalidRelativeDirInput = {
     reference: {
       baseDirectory: "testBaseDirectory",
@@ -144,6 +160,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
       );
     });
   });
+
   describe(`${frontendStorage.upload.name}()`, () => {
     it("should throw if relativeDirectory is invalid (buffer)", async () => {
       await testRelativeDirectoryValidation(
@@ -154,6 +171,7 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
       );
     });
   });
+
   describe(`${frontendStorage.uploadInMultipleParts.name}()`, () => {
     it("should throw if relativeDirectory is invalid (stream)", async () => {
       await testRelativeDirectoryValidation(

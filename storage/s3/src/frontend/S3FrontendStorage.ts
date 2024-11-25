@@ -77,6 +77,7 @@ export class S3FrontendStorage extends FrontendStorage {
       return uploadToUrlFrontend(
         input.url,
         data,
+        "PUT",
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
     else {
