@@ -41,5 +41,5 @@ export async function handleMinioUrlUploadFrontend(
   const headers = metadata
     ? metadataToHeaders(metadata, "x-amz-meta-")
     : undefined;
-  return uploadToUrlFrontend(url, data, headers);
+  return uploadToUrlFrontend(url, data, "PUT", headers);
 }

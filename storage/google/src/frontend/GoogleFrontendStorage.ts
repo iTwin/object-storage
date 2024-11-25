@@ -16,17 +16,17 @@ import {
   FrontendUrlUploadInput,
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
+import {
+  downloadFromUrlFrontend,
+  uploadToUrlFrontend,
+  streamToTransferTypeFrontend,
+} from "@itwin/object-storage-core/lib/frontend/internal";
 
 import {
   FrontendGoogleConfigDownloadInput,
   FrontendGoogleConfigUploadInput,
   FrontendGoogleUploadInMultiplePartsInput,
 } from "./FrontendInterfaces";
-import {
-  downloadFromUrlFrontend,
-  streamToTransferTypeFrontend,
-  uploadToUrlFrontend,
-} from "./Helpers";
 
 @injectable()
 export class GoogleFrontendStorage extends FrontendStorage {

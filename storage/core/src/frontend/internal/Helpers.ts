@@ -10,8 +10,6 @@ import {
   FrontendUrlDownloadInput,
 } from "../FrontendInterfaces";
 
-export const uploadFileSizeLimit = 5_000_000_000; // 5GB
-
 export async function streamToBufferFrontend(
   stream: ReadableStream
 ): Promise<ArrayBuffer> {
@@ -70,9 +68,14 @@ export async function downloadFromUrlFrontend(
 export async function uploadToUrlFrontend(
   url: string,
   data: FrontendTransferData,
+  method: "POST" | "PUT",
   headers?: Record<string, string>
 ): Promise<void> {
-  await axios.put(url, data, {
+  await axios.request({
+    url,
+    method,
+    data,
     headers,
   });
 }
+
