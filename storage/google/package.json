@@ -1,13 +1,13 @@
 {
   "name": "@itwin/object-storage-google",
   "version": "2.2.5",
-  "description": "Object storage implementation using Azure Blob Storage",
+  "description": "Object storage implementation using Google Cloud Storage",
   "keywords": [
     "Bentley",
     "iTwin",
     "iTwin platform",
     "Object storage",
-    "Azure"
+    "Google"
   ],
   "homepage": "https://github.com/iTwin/object-storage/tree/main/storage/google",
   "repository": {
