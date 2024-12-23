@@ -4,11 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
-import { Container } from "inversify";
 
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
-import { DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   Types as CoreTypes,
   PresignedUrlProvider,
@@ -34,7 +33,7 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "s3";
 
   public override register(
-    container: Container,
+    container: DIContainer,
     config: S3ServerStorageBindingsConfig
   ): void {
     if (!config.accessKey)
@@ -50,26 +49,45 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
     if (!config.stsBaseUrl)
       throw new ConfigError<S3ServerStorageConfig>("stsBaseUrl");
 
-    container
-      .bind<S3ServerStorageConfig>(Types.S3Server.config)
-      .toConstantValue(config);
+    container.registerInstance<S3ServerStorageConfig>(
+      Types.S3Server.config,
+      config
+    );
 
-    container.bind(ServerStorage).to(S3ServerStorage).inSingletonScope();
+    container.registerFactory(
+      ServerStorage,
+      (c: DIContainer) =>
+        new S3ServerStorage(
+          c.resolve(S3ClientWrapper),
+          c.resolve(CoreTypes.Server.presignedUrlProvider),
+          c.resolve(CoreTypes.Server.transferConfigProvider)
+        )
+    );
 
-    container.bind(S3Client).toConstantValue(createS3Client(config));
-    container.bind(STSClient).toConstantValue(createStsClient(config));
+    container.registerInstance(S3Client, createS3Client(config));
+    container.registerInstance(STSClient, createStsClient(config));
 
-    container.bind(Types.bucket).toConstantValue(config.bucket);
+    container.registerInstance(Types.bucket, config.bucket);
 
-    container.bind(S3ClientWrapper).toSelf().inSingletonScope();
+    container.registerFactory(S3ClientWrapper, (c: DIContainer) => {
+      return new S3ClientWrapper(c.resolve(S3Client), c.resolve(Types.bucket));
+    });
 
-    container
-      .bind<PresignedUrlProvider>(CoreTypes.Server.presignedUrlProvider)
-      .to(S3PresignedUrlProvider)
-      .inSingletonScope();
-    container
-      .bind<TransferConfigProvider>(CoreTypes.Server.transferConfigProvider)
-      .to(S3TransferConfigProvider)
-      .inSingletonScope();
+    container.registerFactory<PresignedUrlProvider>(
+      CoreTypes.Server.presignedUrlProvider,
+      (c: DIContainer) =>
+        new S3PresignedUrlProvider(
+          c.resolve(S3Client),
+          c.resolve(Types.S3Server.config)
+        )
+    );
+    container.registerFactory<TransferConfigProvider>(
+      CoreTypes.Server.transferConfigProvider,
+      (c: DIContainer) =>
+        new S3TransferConfigProvider(
+          c.resolve(STSClient),
+          c.resolve(Types.S3Server.config)
+        )
+    );
   }
 }

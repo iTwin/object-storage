@@ -5,8 +5,6 @@
 
 import { Readable } from "stream";
 
-import { inject, injectable } from "inversify";
-
 import {
   assertRelativeDirectory,
   buildObjectDirectoryString,
@@ -35,20 +33,18 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import { GoogleTransferConfig, Types } from "../common";
+import { GoogleTransferConfig } from "../common";
 
 import { StorageWrapper } from "./wrappers";
 import { GoogleStorageConfig } from "./wrappers/GoogleStorageConfig";
 import { StorageControlClientWrapper } from "./wrappers/StorageControlClientWrapper";
 
-@injectable()
 export class GoogleServerStorage extends ServerStorage {
   private readonly _bucketName: string;
 
   constructor(
     private readonly _storage: StorageWrapper,
     private readonly _storageControl: StorageControlClientWrapper,
-    @inject(Types.GoogleServer.config)
     config: GoogleStorageConfig
   ) {
     super();

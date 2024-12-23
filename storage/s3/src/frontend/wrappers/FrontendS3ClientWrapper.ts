@@ -12,7 +12,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import { inject, injectable } from "inversify";
 
 import {
   buildObjectKey,
@@ -27,13 +26,10 @@ import {
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
 
-import { Types } from "../../common";
-
-@injectable()
 export class FrontendS3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
-    @inject(Types.bucket) protected readonly _bucket: string
+    protected readonly _bucket: string
   ) {}
 
   public async download(reference: ObjectReference): Promise<ReadableStream> {

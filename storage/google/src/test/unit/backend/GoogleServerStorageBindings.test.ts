@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ServerStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -52,32 +52,31 @@ describe(`${GoogleServerStorageBindings.name}`, () => {
     [
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (container: Container) => container.get(ServerStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
         expectedCtor: GoogleServerStorage,
       },
       {
         testedClassIdentifier: Types.GoogleServer.config.toString(),
-        testedFunction: (container: Container) =>
-          container.get<GoogleServerStorageBindingsConfig>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<GoogleServerStorageBindingsConfig>(
             Types.GoogleServer.config
           ),
         expectedCtor: Object,
       },
       {
         testedClassIdentifier: StorageControlClientWrapper.name,
-        testedFunction: (container: Container) =>
-          container.get(StorageControlClientWrapper),
+        testedFunction: (c: DIContainer) =>
+          c.resolve(StorageControlClientWrapper),
         expectedCtor: StorageControlClientWrapper,
       },
       {
         testedClassIdentifier: StorageWrapperFactory.name,
-        testedFunction: (container: Container) =>
-          container.get(StorageWrapperFactory),
+        testedFunction: (c: DIContainer) => c.resolve(StorageWrapperFactory),
         expectedCtor: StorageWrapperFactory,
       },
       {
         testedClassIdentifier: StorageWrapper.name,
-        testedFunction: (container: Container) => container.get(StorageWrapper),
+        testedFunction: (c: DIContainer) => c.resolve(StorageWrapper),
         expectedCtor: StorageWrapper,
       },
     ];

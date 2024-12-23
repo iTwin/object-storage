@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { inject, injectable } from "inversify";
 
 import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -10,7 +9,6 @@ import {
   FrontendTransferData,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  Types,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {
@@ -20,10 +18,8 @@ import {
 } from "./FrontendInterfaces";
 import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
-@injectable()
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
-    @inject(Types.Frontend.clientWrapperFactory)
     private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory
   ) {
     super();

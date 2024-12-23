@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   Types as CoreTypes,
   PresignedUrlProvider,
@@ -105,41 +105,39 @@ describe(`${S3ServerStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: Types.S3Server.config.toString(),
-        testedFunction: (container: Container) =>
-          container.get<S3ServerStorageConfig>(Types.S3Server.config),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<S3ServerStorageConfig>(Types.S3Server.config),
         expectedCtor: Object,
       },
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (container: Container) => container.get(ServerStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
         expectedCtor: S3ServerStorage,
       },
       {
         testedClassIdentifier: S3Client.name,
-        testedFunction: (container: Container) => container.get(S3Client),
+        testedFunction: (c: DIContainer) => c.resolve(S3Client),
         expectedCtor: S3Client,
       },
       {
         testedClassIdentifier: STSClient.name,
-        testedFunction: (container: Container) => container.get(STSClient),
+        testedFunction: (c: DIContainer) => c.resolve(STSClient),
         expectedCtor: STSClient,
       },
       {
         testedClassIdentifier: Types.bucket.toString(),
-        testedFunction: (container: Container) =>
-          container.get<string>(Types.bucket),
+        testedFunction: (c: DIContainer) => c.resolve<string>(Types.bucket),
         expectedCtor: String,
       },
       {
         testedClassIdentifier: S3ClientWrapper.name,
-        testedFunction: (container: Container) =>
-          container.get(S3ClientWrapper),
+        testedFunction: (c: DIContainer) => c.resolve(S3ClientWrapper),
         expectedCtor: S3ClientWrapper,
       },
       {
         testedClassIdentifier: CoreTypes.Server.presignedUrlProvider.toString(),
-        testedFunction: (container: Container) =>
-          container.get<PresignedUrlProvider>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<PresignedUrlProvider>(
             CoreTypes.Server.presignedUrlProvider
           ),
         expectedCtor: S3PresignedUrlProvider,
@@ -147,8 +145,8 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       {
         testedClassIdentifier:
           CoreTypes.Server.transferConfigProvider.toString(),
-        testedFunction: (container: Container) =>
-          container.get<TransferConfigProvider>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<TransferConfigProvider>(
             CoreTypes.Server.transferConfigProvider
           ),
         expectedCtor: S3TransferConfigProvider,

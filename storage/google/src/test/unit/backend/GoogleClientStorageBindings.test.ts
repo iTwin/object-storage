@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Container } from "inversify";
-
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ClientStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -25,13 +24,13 @@ describe(`${GoogleClientStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (container: Container) => container.get(ClientStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
         expectedCtor: GoogleClientStorage,
       },
       {
         testedClassIdentifier: ClientStorageWrapperFactory.name,
-        testedFunction: (container: Container) =>
-          container.get(ClientStorageWrapperFactory),
+        testedFunction: (c: DIContainer) =>
+          c.resolve(ClientStorageWrapperFactory),
         expectedCtor: ClientStorageWrapperFactory,
       },
     ];

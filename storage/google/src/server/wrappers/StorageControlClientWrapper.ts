@@ -5,14 +5,13 @@
 
 import { StorageControlClient } from "@google-cloud/storage-control";
 import { DownscopedClient, GoogleAuth } from "google-auth-library";
-import { inject, injectable } from "inversify";
 
 import {
   BaseDirectory,
   EntityCollectionPage,
 } from "@itwin/object-storage-core";
 
-import { GoogleTransferConfig, Types } from "../../common";
+import { GoogleTransferConfig } from "../../common";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
 import { GoogleStorageConfigType, roleFromConfigType } from "./Helpers";
@@ -25,13 +24,9 @@ export function isGoogleError(error: unknown): error is GoogleError {
   return error instanceof Error && (error as GoogleError).code !== undefined;
 }
 
-@injectable()
 export class StorageControlClientWrapper {
   private readonly _client: StorageControlClient;
-  constructor(
-    @inject(Types.GoogleServer.config)
-    private readonly _config: GoogleStorageConfig
-  ) {
+  constructor(private readonly _config: GoogleStorageConfig) {
     this._client = new StorageControlClient({
       projectId: this._config.projectId,
     });

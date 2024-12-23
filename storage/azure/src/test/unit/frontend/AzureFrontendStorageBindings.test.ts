@@ -2,9 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
-import { Container } from "inversify";
 
 import {
   FrontendStorage,
@@ -14,6 +11,8 @@ import {
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-backend-unit/lib/shared/test-templates/BindingsTests";
+
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 
 import {
   AzureFrontendStorage,
@@ -28,14 +27,13 @@ describe(`${AzureFrontendStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: FrontendStorage.name,
-        testedFunction: (container: Container) =>
-          container.get(FrontendStorage),
+        testedFunction: (c: DIContainer) => c.resolve(FrontendStorage),
         expectedCtor: AzureFrontendStorage,
       },
       {
         testedClassIdentifier: Types.Frontend.clientWrapperFactory.toString(),
-        testedFunction: (container: Container) =>
-          container.get<FrontendBlockBlobClientWrapperFactory>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<FrontendBlockBlobClientWrapperFactory>(
             Types.Frontend.clientWrapperFactory
           ),
         expectedCtor: FrontendBlockBlobClientWrapperFactory,

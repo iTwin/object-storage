@@ -5,13 +5,15 @@
 import { readdirSync } from "fs";
 import { join } from "path";
 
-import { Container } from "inversify";
 import * as Mocha from "mocha";
+
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 
 import {
   Bindable,
   Types as CoreTypes,
   DependenciesConfig,
+  DIContainer,
 } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
@@ -23,7 +25,7 @@ import {
 import { setOptions } from "./test/Config";
 
 export class StorageUnitTests extends Bindable {
-  public readonly container = new Container();
+  public readonly container: DIContainer = InversifyWrapper.create();
 
   constructor(
     config: DependenciesConfig,
@@ -38,16 +40,17 @@ export class StorageUnitTests extends Bindable {
     this.useBindings(serverStorageDependency);
     this.useBindings(clientStorageDependency);
 
-    this.container
-      .bind<DependenciesConfig>(CoreTypes.dependenciesConfig)
-      .toConstantValue(config);
+    this.container.registerInstance<DependenciesConfig>(
+      CoreTypes.dependenciesConfig,
+      config
+    );
   }
 
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const serverStorage = this.container.get(ServerStorage);
-    const clientStorage = this.container.get(ClientStorage);
+    const serverStorage = this.container.resolve(ServerStorage);
+    const clientStorage = this.container.resolve(ClientStorage);
 
     setOptions({
       serverStorage,

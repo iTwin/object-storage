@@ -16,15 +16,16 @@ import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 function run(): void {
   const backendServer = new ServerStorageProxy();
 
-  backendServer.container
-    .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
-    .toConstantValue({
+  backendServer.container.registerInstance<DependenciesConfig>(
+    DependencyTypes.dependenciesConfig,
+    {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
         dependencyName: "minio",
         ...new ServerStorageConfigProvider().get(),
       },
-    });
+    }
+  );
   backendServer.useBindings(MinioServerStorageBindings);
   backendServer.start({ port: 1222 });
 }

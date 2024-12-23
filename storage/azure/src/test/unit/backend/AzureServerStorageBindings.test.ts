@@ -3,8 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlobServiceClient } from "@azure/storage-blob";
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ServerStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -61,25 +61,23 @@ describe(`${AzureServerStorageBindings.name}`, () => {
     [
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (container: Container) => container.get(ServerStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
         expectedCtor: AzureServerStorage,
       },
       {
         testedClassIdentifier: Types.AzureServer.config.toString(),
-        testedFunction: (container: Container) =>
-          container.get<AzureServerStorageConfig>(Types.AzureServer.config),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<AzureServerStorageConfig>(Types.AzureServer.config),
         expectedCtor: Object,
       },
       {
         testedClassIdentifier: BlobServiceClientWrapper.name,
-        testedFunction: (container: Container) =>
-          container.get(BlobServiceClientWrapper),
+        testedFunction: (c: DIContainer) => c.resolve(BlobServiceClientWrapper),
         expectedCtor: BlobServiceClientWrapper,
       },
       {
         testedClassIdentifier: BlobServiceClient.name,
-        testedFunction: (container: Container) =>
-          container.get(BlobServiceClient),
+        testedFunction: (c: DIContainer) => c.resolve(BlobServiceClient),
         expectedCtor: BlobServiceClient,
       },
     ];

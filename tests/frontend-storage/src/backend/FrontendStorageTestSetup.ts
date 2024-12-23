@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 import {
   FrontendStorage,
   FrontendStorageDependency,
@@ -13,10 +13,11 @@ import {
   Bindable,
   DependenciesConfig,
   Types as DependencyTypes,
+  DIContainer,
 } from "@itwin/cloud-agnostic-core";
 
 export class FrontendStorageTestSetup extends Bindable {
-  public readonly container = new Container();
+  public readonly container: DIContainer = InversifyWrapper.create();
 
   constructor(
     config: DependenciesConfig,
@@ -28,14 +29,15 @@ export class FrontendStorageTestSetup extends Bindable {
     this.requireDependency(FrontendStorageDependency.dependencyType);
     this.useBindings(frontendStorageDependency);
 
-    this.container
-      .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
-      .toConstantValue(config);
+    this.container.registerInstance<DependenciesConfig>(
+      DependencyTypes.dependenciesConfig,
+      config
+    );
   }
 
   public setGlobals(): void {
     this.bindDependencies(this.container);
-    const frontendStorage = this.container.get(FrontendStorage);
+    const frontendStorage = this.container.resolve(FrontendStorage);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).frontendStorage = frontendStorage;

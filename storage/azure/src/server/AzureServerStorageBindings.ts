@@ -6,11 +6,10 @@ import {
   BlobServiceClient,
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
-import { Container } from "inversify";
 
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
-import { DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
@@ -31,7 +30,7 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "azure";
 
   public override register(
-    container: Container,
+    container: DIContainer,
     config: AzureServerStorageBindingsConfig
   ): void {
     if (!config.accountName)
@@ -41,19 +40,31 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
     if (!config.baseUrl)
       throw new ConfigError<AzureServerStorageConfig>("baseUrl");
 
-    container
-      .bind<AzureServerStorageConfig>(Types.AzureServer.config)
-      .toConstantValue(config);
-    container.bind(ServerStorage).to(AzureServerStorage).inSingletonScope();
+    container.registerInstance<AzureServerStorageConfig>(
+      Types.AzureServer.config,
+      config
+    );
+    container.registerFactory(ServerStorage, (c: DIContainer) => {
+      return new AzureServerStorage(
+        c.resolve(Types.AzureServer.config),
+        c.resolve(BlobServiceClientWrapper)
+      );
+    });
 
-    container.bind(BlobServiceClientWrapper).toSelf().inSingletonScope();
-    container
-      .bind(BlobServiceClient)
-      .toConstantValue(
-        new BlobServiceClient(
-          config.baseUrl,
-          new StorageSharedKeyCredential(config.accountName, config.accountKey)
+    container.registerFactory(BlobServiceClientWrapper, (c: DIContainer) => {
+      return new BlobServiceClientWrapper(c.resolve(BlobServiceClient));
+    });
+    container.registerFactory(BlobServiceClient, (c: DIContainer) => {
+      const resolvedConfig = c.resolve<AzureServerStorageBindingsConfig>(
+        Types.AzureServer.config
+      );
+      return new BlobServiceClient(
+        resolvedConfig.baseUrl,
+        new StorageSharedKeyCredential(
+          resolvedConfig.accountName,
+          resolvedConfig.accountKey
         )
       );
+    });
   }
 }

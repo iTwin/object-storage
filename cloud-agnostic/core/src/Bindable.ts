@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
 import { Dependency } from "./Dependency";
 import { DependenciesConfig, DependencyConfig } from "./DependencyConfig";
 import { DependencyFactory } from "./DependencyFactory";
+import { DIContainer } from "./DIContainer";
 import { DependencyError } from "./internal";
 import { Types } from "./Types";
 
@@ -34,7 +34,7 @@ export abstract class Bindable {
   }
 
   private bindNamedDependencies(
-    container: Container,
+    container: DIContainer,
     factory: DependencyFactory,
     configs: DependencyConfig[]
   ): void {
@@ -46,15 +46,17 @@ export abstract class Bindable {
   }
 
   private bindDependency(
-    container: Container,
+    container: DIContainer,
     factory: DependencyFactory,
     config: DependencyConfig
   ) {
     factory.getDependency(config.dependencyName).register(container, config);
   }
 
-  protected bindDependencies(container: Container): void {
-    const config = container.get<DependenciesConfig>(Types.dependenciesConfig);
+  protected bindDependencies(container: DIContainer): void {
+    const config = container.resolve<DependenciesConfig>(
+      Types.dependenciesConfig
+    );
 
     this._dependencyFactories.forEach((factory) => {
       const dependencyConfig = config[factory.dependencyType];

@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Container } from "inversify";
 import { createStubInstance } from "sinon";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { GoogleClientStorageBindings } from "../../../client";
@@ -37,7 +37,7 @@ const googleTestConfig = {
 
 class TestGoogleServerStorageBindings extends GoogleServerStorageBindings {
   public override register(
-    container: Container,
+    container: DIContainer,
     config: GoogleServerStorageBindingsConfig
   ): void {
     super.register(container, config);
@@ -47,20 +47,24 @@ class TestGoogleServerStorageBindings extends GoogleServerStorageBindings {
     );
     const mockStorageWrapper = createStubInstance(StorageWrapper);
 
-    container
-      .rebind(StorageControlClientWrapper)
-      .toConstantValue(mockStorageControlClient);
-    container.rebind(StorageWrapper).toConstantValue(mockStorageWrapper);
+    container.unregister(StorageControlClientWrapper);
+    container.registerInstance(
+      StorageControlClientWrapper,
+      mockStorageControlClient
+    );
+    container.unregister(StorageWrapper);
+    container.registerInstance(StorageWrapper, mockStorageWrapper);
   }
 }
 
 class TestGoogleClientStorageBindings extends GoogleClientStorageBindings {
-  public override register(container: Container): void {
+  public override register(container: DIContainer): void {
     super.register(container);
 
     const mockStorageWrapper = createStubInstance(StorageWrapper);
 
-    container.rebind(StorageWrapper).toConstantValue(mockStorageWrapper);
+    container.unregister(StorageWrapper);
+    container.registerInstance(StorageWrapper, mockStorageWrapper);
   }
 }
 

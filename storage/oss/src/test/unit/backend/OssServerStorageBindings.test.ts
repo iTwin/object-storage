@@ -5,8 +5,8 @@
 import "reflect-metadata";
 
 import * as Core from "@alicloud/pop-core";
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
 import {
   Constants,
@@ -26,15 +26,15 @@ describe(`${OssServerStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: Types.Server.transferConfigProvider.toString(),
-        testedFunction: (container: Container) =>
-          container.get<TransferConfigProvider>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<TransferConfigProvider>(
             Types.Server.transferConfigProvider
           ),
         expectedCtor: OssTransferConfigProvider,
       },
       {
         testedClassIdentifier: Core.name,
-        testedFunction: (container: Container) => container.get(Core),
+        testedFunction: (c: DIContainer) => c.resolve(Core),
         expectedCtor: Core,
       },
     ];

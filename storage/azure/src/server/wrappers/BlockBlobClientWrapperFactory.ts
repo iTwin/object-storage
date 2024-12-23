@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { BlockBlobClient } from "@azure/storage-blob";
-import { injectable } from "inversify";
 
 import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
 
@@ -14,7 +13,6 @@ import { buildBlobUrl } from "../../common/internal";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 
-@injectable()
 export class BlockBlobClientWrapperFactory {
   public create(
     input: UrlTransferInput | AzureTransferConfigInput

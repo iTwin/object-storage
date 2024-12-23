@@ -4,19 +4,24 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Container } from "inversify";
-
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ClientStorage } from "@itwin/object-storage-core";
-import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
+import {
+  S3ClientStorageBindings,
+  S3ClientWrapperFactory,
+} from "@itwin/object-storage-s3";
 
 import { MinioClientStorage } from "./MinioClientStorage";
 
 export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override readonly dependencyName: string = "minio";
 
-  public override register(container: Container): void {
+  public override register(container: DIContainer): void {
     super.register(container);
 
-    container.rebind(ClientStorage).to(MinioClientStorage).inSingletonScope();
+    container.unregister(ClientStorage);
+    container.registerFactory(ClientStorage, (c: DIContainer) => {
+      return new MinioClientStorage(c.resolve(S3ClientWrapperFactory));
+    });
   }
 }

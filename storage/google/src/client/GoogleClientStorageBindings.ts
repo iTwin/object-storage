@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
@@ -15,8 +15,15 @@ import { ClientStorageWrapperFactory } from "./wrappers";
 export class GoogleClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "google";
 
-  public override register(container: Container): void {
-    container.bind(ClientStorageWrapperFactory).toSelf().inSingletonScope();
-    container.bind(ClientStorage).to(GoogleClientStorage).inSingletonScope();
+  public override register(container: DIContainer): void {
+    container.registerFactory(
+      ClientStorageWrapperFactory,
+      () => new ClientStorageWrapperFactory()
+    );
+    container.registerFactory(
+      ClientStorage,
+      (c: DIContainer) =>
+        new GoogleClientStorage(c.resolve(ClientStorageWrapperFactory))
+    );
   }
 }

@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Container } from "inversify";
-
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -22,15 +21,15 @@ describe(`${S3ClientStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: CoreTypes.Client.clientWrapperFactory.toString(),
-        testedFunction: (container: Container) =>
-          container.get<S3ClientWrapperFactory>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<S3ClientWrapperFactory>(
             CoreTypes.Client.clientWrapperFactory
           ),
         expectedCtor: S3ClientWrapperFactory,
       },
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (container: Container) => container.get(ClientStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
         expectedCtor: S3ClientStorage,
       },
     ];

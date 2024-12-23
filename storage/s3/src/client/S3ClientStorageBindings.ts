@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
@@ -17,11 +17,18 @@ import { S3ClientStorage } from "./S3ClientStorage";
 export class S3ClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "s3";
 
-  public override register(container: Container): void {
-    container
-      .bind(CoreTypes.Client.clientWrapperFactory)
-      .to(S3ClientWrapperFactory)
-      .inSingletonScope();
-    container.bind(ClientStorage).to(S3ClientStorage).inSingletonScope();
+  public override register(container: DIContainer): void {
+    container.registerFactory<S3ClientWrapperFactory>(
+      CoreTypes.Client.clientWrapperFactory,
+      () => new S3ClientWrapperFactory()
+    );
+    container.registerFactory<ClientStorage>(
+      ClientStorage,
+      (c: DIContainer) => {
+        return new S3ClientStorage(
+          c.resolve(CoreTypes.Client.clientWrapperFactory)
+        );
+      }
+    );
   }
 }

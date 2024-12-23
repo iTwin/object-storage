@@ -2,9 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
+
 import { Client } from "minio";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   PresignedUrlProvider,
   ServerStorage,
@@ -29,20 +30,18 @@ describe(`${MinioServerStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (container: Container) => container.get(ServerStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
         expectedCtor: MinioServerStorage,
       },
       {
         testedClassIdentifier: Types.Server.presignedUrlProvider.toString(),
-        testedFunction: (container: Container) =>
-          container.get<PresignedUrlProvider>(
-            Types.Server.presignedUrlProvider
-          ),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<PresignedUrlProvider>(Types.Server.presignedUrlProvider),
         expectedCtor: MinioPresignedUrlProvider,
       },
       {
         testedClassIdentifier: Client.name,
-        testedFunction: (container: Container) => container.get(Client),
+        testedFunction: (c: DIContainer) => c.resolve(Client),
         expectedCtor: Client,
       },
     ];

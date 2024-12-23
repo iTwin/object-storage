@@ -7,7 +7,6 @@ import { dirname } from "path";
 import { Readable } from "stream";
 
 import { RestError } from "@azure/storage-blob";
-import { inject, injectable } from "inversify";
 
 import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -33,7 +32,7 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig, Types } from "../common";
+import { AzureTransferConfig } from "../common";
 import { buildBlobName } from "../common/internal";
 
 import {
@@ -48,14 +47,12 @@ export interface AzureServerStorageConfig {
   baseUrl: string;
 }
 
-@injectable()
 export class AzureServerStorage extends ServerStorage {
   private readonly _config: AzureServerStorageConfig;
   private readonly _client: BlobServiceClientWrapper;
 
   public constructor(
-    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-    @inject(Types.AzureServer.config) config: AzureServerStorageConfig,
+    config: AzureServerStorageConfig,
     client: BlobServiceClientWrapper
   ) {
     super();

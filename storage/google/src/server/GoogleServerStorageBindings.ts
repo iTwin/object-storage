@@ -3,11 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { Container } from "inversify";
-
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
-import { DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
@@ -30,7 +28,7 @@ export class GoogleServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = "google";
 
   public override register(
-    container: Container,
+    container: DIContainer,
     config: GoogleServerStorageBindingsConfig
   ): void {
     if (!config.projectId)
@@ -38,22 +36,29 @@ export class GoogleServerStorageBindings extends ServerStorageDependency {
     if (!config.bucketName)
       throw new ConfigError<GoogleStorageConfig>("bucketName");
 
-    container
-      .bind<GoogleStorageConfig>(Types.GoogleServer.config)
-      .toConstantValue(config);
-    container.bind(ServerStorage).to(GoogleServerStorage).inSingletonScope();
-
-    container.bind(StorageControlClientWrapper).toSelf().inSingletonScope();
-    container.bind(StorageWrapperFactory).toSelf().inSingletonScope();
-    container
-      .bind(StorageWrapper)
-      .toDynamicValue((context) => {
-        const factory = context.container.get(StorageWrapperFactory);
-        const config = context.container.get<GoogleStorageConfig>(
-          Types.GoogleServer.config
-        );
-        return factory.createDefaultApplication(config);
-      })
-      .inSingletonScope();
+    container.registerInstance<GoogleStorageConfig>(
+      Types.GoogleServer.config,
+      config
+    );
+    container.registerFactory(StorageWrapperFactory, () => {
+      return new StorageWrapperFactory();
+    });
+    container.registerFactory(StorageWrapper, (c: DIContainer) => {
+      const factory = c.resolve(StorageWrapperFactory);
+      const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);
+      return factory.createDefaultApplication(config);
+    });
+    container.registerFactory(StorageControlClientWrapper, (c: DIContainer) => {
+      const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);
+      return new StorageControlClientWrapper(config);
+    });
+    container.registerFactory(ServerStorage, (c: DIContainer) => {
+      const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);
+      const storage = c.resolve<StorageWrapper>(StorageWrapper);
+      const storageControl = c.resolve<StorageControlClientWrapper>(
+        StorageControlClientWrapper
+      );
+      return new GoogleServerStorage(storage, storageControl, config);
+    });
   }
 }

@@ -7,7 +7,6 @@ import { dirname } from "path";
 import { Readable } from "stream";
 
 import { BlobDownloadOptions } from "@azure/storage-blob";
-import { inject, injectable } from "inversify";
 
 import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -19,7 +18,6 @@ import {
 import {
   ClientStorage,
   TransferData,
-  Types,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
@@ -31,12 +29,8 @@ import {
 } from "../server";
 import { BlockBlobClientWrapperFactory } from "../server/wrappers";
 
-@injectable()
 export class AzureClientStorage extends ClientStorage {
-  constructor(
-    @inject(Types.Client.clientWrapperFactory)
-    private _clientWrapperFactory: BlockBlobClientWrapperFactory
-  ) {
+  constructor(private _clientWrapperFactory: BlockBlobClientWrapperFactory) {
     super();
   }
 

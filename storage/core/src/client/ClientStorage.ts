@@ -4,8 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
-
 import {
   ConfigDownloadInput,
   ConfigUploadInput,
@@ -14,7 +12,6 @@ import {
   UrlUploadInput,
 } from "../server";
 
-@injectable()
 export abstract class ClientStorage {
   public abstract download(
     input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }

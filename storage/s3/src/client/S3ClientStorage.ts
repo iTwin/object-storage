@@ -6,7 +6,6 @@ import { createReadStream } from "fs";
 import { Readable } from "stream";
 
 import type { HttpHandlerOptions } from "@aws-sdk/types";
-import { inject, injectable } from "inversify";
 
 import {
   assertRelativeDirectory,
@@ -21,7 +20,6 @@ import {
 import {
   ClientStorage,
   TransferData,
-  Types,
   UrlDownloadInput,
   UrlUploadInput,
 } from "@itwin/object-storage-core";
@@ -37,12 +35,8 @@ import { createAndUseClient } from "../server/internal";
 
 import { handleS3UrlUpload } from "./internal/Helpers";
 
-@injectable()
 export class S3ClientStorage extends ClientStorage {
-  constructor(
-    @inject(Types.Client.clientWrapperFactory)
-    private _clientWrapperFactory: S3ClientWrapperFactory
-  ) {
+  constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
     super();
   }
 

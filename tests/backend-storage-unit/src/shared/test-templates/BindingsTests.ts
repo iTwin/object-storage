@@ -3,14 +3,19 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { expect } from "chai";
-import { Container } from "inversify";
 
-import { Dependency, DependencyConfig } from "@itwin/cloud-agnostic-core";
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
+
+import {
+  Dependency,
+  DependencyConfig,
+  DIContainer,
+} from "@itwin/cloud-agnostic-core";
 import { ServerStorageDependency } from "@itwin/object-storage-core";
 
 export interface DependencyBindingsTestCase {
   testedClassIdentifier: string;
-  testedFunction: (container: Container) => unknown;
+  testedFunction: (c: DIContainer) => unknown;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expectedCtor: new (...args: any[]) => unknown;
 }
@@ -27,7 +32,7 @@ export function testBindings(
 ): void {
   for (const testCase of testCases) {
     it(`should register ${testCase.testedClassIdentifier}`, () => {
-      const container = new Container();
+      const container: DIContainer = InversifyWrapper.create();
       bindings.register(container, config);
 
       const testedFunction = () => testCase.testedFunction(container);
@@ -35,7 +40,7 @@ export function testBindings(
     });
 
     it(`should register ${testCase.testedClassIdentifier} as a singleton`, () => {
-      const container = new Container();
+      const container: DIContainer = InversifyWrapper.create();
       bindings.register(container, config);
       const instance1 = testCase.testedFunction(container);
       const instance2 = testCase.testedFunction(container);
@@ -44,7 +49,7 @@ export function testBindings(
     });
 
     it(`should resolve ${testCase.testedClassIdentifier} to ${testCase.expectedCtor.name}`, () => {
-      const container = new Container();
+      const container: DIContainer = InversifyWrapper.create();
       bindings.register(container, config);
       const instance = testCase.testedFunction(container);
 
@@ -61,7 +66,7 @@ export function testInvalidServerConfig(
 ): void {
   for (const testCase of testCases) {
     it(`should throw if dependency config is invalid (${testCase.expectedErrorMessage})`, () => {
-      const container = new Container();
+      const container: DIContainer = InversifyWrapper.create();
 
       const testedFunction = () =>
         serverBindings.register(container, testCase.config);
