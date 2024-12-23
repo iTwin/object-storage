@@ -5,7 +5,7 @@
 import "reflect-metadata";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { ClientStorage } from "@itwin/object-storage-core";
+import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   S3ClientStorageBindings,
   S3ClientWrapperFactory,
@@ -21,7 +21,9 @@ export class MinioClientStorageBindings extends S3ClientStorageBindings {
 
     container.unregister(ClientStorage);
     container.registerFactory(ClientStorage, (c: DIContainer) => {
-      return new MinioClientStorage(c.resolve(S3ClientWrapperFactory));
+      return new MinioClientStorage(
+        c.resolve<S3ClientWrapperFactory>(CoreTypes.Client.clientWrapperFactory)
+      );
     });
   }
 }

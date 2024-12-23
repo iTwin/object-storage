@@ -35,7 +35,6 @@ export class OssServerStorageBindings extends S3ServerStorageBindings {
         );
       }
     );
-    container.unregister(Core);
     container.registerFactory(Core, (c: DIContainer) => {
       const resolvedConfig = c.resolve<S3ServerStorageConfig>(
         S3Types.S3Server.config
