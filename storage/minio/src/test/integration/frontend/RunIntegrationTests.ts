@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
 import * as path from "path";
 
 import { FrontendStorageIntegrationTests } from "@itwin/object-storage-tests-frontend";

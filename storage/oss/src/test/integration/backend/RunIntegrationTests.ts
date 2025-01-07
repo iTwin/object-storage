@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
 import { S3ClientStorageBindings } from "@itwin/object-storage-s3";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
