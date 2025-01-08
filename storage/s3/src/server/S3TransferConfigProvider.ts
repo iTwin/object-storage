@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
-import { inject, injectable } from "inversify";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
@@ -14,21 +13,16 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { S3TransferConfig, Types } from "../common";
+import { S3TransferConfig } from "../common";
 
 import { getActions, getExpiresInSeconds } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 
-@injectable()
 export class S3TransferConfigProvider implements TransferConfigProvider {
   private readonly _config: S3ServerStorageConfig;
   private readonly _client: STSClient;
 
-  public constructor(
-    client: STSClient,
-    // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-    @inject(Types.S3Server.config) config: S3ServerStorageConfig
-  ) {
+  public constructor(client: STSClient, config: S3ServerStorageConfig) {
     this._config = config;
     this._client = client;
   }

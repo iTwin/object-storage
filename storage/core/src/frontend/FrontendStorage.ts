@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { injectable } from "inversify";
 
 import {
   FrontendConfigDownloadInput,
@@ -12,7 +11,6 @@ import {
   FrontendUrlUploadInput,
 } from "./FrontendInterfaces";
 
-@injectable()
 export abstract class FrontendStorage {
   public abstract download(
     input: (FrontendUrlDownloadInput | FrontendConfigDownloadInput) & {

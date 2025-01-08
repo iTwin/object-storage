@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { AzureClientStorageBindings } from "../../../client";

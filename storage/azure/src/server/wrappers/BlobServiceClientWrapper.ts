@@ -10,7 +10,6 @@ import {
   ContainerClient,
   ContainerItem,
 } from "@azure/storage-blob";
-import { injectable } from "inversify";
 
 import {
   buildObjectKey,
@@ -25,7 +24,6 @@ import {
 
 import { buildBlobName } from "../../common/internal";
 
-@injectable()
 export class BlobServiceClientWrapper {
   private readonly _client: BlobServiceClient;
 

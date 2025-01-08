@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
 import {
   DependenciesConfig,
   Types as DependencyTypes,
@@ -16,15 +14,16 @@ import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 function run(): void {
   const backendServer = new ServerStorageProxy();
 
-  backendServer.container
-    .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
-    .toConstantValue({
+  backendServer.container.registerInstance<DependenciesConfig>(
+    DependencyTypes.dependenciesConfig,
+    {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
         dependencyName: "azure",
         ...new ServerStorageConfigProvider().get(),
       },
-    });
+    }
+  );
   backendServer.useBindings(AzureServerStorageBindings);
   backendServer.start({ port: 1221 });
 }

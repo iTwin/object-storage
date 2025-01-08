@@ -21,13 +21,14 @@ import { App } from "./App";
 async function run(): Promise<void> {
   const app = new App();
 
-  app.container
-    .bind<DependenciesConfig>(DependencyTypes.dependenciesConfig)
-    .toConstantValue({
+  app.container.registerInstance<DependenciesConfig>(
+    DependencyTypes.dependenciesConfig,
+    {
       ClientStorage: {
         dependencyName: "azure",
       },
-    });
+    }
+  );
   app.useBindings(AzureClientStorageBindings);
 
   return app.start();

@@ -2,10 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
 import { Bindable, Dependency } from "..";
 import { DependencyConfig } from "../DependencyConfig";
+import { DIContainer } from "../DIContainer";
 import { ConfigError } from "../internal";
 import { NamedDependency } from "../NamedDependency";
 
@@ -24,22 +24,30 @@ export abstract class TestNamedDependency extends NamedDependency {
 export class ConcreteTestDependencyBindings extends TestDependency {
   public readonly dependencyName = "testName";
 
-  public register(container: Container, config: TestConfig): void {
-    container.bind<TestConfig>(testConfigType).toDynamicValue(() => config);
-    container.bind(Test).to(ConcreteTest).inSingletonScope();
+  public register(container: DIContainer, config: TestConfig): void {
+    container.registerInstance<TestConfig>(testConfigType, config);
+    container.registerFactory<Test>(
+      Test,
+      (c: DIContainer) =>
+        new ConcreteTest(c.resolve<TestConfig>(testConfigType))
+    );
   }
 }
 export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDependency {
   public readonly dependencyName = "testName";
 
-  public register(container: Container, config: TestConfig): void {
-    container.bind<TestConfig>(testConfigType).toDynamicValue(() => config);
-    container.bind(Test).to(ConcreteTest).inSingletonScope();
+  public register(container: DIContainer, config: TestConfig): void {
+    container.registerInstance<TestConfig>(testConfigType, config);
+    container.registerFactory<Test>(
+      Test,
+      (c: DIContainer) =>
+        new ConcreteTest(c.resolve<TestConfig>(testConfigType))
+    );
   }
 
   protected override _registerInstance(
-    container: Container,
-    childContainer: Container,
+    container: DIContainer,
+    childContainer: DIContainer,
     config: DependencyConfig
   ): void {
     if (!config.instanceName)

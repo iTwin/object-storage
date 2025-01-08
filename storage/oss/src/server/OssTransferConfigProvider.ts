@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import * as Core from "@alicloud/pop-core";
-import { inject, injectable } from "inversify";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
@@ -17,20 +16,15 @@ import {
 import {
   S3ServerStorageConfig,
   S3TransferConfig,
-  Types,
 } from "@itwin/object-storage-s3";
 
 import { getActions } from "./internal";
 
-@injectable()
 export class OssTransferConfigProvider implements TransferConfigProvider {
   private readonly _config: S3ServerStorageConfig;
   private readonly _client: Core;
 
-  public constructor(
-    client: Core,
-    @inject(Types.S3Server.config) config: S3ServerStorageConfig
-  ) {
+  public constructor(client: Core, config: S3ServerStorageConfig) {
     this._config = config;
     this._client = client;
   }

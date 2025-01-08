@@ -2,10 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 
-import { Bindable } from "@itwin/cloud-agnostic-core";
-import { ClientStorageDependency } from "@itwin/object-storage-core";
+import { Bindable, DIContainer } from "@itwin/cloud-agnostic-core";
+import {
+  ClientStorage,
+  ClientStorageDependency,
+} from "@itwin/object-storage-core";
 
 import { NamedFileDownloader } from "../NamedFileDownloader";
 
@@ -17,7 +20,7 @@ import { NamedFileDownloader } from "../NamedFileDownloader";
  * required dependencies (see Run.ts file in this directory).
  */
 export class App extends Bindable {
-  public container = new Container();
+  public container: DIContainer = InversifyWrapper.create();
 
   /**
    * The app constructor defines that it requires `ClientStorage` dependency
@@ -27,7 +30,12 @@ export class App extends Bindable {
   constructor() {
     super();
     this.requireDependency(ClientStorageDependency.dependencyType);
-    this.container.bind(NamedFileDownloader).toSelf().inSingletonScope();
+    this.container.registerFactory(NamedFileDownloader, (c: DIContainer) => {
+      return new NamedFileDownloader(
+        c.resolveNamed<ClientStorage>(ClientStorage, "instanceName1"),
+        c.resolveNamed<ClientStorage>(ClientStorage, "instanceName2")
+      );
+    });
   }
 
   /**
@@ -40,7 +48,7 @@ export class App extends Bindable {
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const namedFileDownloader = this.container.get(NamedFileDownloader);
+    const namedFileDownloader = this.container.resolve(NamedFileDownloader);
     await namedFileDownloader.downloadAllFiles();
   }
 }

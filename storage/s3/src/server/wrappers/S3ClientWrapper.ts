@@ -16,7 +16,6 @@ import {
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import type { HttpHandlerOptions } from "@aws-sdk/types";
-import { inject, injectable } from "inversify";
 
 import {
   buildObjectKey,
@@ -36,13 +35,10 @@ import {
   TransferData,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../../common";
-
-@injectable()
 export class S3ClientWrapper {
   public constructor(
     protected readonly _client: S3Client,
-    @inject(Types.bucket) protected readonly _bucket: string
+    protected readonly _bucket: string
   ) {}
 
   public async download(

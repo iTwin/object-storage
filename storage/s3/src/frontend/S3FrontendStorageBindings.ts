@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
 import {
   Types as CoreTypes,
@@ -10,17 +9,25 @@ import {
   FrontendStorageDependency,
 } from "@itwin/object-storage-core/lib/frontend";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
+
 import { S3FrontendStorage } from "./S3FrontendStorage";
 import { FrontendS3ClientWrapperFactory } from "./wrappers";
 
 export class S3FrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = "s3";
 
-  public override register(container: Container): void {
-    container
-      .bind(CoreTypes.Frontend.clientWrapperFactory)
-      .to(FrontendS3ClientWrapperFactory)
-      .inSingletonScope();
-    container.bind(FrontendStorage).to(S3FrontendStorage).inSingletonScope();
+  public override register(container: DIContainer): void {
+    container.registerFactory(
+      CoreTypes.Frontend.clientWrapperFactory,
+      () => new FrontendS3ClientWrapperFactory()
+    );
+    container.registerFactory(
+      FrontendStorage,
+      (c: DIContainer) =>
+        new S3FrontendStorage(
+          c.resolve(CoreTypes.Frontend.clientWrapperFactory)
+        )
+    );
   }
 }

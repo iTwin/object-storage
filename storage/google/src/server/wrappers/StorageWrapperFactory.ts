@@ -4,14 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Storage } from "@google-cloud/storage";
-import { injectable } from "inversify";
 
 import { GoogleTransferConfig } from "../../common/Interfaces";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
 import { StorageWrapper } from "./StorageWrapper";
 
-@injectable()
 export class StorageWrapperFactory {
   public createDefaultApplication(config: GoogleStorageConfig): StorageWrapper {
     return new StorageWrapper(

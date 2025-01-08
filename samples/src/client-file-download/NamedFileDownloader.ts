@@ -3,8 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { inject, injectable, named } from "inversify";
-
 import { ClientStorage } from "@itwin/object-storage-core";
 
 /**
@@ -13,14 +11,9 @@ import { ClientStorage } from "@itwin/object-storage-core";
  * making this class cloud agnostic. {@link ClientStorage} instances are resolved
  * using instance name (which is described in the configuration as instanceName property)
  */
-@injectable()
 export class NamedFileDownloader {
   constructor(
-    @inject(ClientStorage)
-    @named("instanceName1")
     private _storage1: ClientStorage,
-    @inject(ClientStorage)
-    @named("instanceName2")
     private _storage2: ClientStorage
   ) {}
 

@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
@@ -17,11 +17,15 @@ import { AzureClientStorage } from "./AzureClientStorage";
 export class AzureClientStorageBindings extends ClientStorageDependency {
   public readonly dependencyName: string = "azure";
 
-  public override register(container: Container): void {
-    container
-      .bind(Types.Client.clientWrapperFactory)
-      .to(BlockBlobClientWrapperFactory)
-      .inSingletonScope();
-    container.bind(ClientStorage).to(AzureClientStorage).inSingletonScope();
+  public override register(container: DIContainer): void {
+    container.registerFactory(
+      Types.Client.clientWrapperFactory,
+      () => new BlockBlobClientWrapperFactory()
+    );
+    container.registerFactory(
+      ClientStorage,
+      (c: DIContainer) =>
+        new AzureClientStorage(c.resolve(Types.Client.clientWrapperFactory))
+    );
   }
 }

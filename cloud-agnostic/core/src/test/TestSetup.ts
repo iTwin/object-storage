@@ -2,9 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
 import { Bindable, DependenciesConfig, Types } from "..";
+import { DIContainer } from "../DIContainer";
 
 import {
   DefaultTestDependencies,
@@ -13,15 +13,16 @@ import {
 } from "./TestDependency";
 
 export class TestSetup extends Bindable {
-  constructor(public container: Container, config: DependenciesConfig) {
+  constructor(public container: DIContainer, config: DependenciesConfig) {
     super();
 
     this.requireDependency(TestDependency.dependencyType);
     DefaultTestDependencies.apply(this);
 
-    container
-      .bind<DependenciesConfig>(Types.dependenciesConfig)
-      .toDynamicValue(() => config);
+    this.container.registerInstance<DependenciesConfig>(
+      Types.dependenciesConfig,
+      config
+    );
   }
 
   public start(): void {
@@ -30,15 +31,16 @@ export class TestSetup extends Bindable {
 }
 
 export class TestSetupWithNamedInstances extends Bindable {
-  constructor(public container: Container, config: DependenciesConfig) {
+  constructor(public container: DIContainer, config: DependenciesConfig) {
     super();
 
     this.requireDependency(TestDependency.dependencyType);
     DefaultTestDependenciesWithInstances.apply(this);
 
-    container
-      .bind<DependenciesConfig>(Types.dependenciesConfig)
-      .toDynamicValue(() => config);
+    container.registerInstance<DependenciesConfig>(
+      Types.dependenciesConfig,
+      config
+    );
   }
 
   public start(): void {
@@ -47,12 +49,13 @@ export class TestSetupWithNamedInstances extends Bindable {
 }
 
 export class TestSetupNoFactory extends Bindable {
-  constructor(public container: Container, config: DependenciesConfig) {
+  constructor(public container: DIContainer, config: DependenciesConfig) {
     super();
 
-    container
-      .bind<DependenciesConfig>(Types.dependenciesConfig)
-      .toDynamicValue(() => config);
+    container.registerInstance<DependenciesConfig>(
+      Types.dependenciesConfig,
+      config
+    );
   }
 
   public start(): void {
@@ -61,14 +64,15 @@ export class TestSetupNoFactory extends Bindable {
 }
 
 export class TestSetupNoDefaultDependencies extends Bindable {
-  constructor(public container: Container, config: DependenciesConfig) {
+  constructor(public container: DIContainer, config: DependenciesConfig) {
     super();
 
     this.requireDependency(TestDependency.dependencyType);
 
-    container
-      .bind<DependenciesConfig>(Types.dependenciesConfig)
-      .toDynamicValue(() => config);
+    container.registerInstance<DependenciesConfig>(
+      Types.dependenciesConfig,
+      config
+    );
   }
 
   public start(): void {

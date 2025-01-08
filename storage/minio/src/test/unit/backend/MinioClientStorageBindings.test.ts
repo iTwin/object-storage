@@ -2,10 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
-import { Container } from "inversify";
-
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ClientStorage } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -24,7 +21,7 @@ describe(`${MinioClientStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (container: Container) => container.get(ClientStorage),
+        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
         expectedCtor: MinioClientStorage,
       },
     ];

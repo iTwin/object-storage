@@ -2,14 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
+
 import { createStubInstance } from "sinon";
 
-import {
-  Types as CoreTypes,
-  PresignedUrlProvider,
-  TransferConfigProvider,
-} from "@itwin/object-storage-core";
+import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   mockPresignedUrlProvider,
   mockTransferConfigProvider,
@@ -40,22 +37,29 @@ export const s3TestConfig = {
   },
 };
 
-export function rebindS3Server(container: Container): void {
+export function rebindS3Server(container: DIContainer): void {
   const mockS3ClientWrapper = createStubInstance(S3ClientWrapper);
 
-  container.rebind(S3ClientWrapper).toConstantValue(mockS3ClientWrapper);
-  container
-    .rebind<PresignedUrlProvider>(CoreTypes.Server.presignedUrlProvider)
-    .toConstantValue(mockPresignedUrlProvider);
-  container
-    .rebind<TransferConfigProvider>(CoreTypes.Server.transferConfigProvider)
-    .toConstantValue(mockTransferConfigProvider);
+  container.unregister(S3ClientWrapper);
+  container.registerInstance(S3ClientWrapper, mockS3ClientWrapper);
+  container.unregister(CoreTypes.Server.presignedUrlProvider);
+  container.registerInstance(
+    CoreTypes.Server.presignedUrlProvider,
+    mockPresignedUrlProvider
+  );
+  container.unregister(CoreTypes.Server.transferConfigProvider);
+  container.registerInstance(
+    CoreTypes.Server.transferConfigProvider,
+    mockTransferConfigProvider
+  );
 }
 
-export function rebindS3Client(container: Container): void {
+export function rebindS3Client(container: DIContainer): void {
   const mockS3ClientWrapperFactory = createStubInstance(S3ClientWrapperFactory);
 
-  container
-    .rebind(CoreTypes.Client.clientWrapperFactory)
-    .toConstantValue(mockS3ClientWrapperFactory);
+  container.unregister(CoreTypes.Client.clientWrapperFactory);
+  container.registerInstance(
+    CoreTypes.Client.clientWrapperFactory,
+    mockS3ClientWrapperFactory
+  );
 }

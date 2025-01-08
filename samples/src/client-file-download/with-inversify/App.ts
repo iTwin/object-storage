@@ -2,10 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Container } from "inversify";
 
-import { Bindable } from "@itwin/cloud-agnostic-core";
-import { ClientStorageDependency } from "@itwin/object-storage-core";
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
+
+import { Bindable, DIContainer } from "@itwin/cloud-agnostic-core";
+import {
+  ClientStorage,
+  ClientStorageDependency,
+} from "@itwin/object-storage-core";
 
 import { FileDownloader } from "../FileDownloader";
 
@@ -17,7 +21,7 @@ import { FileDownloader } from "../FileDownloader";
  * required dependencies (see Run.ts file in this directory).
  */
 export class App extends Bindable {
-  public container = new Container();
+  public container: DIContainer = InversifyWrapper.create();
 
   /**
    * The app constructor defines that it requires `ClientStorage` dependency
@@ -27,7 +31,9 @@ export class App extends Bindable {
   constructor() {
     super();
     this.requireDependency(ClientStorageDependency.dependencyType);
-    this.container.bind(FileDownloader).toSelf().inSingletonScope();
+    this.container.registerFactory(FileDownloader, (c: DIContainer) => {
+      return new FileDownloader(c.resolve(ClientStorage));
+    });
   }
 
   /**
@@ -40,7 +46,7 @@ export class App extends Bindable {
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const fileDownloader = this.container.get(FileDownloader);
+    const fileDownloader = this.container.resolve(FileDownloader);
     await fileDownloader.downloadFile();
   }
 }

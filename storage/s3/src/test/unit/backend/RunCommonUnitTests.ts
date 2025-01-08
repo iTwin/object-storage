@@ -2,9 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-import { Container } from "inversify";
-
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { S3ClientStorageBindings } from "../../../client";
@@ -21,7 +19,7 @@ import {
 
 class TestS3ServerStorageBindings extends S3ServerStorageBindings {
   public override register(
-    container: Container,
+    container: DIContainer,
     config: S3ServerStorageBindingsConfig
   ): void {
     super.register(container, config);
@@ -30,7 +28,7 @@ class TestS3ServerStorageBindings extends S3ServerStorageBindings {
 }
 
 class TestS3ClientStorageBindings extends S3ClientStorageBindings {
-  public override register(container: Container): void {
+  public override register(container: DIContainer): void {
     super.register(container);
     rebindS3Client(container);
   }

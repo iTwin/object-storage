@@ -2,9 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
-import { Container } from "inversify";
 import { Client } from "minio";
 import { createStubInstance } from "sinon";
 
@@ -14,6 +11,7 @@ import {
   s3TestConfig,
 } from "@itwin/object-storage-s3/lib/test/unit/backend/CommonUnitTestUtils";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { S3ServerStorageBindingsConfig } from "@itwin/object-storage-s3";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
@@ -39,7 +37,7 @@ const minioTestConfig = {
 
 class TestMinioServerStorageBindings extends MinioServerStorageBindings {
   public override register(
-    container: Container,
+    container: DIContainer,
     config: S3ServerStorageBindingsConfig
   ): void {
     super.register(container, config);
@@ -47,12 +45,13 @@ class TestMinioServerStorageBindings extends MinioServerStorageBindings {
 
     const mockClient = createStubInstance(Client);
 
-    container.rebind(Client).toConstantValue(mockClient);
+    container.unregister(Client);
+    container.registerInstance(Client, mockClient);
   }
 }
 
 class TestMinioClientStorageBindings extends MinioClientStorageBindings {
-  public override register(container: Container): void {
+  public override register(container: DIContainer): void {
     super.register(container);
     rebindS3Client(container);
   }

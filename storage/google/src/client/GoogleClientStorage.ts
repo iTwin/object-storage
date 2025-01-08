@@ -5,8 +5,6 @@
 
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
-
 import {
   assertRelativeDirectory,
   instanceOfUrlTransferInput,
@@ -34,7 +32,6 @@ import {
 
 import { ClientStorageWrapperFactory } from "./wrappers";
 
-@injectable()
 export class GoogleClientStorage extends ClientStorage {
   public constructor(private _storageFactory: ClientStorageWrapperFactory) {
     super();

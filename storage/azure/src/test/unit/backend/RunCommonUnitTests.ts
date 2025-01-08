@@ -2,12 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
 import { BlobServiceClient } from "@azure/storage-blob";
-import { Container } from "inversify";
 import { createStubInstance } from "sinon";
 
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { Types } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
@@ -40,7 +38,7 @@ const azureTestConfig = {
 
 class TestAzureServerStorageBindings extends AzureServerStorageBindings {
   public override register(
-    container: Container,
+    container: DIContainer,
     config: AzureServerStorageBindingsConfig
   ): void {
     super.register(container, config);
@@ -50,24 +48,28 @@ class TestAzureServerStorageBindings extends AzureServerStorageBindings {
       BlobServiceClientWrapper
     );
 
-    container.bind(BlobServiceClient).toConstantValue(mockBlobServiceClient);
-    container
-      .rebind(BlobServiceClientWrapper)
-      .toConstantValue(mockBlobServiceClientWrapper);
+    container.registerInstance(BlobServiceClient, mockBlobServiceClient);
+    container.unregister(BlobServiceClientWrapper);
+    container.registerInstance(
+      BlobServiceClientWrapper,
+      mockBlobServiceClientWrapper
+    );
   }
 }
 
 class TestAzureClientStorageBindings extends AzureClientStorageBindings {
-  public override register(container: Container): void {
+  public override register(container: DIContainer): void {
     super.register(container);
 
     const mockBlockBlobClientWrapperFactory = createStubInstance(
       BlockBlobClientWrapperFactory
     );
 
-    container
-      .rebind(Types.Client.clientWrapperFactory)
-      .toConstantValue(mockBlockBlobClientWrapperFactory);
+    container.unregister(Types.Client.clientWrapperFactory);
+    container.registerInstance(
+      Types.Client.clientWrapperFactory,
+      mockBlockBlobClientWrapperFactory
+    );
   }
 }
 

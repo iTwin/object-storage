@@ -8,7 +8,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { inject, injectable } from "inversify";
 
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 
@@ -18,17 +17,13 @@ import {
   PresignedUrlProvider,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../common";
-
 import { getExpiresInSeconds } from "./internal";
 
-@injectable()
 export class S3PresignedUrlProvider implements PresignedUrlProvider {
   private readonly _client: S3Client;
   private readonly _bucket: string;
 
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-  public constructor(client: S3Client, @inject(Types.bucket) bucket: string) {
+  public constructor(client: S3Client, bucket: string) {
     this._client = client;
     this._bucket = bucket;
   }

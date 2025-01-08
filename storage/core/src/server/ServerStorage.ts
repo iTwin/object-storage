@@ -4,8 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { Readable } from "stream";
 
-import { injectable } from "inversify";
-
 import {
   BaseDirectory,
   ContentHeaders,
@@ -25,7 +23,6 @@ import {
   CopyOptions,
 } from "./Interfaces";
 
-@injectable()
 export abstract class ServerStorage
   implements PresignedUrlProvider, TransferConfigProvider
 {

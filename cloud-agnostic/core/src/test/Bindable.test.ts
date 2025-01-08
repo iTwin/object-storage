@@ -3,10 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { expect } from "chai";
-import { Container } from "inversify";
 
 import { Bindable, DependenciesConfig, NamedInstance } from "..";
 import { DependencyError, DependencyTypeError } from "../internal";
+import { InversifyWrapper } from "../inversify";
 
 import { ConcreteTest, Test, TestConfig } from "./Test";
 import { ConcreteTestDependencyBindings } from "./TestDependency";
@@ -63,17 +63,20 @@ function validateTestObject(test: Test, config: TestConfig) {
 
 describe(`${Bindable.name}`, () => {
   it(`should resolve registered dependency`, () => {
-    const setup = new TestSetup(new Container(), dependenciesConfig);
+    const setup = new TestSetup(InversifyWrapper.create(), dependenciesConfig);
 
     setup.start();
 
-    const test = setup.container.get(Test);
+    const test = setup.container.resolve(Test);
     expect(test instanceof ConcreteTest).to.be.true;
     expect(test.property === "testProperty").to.be.true;
   });
 
   it(`should throw if dependency factory is not registered`, () => {
-    const setup = new TestSetupNoFactory(new Container(), dependenciesConfig);
+    const setup = new TestSetupNoFactory(
+      InversifyWrapper.create(),
+      dependenciesConfig
+    );
 
     const testedFunction = () =>
       setup.useBindings(ConcreteTestDependencyBindings);
@@ -87,7 +90,7 @@ describe(`${Bindable.name}`, () => {
 
   it(`should throw if testName dependency is not registered`, () => {
     const setup = new TestSetupNoDefaultDependencies(
-      new Container(),
+      InversifyWrapper.create(),
       dependenciesConfig
     );
 
@@ -102,7 +105,7 @@ describe(`${Bindable.name}`, () => {
 
   it(`should throw if testName does not support named dependency instances`, () => {
     const setup = new TestSetup(
-      new Container(),
+      InversifyWrapper.create(),
       dependenciesConfigWithMultipleInstances
     );
 
@@ -117,29 +120,29 @@ describe(`${Bindable.name}`, () => {
 
   it(`should resolve registered named dependency instance`, () => {
     const setup = new TestSetupWithNamedInstances(
-      new Container(),
+      InversifyWrapper.create(),
       dependenciesConfigWithOneInstance
     );
 
     setup.start();
 
-    const test = setup.container.getNamed(Test, "instanceName");
+    const test = setup.container.resolveNamed(Test, "instanceName");
     validateTestObject(test, testConfigWithOneInstance[0]);
   });
 
   it(`should resolve multiple registered named dependency instances by name`, () => {
     const setup = new TestSetupWithNamedInstances(
-      new Container(),
+      InversifyWrapper.create(),
       dependenciesConfigWithMultipleInstances
     );
 
     setup.start();
 
-    const test = setup.container.getNamed(
+    const test = setup.container.resolveNamed(
       Test,
       testConfigWithMultipleInstances[0].instanceName!
     );
-    const test2 = setup.container.getNamed(
+    const test2 = setup.container.resolveNamed(
       Test,
       testConfigWithMultipleInstances[1].instanceName!
     );
@@ -150,13 +153,13 @@ describe(`${Bindable.name}`, () => {
 
   it(`should resolve multiple registered named dependency instances as array`, () => {
     const setup = new TestSetupWithNamedInstances(
-      new Container(),
+      InversifyWrapper.create(),
       dependenciesConfigWithMultipleInstances
     );
 
     setup.start();
 
-    const tests: NamedInstance<Test>[] = setup.container.getAll(
+    const tests: NamedInstance<Test>[] = setup.container.resolveAll(
       NamedInstance<Test>
     );
 

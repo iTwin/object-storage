@@ -2,10 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "reflect-metadata";
-
-import { Container } from "inversify";
-
 import {
   Types as CoreTypes,
   FrontendStorage,
@@ -14,6 +10,8 @@ import {
   DependencyBindingsTestCase,
   testBindings,
 } from "@itwin/object-storage-tests-backend-unit/lib/shared/test-templates/BindingsTests";
+
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 
 import {
   FrontendS3ClientWrapperFactory,
@@ -29,16 +27,15 @@ describe(`${S3FrontendStorageBindings.name}`, () => {
       {
         testedClassIdentifier:
           CoreTypes.Frontend.clientWrapperFactory.toString(),
-        testedFunction: (container: Container) =>
-          container.get<FrontendS3ClientWrapperFactory>(
+        testedFunction: (c: DIContainer) =>
+          c.resolve<FrontendS3ClientWrapperFactory>(
             CoreTypes.Frontend.clientWrapperFactory
           ),
         expectedCtor: FrontendS3ClientWrapperFactory,
       },
       {
         testedClassIdentifier: FrontendStorage.name,
-        testedFunction: (container: Container) =>
-          container.get(FrontendStorage),
+        testedFunction: (c: DIContainer) => c.resolve(FrontendStorage),
         expectedCtor: S3FrontendStorage,
       },
     ];

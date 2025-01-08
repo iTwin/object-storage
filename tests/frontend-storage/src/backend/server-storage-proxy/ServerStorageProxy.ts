@@ -5,9 +5,10 @@
 import * as path from "path";
 
 import * as express from "express";
-import { Container } from "inversify";
 
-import { Bindable } from "@itwin/cloud-agnostic-core";
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
+
+import { Bindable, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
@@ -17,7 +18,7 @@ import {
 import * as Common from "./Common";
 
 export class ServerStorageProxy extends Bindable {
-  public readonly container = new Container();
+  public readonly container: DIContainer = InversifyWrapper.create();
 
   private readonly _contentTypeHeader = "content-type";
   private readonly _contentTypeStream = "application/octet-stream";
@@ -31,7 +32,7 @@ export class ServerStorageProxy extends Bindable {
 
   public start(config: { port: number }): void {
     this.bindDependencies(this.container);
-    const serverStorage = this.container.get(ServerStorage);
+    const serverStorage = this.container.resolve(ServerStorage);
 
     const app = express();
     const publicDir = path.resolve(__dirname, "..", "..", "public");

@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { inject, injectable } from "inversify";
-
 import {
   assertRelativeDirectory,
   instanceOfUrlTransferInput,
@@ -16,7 +14,6 @@ import {
   FrontendUploadInMultiplePartsInput,
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
-  Types,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
   downloadFromUrlFrontend,
@@ -31,10 +28,8 @@ import {
   FrontendS3ClientWrapperFactory,
 } from "./wrappers";
 
-@injectable()
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
-    @inject(Types.Frontend.clientWrapperFactory)
     private _clientWrapperFactory: FrontendS3ClientWrapperFactory
   ) {
     super();
