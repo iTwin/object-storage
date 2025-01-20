@@ -7,6 +7,7 @@ import { ClientStorage, ServerStorage } from "@itwin/object-storage-core";
 interface StorageUnitTestsConfig {
   serverStorage: ServerStorage;
   clientStorage: ClientStorage;
+  storageType: string;
 }
 
 export let config: StorageUnitTestsConfig;

@@ -22,7 +22,8 @@ export class FrontendStorageTestSetup extends Bindable {
   constructor(
     config: DependenciesConfig,
     frontendStorageDependency: new () => FrontendStorageDependency,
-    private readonly _serverBaseUrl: string
+    private readonly _serverBaseUrl: string,
+    private readonly _storageType: string
   ) {
     super();
 
@@ -43,5 +44,7 @@ export class FrontendStorageTestSetup extends Bindable {
     (window as any).frontendStorage = frontendStorage;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).serverBaseUrl = this._serverBaseUrl;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).storageType = this._storageType;
   }
 }

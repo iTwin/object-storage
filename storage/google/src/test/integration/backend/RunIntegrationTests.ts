@@ -2,38 +2,48 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
 import { StorageIntegrationTests } from "@itwin/object-storage-tests-backend";
 
 import { GoogleClientStorageBindings } from "../../../client/GoogleClientStorageBindings";
-import { GoogleServerStorageBindings } from "../../../server";
+import { Constants, GoogleServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 const serverStorageConfig = new ServerStorageConfigProvider().get();
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ServerStorage: [
-    {
-      dependencyName: "google",
-      instanceName: "primary",
-      ...serverStorageConfig,
-    },
-    {
-      dependencyName: "google",
-      instanceName: "secondary",
-      ...serverStorageConfig,
-      bucket: serverStorageConfig.secondaryBucketName,
-    },
-  ],
+  ServerStorage: {
+    bindingStrategy: "NamedDependency",
+    instances: [
+      {
+        dependencyName: Constants.storageType,
+        instanceName: "primary",
+        ...serverStorageConfig,
+      },
+      {
+        dependencyName: Constants.storageType,
+        instanceName: "secondary",
+        ...serverStorageConfig,
+        bucket: serverStorageConfig.secondaryBucketName,
+      },
+    ],
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName: "google",
-    bucket: serverStorageConfig.bucketName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName: Constants.storageType,
+      bucket: serverStorageConfig.bucketName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName: "google",
-    bucket: serverStorageConfig.bucketName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName: Constants.storageType,
+      bucket: serverStorageConfig.bucketName,
+    },
+  } as TypedDependencyConfig,
 };
 
 /**
@@ -53,6 +63,7 @@ const tests = new StorageIntegrationTests(
   config,
   GoogleServerStorageBindings,
   GoogleClientStorageBindings,
+  Constants.storageType,
   mochaGrepPattern
 );
 tests.start().catch((err) => {

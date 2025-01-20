@@ -25,7 +25,10 @@ async function run(): Promise<void> {
     DependencyTypes.dependenciesConfig,
     {
       ClientStorage: {
-        dependencyName: "azure",
+        bindingStrategy: "Dependency",
+        instance: {
+          dependencyName: "azure",
+        },
       },
     }
   );

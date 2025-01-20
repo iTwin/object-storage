@@ -10,10 +10,12 @@ import {
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
 
+import { Constants } from "../common";
+
 import { GoogleFrontendStorage } from "./GoogleFrontendStorage";
 
 export class GoogleFrontendStorageBindings extends FrontendStorageDependency {
-  public readonly dependencyName: string = "google";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     container.registerFactory(

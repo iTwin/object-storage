@@ -5,11 +5,12 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 import { createStubInstance } from "sinon";
 
-import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { DIContainer, TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
 import { Types } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { AzureClientStorageBindings } from "../../../client";
+import { Constants } from "../../../common";
 import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
@@ -17,23 +18,32 @@ import {
   BlockBlobClientWrapperFactory,
 } from "../../../server";
 
-const dependencyName = "azure";
+const dependencyName = Constants.storageType;
 const azureTestConfig = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName,
-    accountName: "testAccountName",
-    accountKey: "testAccountKey",
-    baseUrl: "https://testBaseUrl.com",
-  },
+    bindingStrategy: "Dependency",
+    instance: {
+      dependencyName,
+      accountName: "testAccountName",
+      accountKey: "testAccountKey",
+      baseUrl: "https://testBaseUrl.com",
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
 };
 
 class TestAzureServerStorageBindings extends AzureServerStorageBindings {
@@ -76,7 +86,8 @@ class TestAzureClientStorageBindings extends AzureClientStorageBindings {
 const tests = new StorageUnitTests(
   azureTestConfig,
   TestAzureServerStorageBindings,
-  TestAzureClientStorageBindings
+  TestAzureClientStorageBindings,
+  dependencyName
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

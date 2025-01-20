@@ -20,7 +20,7 @@ import {
   testInvalidServerConfig,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { Types } from "../../../common";
+import { Constants as S3Constants, Types } from "../../../common";
 import {
   S3ClientWrapper,
   S3PresignedUrlProvider,
@@ -29,6 +29,7 @@ import {
   S3ServerStorageBindingsConfig,
   S3ServerStorageConfig,
   S3TransferConfigProvider,
+  StsWrapper,
 } from "../../../server";
 
 describe(`${S3ServerStorageBindings.name}`, () => {
@@ -38,20 +39,20 @@ describe(`${S3ServerStorageBindings.name}`, () => {
     const invalidConfigTestCases: InvalidConfigTestCase[] = [
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: Constants,
         } as unknown as S3ServerStorageBindingsConfig,
         expectedErrorMessage: "accessKey is not defined in configuration",
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
         } as unknown as S3ServerStorageBindingsConfig,
         expectedErrorMessage: "bucket is not defined in configuration",
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
           bucket: "testBucket",
         } as unknown as S3ServerStorageBindingsConfig,
@@ -59,7 +60,7 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
           bucket: "testBucket",
           baseUrl: "testBaseUrl",
@@ -68,7 +69,7 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
           bucket: "testBucket",
           baseUrl: "testBaseUrl",
@@ -78,7 +79,7 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
           bucket: "testBucket",
           baseUrl: "testBaseUrl",
@@ -89,7 +90,7 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       },
       {
         config: {
-          dependencyName: "s3",
+          dependencyName: S3Constants.storageType,
           accessKey: "testAccessKey",
           bucket: "testBucket",
           baseUrl: "testBaseUrl",
@@ -118,6 +119,11 @@ describe(`${S3ServerStorageBindings.name}`, () => {
         testedClassIdentifier: S3Client.name,
         testedFunction: (c: DIContainer) => c.resolve(S3Client),
         expectedCtor: S3Client,
+      },
+      {
+        testedClassIdentifier: StsWrapper.name,
+        testedFunction: (c: DIContainer) => c.resolve(StsWrapper),
+        expectedCtor: StsWrapper,
       },
       {
         testedClassIdentifier: STSClient.name,

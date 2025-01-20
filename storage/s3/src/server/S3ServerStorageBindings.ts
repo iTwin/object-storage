@@ -16,13 +16,13 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../common";
+import { Constants, Types } from "../common";
 import { createS3Client, createStsClient } from "../common/internal";
 
 import { S3PresignedUrlProvider } from "./S3PresignedUrlProvider";
 import { S3ServerStorage, S3ServerStorageConfig } from "./S3ServerStorage";
 import { S3TransferConfigProvider } from "./S3TransferConfigProvider";
-import { S3ClientWrapper } from "./wrappers";
+import { S3ClientWrapper, StsWrapper } from "./wrappers";
 
 /* eslint-disable @typescript-eslint/indent */
 export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
@@ -30,7 +30,7 @@ export type S3ServerStorageBindingsConfig = S3ServerStorageConfig &
 /* eslint-enable @typescript-eslint/indent */
 
 export class S3ServerStorageBindings extends ServerStorageDependency {
-  public readonly dependencyName: string = "s3";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(
     container: DIContainer,
@@ -69,6 +69,9 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
 
     container.registerInstance(Types.bucket, config.bucket);
 
+    container.registerFactory(StsWrapper, (c: DIContainer) => {
+      return new StsWrapper(c.resolve(STSClient));
+    });
     container.registerFactory(S3ClientWrapper, (c: DIContainer) => {
       return new S3ClientWrapper(c.resolve(S3Client), c.resolve(Types.bucket));
     });
@@ -85,7 +88,7 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
       CoreTypes.Server.transferConfigProvider,
       (c: DIContainer) =>
         new S3TransferConfigProvider(
-          c.resolve(STSClient),
+          c.resolve(StsWrapper),
           c.resolve(Types.S3Server.config)
         )
     );

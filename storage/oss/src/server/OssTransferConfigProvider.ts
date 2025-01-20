@@ -18,6 +18,8 @@ import {
   S3TransferConfig,
 } from "@itwin/object-storage-s3";
 
+import { Constants } from "../common";
+
 import { getActions } from "./internal";
 
 export class OssTransferConfigProvider implements TransferConfigProvider {
@@ -71,6 +73,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 
@@ -116,6 +119,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 
@@ -163,6 +167,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 }

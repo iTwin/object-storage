@@ -5,9 +5,11 @@
 import {
   DependenciesConfig,
   Types as DependencyTypes,
+  TypedDependencyConfig,
 } from "@itwin/cloud-agnostic-core";
 import { ServerStorageProxy } from "@itwin/object-storage-tests-frontend";
 
+import { Constants } from "../../../common";
 import { AzureServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
@@ -19,9 +21,12 @@ function run(): void {
     {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
-        dependencyName: "azure",
-        ...new ServerStorageConfigProvider().get(),
-      },
+        bindingStrategy: "Dependency",
+        instance: {
+          dependencyName: Constants.storageType,
+          ...new ServerStorageConfigProvider().get(),
+        },
+      } as TypedDependencyConfig,
     }
   );
   backendServer.useBindings(AzureServerStorageBindings);

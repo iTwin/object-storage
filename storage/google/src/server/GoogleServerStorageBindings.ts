@@ -11,7 +11,7 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../common";
+import { Constants, Types } from "../common";
 import {
   GoogleStorageConfig,
   StorageWrapper,
@@ -25,7 +25,7 @@ export type GoogleServerStorageBindingsConfig = GoogleStorageConfig &
   DependencyConfig;
 
 export class GoogleServerStorageBindings extends ServerStorageDependency {
-  public readonly dependencyName: string = "google";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(
     container: DIContainer,

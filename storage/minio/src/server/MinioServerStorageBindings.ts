@@ -18,14 +18,18 @@ import {
   S3ServerStorageBindingsConfig,
   S3ServerStorageConfig,
   Types as S3Types,
+  StsWrapper,
 } from "@itwin/object-storage-s3";
+
+import { Constants } from "../common";
 
 import { createClient } from "./internal";
 import { MinioPresignedUrlProvider } from "./MinioPresignedUrlProvider";
 import { MinioServerStorage } from "./MinioServerStorage";
+import { MinioTransferConfigProvider } from "./MinioTransferConfigProvider";
 
 export class MinioServerStorageBindings extends S3ServerStorageBindings {
-  public override readonly dependencyName: string = "minio";
+  public override readonly dependencyName: string = Constants.storageType;
 
   public override register(
     container: DIContainer,
@@ -49,6 +53,19 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
       );
       return createClient(resolvedConfig);
     });
+    container.unregister(Types.Server.transferConfigProvider);
+    container.registerFactory<TransferConfigProvider>(
+      Types.Server.transferConfigProvider,
+      (c: DIContainer) => {
+        const resolvedConfig = c.resolve<S3ServerStorageConfig>(
+          S3Types.S3Server.config
+        );
+        return new MinioTransferConfigProvider(
+          c.resolve(StsWrapper),
+          resolvedConfig
+        );
+      }
+    );
     container.unregister(ServerStorage);
     container.registerFactory<ServerStorage>(
       ServerStorage,

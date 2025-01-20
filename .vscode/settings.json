@@ -15,7 +15,8 @@
     "**/node_modules": true,
     "**/out": true,
     "**/lib": true,
-    "**/cypress": true,
+    "**/cypress/downloads": true,
+    "**/cypress/support": true,
     "**/dist": true,
     "common/temp": true
   },

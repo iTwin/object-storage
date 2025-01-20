@@ -22,12 +22,14 @@ export class NamedFileDownloader {
       transferType: "local",
       url: "FILE_URL_PLACEHOLDER",
       localPath: "downloadedFile.txt",
+      storageType: "azure",
     });
 
     await this._storage2.download({
       transferType: "local",
       url: "FILE_URL_PLACEHOLDER",
       localPath: "downloadedFile.txt",
+      storageType: "azure",
     });
   }
 }

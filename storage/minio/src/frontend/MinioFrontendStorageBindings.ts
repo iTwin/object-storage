@@ -10,11 +10,13 @@ import { S3FrontendStorageBindings } from "@itwin/object-storage-s3/lib/frontend
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
 
+import { Constants } from "../common";
+
 import { MinioFrontendStorage } from "./MinioFrontendStorage";
 import { FrontendMinioS3ClientWrapperFactory } from "./wrappers/FrontendMinioS3ClientFactory";
 
 export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
-  public override readonly dependencyName: string = "minio";
+  public override readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     super.register(container);

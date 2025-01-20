@@ -75,6 +75,7 @@ export async function testDownloadFromUrlToBuffer(
     test
   );
   const responseBuffer = await test.frontendStorage.download({
+    storageType: test.storageType,
     url,
     transferType: "buffer",
   });
@@ -89,6 +90,7 @@ export async function testDownloadFromUrlToStream(
     test
   );
   const responseStream = await test.frontendStorage.download({
+    storageType: test.storageType,
     url,
     transferType: "stream",
   });

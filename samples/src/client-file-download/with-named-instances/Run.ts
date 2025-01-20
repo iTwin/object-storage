@@ -24,16 +24,19 @@ async function run(): Promise<void> {
   app.container.registerInstance<DependenciesConfig>(
     DependencyTypes.dependenciesConfig,
     {
-      ClientStorage: [
-        {
-          instanceName: "instanceName1",
-          dependencyName: "azure",
-        },
-        {
-          instanceName: "instanceName2",
-          dependencyName: "azure",
-        },
-      ],
+      ClientStorage: {
+        bindingStrategy: "NamedDependency",
+        instances: [
+          {
+            instanceName: "instanceName1",
+            dependencyName: "azure",
+          },
+          {
+            instanceName: "instanceName2",
+            dependencyName: "azure",
+          },
+        ],
+      },
     }
   );
   app.useBindings(AzureClientStorageBindings);

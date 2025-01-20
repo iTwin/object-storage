@@ -42,10 +42,12 @@ export type ObjectProperties = ContentHeaders & {
 export interface TransferConfig {
   baseUrl: string;
   expiration: Date;
+  storageType: string;
 }
 
 export interface UrlTransferInput {
   url: string;
+  storageType: string;
 }
 
 export interface ConfigTransferInput {

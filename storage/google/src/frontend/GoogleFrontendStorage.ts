@@ -57,6 +57,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
         input.transferConfig.bucketName
       }/o/${encodeURIComponent(this.objectName(input.reference))}?alt=media`,
       transferType: input.transferType,
+      storageType: input.transferConfig.storageType,
     };
 
     return downloadFromUrlFrontend(updatedInput, {

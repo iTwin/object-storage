@@ -9,11 +9,13 @@ import {
   ClientStorageDependency,
 } from "@itwin/object-storage-core";
 
+import { Constants } from "../common";
+
 import { GoogleClientStorage } from "./GoogleClientStorage";
 import { ClientStorageWrapperFactory } from "./wrappers";
 
 export class GoogleClientStorageBindings extends ClientStorageDependency {
-  public readonly dependencyName: string = "google";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     container.registerFactory(

@@ -6,3 +6,4 @@ export * from "../common";
 export * from "./FrontendInterfaces";
 export * from "./FrontendStorage";
 export * from "./FrontendStorageDependency";
+export * from "./StrategyFrontendStorage";

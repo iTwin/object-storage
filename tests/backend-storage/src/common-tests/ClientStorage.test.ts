@@ -54,7 +54,7 @@ import { assertLocalFile } from "./utils/Helpers";
 
 use(chaiAsPromised);
 
-const { clientStorage, serverStorage } = config;
+const { clientStorage, serverStorage, storageType } = config;
 
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   describe("PresignedUrlProvider", () => {
@@ -64,6 +64,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           await testLocalFileManager.createAndWriteFile("test-empty-file.txt");
 
         const uploadPromise = clientStorage.upload({
+          storageType: storageType,
           url: "test-url",
           data: emptyFilePath,
         });
@@ -164,6 +165,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
 
         const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
         const response = await clientStorage.download({
+          storageType: storageType,
           url: downloadUrl,
           transferType: "local",
           localPath: `${testDownloadPath}/download-url.txt`,
@@ -188,6 +190,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const abortController = new AbortController();
 
         const downloadPromise = clientStorage.download({
+          storageType: storageType,
           url: downloadUrl,
           transferType: "local",
           localPath: `${testDownloadPath}/download-url.txt`,
@@ -238,6 +241,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
               objectName: "test-object-name",
             },
             transferConfig: {
+              storageType: storageType,
               baseUrl: "test-url",
               expiration: new Date(),
             },
@@ -360,6 +364,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
               objectName: "test-object-name",
             },
             transferConfig: {
+              storageType: storageType,
               baseUrl: "test-url",
               expiration: new Date(),
             },

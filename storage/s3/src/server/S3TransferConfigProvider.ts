@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { AssumeRoleCommand, STSClient } from "@aws-sdk/client-sts";
+import { AssumeRoleCommand } from "@aws-sdk/client-sts";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
@@ -13,16 +13,17 @@ import {
   TransferConfigProvider,
 } from "@itwin/object-storage-core";
 
-import { S3TransferConfig } from "../common";
+import { Constants, S3TransferConfig } from "../common";
 
 import { getActions, getExpiresInSeconds } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
+import { StsWrapper } from "./wrappers";
 
 export class S3TransferConfigProvider implements TransferConfigProvider {
   private readonly _config: S3ServerStorageConfig;
-  private readonly _client: STSClient;
+  private readonly _client: StsWrapper;
 
-  public constructor(client: STSClient, config: S3ServerStorageConfig) {
+  public constructor(client: StsWrapper, config: S3ServerStorageConfig) {
     this._config = config;
     this._client = client;
   }
@@ -47,7 +48,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       ],
     };
 
-    const { Credentials } = await this._client.send(
+    const { Credentials } = await this._client.client.send(
       new AssumeRoleCommand({
         DurationSeconds: getExpiresInSeconds(options),
         Policy: JSON.stringify(policy),
@@ -67,6 +68,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 
@@ -90,7 +92,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       ],
     };
 
-    const { Credentials } = await this._client.send(
+    const { Credentials } = await this._client.client.send(
       new AssumeRoleCommand({
         DurationSeconds: getExpiresInSeconds(options),
         Policy: JSON.stringify(policy),
@@ -110,6 +112,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 
@@ -135,7 +138,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       ],
     };
 
-    const { Credentials } = await this._client.send(
+    const { Credentials } = await this._client.client.send(
       new AssumeRoleCommand({
         DurationSeconds: getExpiresInSeconds(options),
         Policy: JSON.stringify(policy),
@@ -155,6 +158,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
       baseUrl: this._config.baseUrl,
       region: this._config.region,
       bucket: this._config.bucket,
+      storageType: Constants.storageType,
     };
   }
 }

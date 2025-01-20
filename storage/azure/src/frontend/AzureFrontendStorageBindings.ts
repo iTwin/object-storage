@@ -10,11 +10,13 @@ import {
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
 
+import { Constants } from "../common";
+
 import { AzureFrontendStorage } from "./AzureFrontendStorage";
 import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 export class AzureFrontendStorageBindings extends FrontendStorageDependency {
-  public readonly dependencyName: string = "azure";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     container.registerFactory<FrontendBlockBlobClientWrapperFactory>(

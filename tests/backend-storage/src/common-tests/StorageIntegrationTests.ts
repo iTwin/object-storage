@@ -31,6 +31,7 @@ export class StorageIntegrationTests extends Bindable {
     config: DependenciesConfig,
     serverStorageDependency: new () => ServerStorageDependency,
     clientStorageDependency: new () => ClientStorageDependency,
+    private _storageType: string,
     private readonly _mochaGrepPattern?: string
   ) {
     super();
@@ -61,6 +62,7 @@ export class StorageIntegrationTests extends Bindable {
       serverStorage,
       serverStorage2,
       clientStorage,
+      storageType: this._storageType,
     });
 
     const mochaOptions: Mocha.MochaOptions = {

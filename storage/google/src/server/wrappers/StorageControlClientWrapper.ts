@@ -11,7 +11,7 @@ import {
   EntityCollectionPage,
 } from "@itwin/object-storage-core";
 
-import { GoogleTransferConfig } from "../../common";
+import { Constants, GoogleTransferConfig } from "../../common";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
 import { GoogleStorageConfigType, roleFromConfigType } from "./Helpers";
@@ -145,6 +145,7 @@ export class StorageControlClientWrapper {
       authentication: `Bearer ${token!}`,
       expiration: new Date(expirationTime!),
       bucketName: this._config.bucketName,
+      storageType: Constants.storageType,
     };
   }
 

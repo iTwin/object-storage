@@ -15,7 +15,7 @@ import {
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
 
-import { Types } from "../common";
+import { Constants, Types } from "../common";
 
 import {
   AzureServerStorage,
@@ -27,7 +27,7 @@ export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;
 
 export class AzureServerStorageBindings extends ServerStorageDependency {
-  public readonly dependencyName: string = "azure";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(
     container: DIContainer,

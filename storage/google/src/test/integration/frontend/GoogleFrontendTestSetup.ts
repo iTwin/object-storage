@@ -4,17 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
 
-import { GoogleFrontendStorageBindings } from "../../../frontend";
+import { TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
+
+import { Constants, GoogleFrontendStorageBindings } from "../../../frontend";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName: "google",
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName: Constants.storageType,
+    },
+  } as TypedDependencyConfig,
 };
 const setup = new FrontendStorageTestSetup(
   config,
   GoogleFrontendStorageBindings,
-  "http://localhost:1224"
+  "http://localhost:1224",
+  Constants.storageType
 );
 setup.setGlobals();
