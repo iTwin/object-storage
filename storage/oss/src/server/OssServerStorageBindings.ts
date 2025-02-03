@@ -13,11 +13,13 @@ import {
   Types as S3Types,
 } from "@itwin/object-storage-s3";
 
+import { Constants } from "../common";
+
 import { createCore } from "./internal";
 import { OssTransferConfigProvider } from "./OssTransferConfigProvider";
 
 export class OssServerStorageBindings extends S3ServerStorageBindings {
-  public override readonly dependencyName: string = "oss";
+  public override readonly dependencyName: string = Constants.storageType;
 
   public override register(
     container: DIContainer,

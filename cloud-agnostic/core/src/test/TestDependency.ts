@@ -3,13 +3,24 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { Bindable, Dependency } from "..";
-import { DependencyConfig } from "../DependencyConfig";
+import { Bindable, Dependency, StrategyDependency, StrategyInstance } from "..";
+import { DependencyConfig, NamedDependencyConfig } from "../DependencyConfig";
 import { DIContainer } from "../DIContainer";
 import { ConfigError } from "../internal";
 import { NamedDependency } from "../NamedDependency";
 
-import { ConcreteTest, Test, TestConfig, testConfigType } from "./Test";
+import {
+  ConcreteStrategyTest,
+  StrategyTest,
+  StrategyTestBase,
+} from "./StrategyTest";
+import {
+  ConcreteTest,
+  NamedTestConfig,
+  Test,
+  TestConfig,
+  testTypes,
+} from "./Test";
 
 export abstract class TestDependency extends Dependency {
   public static readonly dependencyType = "testType";
@@ -17,44 +28,109 @@ export abstract class TestDependency extends Dependency {
 }
 
 export abstract class TestNamedDependency extends NamedDependency {
-  public static readonly dependencyType = "testType";
-  public readonly dependencyType = TestDependency.dependencyType;
+  public static readonly dependencyType = "testNamedType";
+  public readonly dependencyType = TestNamedDependency.dependencyType;
+}
+
+export abstract class TestStrategyDependency extends StrategyDependency {
+  public static readonly dependencyType = "testStrategyType";
+  public readonly dependencyType = TestStrategyDependency.dependencyType;
+
+  public register(container: DIContainer, config?: DependencyConfig): void {
+    if (!config?.dependencyName)
+      throw new ConfigError<DependencyConfig>("dependencyName");
+  }
+
+  public registerStrategy(
+    container: DIContainer,
+    _config?: DependencyConfig
+  ): void {
+    container.registerFactory<StrategyTestBase>(
+      StrategyTestBase,
+      (c: DIContainer) => {
+        const strategyInstances = c.resolveAll<
+          StrategyInstance<ConcreteStrategyTest>
+        >(StrategyInstance<ConcreteStrategyTest>);
+        const strategyMap = new Map<string, StrategyTestBase>();
+        for (const instance of strategyInstances) {
+          strategyMap.set(instance.instanceName, instance.instance);
+        }
+        return new StrategyTest(strategyMap);
+      }
+    );
+  }
 }
 
 export class ConcreteTestDependencyBindings extends TestDependency {
   public readonly dependencyName = "testName";
 
   public register(container: DIContainer, config: TestConfig): void {
-    container.registerInstance<TestConfig>(testConfigType, config);
+    container.registerInstance<TestConfig>(testTypes.testConfigType, config);
     container.registerFactory<Test>(
       Test,
       (c: DIContainer) =>
-        new ConcreteTest(c.resolve<TestConfig>(testConfigType))
+        new ConcreteTest(c.resolve<TestConfig>(testTypes.testConfigType))
     );
   }
 }
+
 export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDependency {
   public readonly dependencyName = "testName";
 
-  public register(container: DIContainer, config: TestConfig): void {
-    container.registerInstance<TestConfig>(testConfigType, config);
+  public register(container: DIContainer, config: NamedTestConfig): void {
+    container.registerInstance<NamedTestConfig>(
+      testTypes.namedTestConfigType,
+      config
+    );
     container.registerFactory<Test>(
       Test,
       (c: DIContainer) =>
-        new ConcreteTest(c.resolve<TestConfig>(testConfigType))
+        new ConcreteTest(c.resolve<TestConfig>(testTypes.namedTestConfigType))
     );
   }
 
   protected override _registerInstance(
     container: DIContainer,
     childContainer: DIContainer,
-    config: DependencyConfig
+    config: NamedDependencyConfig
   ): void {
     if (!config.instanceName)
-      throw new ConfigError<DependencyConfig>("instanceName");
+      throw new ConfigError<NamedDependencyConfig>("instanceName");
 
     this.bindNamed(container, childContainer, Test, config.instanceName);
   }
+}
+
+export class ConcreteStrategyDependencyClass1 extends TestStrategyDependency {
+  public override dependencyName = "testName1";
+  protected _testProperty = "testProperty1";
+
+  public constructor() {
+    super();
+  }
+
+  public override _registerInstance(
+    container: DIContainer,
+    _childContainer: DIContainer,
+    _config: TestConfig
+  ): void {
+    container.registerFactory<StrategyInstance<ConcreteStrategyTest>>(
+      StrategyInstance<ConcreteStrategyTest>,
+      () =>
+        new StrategyInstance<ConcreteStrategyTest>(
+          new ConcreteStrategyTest({
+            dependencyName: this.dependencyName,
+            testProperty: this._testProperty,
+          }),
+          this.dependencyName
+        )
+    );
+  }
+}
+
+export class ConcreteStrategyDependencyClass2 extends ConcreteStrategyDependencyClass1 {
+  public override dependencyName = "testName2";
+  protected override _testProperty = "testProperty2";
 }
 
 export class DefaultTestDependencies {
@@ -66,5 +142,12 @@ export class DefaultTestDependencies {
 export class DefaultTestDependenciesWithInstances {
   public static apply(dependable: Bindable): void {
     dependable.useBindings(ConcreteTestDependencyBindingsWithInstances);
+  }
+}
+
+export class DefaultTestStrategyDependencies {
+  public static apply(dependable: Bindable): void {
+    dependable.useBindings(ConcreteStrategyDependencyClass1);
+    dependable.useBindings(ConcreteStrategyDependencyClass2);
   }
 }

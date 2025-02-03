@@ -10,12 +10,13 @@ import {
   Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
+import { Constants } from "../common";
 import { S3ClientWrapperFactory } from "../server";
 
 import { S3ClientStorage } from "./S3ClientStorage";
 
 export class S3ClientStorageBindings extends ClientStorageDependency {
-  public readonly dependencyName: string = "s3";
+  public readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     container.registerFactory<S3ClientWrapperFactory>(

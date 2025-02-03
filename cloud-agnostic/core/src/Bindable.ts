@@ -8,6 +8,7 @@ import { DependenciesConfig, DependencyConfig } from "./DependencyConfig";
 import { DependencyFactory } from "./DependencyFactory";
 import { DIContainer } from "./DIContainer";
 import { DependencyError } from "./internal";
+import { StrategyDependency } from "./StrategyDependency";
 import { Types } from "./Types";
 
 export abstract class Bindable {
@@ -31,6 +32,22 @@ export abstract class Bindable {
       );
 
     factory.addDependency(dependencyBindings);
+  }
+
+  private bindStrategyDependencies(
+    container: DIContainer,
+    factory: DependencyFactory,
+    config: DependencyConfig
+  ): void {
+    let first = true;
+    for (const dependency of factory.getStrategyDependencies()) {
+      if (!(dependency instanceof StrategyDependency)) continue;
+      if (first) {
+        first = false;
+        dependency.registerStrategy(container, config);
+      }
+      dependency.registerInstance(container, config);
+    }
   }
 
   private bindNamedDependencies(
@@ -60,9 +77,28 @@ export abstract class Bindable {
 
     this._dependencyFactories.forEach((factory) => {
       const dependencyConfig = config[factory.dependencyType];
-      if (Array.isArray(dependencyConfig))
-        this.bindNamedDependencies(container, factory, dependencyConfig);
-      else this.bindDependency(container, factory, dependencyConfig);
+      switch (dependencyConfig.bindingStrategy) {
+        case "NamedDependency": {
+          this.bindNamedDependencies(
+            container,
+            factory,
+            dependencyConfig.instances
+          );
+          break;
+        }
+        case "StrategyDependency": {
+          this.bindStrategyDependencies(
+            container,
+            factory,
+            dependencyConfig.instance
+          );
+          break;
+        }
+        default: {
+          this.bindDependency(container, factory, dependencyConfig.instance);
+          break;
+        }
+      }
     });
   }
 }

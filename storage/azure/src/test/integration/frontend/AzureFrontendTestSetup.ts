@@ -4,17 +4,23 @@
  *--------------------------------------------------------------------------------------------*/
 import { FrontendStorageTestSetup } from "@itwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
 
-import { AzureFrontendStorageBindings } from "../../../frontend";
+import { TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
+
+import { AzureFrontendStorageBindings, Constants } from "../../../frontend";
 
 const config = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName: "azure",
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName: Constants.storageType,
+    },
+  } as TypedDependencyConfig,
 };
 const setup = new FrontendStorageTestSetup(
   config,
   AzureFrontendStorageBindings,
-  "http://localhost:1221"
+  "http://localhost:1221",
+  Constants.storageType
 );
 setup.setGlobals();

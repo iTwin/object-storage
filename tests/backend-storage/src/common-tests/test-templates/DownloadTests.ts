@@ -14,7 +14,7 @@ import { config } from "../Config";
 import { testDirectoryManager } from "../Global.test";
 import { assertBuffer, assertStream } from "../utils/Helpers";
 
-const { serverStorage } = config;
+const { serverStorage, storageType } = config;
 
 export async function testDownloadFromUrlToBuffer(
   testedStorage: ClientStorage
@@ -30,6 +30,7 @@ export async function testDownloadFromUrlToBuffer(
 
   const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
   const response = await testedStorage.download({
+    storageType: storageType,
     url: downloadUrl,
     transferType: "buffer",
   });
@@ -51,6 +52,7 @@ export async function testDownloadFromUrlToStream(
 
   const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
   const response = await testedStorage.download({
+    storageType: storageType,
     url: downloadUrl,
     transferType: "stream",
   });

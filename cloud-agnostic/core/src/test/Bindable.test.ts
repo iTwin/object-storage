@@ -8,13 +8,15 @@ import { Bindable, DependenciesConfig, NamedInstance } from "..";
 import { DependencyError, DependencyTypeError } from "../internal";
 import { InversifyWrapper } from "../inversify";
 
-import { ConcreteTest, Test, TestConfig } from "./Test";
+import { StrategyTestBase } from "./StrategyTest";
+import { ConcreteTest, NamedTestConfig, Test, TestConfig } from "./Test";
 import { ConcreteTestDependencyBindings } from "./TestDependency";
 import {
   TestSetup,
   TestSetupNoDefaultDependencies,
   TestSetupNoFactory,
   TestSetupWithNamedInstances,
+  TestSetupWithStrategyInstances,
 } from "./TestSetup";
 
 const testConfig: TestConfig = {
@@ -22,7 +24,7 @@ const testConfig: TestConfig = {
   testProperty: "testProperty",
 };
 
-const testConfigWithOneInstance: TestConfig[] = [
+const testConfigWithOneInstance: NamedTestConfig[] = [
   {
     dependencyName: "testName",
     instanceName: "instanceName",
@@ -30,7 +32,7 @@ const testConfigWithOneInstance: TestConfig[] = [
   },
 ];
 
-const testConfigWithMultipleInstances: TestConfig[] = [
+const testConfigWithMultipleInstances: NamedTestConfig[] = [
   {
     dependencyName: "testName",
     instanceName: "instanceName",
@@ -44,18 +46,34 @@ const testConfigWithMultipleInstances: TestConfig[] = [
 ];
 
 const dependenciesConfigWithOneInstance: DependenciesConfig = {
-  testType: testConfigWithOneInstance,
+  testNamedType: {
+    bindingStrategy: "NamedDependency",
+    instances: testConfigWithOneInstance,
+  },
 };
 
 const dependenciesConfigWithMultipleInstances: DependenciesConfig = {
-  testType: testConfigWithMultipleInstances,
+  testNamedType: {
+    bindingStrategy: "NamedDependency",
+    instances: testConfigWithMultipleInstances,
+  },
+};
+
+const dependenciesStrategyConfig: DependenciesConfig = {
+  testStrategyType: {
+    bindingStrategy: "StrategyDependency",
+    instance: testConfig,
+  },
 };
 
 const dependenciesConfig: DependenciesConfig = {
-  testType: testConfig,
+  testType: {
+    bindingStrategy: "Dependency",
+    instance: testConfig,
+  },
 };
 
-function validateTestObject(test: Test, config: TestConfig) {
+function validateNamedTestObject(test: Test, config: NamedTestConfig) {
   expect(test instanceof ConcreteTest).to.be.true;
   expect(test.instanceName === config.instanceName).to.be.true;
   expect(test.property === config.testProperty).to.be.true;
@@ -104,10 +122,12 @@ describe(`${Bindable.name}`, () => {
   });
 
   it(`should throw if testName does not support named dependency instances`, () => {
-    const setup = new TestSetup(
-      InversifyWrapper.create(),
-      dependenciesConfigWithMultipleInstances
-    );
+    const setup = new TestSetup(InversifyWrapper.create(), {
+      testType: {
+        bindingStrategy: "NamedDependency",
+        instances: testConfigWithOneInstance,
+      },
+    });
 
     const testedFunction = () => setup.start();
     expect(testedFunction)
@@ -127,7 +147,7 @@ describe(`${Bindable.name}`, () => {
     setup.start();
 
     const test = setup.container.resolveNamed(Test, "instanceName");
-    validateTestObject(test, testConfigWithOneInstance[0]);
+    validateNamedTestObject(test, testConfigWithOneInstance[0]);
   });
 
   it(`should resolve multiple registered named dependency instances by name`, () => {
@@ -140,15 +160,15 @@ describe(`${Bindable.name}`, () => {
 
     const test = setup.container.resolveNamed(
       Test,
-      testConfigWithMultipleInstances[0].instanceName!
+      testConfigWithMultipleInstances[0].instanceName
     );
     const test2 = setup.container.resolveNamed(
       Test,
-      testConfigWithMultipleInstances[1].instanceName!
+      testConfigWithMultipleInstances[1].instanceName
     );
 
-    validateTestObject(test, testConfigWithMultipleInstances[0]);
-    validateTestObject(test2, testConfigWithMultipleInstances[1]);
+    validateNamedTestObject(test, testConfigWithMultipleInstances[0]);
+    validateNamedTestObject(test2, testConfigWithMultipleInstances[1]);
   });
 
   it(`should resolve multiple registered named dependency instances as array`, () => {
@@ -164,7 +184,27 @@ describe(`${Bindable.name}`, () => {
     );
 
     expect(tests.length).to.be.equal(2);
-    validateTestObject(tests[0]?.instance, testConfigWithMultipleInstances[0]);
-    validateTestObject(tests[1]?.instance, testConfigWithMultipleInstances[1]);
+    validateNamedTestObject(
+      tests[0]?.instance,
+      testConfigWithMultipleInstances[0]
+    );
+    validateNamedTestObject(
+      tests[1]?.instance,
+      testConfigWithMultipleInstances[1]
+    );
+  });
+
+  it(`should resolve strategy dependency with multiple instances`, () => {
+    const setup = new TestSetupWithStrategyInstances(
+      InversifyWrapper.create(),
+      dependenciesStrategyConfig
+    );
+
+    setup.start();
+
+    const test = setup.container.resolve(StrategyTestBase);
+
+    expect(test.method("testName1")).to.be.equal("testProperty1");
+    expect(test.method("testName2")).to.be.equal("testProperty2");
   });
 });

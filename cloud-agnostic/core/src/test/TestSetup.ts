@@ -9,7 +9,10 @@ import { DIContainer } from "../DIContainer";
 import {
   DefaultTestDependencies,
   DefaultTestDependenciesWithInstances,
+  DefaultTestStrategyDependencies,
   TestDependency,
+  TestNamedDependency,
+  TestStrategyDependency,
 } from "./TestDependency";
 
 export class TestSetup extends Bindable {
@@ -34,8 +37,26 @@ export class TestSetupWithNamedInstances extends Bindable {
   constructor(public container: DIContainer, config: DependenciesConfig) {
     super();
 
-    this.requireDependency(TestDependency.dependencyType);
+    this.requireDependency(TestNamedDependency.dependencyType);
     DefaultTestDependenciesWithInstances.apply(this);
+
+    container.registerInstance<DependenciesConfig>(
+      Types.dependenciesConfig,
+      config
+    );
+  }
+
+  public start(): void {
+    this.bindDependencies(this.container);
+  }
+}
+
+export class TestSetupWithStrategyInstances extends Bindable {
+  constructor(public container: DIContainer, config: DependenciesConfig) {
+    super();
+
+    this.requireDependency(TestStrategyDependency.dependencyType);
+    DefaultTestStrategyDependencies.apply(this);
 
     container.registerInstance<DependenciesConfig>(
       Types.dependenciesConfig,

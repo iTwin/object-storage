@@ -13,7 +13,7 @@ import {
   testInvalidServerConfig,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { Types } from "../../../common";
+import { Constants, Types } from "../../../common";
 import {
   AzureServerStorage,
   AzureServerStorageBindings,
@@ -29,20 +29,20 @@ describe(`${AzureServerStorageBindings.name}`, () => {
     const invalidConfigTestCases: InvalidConfigTestCase[] = [
       {
         config: {
-          dependencyName: "azure",
+          dependencyName: Constants.storageType,
         } as unknown as AzureServerStorageBindingsConfig,
         expectedErrorMessage: "accountName is not defined in configuration",
       },
       {
         config: {
-          dependencyName: "azure",
+          dependencyName: Constants.storageType,
           accountName: "testAccountName",
         } as unknown as AzureServerStorageBindingsConfig,
         expectedErrorMessage: "accountKey is not defined in configuration",
       },
       {
         config: {
-          dependencyName: "azure",
+          dependencyName: Constants.storageType,
           accountName: "testAccountName",
           accountKey: "testAccountKey",
         } as unknown as AzureServerStorageBindingsConfig,
@@ -52,7 +52,7 @@ describe(`${AzureServerStorageBindings.name}`, () => {
     testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 
     const config: AzureServerStorageBindingsConfig = {
-      dependencyName: "azure",
+      dependencyName: Constants.storageType,
       accountName: "testAccountName",
       accountKey: "testAccountKey",
       baseUrl: "testBaseUrl",

@@ -7,7 +7,7 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "@itwin/object-storage-core/lib/common";
 
-import { S3TransferConfig } from "../../../common";
+import { Constants, S3TransferConfig } from "../../../common";
 import { assertS3TransferConfig } from "../../../common/internal";
 
 use(chaiAsPromised);
@@ -17,6 +17,7 @@ describe("Helper functions", () => {
     const validBaseTransferConfig: TransferConfig = {
       baseUrl: "http://foo.bar",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
+      storageType: Constants.storageType,
     };
 
     [

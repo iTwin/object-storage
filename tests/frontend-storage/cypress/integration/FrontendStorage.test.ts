@@ -20,13 +20,15 @@ import {
 } from "../../src/frontend";
 
 const serverBaseUrl: string = (window as any).serverBaseUrl;
+const storageType: string = (window as any).storageType;
 const frontendStorage: FrontendStorage = (window as any).frontendStorage;
 const serverStorage = new FrontendServerStorageProxy(serverBaseUrl);
 const directoryManager = new FrontendTestRemoteDirectoryManager(serverStorage);
 const test: TestProps = {
   serverStorage,
   frontendStorage,
-  directoryManager
+  directoryManager,
+  storageType
 };
 
 describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name}`, () => {
@@ -137,7 +139,8 @@ describe(`${FrontendStorage.name}: ${frontendStorage.constructor.name} (Input va
     } as ObjectReference,
     transferConfig: {
       expiration: new Date(),
-      baseUrl: "testBaseUrl"
+      baseUrl: "testBaseUrl",
+      storageType: test.storageType
     } as TransferConfig
   };
 

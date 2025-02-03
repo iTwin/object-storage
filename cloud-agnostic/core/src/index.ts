@@ -7,5 +7,6 @@ export * from "./DIContainer";
 export * from "./Bindable";
 export * from "./Dependency";
 export * from "./NamedDependency";
+export * from "./StrategyDependency";
 export * from "./DependencyConfig";
 export * from "./Types";

@@ -7,7 +7,7 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig } from "../../../common";
+import { AzureTransferConfig, Constants } from "../../../common";
 import { buildBlobUrl } from "../../../common/internal";
 
 use(chaiAsPromised);
@@ -15,6 +15,7 @@ use(chaiAsPromised);
 describe("Helper functions", () => {
   describe(`${buildBlobUrl.name}()`, () => {
     const validBaseTransferConfig: TransferConfig = {
+      storageType: Constants.storageType,
       baseUrl: "testBaseUrl",
       expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
     };

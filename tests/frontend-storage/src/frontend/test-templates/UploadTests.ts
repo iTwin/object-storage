@@ -78,6 +78,7 @@ export async function testUploadFromBufferToUrl(
   const dataBuffer = stringToArrayBuffer(data);
   const url = await test.serverStorage.getUploadUrl({ reference });
   await test.frontendStorage.upload({
+    storageType: test.storageType,
     url,
     data: dataBuffer,
     metadata,

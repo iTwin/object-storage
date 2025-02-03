@@ -5,36 +5,46 @@
 
 import { createStubInstance } from "sinon";
 
-import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { DIContainer, TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
 import { Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   mockPresignedUrlProvider,
   mockTransferConfigProvider,
 } from "@itwin/object-storage-tests-backend-unit";
 
+import { Constants } from "../../../common";
 import { S3ClientWrapper, S3ClientWrapperFactory } from "../../../server";
 
-const dependencyName = "s3";
+const dependencyName = Constants.storageType;
 export const s3TestConfig = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName,
-    bucket: "testBucket",
-    accessKey: "testAccessKey",
-    secretKey: "testSecretKey",
-    baseUrl: "http://testBaseUrl.com",
-    region: "testRegion",
-    roleArn: "testRoleArn",
-    stsBaseUrl: "http://testStsBaseUrl.com",
-  },
+    bindingStrategy: "Dependency",
+    instance: {
+      dependencyName,
+      bucket: "testBucket",
+      accessKey: "testAccessKey",
+      secretKey: "testSecretKey",
+      baseUrl: "http://testBaseUrl.com",
+      region: "testRegion",
+      roleArn: "testRoleArn",
+      stsBaseUrl: "http://testStsBaseUrl.com",
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
 };
 
 export function rebindS3Server(container: DIContainer): void {

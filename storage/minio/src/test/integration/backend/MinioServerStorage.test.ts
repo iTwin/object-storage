@@ -22,6 +22,7 @@ import {
   S3ClientWrapper,
   S3TransferConfig,
   S3TransferConfigProvider,
+  StsWrapper,
 } from "@itwin/object-storage-s3";
 import {
   TestRemoteDirectory,
@@ -145,7 +146,7 @@ describe(`${MinioServerStorage.name} internal tests`, () => {
       secretKey,
     });
     const transferConfigProvider = new S3TransferConfigProvider(
-      stsClient,
+      new StsWrapper(stsClient),
       serverStorageConfig
     );
 

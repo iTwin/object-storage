@@ -30,7 +30,8 @@ export class StorageUnitTests extends Bindable {
   constructor(
     config: DependenciesConfig,
     serverStorageDependency: new () => ServerStorageDependency,
-    clientStorageDependency: new () => ClientStorageDependency
+    clientStorageDependency: new () => ClientStorageDependency,
+    private readonly _storageType: string
   ) {
     super();
 
@@ -55,6 +56,7 @@ export class StorageUnitTests extends Bindable {
     setOptions({
       serverStorage,
       clientStorage,
+      storageType: this._storageType,
     });
 
     const mochaOptions: Mocha.MochaOptions = {

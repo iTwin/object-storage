@@ -28,6 +28,10 @@ export class DependencyFactory {
     return dependency;
   }
 
+  public getStrategyDependencies(): Iterable<Dependency> {
+    return this._dependencyMap.values();
+  }
+
   public getNamedDependency(name: string): NamedDependency {
     const dependency = this.getDependency(name);
     if (!(dependency instanceof NamedDependency))

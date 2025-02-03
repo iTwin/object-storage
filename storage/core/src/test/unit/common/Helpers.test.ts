@@ -68,6 +68,7 @@ describe("Helper functions", () => {
 
     it("should not throw if transfer config is valid", () => {
       const transferConfig: TransferConfig = {
+        storageType: "testStorageType",
         baseUrl: "testBaseUrl",
         expiration: new Date(new Date().getTime() + 5 * 60 * 1000),
       };

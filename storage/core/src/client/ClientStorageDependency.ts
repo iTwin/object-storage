@@ -8,28 +8,44 @@ import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 import {
   DependencyConfig,
   DIContainer,
-  NamedDependency,
+  StrategyDependency,
+  StrategyInstance,
 } from "@itwin/cloud-agnostic-core";
 
 import { ClientStorage } from "./ClientStorage";
+import { StrategyClientStorage } from "./StrategyClientStorage";
 
-export abstract class ClientStorageDependency extends NamedDependency {
+export abstract class ClientStorageDependency extends StrategyDependency {
   public static readonly dependencyType = "ClientStorage";
   public readonly dependencyType = ClientStorageDependency.dependencyType;
 
-  protected override _registerInstance(
+  public override registerStrategy(
     container: DIContainer,
-    childContainer: DIContainer,
     config: DependencyConfig
   ): void {
-    if (!config.instanceName)
-      throw new ConfigError<DependencyConfig>("instanceName");
+    if (!config.dependencyName)
+      throw new ConfigError<DependencyConfig>("dependencyName");
 
-    this.bindNamed(
-      container,
-      childContainer,
-      ClientStorage,
-      config.instanceName
+    container.registerFactory(ClientStorage, (container) => {
+      const storagesInstances = container.resolveAll<
+        StrategyInstance<ClientStorage>
+      >(StrategyInstance<ClientStorage>);
+      return new StrategyClientStorage(storagesInstances);
+    });
+  }
+
+  public override _registerInstance(
+    container: DIContainer,
+    childContainer: DIContainer,
+    _config: DependencyConfig
+  ): void {
+    container.registerFactory<StrategyInstance<ClientStorage>>(
+      StrategyInstance<ClientStorage>,
+      (_c) =>
+        new StrategyInstance<ClientStorage>(
+          childContainer.resolve(ClientStorage),
+          this.dependencyName
+        )
     );
   }
 }

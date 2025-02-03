@@ -5,10 +5,11 @@
 import {
   DependenciesConfig,
   Types as DependencyTypes,
+  TypedDependencyConfig,
 } from "@itwin/cloud-agnostic-core";
 import { ServerStorageProxy } from "@itwin/object-storage-tests-frontend";
 
-import { GoogleServerStorageBindings } from "../../../server";
+import { Constants, GoogleServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
 function run(): void {
@@ -19,9 +20,12 @@ function run(): void {
     {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
-        dependencyName: "google",
-        ...new ServerStorageConfigProvider().get(),
-      },
+        bindingStrategy: "Dependency",
+        instance: {
+          dependencyName: Constants.storageType,
+          ...new ServerStorageConfigProvider().get(),
+        },
+      } as TypedDependencyConfig,
     }
   );
   backendServer.useBindings(GoogleServerStorageBindings);

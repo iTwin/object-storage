@@ -13,4 +13,5 @@ export interface TestProps {
   serverStorage: FrontendServerStorageProxy;
   directoryManager: FrontendTestRemoteDirectoryManager;
   frontendStorage: FrontendStorage;
+  storageType: string;
 }

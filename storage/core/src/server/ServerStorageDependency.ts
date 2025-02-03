@@ -6,9 +6,9 @@
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
 import {
-  DependencyConfig,
   DIContainer,
   NamedDependency,
+  NamedDependencyConfig,
 } from "@itwin/cloud-agnostic-core";
 
 import { ServerStorage } from "./ServerStorage";
@@ -20,10 +20,10 @@ export abstract class ServerStorageDependency extends NamedDependency {
   protected override _registerInstance(
     container: DIContainer,
     childContainer: DIContainer,
-    config: DependencyConfig
+    config: NamedDependencyConfig
   ): void {
     if (!config.instanceName)
-      throw new ConfigError<DependencyConfig>("instanceName");
+      throw new ConfigError<NamedDependencyConfig>("instanceName");
 
     this.bindNamed(
       container,

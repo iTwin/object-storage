@@ -10,10 +10,11 @@ import { config } from "./Config";
 import { Constants } from "./Constants";
 import { testRelativeDirectoryValidation } from "./test-templates/CommonTests";
 
-const { clientStorage } = config;
+const { clientStorage, storageType } = config;
 
 describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
   const testTransferConfig: TransferConfig = {
+    storageType: storageType,
     expiration: new Date(),
     baseUrl: "testBaseUrl",
   };

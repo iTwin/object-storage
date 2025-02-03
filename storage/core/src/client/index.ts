@@ -4,3 +4,4 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./ClientStorage";
 export * from "./ClientStorageDependency";
+export * from "./StrategyClientStorage";

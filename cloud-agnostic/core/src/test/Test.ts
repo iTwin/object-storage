@@ -3,13 +3,20 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { DependencyConfig } from "..";
+import { DependencyConfig, NamedDependencyConfig } from "..";
 
 export interface TestConfig extends DependencyConfig {
   testProperty: string;
 }
 
-export const testConfigType = Symbol.for("TestConfig");
+export interface NamedTestConfig extends NamedDependencyConfig {
+  testProperty: string;
+}
+
+export const testTypes = {
+  testConfigType: Symbol.for("TestConfig"),
+  namedTestConfigType: Symbol.for("NamedTestConfig"),
+};
 
 export abstract class Test {
   abstract get property(): string;
@@ -26,6 +33,6 @@ export class ConcreteTest extends Test {
   }
 
   public get instanceName(): string | undefined {
-    return this._config.instanceName;
+    return (this._config as unknown as NamedDependencyConfig).instanceName;
   }
 }

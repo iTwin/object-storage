@@ -6,6 +6,7 @@ import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { S3ClientStorageBindings } from "../../../client";
+import { Constants } from "../../../common";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,
@@ -37,7 +38,8 @@ class TestS3ClientStorageBindings extends S3ClientStorageBindings {
 const tests = new StorageUnitTests(
   s3TestConfig,
   TestS3ServerStorageBindings,
-  TestS3ClientStorageBindings
+  TestS3ClientStorageBindings,
+  Constants.storageType
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

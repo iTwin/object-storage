@@ -8,6 +8,7 @@ import {
 } from "@itwin/cloud-agnostic-core";
 import { ServerStorageProxy } from "@itwin/object-storage-tests-frontend";
 
+import { Constants } from "../../../common";
 import { OssServerStorageBindings } from "../../../server";
 import { ServerStorageConfigProvider } from "../ServerStorageConfigProvider";
 
@@ -19,8 +20,11 @@ function run(): void {
     {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
-        dependencyName: "oss",
-        ...new ServerStorageConfigProvider().get(),
+        bindingStrategy: "Dependency",
+        instance: {
+          dependencyName: Constants.storageType,
+          ...new ServerStorageConfigProvider().get(),
+        },
       },
     }
   );

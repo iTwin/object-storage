@@ -4,33 +4,44 @@
  *--------------------------------------------------------------------------------------------*/
 import { createStubInstance } from "sinon";
 
-import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { DIContainer, TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { GoogleClientStorageBindings } from "../../../client";
+import { ClientStorageWrapperFactory } from "../../../client/wrappers";
 import {
+  Constants,
   GoogleServerStorageBindings,
   GoogleServerStorageBindingsConfig,
   StorageWrapper,
 } from "../../../server";
 import { StorageControlClientWrapper } from "../../../server/wrappers/StorageControlClientWrapper";
 
-const dependencyName = "google";
+const dependencyName = Constants.storageType;
 const googleTestConfig = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    dependencyName,
-    projectId: "testProjectId",
-    bucketName: "testBucketName",
-  },
+    bindingStrategy: "Dependency",
+    instance: {
+      dependencyName,
+      projectId: "testProjectId",
+      bucketName: "testBucketName",
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
 };
 
 class TestGoogleServerStorageBindings extends GoogleServerStorageBindings {
@@ -60,16 +71,24 @@ class TestGoogleClientStorageBindings extends GoogleClientStorageBindings {
     super.register(container);
 
     const mockStorageWrapper = createStubInstance(StorageWrapper);
+    const mockStorageWrapperFactory = createStubInstance(
+      ClientStorageWrapperFactory
+    );
+    mockStorageWrapperFactory.createFromToken.returns(mockStorageWrapper);
 
-    container.unregister(StorageWrapper);
-    container.registerInstance(StorageWrapper, mockStorageWrapper);
+    container.unregister(ClientStorageWrapperFactory);
+    container.registerInstance(
+      ClientStorageWrapperFactory,
+      mockStorageWrapperFactory
+    );
   }
 }
 
 const tests = new StorageUnitTests(
   googleTestConfig,
   TestGoogleServerStorageBindings,
-  TestGoogleClientStorageBindings
+  TestGoogleClientStorageBindings,
+  dependencyName
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

@@ -9,10 +9,12 @@ import {
   S3ClientWrapperFactory,
 } from "@itwin/object-storage-s3";
 
+import { Constants } from "../common";
+
 import { MinioClientStorage } from "./MinioClientStorage";
 
 export class MinioClientStorageBindings extends S3ClientStorageBindings {
-  public override readonly dependencyName: string = "minio";
+  public override readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
     super.register(container);

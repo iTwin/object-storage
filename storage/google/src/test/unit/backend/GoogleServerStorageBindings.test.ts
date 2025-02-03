@@ -12,7 +12,7 @@ import {
   testInvalidServerConfig,
 } from "@itwin/object-storage-tests-backend-unit";
 
-import { Types } from "../../../common";
+import { Constants, Types } from "../../../common";
 import {
   GoogleServerStorageBindings,
   GoogleServerStorageBindingsConfig,
@@ -29,13 +29,13 @@ describe(`${GoogleServerStorageBindings.name}`, () => {
     const invalidConfigTestCases: InvalidConfigTestCase[] = [
       {
         config: {
-          dependencyName: "google",
+          dependencyName: Constants.storageType,
         } as unknown as GoogleServerStorageBindingsConfig,
         expectedErrorMessage: "projectId is not defined in configuration",
       },
       {
         config: {
-          dependencyName: "google",
+          dependencyName: Constants.storageType,
           projectId: "testProjectId",
         } as unknown as GoogleServerStorageBindingsConfig,
         expectedErrorMessage: "bucketName is not defined in configuration",
@@ -44,7 +44,7 @@ describe(`${GoogleServerStorageBindings.name}`, () => {
     testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 
     const config: GoogleServerStorageBindingsConfig = {
-      dependencyName: "google",
+      dependencyName: Constants.storageType,
       projectId: "testProjectId",
       bucketName: "testBucketName",
     };

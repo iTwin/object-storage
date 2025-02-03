@@ -19,8 +19,11 @@ function run(): void {
     {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ServerStorage: {
-        dependencyName: "minio",
-        ...new ServerStorageConfigProvider().get(),
+        bindingStrategy: "Dependency",
+        instance: {
+          dependencyName: "minio",
+          ...new ServerStorageConfigProvider().get(),
+        },
       },
     }
   );

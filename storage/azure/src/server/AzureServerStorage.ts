@@ -32,7 +32,7 @@ import {
   TransferType,
 } from "@itwin/object-storage-core";
 
-import { AzureTransferConfig } from "../common";
+import { AzureTransferConfig, Constants } from "../common";
 import { buildBlobName } from "../common/internal";
 
 import {
@@ -265,6 +265,7 @@ export class AzureServerStorage extends ServerStorage {
     );
 
     return {
+      storageType: Constants.storageType,
       authentication: parameters,
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
@@ -288,6 +289,7 @@ export class AzureServerStorage extends ServerStorage {
     );
 
     return {
+      storageType: Constants.storageType,
       authentication: parameters,
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,
@@ -310,6 +312,7 @@ export class AzureServerStorage extends ServerStorage {
     );
 
     return {
+      storageType: Constants.storageType,
       authentication: parameters,
       expiration: expiresOn,
       baseUrl: this._config.baseUrl,

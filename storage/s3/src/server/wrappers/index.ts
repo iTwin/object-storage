@@ -4,3 +4,4 @@
  *--------------------------------------------------------------------------------------------*/
 export * from "./S3ClientWrapper";
 export * from "./S3ClientWrapperFactory";
+export * from "./StsWrapper";

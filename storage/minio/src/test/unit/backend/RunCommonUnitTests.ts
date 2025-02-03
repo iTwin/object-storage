@@ -11,28 +11,39 @@ import {
   s3TestConfig,
 } from "@itwin/object-storage-s3/lib/test/unit/backend/CommonUnitTestUtils";
 
-import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { DIContainer, TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
 import { S3ServerStorageBindingsConfig } from "@itwin/object-storage-s3";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { MinioClientStorageBindings } from "../../../client";
+import { Constants } from "../../../common";
 import { MinioServerStorageBindings } from "../../../server";
 
-const dependencyName = "minio";
+const dependencyName = Constants.storageType;
 const minioTestConfig = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ServerStorage: {
-    ...s3TestConfig.ServerStorage,
-    dependencyName,
-  },
+    bindingStrategy: "Dependency",
+    instance: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(s3TestConfig.ServerStorage as any).instance,
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ClientStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   FrontendStorage: {
-    dependencyName,
-  },
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName,
+    },
+  } as TypedDependencyConfig,
 };
 
 class TestMinioServerStorageBindings extends MinioServerStorageBindings {
@@ -60,7 +71,8 @@ class TestMinioClientStorageBindings extends MinioClientStorageBindings {
 const tests = new StorageUnitTests(
   minioTestConfig,
   TestMinioServerStorageBindings,
-  TestMinioClientStorageBindings
+  TestMinioClientStorageBindings,
+  Constants.storageType
 );
 tests.start().catch((err) => {
   process.exitCode = 1;

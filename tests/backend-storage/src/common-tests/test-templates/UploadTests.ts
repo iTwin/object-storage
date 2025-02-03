@@ -23,7 +23,7 @@ import {
   queryAndAssertMetadata,
 } from "../utils/Helpers";
 
-const { serverStorage } = config;
+const { serverStorage, storageType } = config;
 
 interface TestCase {
   dataToAssert: Buffer;
@@ -136,6 +136,7 @@ export async function testUploadToUrl(params: TestCase): Promise<void> {
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
   await params.testedStorage.upload({
+    storageType: storageType,
     data: params.dataToUpload,
     url: uploadUrl,
   });
@@ -157,6 +158,7 @@ export async function testUploadToUrlWithRelativeDir(
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
   await params.testedStorage.upload({
+    storageType: storageType,
     data: params.dataToUpload,
     url: uploadUrl,
   });
@@ -179,6 +181,7 @@ export async function testUploadToUrlWithMetadata(
 
   const uploadUrl = await serverStorage.getUploadUrl(reference);
   await params.testedStorage.upload({
+    storageType: storageType,
     data: params.dataToUpload,
     url: uploadUrl,
     metadata,

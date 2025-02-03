@@ -8,6 +8,7 @@ interface StorageIntegrationTestsConfig {
   serverStorage: ServerStorage;
   serverStorage2: ServerStorage;
   clientStorage: ClientStorage;
+  storageType: string;
 }
 
 export let config: StorageIntegrationTestsConfig;

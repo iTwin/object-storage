@@ -18,6 +18,7 @@ export class FileDownloader {
       transferType: "local",
       url: "FILE_URL_PLACEHOLDER",
       localPath: "downloadedFile.txt",
+      storageType: "azure",
     });
   }
 }
