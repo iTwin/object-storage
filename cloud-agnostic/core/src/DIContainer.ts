@@ -28,4 +28,6 @@ export abstract class DIContainer {
   abstract resolveAll<T>(key: DIIdentifier<T>): T[];
 
   abstract createChild(): DIContainer;
+
+  abstract isRegistered<T>(key: DIIdentifier<T>): boolean;
 }

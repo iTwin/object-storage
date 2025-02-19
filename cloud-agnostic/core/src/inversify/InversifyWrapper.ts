@@ -10,8 +10,12 @@ import { DIContainer } from "../DIContainer";
 import { Abstract, Constructor, DIIdentifier } from "../internal";
 
 export class InversifyWrapper extends DIContainer {
-  constructor(private _container: Container) {
+  constructor(private readonly _container: Container) {
     super();
+  }
+
+  public get container(): Container {
+    return this._container;
   }
 
   public static create(): DIContainer {
@@ -76,5 +80,9 @@ export class InversifyWrapper extends DIContainer {
 
   public override createChild(): DIContainer {
     return new InversifyWrapper(this._container.createChild());
+  }
+
+  public override isRegistered<T>(key: DIIdentifier<T>): boolean {
+    return this._container.isBound(key);
   }
 }
