@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { ClientStorage, Types } from "@itwin/object-storage-core";
+import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
@@ -22,14 +22,15 @@ describe(`${AzureClientStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<ClientStorage>(CoreTypes.Client.clientStorage),
         expectedCtor: AzureClientStorage,
       },
       {
-        testedClassIdentifier: Types.Client.clientWrapperFactory.toString(),
+        testedClassIdentifier: CoreTypes.Client.clientWrapperFactory.toString(),
         testedFunction: (c: DIContainer) =>
           c.resolve<BlockBlobClientWrapperFactory>(
-            Types.Client.clientWrapperFactory
+            CoreTypes.Client.clientWrapperFactory
           ),
         expectedCtor: BlockBlobClientWrapperFactory,
       },

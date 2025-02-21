@@ -12,6 +12,8 @@ import {
   StrategyInstance,
 } from "@itwin/cloud-agnostic-core";
 
+import { Types } from "../common";
+
 import { ClientStorage } from "./ClientStorage";
 import { StrategyClientStorage } from "./StrategyClientStorage";
 
@@ -26,12 +28,15 @@ export abstract class ClientStorageDependency extends StrategyDependency {
     if (!config.dependencyName)
       throw new ConfigError<DependencyConfig>("dependencyName");
 
-    container.registerFactory(ClientStorage, (container) => {
-      const storagesInstances = container.resolveAll<
-        StrategyInstance<ClientStorage>
-      >(StrategyInstance<ClientStorage>);
-      return new StrategyClientStorage(storagesInstances);
-    });
+    container.registerFactory<ClientStorage>(
+      Types.Client.clientStorage,
+      (c) => {
+        const storagesInstances = c.resolveAll<StrategyInstance<ClientStorage>>(
+          StrategyInstance<ClientStorage>
+        );
+        return new StrategyClientStorage(storagesInstances);
+      }
+    );
   }
 
   public override _registerInstance(
@@ -43,7 +48,7 @@ export abstract class ClientStorageDependency extends StrategyDependency {
       StrategyInstance<ClientStorage>,
       (_c) =>
         new StrategyInstance<ClientStorage>(
-          childContainer.resolve(ClientStorage),
+          childContainer.resolve<ClientStorage>(Types.Client.clientStorage),
           this.dependencyName
         )
     );

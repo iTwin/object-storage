@@ -27,7 +27,8 @@ describe(`${S3ClientStorageBindings.name}`, () => {
       },
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<ClientStorage>(CoreTypes.Client.clientStorage),
         expectedCtor: S3ClientStorage,
       },
     ];

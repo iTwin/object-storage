@@ -20,6 +20,7 @@ import {
   ClientStorageDependency,
   ServerStorage,
   ServerStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import { setOptions } from "./Config";
@@ -51,12 +52,17 @@ export class StorageIntegrationTests extends Bindable {
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const serverStorage = this.container.resolveNamed(ServerStorage, "primary");
-    const serverStorage2 = this.container.resolveNamed(
-      ServerStorage,
+    const serverStorage = this.container.resolveNamed<ServerStorage>(
+      CoreTypes.Server.serverStorage,
+      "primary"
+    );
+    const serverStorage2 = this.container.resolveNamed<ServerStorage>(
+      CoreTypes.Server.serverStorage,
       "secondary"
     );
-    const clientStorage = this.container.resolve(ClientStorage);
+    const clientStorage = this.container.resolve<ClientStorage>(
+      CoreTypes.Client.clientStorage
+    );
 
     setOptions({
       serverStorage,

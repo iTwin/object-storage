@@ -5,7 +5,10 @@
 import * as Core from "@alicloud/pop-core";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
+import {
+  TransferConfigProvider,
+  Types as CoreTypes,
+} from "@itwin/object-storage-core";
 import {
   S3ServerStorageBindings,
   S3ServerStorageBindingsConfig,
@@ -27,9 +30,9 @@ export class OssServerStorageBindings extends S3ServerStorageBindings {
   ): void {
     super.register(container, config);
 
-    container.unregister(Types.Server.transferConfigProvider);
+    container.unregister(CoreTypes.Server.transferConfigProvider);
     container.registerFactory<TransferConfigProvider>(
-      Types.Server.transferConfigProvider,
+      CoreTypes.Server.transferConfigProvider,
       (c: DIContainer) => {
         return new OssTransferConfigProvider(
           c.resolve<Core>(Core),

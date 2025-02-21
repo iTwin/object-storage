@@ -5,7 +5,7 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { ServerStorage } from "@itwin/object-storage-core";
+import { ServerStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   InvalidConfigTestCase,
@@ -61,7 +61,8 @@ describe(`${AzureServerStorageBindings.name}`, () => {
     [
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<ServerStorage>(CoreTypes.Server.serverStorage),
         expectedCtor: AzureServerStorage,
       },
       {

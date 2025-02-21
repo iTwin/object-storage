@@ -8,6 +8,7 @@ import { Bindable, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
+  Types,
 } from "@itwin/object-storage-core";
 
 import { NamedFileDownloader } from "../NamedFileDownloader";
@@ -32,8 +33,14 @@ export class App extends Bindable {
     this.requireDependency(ClientStorageDependency.dependencyType);
     this.container.registerFactory(NamedFileDownloader, (c: DIContainer) => {
       return new NamedFileDownloader(
-        c.resolveNamed<ClientStorage>(ClientStorage, "instanceName1"),
-        c.resolveNamed<ClientStorage>(ClientStorage, "instanceName2")
+        c.resolveNamed<ClientStorage>(
+          Types.Client.clientStorage,
+          "instanceName1"
+        ),
+        c.resolveNamed<ClientStorage>(
+          Types.Client.clientStorage,
+          "instanceName2"
+        )
       );
     });
   }

@@ -13,6 +13,7 @@ import {
   ServerStorage,
   ServerStorageDependency,
   ExpiryOptions,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import * as Common from "./Common";
@@ -32,7 +33,9 @@ export class ServerStorageProxy extends Bindable {
 
   public start(config: { port: number }): void {
     this.bindDependencies(this.container);
-    const serverStorage = this.container.resolve(ServerStorage);
+    const serverStorage = this.container.resolve<ServerStorage>(
+      CoreTypes.Server.serverStorage
+    );
 
     const app = express();
     const publicDir = path.resolve(__dirname, "..", "..", "public");

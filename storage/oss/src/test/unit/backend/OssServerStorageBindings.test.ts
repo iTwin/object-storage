@@ -5,7 +5,10 @@
 import * as Core from "@alicloud/pop-core";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { TransferConfigProvider, Types } from "@itwin/object-storage-core";
+import {
+  TransferConfigProvider,
+  Types as CoreTypes,
+} from "@itwin/object-storage-core";
 import {
   Constants,
   DependencyBindingsTestCase,
@@ -23,10 +26,11 @@ describe(`${OssServerStorageBindings.name}`, () => {
   describe(`${serverBindings.register.name}()`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
-        testedClassIdentifier: Types.Server.transferConfigProvider.toString(),
+        testedClassIdentifier:
+          CoreTypes.Server.transferConfigProvider.toString(),
         testedFunction: (c: DIContainer) =>
           c.resolve<TransferConfigProvider>(
-            Types.Server.transferConfigProvider
+            CoreTypes.Server.transferConfigProvider
           ),
         expectedCtor: OssTransferConfigProvider,
       },

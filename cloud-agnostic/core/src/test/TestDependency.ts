@@ -14,13 +14,8 @@ import {
   StrategyTest,
   StrategyTestBase,
 } from "./StrategyTest";
-import {
-  ConcreteTest,
-  NamedTestConfig,
-  Test,
-  TestConfig,
-  testTypes,
-} from "./Test";
+import { ConcreteTest, NamedTestConfig, Test, TestConfig } from "./Test";
+import { TestTypes } from "./TestTypes";
 
 export abstract class TestDependency extends Dependency {
   public static readonly dependencyType = "testType";
@@ -46,7 +41,7 @@ export abstract class TestStrategyDependency extends StrategyDependency {
     _config?: DependencyConfig
   ): void {
     container.registerFactory<StrategyTestBase>(
-      StrategyTestBase,
+      TestTypes.strategyTestBase,
       (c: DIContainer) => {
         const strategyInstances = c.resolveAll<
           StrategyInstance<ConcreteStrategyTest>
@@ -65,11 +60,11 @@ export class ConcreteTestDependencyBindings extends TestDependency {
   public readonly dependencyName = "testName";
 
   public register(container: DIContainer, config: TestConfig): void {
-    container.registerInstance<TestConfig>(testTypes.testConfigType, config);
+    container.registerInstance<TestConfig>(TestTypes.testConfig, config);
     container.registerFactory<Test>(
-      Test,
+      TestTypes.test,
       (c: DIContainer) =>
-        new ConcreteTest(c.resolve<TestConfig>(testTypes.testConfigType))
+        new ConcreteTest(c.resolve<TestConfig>(TestTypes.testConfig))
     );
   }
 }
@@ -79,13 +74,13 @@ export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDepend
 
   public register(container: DIContainer, config: NamedTestConfig): void {
     container.registerInstance<NamedTestConfig>(
-      testTypes.namedTestConfigType,
+      TestTypes.namedTestConfig,
       config
     );
     container.registerFactory<Test>(
-      Test,
+      TestTypes.test,
       (c: DIContainer) =>
-        new ConcreteTest(c.resolve<TestConfig>(testTypes.namedTestConfigType))
+        new ConcreteTest(c.resolve<TestConfig>(TestTypes.namedTestConfig))
     );
   }
 
@@ -97,7 +92,12 @@ export class ConcreteTestDependencyBindingsWithInstances extends TestNamedDepend
     if (!config.instanceName)
       throw new ConfigError<NamedDependencyConfig>("instanceName");
 
-    this.bindNamed(container, childContainer, Test, config.instanceName);
+    this.bindNamed(
+      container,
+      childContainer,
+      TestTypes.test,
+      config.instanceName
+    );
   }
 }
 

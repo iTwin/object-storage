@@ -24,7 +24,7 @@ export class S3ClientStorageBindings extends ClientStorageDependency {
       () => new S3ClientWrapperFactory()
     );
     container.registerFactory<ClientStorage>(
-      ClientStorage,
+      CoreTypes.Client.clientStorage,
       (c: DIContainer) => {
         return new S3ClientStorage(
           c.resolve(CoreTypes.Client.clientWrapperFactory)

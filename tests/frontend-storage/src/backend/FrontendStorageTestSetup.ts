@@ -7,6 +7,7 @@ import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 import {
   FrontendStorage,
   FrontendStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import {
@@ -38,7 +39,9 @@ export class FrontendStorageTestSetup extends Bindable {
 
   public setGlobals(): void {
     this.bindDependencies(this.container);
-    const frontendStorage = this.container.resolve(FrontendStorage);
+    const frontendStorage = this.container.resolve<FrontendStorage>(
+      CoreTypes.Frontend.frontendStorage
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).frontendStorage = frontendStorage;

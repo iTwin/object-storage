@@ -7,7 +7,7 @@ import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
-  Types,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import { Constants } from "../common";
@@ -23,13 +23,13 @@ export class AzureClientStorageBindings extends ClientStorageDependency {
     _config?: DependencyConfig
   ): void {
     container.registerFactory(
-      Types.Client.clientWrapperFactory,
+      CoreTypes.Client.clientWrapperFactory,
       () => new BlockBlobClientWrapperFactory()
     );
-    container.registerFactory(
-      ClientStorage,
+    container.registerFactory<ClientStorage>(
+      CoreTypes.Client.clientStorage,
       (c: DIContainer) =>
-        new AzureClientStorage(c.resolve(Types.Client.clientWrapperFactory))
+        new AzureClientStorage(c.resolve(CoreTypes.Client.clientWrapperFactory))
     );
   }
 }

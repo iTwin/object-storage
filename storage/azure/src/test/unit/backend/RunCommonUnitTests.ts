@@ -6,7 +6,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import { createStubInstance } from "sinon";
 
 import { DIContainer, TypedDependencyConfig } from "@itwin/cloud-agnostic-core";
-import { Types } from "@itwin/object-storage-core";
+import { Types as CoreTypes } from "@itwin/object-storage-core";
 import { StorageUnitTests } from "@itwin/object-storage-tests-backend-unit";
 
 import { AzureClientStorageBindings } from "../../../client";
@@ -75,9 +75,9 @@ class TestAzureClientStorageBindings extends AzureClientStorageBindings {
       BlockBlobClientWrapperFactory
     );
 
-    container.unregister(Types.Client.clientWrapperFactory);
+    container.unregister(CoreTypes.Client.clientWrapperFactory);
     container.registerInstance(
-      Types.Client.clientWrapperFactory,
+      CoreTypes.Client.clientWrapperFactory,
       mockBlockBlobClientWrapperFactory
     );
   }

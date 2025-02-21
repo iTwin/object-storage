@@ -5,7 +5,7 @@
 
 import {
   FrontendStorage,
-  Types,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core/lib/frontend";
 import {
   DependencyBindingsTestCase,
@@ -27,14 +27,16 @@ describe(`${AzureFrontendStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: FrontendStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(FrontendStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<FrontendStorage>(CoreTypes.Frontend.frontendStorage),
         expectedCtor: AzureFrontendStorage,
       },
       {
-        testedClassIdentifier: Types.Frontend.clientWrapperFactory.toString(),
+        testedClassIdentifier:
+          CoreTypes.Frontend.clientWrapperFactory.toString(),
         testedFunction: (c: DIContainer) =>
           c.resolve<FrontendBlockBlobClientWrapperFactory>(
-            Types.Frontend.clientWrapperFactory
+            CoreTypes.Frontend.clientWrapperFactory
           ),
         expectedCtor: FrontendBlockBlobClientWrapperFactory,
       },

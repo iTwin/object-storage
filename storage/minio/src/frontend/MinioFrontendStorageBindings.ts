@@ -21,9 +21,9 @@ export class MinioFrontendStorageBindings extends S3FrontendStorageBindings {
   public override register(container: DIContainer): void {
     super.register(container);
 
-    container.unregister(FrontendStorage);
-    container.registerFactory(
-      FrontendStorage,
+    container.unregister<FrontendStorage>(CoreTypes.Frontend.frontendStorage);
+    container.registerFactory<FrontendStorage>(
+      CoreTypes.Frontend.frontendStorage,
       (c: DIContainer) =>
         new MinioFrontendStorage(
           c.resolve<FrontendMinioS3ClientWrapperFactory>(

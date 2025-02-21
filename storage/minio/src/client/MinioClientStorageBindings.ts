@@ -19,11 +19,16 @@ export class MinioClientStorageBindings extends S3ClientStorageBindings {
   public override register(container: DIContainer): void {
     super.register(container);
 
-    container.unregister(ClientStorage);
-    container.registerFactory(ClientStorage, (c: DIContainer) => {
-      return new MinioClientStorage(
-        c.resolve<S3ClientWrapperFactory>(CoreTypes.Client.clientWrapperFactory)
-      );
-    });
+    container.unregister<ClientStorage>(CoreTypes.Client.clientStorage);
+    container.registerFactory<ClientStorage>(
+      CoreTypes.Client.clientStorage,
+      (c: DIContainer) => {
+        return new MinioClientStorage(
+          c.resolve<S3ClientWrapperFactory>(
+            CoreTypes.Client.clientWrapperFactory
+          )
+        );
+      }
+    );
   }
 }

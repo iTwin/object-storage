@@ -6,6 +6,7 @@
 import {
   FrontendStorage,
   FrontendStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
@@ -18,8 +19,8 @@ export class GoogleFrontendStorageBindings extends FrontendStorageDependency {
   public readonly dependencyName: string = Constants.storageType;
 
   public override register(container: DIContainer): void {
-    container.registerFactory(
-      FrontendStorage,
+    container.registerFactory<FrontendStorage>(
+      CoreTypes.Frontend.frontendStorage,
       () => new GoogleFrontendStorage()
     );
   }
