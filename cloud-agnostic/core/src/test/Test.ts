@@ -13,11 +13,6 @@ export interface NamedTestConfig extends NamedDependencyConfig {
   testProperty: string;
 }
 
-export const testTypes = {
-  testConfigType: Symbol.for("TestConfig"),
-  namedTestConfigType: Symbol.for("NamedTestConfig"),
-};
-
 export abstract class Test {
   abstract get property(): string;
   abstract get instanceName(): string | undefined;

@@ -22,12 +22,12 @@ export async function handleMinioUrlUpload(
   const { data, metadata, url } = input;
 
   let dataToUpload: Buffer;
-  if (data instanceof Buffer) dataToUpload = data;
-  else if (data instanceof Readable) dataToUpload = await streamToBuffer(data);
-  else {
+  if (typeof data === "string") {
     await assertFileNotEmpty(data);
     dataToUpload = await streamToBuffer(createReadStream(data));
-  }
+  } else if (data instanceof Readable)
+    dataToUpload = await streamToBuffer(data);
+  else dataToUpload = data;
   const metaHeaders = metadata
     ? metadataToHeaders(metadata, "x-amz-meta-")
     : undefined;

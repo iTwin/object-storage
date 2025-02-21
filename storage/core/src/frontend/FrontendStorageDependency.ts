@@ -11,6 +11,8 @@ import {
   StrategyInstance,
 } from "@itwin/cloud-agnostic-core";
 
+import { Types } from "../common";
+
 import { FrontendStorage } from "./FrontendStorage";
 import { StrategyFrontendStorage } from "./StrategyFrontendStorage";
 
@@ -25,12 +27,15 @@ export abstract class FrontendStorageDependency extends StrategyDependency {
     if (!config.dependencyName)
       throw new ConfigError<DependencyConfig>("dependencyName");
 
-    container.registerFactory(FrontendStorage, (container) => {
-      const storagesInstances = container.resolveAll<
-        StrategyInstance<FrontendStorage>
-      >(StrategyInstance<FrontendStorage>);
-      return new StrategyFrontendStorage(storagesInstances);
-    });
+    container.registerFactory<FrontendStorage>(
+      Types.Frontend.frontendStorage,
+      (c) => {
+        const storagesInstances = c.resolveAll<
+          StrategyInstance<FrontendStorage>
+        >(StrategyInstance<FrontendStorage>);
+        return new StrategyFrontendStorage(storagesInstances);
+      }
+    );
   }
 
   public override _registerInstance(
@@ -42,7 +47,9 @@ export abstract class FrontendStorageDependency extends StrategyDependency {
       StrategyInstance<FrontendStorage>,
       (_c) =>
         new StrategyInstance<FrontendStorage>(
-          childContainer.resolve(FrontendStorage),
+          childContainer.resolve<FrontendStorage>(
+            Types.Frontend.frontendStorage
+          ),
           this.dependencyName
         )
     );

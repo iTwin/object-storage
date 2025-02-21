@@ -11,13 +11,14 @@ import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 
 import {
   Bindable,
-  Types as CoreTypes,
+  Types as DependencyTypes,
   DependenciesConfig,
   DIContainer,
 } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
+  Types as CoreTypes,
   ServerStorage,
   ServerStorageDependency,
 } from "@itwin/object-storage-core";
@@ -42,7 +43,7 @@ export class StorageUnitTests extends Bindable {
     this.useBindings(clientStorageDependency);
 
     this.container.registerInstance<DependenciesConfig>(
-      CoreTypes.dependenciesConfig,
+      DependencyTypes.dependenciesConfig,
       config
     );
   }
@@ -50,8 +51,12 @@ export class StorageUnitTests extends Bindable {
   public async start(): Promise<void> {
     this.bindDependencies(this.container);
 
-    const serverStorage = this.container.resolve(ServerStorage);
-    const clientStorage = this.container.resolve(ClientStorage);
+    const serverStorage = this.container.resolve<ServerStorage>(
+      CoreTypes.Server.serverStorage
+    );
+    const clientStorage = this.container.resolve<ClientStorage>(
+      CoreTypes.Client.clientStorage
+    );
 
     setOptions({
       serverStorage,

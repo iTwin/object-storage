@@ -9,6 +9,7 @@ import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import { Constants, Types } from "../common";
@@ -52,13 +53,18 @@ export class GoogleServerStorageBindings extends ServerStorageDependency {
       const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);
       return new StorageControlClientWrapper(config);
     });
-    container.registerFactory(ServerStorage, (c: DIContainer) => {
-      const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);
-      const storage = c.resolve<StorageWrapper>(StorageWrapper);
-      const storageControl = c.resolve<StorageControlClientWrapper>(
-        StorageControlClientWrapper
-      );
-      return new GoogleServerStorage(storage, storageControl, config);
-    });
+    container.registerFactory<ServerStorage>(
+      CoreTypes.Server.serverStorage,
+      (c: DIContainer) => {
+        const config = c.resolve<GoogleStorageConfig>(
+          Types.GoogleServer.config
+        );
+        const storage = c.resolve<StorageWrapper>(StorageWrapper);
+        const storageControl = c.resolve<StorageControlClientWrapper>(
+          StorageControlClientWrapper
+        );
+        return new GoogleServerStorage(storage, storageControl, config);
+      }
+    );
   }
 }

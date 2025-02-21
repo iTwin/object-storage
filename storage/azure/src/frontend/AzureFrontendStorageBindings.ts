@@ -5,7 +5,7 @@
 import {
   FrontendStorage,
   FrontendStorageDependency,
-  Types,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core/lib/frontend";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
@@ -20,13 +20,16 @@ export class AzureFrontendStorageBindings extends FrontendStorageDependency {
 
   public override register(container: DIContainer): void {
     container.registerFactory<FrontendBlockBlobClientWrapperFactory>(
-      Types.Frontend.clientWrapperFactory,
+      CoreTypes.Frontend.clientWrapperFactory,
       () => new FrontendBlockBlobClientWrapperFactory()
     );
-    container.registerFactory(FrontendStorage, (c: DIContainer) => {
-      return new AzureFrontendStorage(
-        c.resolve(Types.Frontend.clientWrapperFactory)
-      );
-    });
+    container.registerFactory<FrontendStorage>(
+      CoreTypes.Frontend.frontendStorage,
+      (c: DIContainer) => {
+        return new AzureFrontendStorage(
+          c.resolve(CoreTypes.Frontend.clientWrapperFactory)
+        );
+      }
+    );
   }
 }

@@ -7,6 +7,7 @@ import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import { Constants } from "../common";
@@ -22,8 +23,8 @@ export class GoogleClientStorageBindings extends ClientStorageDependency {
       ClientStorageWrapperFactory,
       () => new ClientStorageWrapperFactory()
     );
-    container.registerFactory(
-      ClientStorage,
+    container.registerFactory<ClientStorage>(
+      CoreTypes.Client.clientStorage,
       (c: DIContainer) =>
         new GoogleClientStorage(c.resolve(ClientStorageWrapperFactory))
     );

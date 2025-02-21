@@ -9,7 +9,7 @@ import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   PresignedUrlProvider,
   ServerStorage,
-  Types,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 import {
   Constants,
@@ -30,13 +30,16 @@ describe(`${MinioServerStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ServerStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(ServerStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<ServerStorage>(CoreTypes.Server.serverStorage),
         expectedCtor: MinioServerStorage,
       },
       {
-        testedClassIdentifier: Types.Server.presignedUrlProvider.toString(),
+        testedClassIdentifier: CoreTypes.Server.presignedUrlProvider.toString(),
         testedFunction: (c: DIContainer) =>
-          c.resolve<PresignedUrlProvider>(Types.Server.presignedUrlProvider),
+          c.resolve<PresignedUrlProvider>(
+            CoreTypes.Server.presignedUrlProvider
+          ),
         expectedCtor: MinioPresignedUrlProvider,
       },
       {

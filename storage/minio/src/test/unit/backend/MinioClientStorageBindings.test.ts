@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { DIContainer } from "@itwin/cloud-agnostic-core";
-import { ClientStorage } from "@itwin/object-storage-core";
+import { ClientStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
   testBindings,
@@ -21,7 +21,8 @@ describe(`${MinioClientStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: ClientStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(ClientStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<ClientStorage>(CoreTypes.Client.clientStorage),
         expectedCtor: MinioClientStorage,
       },
     ];

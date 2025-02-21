@@ -7,20 +7,22 @@ import "reflect-metadata";
 import { Container, decorate, injectable, METADATA_KEY } from "inversify";
 
 import { DIContainer } from "../DIContainer";
-import { Abstract, Constructor, DIIdentifier } from "../internal";
+import { Constructor, DIIdentifier } from "../internal";
 
 export class InversifyWrapper extends DIContainer {
-  constructor(private _container: Container) {
+  constructor(private readonly _container: Container) {
     super();
+  }
+
+  public get container(): Container {
+    return this._container;
   }
 
   public static create(): DIContainer {
     return new InversifyWrapper(new Container());
   }
 
-  private needsDecoration<T>(
-    key: DIIdentifier<T>
-  ): key is Constructor<T> | Abstract<T> {
+  private needsDecoration<T>(key: DIIdentifier<T>): key is Constructor<T> {
     if (typeof key === "symbol") return false;
     return Reflect.hasOwnMetadata(METADATA_KEY.PARAM_TYPES, key);
   }
@@ -76,5 +78,9 @@ export class InversifyWrapper extends DIContainer {
 
   public override createChild(): DIContainer {
     return new InversifyWrapper(this._container.createChild());
+  }
+
+  public override isRegistered<T>(key: DIIdentifier<T>): boolean {
+    return this._container.isBound(key);
   }
 }

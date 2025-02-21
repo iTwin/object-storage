@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FrontendStorage } from "@itwin/object-storage-core/lib/frontend";
+import {
+  FrontendStorage,
+  Types as CoreTypes,
+} from "@itwin/object-storage-core/lib/frontend";
 import {
   DependencyBindingsTestCase,
   testBindings,
@@ -22,7 +25,8 @@ describe(`${MinioFrontendStorageBindings.name}`, () => {
     const bindingsTestCases: DependencyBindingsTestCase[] = [
       {
         testedClassIdentifier: FrontendStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(FrontendStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<FrontendStorage>(CoreTypes.Frontend.frontendStorage),
         expectedCtor: MinioFrontendStorage,
       },
     ];

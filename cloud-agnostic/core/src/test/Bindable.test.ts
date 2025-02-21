@@ -18,6 +18,7 @@ import {
   TestSetupWithNamedInstances,
   TestSetupWithStrategyInstances,
 } from "./TestSetup";
+import { TestTypes } from "./TestTypes";
 
 const testConfig: TestConfig = {
   dependencyName: "testName",
@@ -85,7 +86,7 @@ describe(`${Bindable.name}`, () => {
 
     setup.start();
 
-    const test = setup.container.resolve(Test);
+    const test = setup.container.resolve<Test>(TestTypes.test);
     expect(test instanceof ConcreteTest).to.be.true;
     expect(test.property === "testProperty").to.be.true;
   });
@@ -146,7 +147,10 @@ describe(`${Bindable.name}`, () => {
 
     setup.start();
 
-    const test = setup.container.resolveNamed(Test, "instanceName");
+    const test = setup.container.resolveNamed<Test>(
+      TestTypes.test,
+      "instanceName"
+    );
     validateNamedTestObject(test, testConfigWithOneInstance[0]);
   });
 
@@ -158,12 +162,12 @@ describe(`${Bindable.name}`, () => {
 
     setup.start();
 
-    const test = setup.container.resolveNamed(
-      Test,
+    const test = setup.container.resolveNamed<Test>(
+      TestTypes.test,
       testConfigWithMultipleInstances[0].instanceName
     );
-    const test2 = setup.container.resolveNamed(
-      Test,
+    const test2 = setup.container.resolveNamed<Test>(
+      TestTypes.test,
       testConfigWithMultipleInstances[1].instanceName
     );
 
@@ -202,7 +206,9 @@ describe(`${Bindable.name}`, () => {
 
     setup.start();
 
-    const test = setup.container.resolve(StrategyTestBase);
+    const test = setup.container.resolve<StrategyTestBase>(
+      TestTypes.strategyTestBase
+    );
 
     expect(test.method("testName1")).to.be.equal("testProperty1");
     expect(test.method("testName2")).to.be.equal("testProperty2");

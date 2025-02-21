@@ -10,7 +10,7 @@ import {
   PresignedUrlProvider,
   ServerStorage,
   TransferConfigProvider,
-  Types,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 import {
   S3ClientWrapper,
@@ -37,9 +37,9 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
   ): void {
     super.register(container, config);
 
-    container.unregister(Types.Server.presignedUrlProvider);
+    container.unregister(CoreTypes.Server.presignedUrlProvider);
     container.registerFactory<PresignedUrlProvider>(
-      Types.Server.presignedUrlProvider,
+      CoreTypes.Server.presignedUrlProvider,
       (c: DIContainer) =>
         new MinioPresignedUrlProvider(
           c.resolve(Client),
@@ -53,9 +53,9 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
       );
       return createClient(resolvedConfig);
     });
-    container.unregister(Types.Server.transferConfigProvider);
+    container.unregister(CoreTypes.Server.transferConfigProvider);
     container.registerFactory<TransferConfigProvider>(
-      Types.Server.transferConfigProvider,
+      CoreTypes.Server.transferConfigProvider,
       (c: DIContainer) => {
         const resolvedConfig = c.resolve<S3ServerStorageConfig>(
           S3Types.S3Server.config
@@ -66,14 +66,18 @@ export class MinioServerStorageBindings extends S3ServerStorageBindings {
         );
       }
     );
-    container.unregister(ServerStorage);
+    container.unregister<ServerStorage>(CoreTypes.Server.serverStorage);
     container.registerFactory<ServerStorage>(
-      ServerStorage,
+      CoreTypes.Server.serverStorage,
       (c: DIContainer) =>
         new MinioServerStorage(
           c.resolve(S3ClientWrapper),
-          c.resolve<PresignedUrlProvider>(Types.Server.presignedUrlProvider),
-          c.resolve<TransferConfigProvider>(Types.Server.transferConfigProvider)
+          c.resolve<PresignedUrlProvider>(
+            CoreTypes.Server.presignedUrlProvider
+          ),
+          c.resolve<TransferConfigProvider>(
+            CoreTypes.Server.transferConfigProvider
+          )
         )
     );
   }

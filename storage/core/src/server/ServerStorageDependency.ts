@@ -11,7 +11,7 @@ import {
   NamedDependencyConfig,
 } from "@itwin/cloud-agnostic-core";
 
-import { ServerStorage } from "./ServerStorage";
+import { Types } from "../common";
 
 export abstract class ServerStorageDependency extends NamedDependency {
   public static readonly dependencyType = "ServerStorage";
@@ -28,7 +28,7 @@ export abstract class ServerStorageDependency extends NamedDependency {
     this.bindNamed(
       container,
       childContainer,
-      ServerStorage,
+      Types.Server.serverStorage,
       config.instanceName
     );
   }

@@ -9,6 +9,7 @@ import { Bindable, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ClientStorage,
   ClientStorageDependency,
+  Types,
 } from "@itwin/object-storage-core";
 
 import { FileDownloader } from "../FileDownloader";
@@ -32,7 +33,9 @@ export class App extends Bindable {
     super();
     this.requireDependency(ClientStorageDependency.dependencyType);
     this.container.registerFactory(FileDownloader, (c: DIContainer) => {
-      return new FileDownloader(c.resolve(ClientStorage));
+      return new FileDownloader(
+        c.resolve<ClientStorage>(Types.Client.clientStorage)
+      );
     });
   }
 

@@ -24,8 +24,8 @@ export class S3FrontendStorageBindings extends FrontendStorageDependency {
       CoreTypes.Frontend.clientWrapperFactory,
       () => new FrontendS3ClientWrapperFactory()
     );
-    container.registerFactory(
-      FrontendStorage,
+    container.registerFactory<FrontendStorage>(
+      CoreTypes.Frontend.frontendStorage,
       (c: DIContainer) =>
         new S3FrontendStorage(
           c.resolve(CoreTypes.Frontend.clientWrapperFactory)

@@ -35,7 +35,8 @@ describe(`${S3FrontendStorageBindings.name}`, () => {
       },
       {
         testedClassIdentifier: FrontendStorage.name,
-        testedFunction: (c: DIContainer) => c.resolve(FrontendStorage),
+        testedFunction: (c: DIContainer) =>
+          c.resolve<FrontendStorage>(CoreTypes.Frontend.frontendStorage),
         expectedCtor: S3FrontendStorage,
       },
     ];

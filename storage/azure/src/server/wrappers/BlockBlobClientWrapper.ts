@@ -48,17 +48,18 @@ export class BlockBlobClientWrapper {
     headers?: ContentHeaders
   ): Promise<void> {
     const blobHTTPHeaders = this.getBlobHTTPHeaders(headers);
-    if (data instanceof Buffer)
-      await this._client.upload(data, data.byteLength, {
-        metadata,
-        blobHTTPHeaders,
-      });
+    if (typeof data === "string")
+      await this._client.uploadFile(data, { metadata, blobHTTPHeaders });
     else if (data instanceof Readable)
       await this._client.uploadStream(data, undefined, undefined, {
         metadata,
         blobHTTPHeaders,
       });
-    else await this._client.uploadFile(data, { metadata, blobHTTPHeaders });
+    else
+      await this._client.upload(data, data.byteLength, {
+        metadata,
+        blobHTTPHeaders,
+      });
   }
 
   public async uploadInMultipleParts(

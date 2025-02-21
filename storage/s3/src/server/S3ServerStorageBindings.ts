@@ -54,8 +54,8 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
       config
     );
 
-    container.registerFactory(
-      ServerStorage,
+    container.registerFactory<ServerStorage>(
+      CoreTypes.Server.serverStorage,
       (c: DIContainer) =>
         new S3ServerStorage(
           c.resolve(S3ClientWrapper),

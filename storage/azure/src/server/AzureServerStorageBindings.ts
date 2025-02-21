@@ -13,6 +13,7 @@ import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import {
   ServerStorage,
   ServerStorageDependency,
+  Types as CoreTypes,
 } from "@itwin/object-storage-core";
 
 import { Constants, Types } from "../common";
@@ -44,12 +45,15 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
       Types.AzureServer.config,
       config
     );
-    container.registerFactory(ServerStorage, (c: DIContainer) => {
-      return new AzureServerStorage(
-        c.resolve(Types.AzureServer.config),
-        c.resolve(BlobServiceClientWrapper)
-      );
-    });
+    container.registerFactory<ServerStorage>(
+      CoreTypes.Server.serverStorage,
+      (c: DIContainer) => {
+        return new AzureServerStorage(
+          c.resolve(Types.AzureServer.config),
+          c.resolve(BlobServiceClientWrapper)
+        );
+      }
+    );
 
     container.registerFactory(BlobServiceClientWrapper, (c: DIContainer) => {
       return new BlobServiceClientWrapper(c.resolve(BlobServiceClient));
