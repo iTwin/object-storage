@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-core",
-  "version": "3.0.0-dev.0",
+  "version": "3.0.0",
   "description": "Core generic object storage interfaces",
   "keywords": [
     "Bentley",
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
-    "axios": "^1.7.4"
+    "axios": "^1.8.2"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
