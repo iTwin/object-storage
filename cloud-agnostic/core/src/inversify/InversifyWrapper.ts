@@ -4,10 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "reflect-metadata";
 
-import { Container, decorate, injectable, METADATA_KEY } from "inversify";
+import { Container, decorate, injectable } from "inversify";
 
 import { DIContainer } from "../DIContainer";
 import { Constructor, DIIdentifier } from "../internal";
+
+const PARAM_TYPES = "inversify:paramtypes";
 
 export class InversifyWrapper extends DIContainer {
   constructor(private readonly _container: Container) {
@@ -24,7 +26,7 @@ export class InversifyWrapper extends DIContainer {
 
   private needsDecoration<T>(key: DIIdentifier<T>): key is Constructor<T> {
     if (typeof key === "symbol") return false;
-    return Reflect.hasOwnMetadata(METADATA_KEY.PARAM_TYPES, key);
+    return Reflect.hasOwnMetadata(PARAM_TYPES, key);
   }
 
   public override registerFactory<T>(
@@ -53,7 +55,7 @@ export class InversifyWrapper extends DIContainer {
     this._container
       .bind<T>(key)
       .toDynamicValue(() => factory(this))
-      .whenTargetNamed(name);
+      .whenNamed(name);
   }
 
   public override registerInstance<T>(key: DIIdentifier<T>, instance: T): void {
@@ -61,7 +63,7 @@ export class InversifyWrapper extends DIContainer {
   }
 
   public override unregister<T>(key: DIIdentifier<T>): void {
-    this._container.unbind(key);
+    this._container.unbindSync(key);
   }
 
   public override resolve<T>(key: DIIdentifier<T>): T {
@@ -69,7 +71,7 @@ export class InversifyWrapper extends DIContainer {
   }
 
   public override resolveNamed<T>(key: DIIdentifier<T>, name: string): T {
-    return this._container.getNamed<T>(key, name);
+    return this._container.get<T>(key, { name: name });
   }
 
   public override resolveAll<T>(key: DIIdentifier<T>): T[] {
@@ -77,7 +79,7 @@ export class InversifyWrapper extends DIContainer {
   }
 
   public override createChild(): DIContainer {
-    return new InversifyWrapper(this._container.createChild());
+    return new InversifyWrapper(new Container({ parent: this._container }));
   }
 
   public override isRegistered<T>(key: DIIdentifier<T>): boolean {
