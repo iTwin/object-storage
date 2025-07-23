@@ -45,12 +45,12 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
-    "@google-cloud/storage": "^7.12.1",
-    "@google-cloud/storage-control": "^0.2.0",
+    "@google-cloud/storage": "^7.16.0",
+    "@google-cloud/storage-control": "^0.5.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-core": "workspace:*",
-    "axios": "^1.8.2",
-    "google-auth-library": "^9.14.0"
+    "axios": "^1.10.0",
+    "google-auth-library": "^10.1.0"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",

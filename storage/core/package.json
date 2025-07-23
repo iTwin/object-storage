@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
-    "axios": "^1.8.2"
+    "axios": "^1.10.0"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
