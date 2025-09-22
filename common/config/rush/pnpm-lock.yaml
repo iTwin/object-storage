@@ -80,7 +80,7 @@ importers:
         specifier: workspace:*
         version: link:../utils/common-config
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       cspell:
         specifier: ^8.16.0
@@ -135,7 +135,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       '@types/sinon':
         specifier: ^10.0.11
@@ -201,8 +201,8 @@ importers:
         specifier: workspace:*
         version: link:../../cloud-agnostic/core
       axios:
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: ^1.12.2
+        version: 1.12.2
     devDependencies:
       '@itwin/object-storage-common-config':
         specifier: workspace:*
@@ -217,7 +217,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       chai:
         specifier: ^4.3.10
@@ -271,8 +271,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       axios:
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: ^1.12.2
+        version: 1.12.2
       google-auth-library:
         specifier: ^10.1.0
         version: 10.1.0
@@ -299,7 +299,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       '@types/sinon':
         specifier: ^10.0.11
@@ -405,7 +405,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       '@types/sinon':
         specifier: ^10.0.11
@@ -502,7 +502,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       chai:
         specifier: ^4.3.10
@@ -602,7 +602,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       '@types/sinon':
         specifier: ^10.0.11
@@ -693,7 +693,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       '@types/yargs':
         specifier: ^15.0.5
@@ -748,7 +748,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       cspell:
         specifier: ^8.16.0
@@ -788,11 +788,11 @@ importers:
         specifier: ^4.17.13
         version: 4.17.23
       '@types/node':
-        specifier: ^18.11.18
+        specifier: ^20.17.20
         version: 18.19.120
       axios:
-        specifier: ^1.10.0
-        version: 1.10.0
+        specifier: ^1.12.2
+        version: 1.12.2
       cspell:
         specifier: ^8.16.0
         version: 8.19.4
@@ -2756,8 +2756,8 @@ packages:
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
 
-  axios@1.10.0:
-    resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
+  axios@1.12.2:
+    resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
 
   babel-loader@10.0.0:
     resolution: {integrity: sha512-z8jt+EdS61AMw22nSfoNJAZ0vrtmhPRVi6ghL3rCeRZI8cdNYFiV5xeV3HbE7rlZZNmGH8BVccwWt8/ED0QOHA==}
@@ -8614,7 +8614,7 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.10.0:
+  axios@1.12.2:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.4
@@ -11949,7 +11949,7 @@ snapshots:
 
   wait-on@7.2.0:
     dependencies:
-      axios: 1.10.0
+      axios: 1.12.2
       joi: 17.13.3
       lodash: 4.17.21
       minimist: 1.2.8

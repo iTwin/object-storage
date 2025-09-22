@@ -9,7 +9,11 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
-import { ConfigTransferInput, UrlTransferInput } from "../../common";
+import {
+  ConfigTransferInput,
+  createClientAbortSignal,
+  UrlTransferInput,
+} from "../../common";
 import { defaultExpiresInSeconds } from "../../common/internal";
 import {
   ConfigDownloadInput,
@@ -121,12 +125,14 @@ export async function streamToTransferType(
 export async function downloadFromUrl(
   input: UrlDownloadInput
 ): Promise<TransferData> {
-  const { transferType, url } = input;
+  const { transferType, url, abortSignal } = input;
 
   // There is an issue with Axios type definitions. Casting should be removed
   // after upgrading to Axios 1.0
   // See: https://github.com/axios/axios/pull/4229
-  const signal = input.abortSignal as AbortSignal | undefined;
+  const signal = abortSignal
+    ? (createClientAbortSignal(abortSignal) as unknown as AbortSignal)
+    : undefined;
 
   switch (transferType) {
     case "buffer":

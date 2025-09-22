@@ -6,6 +6,7 @@ import { Readable } from "stream";
 
 import {
   ConfigTransferInput,
+  GenericAbortSignal,
   Metadata,
   MultipartUploadOptions,
   ObjectReference,
@@ -16,17 +17,6 @@ import {
 export type TransferType = "buffer" | "stream" | "local";
 export type TransferData = Readable | Buffer | string;
 export type MultipartUploadData = Readable | string;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AbortSignalListener = (this: GenericAbortSignal, ev: any) => any;
-
-export interface GenericAbortSignal {
-  aborted: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onabort: ((this: any, ev: any) => any) | null;
-  addEventListener: (type: "abort", listener: AbortSignalListener) => void;
-  removeEventListener: (type: "abort", listener: AbortSignalListener) => void;
-}
 
 export interface UrlDownloadInput extends UrlTransferInput {
   transferType: TransferType;
