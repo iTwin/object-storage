@@ -131,7 +131,7 @@ export async function downloadFromUrl(
   // after upgrading to Axios 1.0
   // See: https://github.com/axios/axios/pull/4229
   const signal = abortSignal
-    ? (createClientAbortSignal(abortSignal) as unknown as AbortSignal)
+    ? (createClientAbortSignal(abortSignal) as AbortSignal)
     : undefined;
 
   switch (transferType) {
