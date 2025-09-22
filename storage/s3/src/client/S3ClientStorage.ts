@@ -22,6 +22,7 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
+  createClientAbortSignal,
 } from "@itwin/object-storage-core";
 
 import {
@@ -63,7 +64,9 @@ export class S3ClientStorage extends ClientStorage {
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
     const options: HttpHandlerOptions = {
-      abortSignal: input.abortSignal,
+      abortSignal: input.abortSignal
+        ? createClientAbortSignal(input.abortSignal)
+        : undefined,
     };
 
     return createAndUseClient(

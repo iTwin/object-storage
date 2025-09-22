@@ -20,6 +20,7 @@ import {
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
+  createClientAbortSignal,
 } from "@itwin/object-storage-core";
 
 import {
@@ -63,7 +64,9 @@ export class AzureClientStorage extends ClientStorage {
       await promises.mkdir(dirname(input.localPath), { recursive: true });
 
     const options: BlobDownloadOptions = {
-      abortSignal: input.abortSignal,
+      abortSignal: input.abortSignal
+        ? createClientAbortSignal(input.abortSignal)
+        : undefined,
     };
 
     const downloadStream = await this._clientWrapperFactory

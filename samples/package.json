@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.17.20",
     "cspell": "^8.16.0",
     "eslint": "^8.57.1",
     "rimraf": "^2.6.2",

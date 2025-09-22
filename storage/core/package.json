@@ -39,14 +39,14 @@
   },
   "dependencies": {
     "@itwin/cloud-agnostic-core": "workspace:*",
-    "axios": "^1.10.0"
+    "axios": "^1.12.2"
   },
   "devDependencies": {
     "@itwin/object-storage-common-config": "workspace:*",
     "@types/chai": "^4.3.8",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.17.20",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "cspell": "^8.16.0",
