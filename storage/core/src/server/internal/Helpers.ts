@@ -130,9 +130,7 @@ export async function downloadFromUrl(
   // There is an issue with Axios type definitions. Casting should be removed
   // after upgrading to Axios 1.0
   // See: https://github.com/axios/axios/pull/4229
-  const signal = abortSignal
-    ? (createClientAbortSignal(abortSignal) as AbortSignal)
-    : undefined;
+  const signal = abortSignal ? createClientAbortSignal(abortSignal) : undefined;
 
   switch (transferType) {
     case "buffer":
