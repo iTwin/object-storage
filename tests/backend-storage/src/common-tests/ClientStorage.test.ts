@@ -189,7 +189,6 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         const downloadUrl = await serverStorage.getDownloadUrl(uploadedFile);
         const abortController = new AbortController();
 
-        abortController.abort();
         const downloadPromise = clientStorage.download({
           storageType: storageType,
           url: downloadUrl,
@@ -197,6 +196,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           localPath: `${testDownloadPath}/download-url.txt`,
           abortSignal: abortController.signal,
         });
+        abortController.abort();
 
         let wasAborted = false;
         try {
@@ -529,7 +529,6 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             );
           const abortController = new AbortController();
 
-          abortController.abort();
           const downloadPromise = clientStorage.download({
             reference: uploadedFile,
             transferConfig: downloadConfig,
@@ -537,6 +536,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
             localPath: path.join(testDownloadPath, "download-config.txt"),
             abortSignal: abortController.signal,
           });
+          abortController.abort();
 
           let wasAborted = false;
           try {

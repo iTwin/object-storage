@@ -16,9 +16,19 @@ export interface GenericAbortSignal {
 
 export function createClientAbortSignal(
   userAbortSignal: GenericAbortSignal
-): GenericAbortSignal {
-  const signal = AbortSignal.any([
-    userAbortSignal as AbortSignal,
-  ]) as unknown as GenericAbortSignal;
-  return signal;
+): AbortSignal {
+  if (userAbortSignal.aborted) {
+    return AbortSignal.abort();
+  }
+
+  const controller = new AbortController();
+
+  const abortListener = () => {
+    userAbortSignal.removeEventListener("abort", abortListener);
+    controller.abort();
+  };
+
+  userAbortSignal.addEventListener("abort", abortListener);
+
+  return controller.signal;
 }
