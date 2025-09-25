@@ -1,6 +1,6 @@
 {
   "name": "@itwin/object-storage-google",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Object storage implementation using Google Cloud Storage",
   "keywords": [
     "Bentley",
