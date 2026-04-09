@@ -19,6 +19,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  CopyObjectOptions,
   ExpiryOptions,
   Metadata,
   MultipartUploadData,
@@ -322,7 +323,8 @@ export class AzureServerStorage extends ServerStorage {
   public async copyObject(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetReference: ObjectReference
+    targetReference: ObjectReference,
+    options?: CopyObjectOptions
   ): Promise<void> {
     assertRelativeDirectory(sourceReference.relativeDirectory);
     assertRelativeDirectory(targetReference.relativeDirectory);
@@ -333,7 +335,10 @@ export class AzureServerStorage extends ServerStorage {
       );
     }
 
-    const sourceUrl = await sourceStorage.getDownloadUrl(sourceReference);
+    const sourceUrl = await sourceStorage.getDownloadUrl(
+      sourceReference,
+      options?.expiry
+    );
     const targetBlobClient = this._client.getBlobClient(targetReference);
 
     const copyPoller = await targetBlobClient.beginCopyFromURL(sourceUrl);

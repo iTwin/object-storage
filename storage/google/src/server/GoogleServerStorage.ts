@@ -19,6 +19,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  CopyObjectOptions,
   EntityPageListIterator,
   ExpiryOptions,
   Metadata,
@@ -186,7 +187,8 @@ export class GoogleServerStorage extends ServerStorage {
   public override async copyObject(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetReference: ObjectReference
+    targetReference: ObjectReference,
+    _options?: CopyObjectOptions
   ): Promise<void> {
     return await this._storage.copyFile(
       (sourceStorage as GoogleServerStorage).bucketName,
