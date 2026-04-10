@@ -19,7 +19,8 @@ const webpackConfig = {
   },
   output: {
     filename: bundledScriptFileName,
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
+    publicPath: ""
   },
   // TODO: remove after frontend storage is fixed
   resolve: {
