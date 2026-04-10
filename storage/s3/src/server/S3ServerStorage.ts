@@ -14,6 +14,7 @@ import {
 import {
   BaseDirectory,
   ContentHeaders,
+  CopyObjectOptions,
   ExpiryOptions,
   Metadata,
   MultipartUploadData,
@@ -263,7 +264,8 @@ export class S3ServerStorage extends ServerStorage {
   public copyObject(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetReference: ObjectReference
+    targetReference: ObjectReference,
+    _options?: CopyObjectOptions
   ): Promise<void> {
     assertRelativeDirectory(sourceReference.relativeDirectory);
     assertRelativeDirectory(targetReference.relativeDirectory);

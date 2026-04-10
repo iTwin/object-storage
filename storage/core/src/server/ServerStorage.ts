@@ -21,6 +21,7 @@ import {
   TransferData,
   EntityPageListIterator,
   CopyOptions,
+  CopyObjectOptions,
 } from "./Interfaces";
 
 export abstract class ServerStorage
@@ -153,13 +154,16 @@ export abstract class ServerStorage
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
    * @param {ObjectReference} sourceReference object reference in the source storage.
    * @param {ObjectReference} targetReference object reference in the target storage.
+   * @param {CopyObjectOptions} options optional options for the copy operation. The `expiry` option
+   * currently only applies to Azure.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
   public abstract copyObject(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetReference: ObjectReference
+    targetReference: ObjectReference,
+    options?: CopyObjectOptions
   ): Promise<void>;
 
   private async *listObjectsFiltered(
@@ -189,11 +193,17 @@ export abstract class ServerStorage
   private async copyObjectWithKey(
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
-    targetReference: ObjectReference
+    targetReference: ObjectReference,
+    options?: CopyObjectOptions
   ): Promise<string> {
     const newTaskKey = this.buildTaskKey(sourceReference);
     try {
-      await this.copyObject(sourceStorage, sourceReference, targetReference);
+      await this.copyObject(
+        sourceStorage,
+        sourceReference,
+        targetReference,
+        options
+      );
       return newTaskKey;
     } catch (error) {
       throw { key: newTaskKey, error };
@@ -208,6 +218,8 @@ export abstract class ServerStorage
    * reference in the target storage.
    * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
    * objects from the sourceDirectory will be copied.
+   * @param {CopyOptions} copyOptions optional options to control copy behavior, including concurrency,
+   * page size and error handling. The `expiry` option for presigned URLs currently only applies to Azure.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
@@ -255,7 +267,12 @@ export abstract class ServerStorage
             };
       taskMap.set(
         this.buildTaskKey(sourceReference),
-        this.copyObjectWithKey(sourceStorage, sourceReference, targetReference)
+        this.copyObjectWithKey(
+          sourceStorage,
+          sourceReference,
+          targetReference,
+          copyOptions
+        )
       );
       if (taskMap.size >= copyOptions.maxConcurrency) {
         await handleSingleTask();

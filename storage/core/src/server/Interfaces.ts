@@ -101,8 +101,15 @@ export type ExpiryOptions =
       expiresInSeconds?: number;
     };
 
+export interface CopyObjectOptions {
+  /** Expiry for the presigned URL used during copy. Currently only applies to Azure. */
+  expiry?: ExpiryOptions;
+}
+
 export interface CopyOptions {
   maxPageSize: number;
   maxConcurrency: number;
   continueOnError: boolean;
+  /** Expiry for the presigned URL used during copy. Currently only applies to Azure. */
+  expiry?: ExpiryOptions;
 }
