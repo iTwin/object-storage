@@ -154,7 +154,8 @@ export abstract class ServerStorage
    * @param {ServerStorage} sourceStorage source storage. Must be of the same type as this storage.
    * @param {ObjectReference} sourceReference object reference in the source storage.
    * @param {ObjectReference} targetReference object reference in the target storage.
-   * @param {CopyObjectOptions} options optional options for the copy operation.
+   * @param {CopyObjectOptions} options optional options for the copy operation. The `expiry` option
+   * currently only applies to Azure.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
@@ -218,7 +219,7 @@ export abstract class ServerStorage
    * @param {Function} predicate optional predicate to filter objects to copy. If not specified, all
    * objects from the sourceDirectory will be copied.
    * @param {CopyOptions} copyOptions optional options to control copy behavior, including concurrency,
-   * page size, error handling and presigned URL expiry.
+   * page size and error handling. The `expiry` option for presigned URLs currently only applies to Azure.
    * @returns {Promise<void>}
    * @note This uses server-side copying. Cross-region copy support depends on the storage provider.
    */
