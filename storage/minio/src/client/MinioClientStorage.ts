@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
+import { UrlTransferClient } from "@itwin/object-storage-core/lib/server/internal";
 
 import { UrlUploadInput } from "@itwin/object-storage-core";
 import {
@@ -14,14 +15,18 @@ import {
 import { handleMinioUrlUpload } from "./internal";
 
 export class MinioClientStorage extends S3ClientStorage {
-  constructor(clientWrapperFactory: S3ClientWrapperFactory) {
-    super(clientWrapperFactory);
+  constructor(
+    clientWrapperFactory: S3ClientWrapperFactory,
+    urlTransferClient?: UrlTransferClient
+  ) {
+    super(clientWrapperFactory, urlTransferClient);
   }
 
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    if (instanceOfUrlTransferInput(input)) return handleMinioUrlUpload(input);
+    if (instanceOfUrlTransferInput(input))
+      return handleMinioUrlUpload(input, this._urlTransferClient);
 
     return super.upload(input);
   }

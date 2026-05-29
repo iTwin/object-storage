@@ -12,8 +12,8 @@ import {
   instanceOfUrlTransferInput,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
+  UrlTransferClient,
   assertFileNotEmpty,
-  downloadFromUrl,
   streamToTransferType,
 } from "@itwin/object-storage-core/lib/server/internal";
 
@@ -37,7 +37,10 @@ import { createAndUseClient } from "../server/internal";
 import { handleS3UrlUpload } from "./internal/Helpers";
 
 export class S3ClientStorage extends ClientStorage {
-  constructor(private _clientWrapperFactory: S3ClientWrapperFactory) {
+  constructor(
+    private _clientWrapperFactory: S3ClientWrapperFactory,
+    protected _urlTransferClient: UrlTransferClient = new UrlTransferClient()
+  ) {
     super();
   }
 
@@ -60,7 +63,8 @@ export class S3ClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | S3ConfigDownloadInput
   ): Promise<TransferData> {
-    if (instanceOfUrlTransferInput(input)) return downloadFromUrl(input);
+    if (instanceOfUrlTransferInput(input))
+      return this._urlTransferClient.download(input);
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
     const options: HttpHandlerOptions = {
@@ -88,7 +92,8 @@ export class S3ClientStorage extends ClientStorage {
   public override async upload(
     input: UrlUploadInput | S3ConfigUploadInput
   ): Promise<void> {
-    if (instanceOfUrlTransferInput(input)) return handleS3UrlUpload(input);
+    if (instanceOfUrlTransferInput(input))
+      return handleS3UrlUpload(input, this._urlTransferClient);
 
     let { data } = input;
     const { metadata } = input;

@@ -3,5 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export * from "./BlobServiceClientWrapper";
+export * from "./BlobServiceClientWrapperFactory";
 export * from "./BlockBlobClientWrapper";
 export * from "./BlockBlobClientWrapperFactory";

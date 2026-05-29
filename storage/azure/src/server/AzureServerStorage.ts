@@ -29,6 +29,7 @@ import {
   ObjectReference,
   EntityPageListIterator,
   ServerStorage,
+  StorageOptions,
   TransferData,
   TransferType,
 } from "@itwin/object-storage-core";
@@ -42,7 +43,7 @@ import {
 } from "./internal";
 import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
 
-export interface AzureServerStorageConfig {
+export interface AzureServerStorageConfig extends StorageOptions {
   accountName: string;
   accountKey: string;
   baseUrl: string;
@@ -144,7 +145,9 @@ export class AzureServerStorage extends ServerStorage {
   ): EntityPageListIterator<ObjectReference> {
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
-        this._client.getObjectsNextPage(directory, { maxPageSize: maxPageSize })
+        this._client.getObjectsNextPage(directory, {
+          maxPageSize: maxPageSize,
+        })
       );
     return pageIterator;
   }
