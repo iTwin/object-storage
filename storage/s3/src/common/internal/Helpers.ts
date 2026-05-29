@@ -9,7 +9,10 @@ import {
   assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core/lib/internal";
-import { TransferConfig } from "@itwin/object-storage-core/lib/common";
+import {
+  RetryOptions,
+  TransferConfig,
+} from "@itwin/object-storage-core/lib/common";
 import { assertTransferConfig } from "@itwin/object-storage-core/lib/common/internal";
 
 import { S3TransferConfig } from "../Interfaces";
@@ -20,8 +23,10 @@ export function createS3Client(config: {
   accessKey: string;
   secretKey: string;
   sessionToken?: string;
+  retryOptions?: RetryOptions;
 }): S3Client {
-  const { baseUrl, region, accessKey, secretKey, sessionToken } = config;
+  const { baseUrl, region, accessKey, secretKey, sessionToken, retryOptions } =
+    config;
 
   return new S3Client({
     endpoint: baseUrl,
@@ -31,6 +36,9 @@ export function createS3Client(config: {
       secretAccessKey: secretKey,
       sessionToken,
     },
+    ...(retryOptions?.maxRetries !== undefined && {
+      maxAttempts: retryOptions.maxRetries + 1,
+    }),
   });
 }
 

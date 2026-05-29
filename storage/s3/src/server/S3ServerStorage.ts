@@ -24,6 +24,7 @@ import {
   ObjectReference,
   PresignedUrlProvider,
   ServerStorage,
+  StorageOptions,
   TransferConfig,
   TransferConfigProvider,
   TransferData,
@@ -33,7 +34,7 @@ import {
 
 import { S3ClientWrapper } from "./wrappers";
 
-export interface S3ServerStorageConfig {
+export interface S3ServerStorageConfig extends StorageOptions {
   baseUrl: string;
   region: string;
   bucket: string;

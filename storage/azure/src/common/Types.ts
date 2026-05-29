@@ -8,6 +8,9 @@ const types = {
   AzureServer: {
     config: Symbol.for("Types.AzureServer.Config"),
   },
+  AzureClient: {
+    config: Symbol.for("Types.AzureClient.Config"),
+  },
 };
 
 export { types as Types };

@@ -41,9 +41,15 @@ export class GoogleServerStorageBindings extends ServerStorageDependency {
       Types.GoogleServer.config,
       config
     );
-    container.registerFactory(StorageWrapperFactory, () => {
-      return new StorageWrapperFactory();
-    });
+    container.registerFactory(
+      StorageWrapperFactory,
+      (c: DIContainer) =>
+        new StorageWrapperFactory(
+          c.resolve<GoogleServerStorageBindingsConfig>(
+            Types.GoogleServer.config
+          ).retryOptions
+        )
+    );
     container.registerFactory(StorageWrapper, (c: DIContainer) => {
       const factory = c.resolve(StorageWrapperFactory);
       const config = c.resolve<GoogleStorageConfig>(Types.GoogleServer.config);

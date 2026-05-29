@@ -14,11 +14,15 @@ import {
 
 export abstract class ClientStorage {
   public abstract download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+    input: (UrlDownloadInput | ConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   public abstract download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+    input: (UrlDownloadInput | ConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   public abstract download(

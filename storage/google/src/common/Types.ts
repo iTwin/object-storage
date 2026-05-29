@@ -8,6 +8,9 @@ const types = {
   GoogleServer: {
     config: Symbol.for("Types.GoogleServer.Config"),
   },
+  GoogleClient: {
+    config: Symbol.for("Types.GoogleClient.Config"),
+  },
 };
 
 export { types as Types };

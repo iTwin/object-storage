@@ -9,12 +9,15 @@ import { metadataToHeaders } from "@itwin/object-storage-core/lib/common/interna
 import {
   assertFileNotEmpty,
   streamToBuffer,
-  uploadToUrl,
+  UrlTransferClient,
 } from "@itwin/object-storage-core/lib/server/internal";
 
 import { UrlUploadInput } from "@itwin/object-storage-core";
 
-export async function handleS3UrlUpload(input: UrlUploadInput): Promise<void> {
+export async function handleS3UrlUpload(
+  input: UrlUploadInput,
+  urlTransferClient: UrlTransferClient
+): Promise<void> {
   const { data, metadata, url } = input;
 
   let dataToUpload: Buffer;
@@ -32,5 +35,5 @@ export async function handleS3UrlUpload(input: UrlUploadInput): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     "Content-Length": dataToUpload.byteLength.toString(),
   };
-  return uploadToUrl(url, dataToUpload, headers);
+  return urlTransferClient.upload(url, dataToUpload, headers);
 }

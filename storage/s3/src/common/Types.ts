@@ -8,6 +8,10 @@ const types = {
   S3Server: {
     config: Symbol.for("Types.S3Server.Config"),
   },
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  S3Client: {
+    config: Symbol.for("Types.S3Client.Config"),
+  },
 };
 
 export { types as Types };

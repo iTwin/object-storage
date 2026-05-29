@@ -3,17 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { randomBytes } from "crypto";
-import { createReadStream, createWriteStream, promises } from "fs";
+import { createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import axios from "axios";
-
-import {
-  ConfigTransferInput,
-  createClientAbortSignal,
-  UrlTransferInput,
-} from "../../common";
+import { ConfigTransferInput, UrlTransferInput } from "../../common";
 import { defaultExpiresInSeconds } from "../../common/internal";
 import {
   ConfigDownloadInput,
@@ -55,7 +49,11 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       chunks.push(data instanceof Buffer ? data : Buffer.from(data))
     );
-    stream.on("end", () => resolve(Buffer.concat(chunks)));
+    stream.on("end", () => {
+      const buffer = Buffer.concat(chunks);
+      stream.destroy();
+      resolve(buffer);
+    });
     stream.on("error", reject);
   });
 }
@@ -122,102 +120,9 @@ export async function streamToTransferType(
   }
 }
 
-export async function downloadFromUrl(
-  input: UrlDownloadInput
-): Promise<TransferData> {
-  const { transferType, url, abortSignal } = input;
-
-  // There is an issue with Axios type definitions. Casting should be removed
-  // after upgrading to Axios 1.0
-  // See: https://github.com/axios/axios/pull/4229
-  const signal = abortSignal ? createClientAbortSignal(abortSignal) : undefined;
-
-  switch (transferType) {
-    case "buffer":
-      return downloadFromUrlAsBuffer(url, signal);
-    case "stream":
-      return downloadFromUrlAsStream(url, signal);
-    case "local":
-      const localPath = input.localPath;
-      assertLocalFile(localPath);
-      return downloadFromUrlToLocalFile(url, localPath, signal);
-    default:
-      throw new Error(`Type ${input.transferType} is not supported`);
-  }
-}
-
-export async function uploadToUrl(
-  url: string,
-  data: TransferData,
-  headers?: Record<string, string>
-): Promise<void> {
-  let dataToUpload: Readable | Buffer;
-  if (typeof data === "string") {
-    await assertFileNotEmpty(data);
-    dataToUpload = createReadStream(data);
-  } else {
-    dataToUpload = data;
-  }
-  await axios.put(url, dataToUpload, {
-    headers,
-  });
-}
-
 // TODO: switch to using crypto.randomUUID function once support for Node 12.x is dropped.
 export function getRandomString(): string {
   return randomBytes(16).toString("hex");
-}
-
-async function downloadFromUrlAsBuffer(
-  url: string,
-  signal?: AbortSignal
-): Promise<Buffer> {
-  let promise = axios.get(url, {
-    responseType: "arraybuffer",
-    signal,
-  });
-  promise = convertAbortErrorName(promise);
-  return (await promise).data as Buffer;
-}
-
-async function downloadFromUrlAsStream(
-  url: string,
-  signal?: AbortSignal
-): Promise<Readable> {
-  let promise = axios.get(url, {
-    responseType: "stream",
-    signal,
-  });
-  promise = convertAbortErrorName(promise);
-  return (await promise).data as Readable;
-}
-
-async function downloadFromUrlToLocalFile(
-  url: string,
-  localPath: string,
-  signal?: AbortSignal
-): Promise<string> {
-  let promise = axios.get(url, {
-    responseType: "stream",
-    signal,
-  });
-  promise = convertAbortErrorName(promise);
-
-  const stream = (await promise).data as Readable;
-  await streamToLocalFile(stream, localPath);
-
-  return localPath;
-}
-
-async function convertAbortErrorName<T>(promise: Promise<T>): Promise<T> {
-  try {
-    return await promise;
-  } catch (error: unknown) {
-    if (error instanceof Error && error.name === "CanceledError")
-      error.name = "AbortError";
-
-    throw error;
-  }
 }
 
 export function getExpiryDate(options?: ExpiryOptions): Date {

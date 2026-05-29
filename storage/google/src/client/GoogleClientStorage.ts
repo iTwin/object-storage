@@ -13,9 +13,8 @@ import {
   assertFileNotEmpty,
   assertLocalFile,
   bufferToTransferType,
-  downloadFromUrl,
-  uploadToUrl,
 } from "@itwin/object-storage-core/lib/server/internal";
+import { UrlTransferClient } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   ClientStorage,
@@ -33,7 +32,10 @@ import {
 import { ClientStorageWrapperFactory } from "./wrappers";
 
 export class GoogleClientStorage extends ClientStorage {
-  public constructor(private _storageFactory: ClientStorageWrapperFactory) {
+  public constructor(
+    private _storageFactory: ClientStorageWrapperFactory,
+    private _urlTransferClient: UrlTransferClient = new UrlTransferClient()
+  ) {
     super();
   }
 
@@ -59,7 +61,8 @@ export class GoogleClientStorage extends ClientStorage {
   public override async download(
     input: UrlDownloadInput | GoogleConfigDownloadInput
   ): Promise<TransferData> {
-    if (instanceOfUrlTransferInput(input)) return await downloadFromUrl(input);
+    if (instanceOfUrlTransferInput(input))
+      return await this._urlTransferClient.download(input);
     assertRelativeDirectory(input.reference.relativeDirectory);
     if (input.transferType === "local") {
       assertLocalFile(input.localPath);
@@ -84,7 +87,11 @@ export class GoogleClientStorage extends ClientStorage {
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     if (isUrlTransfer)
-      return uploadToUrl(input.url, input.data, input.metadata);
+      return this._urlTransferClient.upload(
+        input.url,
+        input.data,
+        input.metadata
+      );
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
     await storage.uploadFile(input.reference, input.data, input.metadata);

@@ -2,11 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  BlobServiceClient,
-  StorageSharedKeyCredential,
-} from "@azure/storage-blob";
-
 import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
 
 import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
@@ -22,7 +17,10 @@ import {
   AzureServerStorage,
   AzureServerStorageConfig,
 } from "./AzureServerStorage";
-import { BlobServiceClientWrapper } from "./wrappers/BlobServiceClientWrapper";
+import {
+  BlobServiceClientWrapper,
+  BlobServiceClientWrapperFactory,
+} from "./wrappers";
 
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;
@@ -55,20 +53,20 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
       }
     );
 
+    container.registerFactory(
+      BlobServiceClientWrapperFactory,
+      (c: DIContainer) => {
+        const resolvedConfig = c.resolve<AzureServerStorageBindingsConfig>(
+          Types.AzureServer.config
+        );
+        return new BlobServiceClientWrapperFactory(resolvedConfig.retryOptions);
+      }
+    );
     container.registerFactory(BlobServiceClientWrapper, (c: DIContainer) => {
-      return new BlobServiceClientWrapper(c.resolve(BlobServiceClient));
-    });
-    container.registerFactory(BlobServiceClient, (c: DIContainer) => {
       const resolvedConfig = c.resolve<AzureServerStorageBindingsConfig>(
         Types.AzureServer.config
       );
-      return new BlobServiceClient(
-        resolvedConfig.baseUrl,
-        new StorageSharedKeyCredential(
-          resolvedConfig.accountName,
-          resolvedConfig.accountKey
-        )
-      );
+      return c.resolve(BlobServiceClientWrapperFactory).create(resolvedConfig);
     });
   }
 }
