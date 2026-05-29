@@ -35,7 +35,12 @@ export class GoogleClientStorageBindings extends ClientStorageDependency {
     );
     container.registerFactory(
       ClientStorageWrapperFactory,
-      () => new ClientStorageWrapperFactory()
+      (c: DIContainer) =>
+        new ClientStorageWrapperFactory(
+          c.resolve<GoogleClientStorageBindingsConfig>(
+            Types.GoogleClient.config
+          ).retryOptions
+        )
     );
     container.registerFactory<UrlTransferClient>(
       UrlTransferClient,

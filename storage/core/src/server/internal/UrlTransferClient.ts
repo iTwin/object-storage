@@ -61,9 +61,9 @@ export class UrlTransferClient {
       return;
     }
     await this.withRetry(async () => {
+      if (typeof data === "string") await assertFileNotEmpty(data);
       const dataToUpload =
         typeof data === "string" ? createReadStream(data) : data;
-      if (typeof data === "string") await assertFileNotEmpty(data);
       await UrlTransferClient.putData(url, dataToUpload, headers);
     });
   }
@@ -90,11 +90,30 @@ export class UrlTransferClient {
           retryDelayMs * Math.pow(2, attempt),
           maxRetryDelayMs
         );
-        await new Promise<void>((resolve) => setTimeout(resolve, delay));
+        await UrlTransferClient.abortableSleep(delay, signal);
       }
     }
     // Unreachable, but required for TypeScript
     throw new Error("Retry loop exhausted");
+  }
+
+  private static abortableSleep(
+    ms: number,
+    signal?: AbortSignal
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        signal?.removeEventListener("abort", onAbort);
+        resolve();
+      }, ms);
+      const onAbort = (): void => {
+        clearTimeout(timer);
+        const error = new Error("Aborted");
+        error.name = "AbortError";
+        reject(error);
+      };
+      signal?.addEventListener("abort", onAbort, { once: true });
+    });
   }
 
   private static isRetryableAxiosError(error: unknown): boolean {

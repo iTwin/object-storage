@@ -36,6 +36,14 @@ export class StorageWrapperFactory {
     return new StorageWrapper(
       new Storage({
         token: transferConfig.authentication,
+        retryOptions: {
+          autoRetry: true,
+          maxRetries: this._retryOptions.maxRetries,
+          maxRetryDelay:
+            this._retryOptions.maxRetryDelayMs !== undefined
+              ? this._retryOptions.maxRetryDelayMs / 1000
+              : undefined,
+        },
       }),
       { bucketName: transferConfig.bucketName }
     );

@@ -62,12 +62,12 @@ export interface RetryOptions {
    * Initial delay in milliseconds before the first retry, with exponential
    * backoff applied on subsequent attempts.
    * Supported by Azure server storage and all URL-based client transfers.
-   * Ignored by S3, Minio, and Google server storage.
+   * Ignored by S3, Minio, and Google storage.
    */
   retryDelayMs?: number;
   /**
    * Upper bound in milliseconds for the delay between retries.
-   * Supported by Azure, Google server storage, and all URL-based client transfers.
+   * Supported by Azure and Google storage, and all URL-based client transfers.
    * Ignored by S3 and Minio server storage.
    */
   maxRetryDelayMs?: number;
