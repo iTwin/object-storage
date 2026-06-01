@@ -15,11 +15,8 @@ import {
   FrontendUrlUploadInput,
   ObjectReference,
 } from "@itwin/object-storage-core/lib/frontend";
-import {
-  downloadFromUrlFrontend,
-  uploadToUrlFrontend,
-  streamToTransferTypeFrontend,
-} from "@itwin/object-storage-core/lib/frontend/internal";
+import { streamToTransferTypeFrontend } from "@itwin/object-storage-core/lib/frontend/internal";
+import { FrontendUrlTransferClient } from "@itwin/object-storage-core/lib/frontend/internal";
 
 import {
   FrontendGoogleConfigDownloadInput,
@@ -28,7 +25,9 @@ import {
 } from "./FrontendInterfaces";
 
 export class GoogleFrontendStorage extends FrontendStorage {
-  public constructor() {
+  public constructor(
+    private _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient()
+  ) {
     super();
   }
 
@@ -48,7 +47,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
     input: FrontendUrlDownloadInput | FrontendGoogleConfigDownloadInput
   ): Promise<FrontendTransferData> {
     if (instanceOfUrlTransferInput(input))
-      return downloadFromUrlFrontend(input);
+      return this._urlTransferClient.download(input);
 
     assertRelativeDirectory(input.reference.relativeDirectory);
 
@@ -60,7 +59,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
       storageType: input.transferConfig.storageType,
     };
 
-    return downloadFromUrlFrontend(updatedInput, {
+    return this._urlTransferClient.download(updatedInput, {
       Authorization: input.transferConfig.authentication,
     });
   }
@@ -75,13 +74,13 @@ export class GoogleFrontendStorage extends FrontendStorage {
     const { data } = input;
 
     if (instanceOfUrlTransferInput(input))
-      return uploadToUrlFrontend(input.url, data, "PUT");
+      return this._urlTransferClient.upload(input.url, data, "PUT");
 
     assertRelativeDirectory(input.reference.relativeDirectory);
     const url = `https://storage.googleapis.com/upload/storage/v1/b/${
       input.transferConfig.bucketName
     }/o?uploadType=media&name=${this.objectName(input.reference)}`;
-    return uploadToUrlFrontend(url, input.data, "POST", {
+    return this._urlTransferClient.upload(url, input.data, "POST", {
       Authorization: input.transferConfig.authentication,
       "Content-Type": "application/octet-stream",
     });
@@ -98,7 +97,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
     }/o?uploadType=media&name=${this.objectName(input.reference)}`;
     const data = await streamToTransferTypeFrontend(input.data, "buffer");
 
-    return uploadToUrlFrontend(url, data, "POST", {
+    return this._urlTransferClient.upload(url, data, "POST", {
       Authorization: input.transferConfig.authentication,
       "Content-Type": "application/octet-stream",
     });

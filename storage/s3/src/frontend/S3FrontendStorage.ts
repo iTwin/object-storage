@@ -15,11 +15,8 @@ import {
   FrontendUrlDownloadInput,
   FrontendUrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
-import {
-  downloadFromUrlFrontend,
-  streamToTransferTypeFrontend,
-  uploadToUrlFrontend,
-} from "@itwin/object-storage-core/lib/frontend/internal";
+import { streamToTransferTypeFrontend } from "@itwin/object-storage-core/lib/frontend/internal";
+import { FrontendUrlTransferClient } from "@itwin/object-storage-core/lib/frontend/internal";
 
 import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
 import { createAndUseClientFrontend } from "./internal";
@@ -30,7 +27,8 @@ import {
 
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
-    private _clientWrapperFactory: FrontendS3ClientWrapperFactory
+    private _clientWrapperFactory: FrontendS3ClientWrapperFactory,
+    protected _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient()
   ) {
     super();
   }
@@ -51,7 +49,7 @@ export class S3FrontendStorage extends FrontendStorage {
     input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
   ): Promise<FrontendTransferData> {
     if (instanceOfUrlTransferInput(input))
-      return downloadFromUrlFrontend(input);
+      return this._urlTransferClient.download(input);
     else assertRelativeDirectory(input.reference.relativeDirectory);
 
     return createAndUseClientFrontend(
@@ -69,7 +67,7 @@ export class S3FrontendStorage extends FrontendStorage {
     const { data, metadata } = input;
 
     if (instanceOfUrlTransferInput(input))
-      return uploadToUrlFrontend(
+      return this._urlTransferClient.upload(
         input.url,
         data,
         "PUT",

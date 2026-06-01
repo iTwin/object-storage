@@ -12,6 +12,7 @@ const types = {
   Frontend: {
     clientWrapperFactory: Symbol.for("Types.Frontend.clientWrapperFactory"),
     frontendStorage: Symbol.for("Types.Client.frontendStorage"),
+    urlTransferClient: Symbol.for("Types.Frontend.urlTransferClient"),
   },
   Server: {
     presignedUrlProvider: Symbol.for("Types.Server.presignedUrlProvider"),

@@ -7,6 +7,7 @@ import {
   FrontendConfigUploadInput,
   FrontendUrlUploadInput,
 } from "@itwin/object-storage-core/lib/frontend";
+import { FrontendUrlTransferClient } from "@itwin/object-storage-core/lib/frontend/internal";
 import {
   FrontendS3ClientWrapperFactory,
   S3FrontendStorage,
@@ -15,15 +16,18 @@ import {
 import { handleMinioUrlUploadFrontend } from "./internal";
 
 export class MinioFrontendStorage extends S3FrontendStorage {
-  public constructor(clientWrapperFactory: FrontendS3ClientWrapperFactory) {
-    super(clientWrapperFactory);
+  public constructor(
+    clientWrapperFactory: FrontendS3ClientWrapperFactory,
+    urlTransferClient?: FrontendUrlTransferClient
+  ) {
+    super(clientWrapperFactory, urlTransferClient);
   }
 
   public override async upload(
     input: FrontendUrlUploadInput | FrontendConfigUploadInput
   ): Promise<void> {
     if (instanceOfUrlTransferInput(input))
-      return handleMinioUrlUploadFrontend(input);
+      return handleMinioUrlUploadFrontend(input, this._urlTransferClient);
     else return super.upload(input);
   }
 }

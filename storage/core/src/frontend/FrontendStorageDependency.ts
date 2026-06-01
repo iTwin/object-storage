@@ -13,6 +13,7 @@ import {
 
 import { Types } from "../common";
 
+import { FrontendStorageBindingsConfig } from "./FrontendInterfaces";
 import { FrontendStorage } from "./FrontendStorage";
 import { StrategyFrontendStorage } from "./StrategyFrontendStorage";
 
@@ -22,10 +23,10 @@ export abstract class FrontendStorageDependency extends StrategyDependency {
 
   public override registerStrategy(
     container: DIContainer,
-    config: DependencyConfig
+    config: FrontendStorageBindingsConfig
   ): void {
     if (!config.dependencyName)
-      throw new ConfigError<DependencyConfig>("dependencyName");
+      throw new ConfigError<FrontendStorageBindingsConfig>("dependencyName");
 
     container.registerFactory<FrontendStorage>(
       Types.Frontend.frontendStorage,

@@ -2,13 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
+import {
+  RetryOptions,
+  TransferConfig,
+} from "@itwin/object-storage-core/lib/frontend";
 
 import { assertS3TransferConfig, createS3Client } from "../../common/internal";
 
 import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
 
 export class FrontendS3ClientWrapperFactory {
+  public constructor(protected readonly _retryOptions: RetryOptions = {}) {}
+
   public create(transferConfig: TransferConfig): FrontendS3ClientWrapper {
     assertS3TransferConfig(transferConfig);
 
@@ -22,6 +27,7 @@ export class FrontendS3ClientWrapperFactory {
         accessKey,
         secretKey,
         sessionToken,
+        retryOptions: this._retryOptions,
       }),
       bucket
     );

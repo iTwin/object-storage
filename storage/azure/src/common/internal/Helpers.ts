@@ -2,12 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { StoragePipelineOptions } from "@azure/storage-blob";
+
 import {
   assertPrimitiveType,
   FalsyValueError,
 } from "@itwin/cloud-agnostic-core/lib/internal";
 import {
   ObjectReference,
+  RetryOptions,
   TransferConfig,
 } from "@itwin/object-storage-core/lib/common";
 import {
@@ -41,4 +44,19 @@ export function buildBlobUrl(input: AzureTransferConfigInput): string {
 export function buildBlobName(reference: ObjectReference): string {
   const { relativeDirectory, objectName } = reference;
   return (relativeDirectory ? `${relativeDirectory}/` : "") + objectName;
+}
+
+export function formatRetryOptions(
+  retryOptions: RetryOptions
+): StoragePipelineOptions {
+  return {
+    retryOptions: {
+      maxTries:
+        retryOptions.maxRetries !== undefined
+          ? retryOptions.maxRetries + 1
+          : undefined,
+      retryDelayInMs: retryOptions.retryDelayMs,
+      maxRetryDelayInMs: retryOptions.maxRetryDelayMs,
+    },
+  };
 }

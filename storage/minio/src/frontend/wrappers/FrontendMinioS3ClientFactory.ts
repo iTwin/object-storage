@@ -3,14 +3,26 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { TransferConfig } from "@itwin/object-storage-core/lib/frontend";
+import {
+  RetryOptions,
+  TransferConfig,
+} from "@itwin/object-storage-core/lib/frontend";
 import { assertS3TransferConfig } from "@itwin/object-storage-s3/lib/common/internal";
-import { FrontendS3ClientWrapper } from "@itwin/object-storage-s3/lib/frontend";
+import {
+  FrontendS3ClientWrapper,
+  FrontendS3ClientWrapperFactory,
+} from "@itwin/object-storage-s3/lib/frontend";
 
 import { createMinioS3ClientFrontend } from "../internal";
 
-export class FrontendMinioS3ClientWrapperFactory {
-  public create(transferConfig: TransferConfig): FrontendS3ClientWrapper {
+export class FrontendMinioS3ClientWrapperFactory extends FrontendS3ClientWrapperFactory {
+  public constructor(retryOptions: RetryOptions = {}) {
+    super(retryOptions);
+  }
+
+  public override create(
+    transferConfig: TransferConfig
+  ): FrontendS3ClientWrapper {
     assertS3TransferConfig(transferConfig);
 
     const { authentication, baseUrl, region, bucket } = transferConfig;
@@ -23,6 +35,7 @@ export class FrontendMinioS3ClientWrapperFactory {
         accessKey,
         secretKey,
         sessionToken,
+        retryOptions: this._retryOptions,
       }),
       bucket
     );
