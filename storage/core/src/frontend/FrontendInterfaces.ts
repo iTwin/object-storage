@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { DependencyConfig } from "@itwin/cloud-agnostic-core";
+
 import {
   ConfigTransferInput,
   Metadata,
@@ -9,11 +11,16 @@ import {
   ObjectReference,
   TransferConfig,
   UrlTransferInput,
+  RetryOptions,
 } from "../common";
 
 export type FrontendTransferType = "buffer" | "stream";
 export type FrontendTransferData = ArrayBuffer | ReadableStream;
 export type FrontendMultipartUploadData = ReadableStream;
+
+export interface FrontendStorageBindingsConfig extends DependencyConfig {
+  retryOptions?: RetryOptions;
+}
 
 export interface FrontendUrlDownloadInput extends UrlTransferInput {
   transferType: FrontendTransferType;

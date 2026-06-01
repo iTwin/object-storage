@@ -5,11 +5,12 @@
 import {
   BlobServiceClient,
   newPipeline,
-  StoragePipelineOptions,
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
 import { RetryOptions } from "@itwin/object-storage-core";
+
+import { formatRetryOptions } from "../../common/internal";
 
 import { BlobServiceClientWrapper } from "./BlobServiceClientWrapper";
 
@@ -27,20 +28,10 @@ export class BlobServiceClientWrapperFactory {
       config.accountName,
       config.accountKey
     );
-    const pipelineOptions: StoragePipelineOptions = {
-      retryOptions: {
-        maxTries:
-          this._retryOptions.maxRetries != undefined
-            ? this._retryOptions.maxRetries + 1
-            : undefined,
-        retryDelayInMs: this._retryOptions.retryDelayMs,
-        maxRetryDelayInMs: this._retryOptions.maxRetryDelayMs,
-      },
-    };
     return new BlobServiceClientWrapper(
       new BlobServiceClient(
         config.baseUrl,
-        newPipeline(credential, pipelineOptions)
+        newPipeline(credential, formatRetryOptions(this._retryOptions))
       )
     );
   }

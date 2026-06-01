@@ -6,19 +6,23 @@ import { BlockBlobClient } from "@azure/storage-blob";
 
 import { instanceOfUrlTransferInput } from "@itwin/object-storage-core/lib/common/internal";
 
-import { UrlTransferInput } from "@itwin/object-storage-core";
+import { RetryOptions, UrlTransferInput } from "@itwin/object-storage-core";
 
 import { AzureTransferConfigInput } from "../../common";
-import { buildBlobUrl } from "../../common/internal";
+import { buildBlobUrl, formatRetryOptions } from "../../common/internal";
 
 import { BlockBlobClientWrapper } from "./BlockBlobClientWrapper";
 
 export class BlockBlobClientWrapperFactory {
+  public constructor(private readonly _retryOptions: RetryOptions = {}) {}
+
   public create(
     input: UrlTransferInput | AzureTransferConfigInput
   ): BlockBlobClientWrapper {
     const blobClient = new BlockBlobClient(
-      instanceOfUrlTransferInput(input) ? input.url : buildBlobUrl(input)
+      instanceOfUrlTransferInput(input) ? input.url : buildBlobUrl(input),
+      undefined,
+      formatRetryOptions(this._retryOptions)
     );
     return new BlockBlobClientWrapper(blobClient);
   }

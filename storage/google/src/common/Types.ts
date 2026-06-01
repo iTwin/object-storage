@@ -11,6 +11,9 @@ const types = {
   GoogleClient: {
     config: Symbol.for("Types.GoogleClient.Config"),
   },
+  GoogleFrontend: {
+    config: Symbol.for("Types.GoogleFrontend.Config"),
+  },
 };
 
 export { types as Types };
