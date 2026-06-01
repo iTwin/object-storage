@@ -76,16 +76,18 @@ export class UrlTransferClient {
     const retryDelayMs = this._retryOptions?.retryDelayMs ?? 1000;
     const maxRetryDelayMs = this._retryOptions?.maxRetryDelayMs ?? 30000;
 
+    let lastError: unknown;
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         return await operation();
       } catch (error) {
-        if (
-          attempt === maxRetries ||
-          !UrlTransferClient.isRetryableAxiosError(error)
-        )
-          throw error;
+        if (!UrlTransferClient.isRetryableAxiosError(error)) throw error;
         if (signal?.aborted) throw error;
+
+        // If throwing from here for max retries, it breaks typescript type inference
+        lastError = error;
+        if (attempt >= maxRetries) break;
+
         const delay = Math.min(
           retryDelayMs * Math.pow(2, attempt),
           maxRetryDelayMs
@@ -93,8 +95,8 @@ export class UrlTransferClient {
         await UrlTransferClient.abortableSleep(delay, signal);
       }
     }
-    // Unreachable, but required for TypeScript
-    throw new Error("Retry loop exhausted");
+
+    throw lastError;
   }
 
   private static abortableSleep(
