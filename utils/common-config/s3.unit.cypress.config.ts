@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 // cSpell:ignore unsignable pnpm
 import { defineConfig } from "cypress"
-import * as webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
+import webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
 import baseConfig from "./unit.cypress.config";
 
 export default defineConfig({
