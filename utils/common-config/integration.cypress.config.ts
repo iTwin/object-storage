@@ -3,6 +3,21 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { defineConfig } from "cypress"
+import webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getWebpackOptions(): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const options: any = webpackPreprocessor.getFullWebpackOptions();
+  const fallback = options.resolve.fallback;
+  fallback.crypto = "crypto-browserify";
+  fallback.events = "events";
+  fallback.https = "https-browserify";
+  fallback.http = "stream-http";
+  fallback.url = "url";
+  fallback.util = "util";
+  return options;
+}
 
 export default defineConfig({
   browser: "chrome",
@@ -11,6 +26,10 @@ export default defineConfig({
   video: false,
   defaultCommandTimeout: 30000,
   e2e: {
-    specPattern: "cypress/integration/**.test.ts"
+    specPattern: "cypress/integration/**.test.ts",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setupNodeEvents(on: any) {
+      on("file:preprocessor", webpackPreprocessor({ webpackOptions: getWebpackOptions() }));
+    }
   }
 });
