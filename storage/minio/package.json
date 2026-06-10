@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@cypress/webpack-batteries-included-preprocessor": "^4.1.1",
-    "@cypress/webpack-preprocessor": "^6.0.4",
+    "@cypress/webpack-preprocessor": "^5.4.4",
     "@itwin/cloud-agnostic-core": "workspace:*",
     "@itwin/object-storage-common-config": "workspace:*",
     "@itwin/object-storage-tests-backend": "workspace:*",
