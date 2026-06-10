@@ -378,10 +378,10 @@ importers:
     devDependencies:
       '@cypress/webpack-batteries-included-preprocessor':
         specifier: ^4.1.1
-        version: 4.1.1(@cypress/webpack-preprocessor@5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)
+        version: 4.1.1(@cypress/webpack-preprocessor@6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)
       '@cypress/webpack-preprocessor':
-        specifier: ^5.4.4
-        version: 5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
+        specifier: ^6.0.4
+        version: 6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
       '@itwin/cloud-agnostic-core':
         specifier: workspace:*
         version: link:../../cloud-agnostic/core
@@ -584,10 +584,10 @@ importers:
         version: 3.973.12
       '@cypress/webpack-batteries-included-preprocessor':
         specifier: ^4.1.1
-        version: 4.1.1(@cypress/webpack-preprocessor@5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)
+        version: 4.1.1(@cypress/webpack-preprocessor@6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)
       '@cypress/webpack-preprocessor':
-        specifier: ^5.4.4
-        version: 5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
+        specifier: ^6.0.4
+        version: 6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
       '@itwin/object-storage-common-config':
         specifier: workspace:*
         version: link:../../utils/common-config
@@ -1816,12 +1816,12 @@ packages:
     peerDependencies:
       '@cypress/webpack-preprocessor': ^6.0.4
 
-  '@cypress/webpack-preprocessor@5.17.1':
-    resolution: {integrity: sha512-FE/e8ikPc8z4EVopJCaior3RGy0jd2q9Xcp5NtiwNG4XnLfEnUFTZlAGwXe75sEh4fNMPrBJW1KIz77PX5vGAw==}
+  '@cypress/webpack-preprocessor@6.0.4':
+    resolution: {integrity: sha512-ly+EcabWWbhrSPr2J/njQX7Y3da+QqOmFg8Og/MVmLxhDLKIzr2WhTdgzDYviPTLx/IKsdb41cc2RLYp6mSBRA==}
     peerDependencies:
-      '@babel/core': ^7.0.1
-      '@babel/preset-env': ^7.0.0
-      babel-loader: ^8.0.2 || ^9
+      '@babel/core': ^7.25.2
+      '@babel/preset-env': ^7.25.3
+      babel-loader: ^8.3 || ^9 || ^10
       webpack: ^4 || ^5
 
   '@cypress/xvfb@1.2.4':
@@ -6839,7 +6839,7 @@ snapshots:
       tough-cookie: 5.1.2
       tunnel-agent: 0.6.0
 
-  '@cypress/webpack-batteries-included-preprocessor@4.1.1(@cypress/webpack-preprocessor@5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)':
+  '@cypress/webpack-batteries-included-preprocessor@4.1.1(@cypress/webpack-preprocessor@6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2))(typescript@5.9.3)(webpack-cli@5.1.4)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-transform-class-properties': 7.29.7(@babel/core@7.29.7)
@@ -6848,7 +6848,7 @@ snapshots:
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-react': 7.29.7(@babel/core@7.29.7)
       '@babel/runtime': 7.29.7
-      '@cypress/webpack-preprocessor': 5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
+      '@cypress/webpack-preprocessor': 6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)
       babel-loader: 10.1.1(@babel/core@7.29.7)(webpack@5.107.2)
       babel-plugin-add-module-exports: 1.0.4
       buffer: 6.0.3
@@ -6887,7 +6887,7 @@ snapshots:
       - utf-8-validate
       - webpack-cli
 
-  '@cypress/webpack-preprocessor@5.17.1(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)':
+  '@cypress/webpack-preprocessor@6.0.4(@babel/core@7.29.7)(@babel/preset-env@7.29.7(@babel/core@7.29.7))(babel-loader@10.1.1(@babel/core@7.29.7)(webpack@5.107.2))(webpack@5.107.2)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
@@ -6895,6 +6895,7 @@ snapshots:
       bluebird: 3.7.1
       debug: 4.4.3(supports-color@8.1.1)
       lodash: 4.18.1
+      semver: 7.8.3
       webpack: 5.107.2(webpack-cli@5.1.4)
     transitivePeerDependencies:
       - supports-color
