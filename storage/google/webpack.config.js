@@ -13,7 +13,6 @@ const bundledScriptFileName = setupScriptFileName;
 
 const webpackConfig = {
   mode: "development",
-  devtool: "inline-source-map",
   optimization: {
     minimize: false
   },
