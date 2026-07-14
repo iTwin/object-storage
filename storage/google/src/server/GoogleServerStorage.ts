@@ -6,6 +6,7 @@
 import { Readable } from "stream";
 
 import {
+  assertBaseDirectory,
   assertRelativeDirectory,
   buildObjectDirectoryString,
 } from "@itwin/object-storage-core/lib/common/internal";
@@ -232,6 +233,7 @@ export class GoogleServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<GoogleTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
     getExpiryDate(expiry);
 
@@ -243,6 +245,7 @@ export class GoogleServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
     getExpiryDate(expiry);
 
@@ -254,6 +257,7 @@ export class GoogleServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<TransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
     getExpiryDate(expiry);
 

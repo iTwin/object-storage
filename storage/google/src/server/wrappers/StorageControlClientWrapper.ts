@@ -24,6 +24,10 @@ export function isGoogleError(error: unknown): error is GoogleError {
   return error instanceof Error && (error as GoogleError).code !== undefined;
 }
 
+export function escapeCelStringLiteral(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
 export class StorageControlClientWrapper {
   private readonly _client: StorageControlClient;
   constructor(private readonly _config: GoogleStorageConfig) {
@@ -117,6 +121,7 @@ export class StorageControlClientWrapper {
     action: GoogleStorageConfigType,
     folderName: string
   ): Promise<GoogleTransferConfig> {
+    const escapedFolderName = escapeCelStringLiteral(folderName);
     const cab = {
       accessBoundary: {
         accessBoundaryRules: [
@@ -125,9 +130,9 @@ export class StorageControlClientWrapper {
             availablePermissions: [roleFromConfigType(action)],
             availabilityCondition: {
               expression:
-                `resource.name.startsWith('${this.bucketPath}/objects/${folderName}') || ` +
+                `resource.name.startsWith('${this.bucketPath}/objects/${escapedFolderName}') || ` +
                 `api.getAttribute('storage.googleapis.com/objectListPrefix', '')` +
-                `.startsWith('${folderName}/')`,
+                `.startsWith('${escapedFolderName}/')`,
             },
           },
         ],

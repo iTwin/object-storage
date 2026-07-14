@@ -7,6 +7,7 @@ import * as chaiAsPromised from "chai-as-promised";
 
 import { TransferConfig } from "../../../common";
 import {
+  assertBaseDirectory,
   assertRelativeDirectory,
   assertTransferConfig,
 } from "../../../common/internal";
@@ -119,6 +120,57 @@ describe("Helper functions", () => {
         })`, () => {
           const testedFunction = () =>
             assertRelativeDirectory(relativeDirectory);
+          expect(testedFunction).to.not.throw();
+        });
+      }
+    );
+  });
+
+  describe(`${assertBaseDirectory.name}()`, () => {
+    [
+      {
+        baseDirectory: undefined,
+        expectedErrorMessage: "Base directory cannot be empty.",
+      },
+      {
+        baseDirectory: "",
+        expectedErrorMessage: "Base directory cannot be empty.",
+      },
+      {
+        baseDirectory: "\\foo",
+        expectedErrorMessage: "Base directory cannot contain backslashes.",
+      },
+      {
+        baseDirectory: "/foo",
+        expectedErrorMessage:
+          "Base directory cannot contain slashes at the beginning or the end of the string.",
+      },
+      {
+        baseDirectory: "foo/",
+        expectedErrorMessage:
+          "Base directory cannot contain slashes at the beginning or the end of the string.",
+      },
+      {
+        baseDirectory: "/foo/",
+        expectedErrorMessage:
+          "Base directory cannot contain slashes at the beginning or the end of the string.",
+      },
+    ].forEach((testCase) => {
+      it(`should throw if base directory is invalid (${
+        testCase.baseDirectory ?? "undefined"
+      })`, () => {
+        const testedFunction = () =>
+          assertBaseDirectory(testCase.baseDirectory);
+        expect(testedFunction)
+          .to.throw(Error)
+          .with.property("message", testCase.expectedErrorMessage);
+      });
+    });
+
+    ["foo", "foo/bar", "12345678-1234-1234-1234-123456789abc"].forEach(
+      (baseDirectory: string) => {
+        it(`should not throw if base directory is valid (${baseDirectory})`, () => {
+          const testedFunction = () => assertBaseDirectory(baseDirectory);
           expect(testedFunction).to.not.throw();
         });
       }
