@@ -47,3 +47,10 @@ export function getActions(): string[] {
 
   return actions;
 }
+
+export function assertPolicyResourceDirectory(directory: string): void {
+  if (directory.includes("*") || directory.includes("?"))
+    throw new Error(
+      "Directory cannot contain wildcard characters ('*' or '?')."
+    );
+}

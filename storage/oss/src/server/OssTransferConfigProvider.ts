@@ -6,7 +6,10 @@ import * as Core from "@alicloud/pop-core";
 
 import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
-import { getExpiresInSeconds } from "@itwin/object-storage-s3/lib/server/internal";
+import {
+  assertPolicyResourceDirectory,
+  getExpiresInSeconds,
+} from "@itwin/object-storage-s3/lib/server/internal";
 
 import {
   ExpiryOptions,
@@ -35,17 +38,15 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",
       Statement: [
         {
           Effect: "Allow",
           Action: ["oss:GetObject"],
-          Resource: [
-            `acs:oss:*:*:${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
-          ],
+          Resource: [`acs:oss:*:*:${this._config.bucket}/${directoryPath}/*`],
         },
       ],
     };
@@ -81,17 +82,15 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",
       Statement: [
         {
           Effect: "Allow",
           Action: ["oss:PutObject"],
-          Resource: [
-            `acs:oss:*:*:${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
-          ],
+          Resource: [`acs:oss:*:*:${this._config.bucket}/${directoryPath}/*`],
         },
       ],
     };
@@ -128,6 +127,8 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const actions = getActions();
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",
       Statement: [
@@ -135,9 +136,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
           Effect: "Allow",
           Action: actions,
           Resource: [
-            `acs:oss:*:*:${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
+            `acs:oss:*:*:${this._config.bucket}/${directoryPath}/*`,
             `acs:oss:*:*:${this._config.bucket}`,
           ],
         },

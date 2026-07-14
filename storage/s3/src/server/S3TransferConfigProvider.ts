@@ -15,7 +15,11 @@ import {
 
 import { Constants, S3TransferConfig } from "../common";
 
-import { getActions, getExpiresInSeconds } from "./internal";
+import {
+  assertPolicyResourceDirectory,
+  getActions,
+  getExpiresInSeconds,
+} from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 import { StsWrapper } from "./wrappers";
 
@@ -32,6 +36,8 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "2012-10-17",
@@ -39,11 +45,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         {
           Effect: "Allow",
           Action: ["s3:GetObject"],
-          Resource: [
-            `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
-          ],
+          Resource: [`arn:aws:s3:::${this._config.bucket}/${directoryPath}/*`],
         },
       ],
     };
@@ -76,6 +78,8 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "2012-10-17",
@@ -83,11 +87,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         {
           Effect: "Allow",
           Action: ["s3:PutObject"],
-          Resource: [
-            `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
-          ],
+          Resource: [`arn:aws:s3:::${this._config.bucket}/${directoryPath}/*`],
         },
       ],
     };
@@ -121,6 +121,8 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const actions = getActions();
+    const directoryPath = buildObjectDirectoryString(directory);
+    assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
       Version: "2012-10-17",
@@ -129,9 +131,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
           Effect: "Allow",
           Action: actions,
           Resource: [
-            `arn:aws:s3:::${this._config.bucket}/${buildObjectDirectoryString(
-              directory
-            )}/*`,
+            `arn:aws:s3:::${this._config.bucket}/${directoryPath}/*`,
             `arn:aws:s3:::${this._config.bucket}`,
           ],
         },

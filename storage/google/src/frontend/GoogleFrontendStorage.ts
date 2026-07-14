@@ -79,7 +79,9 @@ export class GoogleFrontendStorage extends FrontendStorage {
     assertRelativeDirectory(input.reference.relativeDirectory);
     const url = `https://storage.googleapis.com/upload/storage/v1/b/${
       input.transferConfig.bucketName
-    }/o?uploadType=media&name=${this.objectName(input.reference)}`;
+    }/o?uploadType=media&name=${encodeURIComponent(
+      this.objectName(input.reference)
+    )}`;
     return this._urlTransferClient.upload(url, input.data, "POST", {
       Authorization: input.transferConfig.authentication,
       "Content-Type": "application/octet-stream",
@@ -94,7 +96,9 @@ export class GoogleFrontendStorage extends FrontendStorage {
 
     const url = `https://storage.googleapis.com/upload/storage/v1/b/${
       input.transferConfig.bucketName
-    }/o?uploadType=media&name=${this.objectName(input.reference)}`;
+    }/o?uploadType=media&name=${encodeURIComponent(
+      this.objectName(input.reference)
+    )}`;
     const data = await streamToTransferTypeFrontend(input.data, "buffer");
 
     return this._urlTransferClient.upload(url, data, "POST", {
