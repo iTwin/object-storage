@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import * as Core from "@alicloud/pop-core";
 
-import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertBaseDirectory,
+  buildObjectDirectoryString,
+} from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 import {
   assertPolicyResourceDirectory,
@@ -39,6 +42,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",
@@ -83,6 +87,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
     expiry?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",
@@ -128,6 +133,7 @@ export class OssTransferConfigProvider implements TransferConfigProvider {
   ): Promise<S3TransferConfig> {
     const actions = getActions();
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     const policy = {
       Version: "1",

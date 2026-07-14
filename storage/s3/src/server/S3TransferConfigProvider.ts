@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { AssumeRoleCommand } from "@aws-sdk/client-sts";
 
-import { buildObjectDirectoryString } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertBaseDirectory,
+  buildObjectDirectoryString,
+} from "@itwin/object-storage-core/lib/common/internal";
 import { getRandomString } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
@@ -37,6 +40,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -79,6 +83,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {
@@ -122,6 +127,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
   ): Promise<S3TransferConfig> {
     const actions = getActions();
     const directoryPath = buildObjectDirectoryString(directory);
+    assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
     /* eslint-disable @typescript-eslint/naming-convention */
     const policy = {

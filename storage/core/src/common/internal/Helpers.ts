@@ -77,6 +77,23 @@ export function assertRelativeDirectory(
     );
 }
 
+export function assertBaseDirectory(baseDirectory: string | undefined): void {
+  if (!baseDirectory) throw new Error("Base directory cannot be empty.");
+
+  const backslash = "\\";
+  if (baseDirectory.includes(backslash))
+    throw new Error("Base directory cannot contain backslashes.");
+
+  const separator = "/";
+  if (
+    baseDirectory[0] === separator ||
+    baseDirectory[baseDirectory.length - 1] === separator
+  )
+    throw new Error(
+      "Base directory cannot contain slashes at the beginning or the end of the string."
+    );
+}
+
 export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(transferConfig, "transferConfig", "object");
   assertPrimitiveType(
