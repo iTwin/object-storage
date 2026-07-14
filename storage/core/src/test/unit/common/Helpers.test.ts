@@ -156,7 +156,9 @@ describe("Helper functions", () => {
           "Base directory cannot contain slashes at the beginning or the end of the string.",
       },
     ].forEach((testCase) => {
-      it(`should throw if base directory is invalid (${testCase.baseDirectory})`, () => {
+      it(`should throw if base directory is invalid (${
+        testCase.baseDirectory ?? "undefined"
+      })`, () => {
         const testedFunction = () =>
           assertBaseDirectory(testCase.baseDirectory);
         expect(testedFunction)
