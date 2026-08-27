@@ -7,7 +7,7 @@ import "reflect-metadata";
 import { Container, decorate, injectable } from "inversify";
 
 import { DIContainer } from "../DIContainer";
-import { Constructor, DIIdentifier } from "../internal";
+import { AbstractConstructor, DIIdentifier } from "../internal";
 
 const PARAM_TYPES = "inversify:paramtypes";
 
@@ -24,7 +24,9 @@ export class InversifyWrapper extends DIContainer {
     return new InversifyWrapper(new Container());
   }
 
-  private needsDecoration<T>(key: DIIdentifier<T>): key is Constructor<T> {
+  private needsDecoration<T>(
+    key: DIIdentifier<T>
+  ): key is AbstractConstructor<T> {
     if (typeof key === "symbol") return false;
     return Reflect.hasOwnMetadata(PARAM_TYPES, key);
   }
