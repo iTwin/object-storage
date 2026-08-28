@@ -1,8 +1,8 @@
 steps:
   - task: NodeTool@0
-    displayName: Install Node@$(node20Version)
+    displayName: Install Node@$(currentNodeVersion)
     inputs:
-      versionSpec: $(node20Version)
+      versionSpec: $(currentNodeVersion)
       checkLatest: true
 
   - script: node common/scripts/install-run-rush.js install --purge
@@ -16,7 +16,7 @@ steps:
 
   - script: node common/scripts/install-run-rush.js version --ensure-version-policy
     displayName: Ensure consistent version across all packages
-    
+
   - powershell: |
       $cloudAgnosticCorePackageJson = Get-Content -Raw -Path cloud-agnostic/core/package.json | ConvertFrom-Json
       $newVersion = $cloudAgnosticCorePackageJson.version

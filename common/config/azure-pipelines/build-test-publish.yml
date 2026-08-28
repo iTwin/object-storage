@@ -1,13 +1,13 @@
-name:
-  $(Date:yyyy.M.d)$(Rev:.r)
+name: $(Date:yyyy.M.d)$(Rev:.r)
 
 parameters:
-- name: runRushAudit
-  type: boolean
-  default: true
+  - name: runRushAudit
+    type: boolean
+    default: true
 
 variables:
-  node20Version: '20.18.2'
+  currentNodeVersion: "26.8.1"
+  maintenanceNodeVersion: "22.23.2"
 
 trigger: none
 
@@ -15,30 +15,34 @@ jobs:
   - job: BuildAndTest
     strategy:
       matrix:
-        linux-node-20:
-          imageName: 'ubuntu-latest'
-          nodeVersion: $(node20Version)
+        linux-node-current:
+          imageName: "ubuntu-latest"
+          nodeVersion: $(currentNodeVersion)
           runFrontendIntegrationTests: true
-        windows-node-20:
-          imageName: 'windows-latest'
-          nodeVersion: $(node20Version)
+        windows-node-current:
+          imageName: "windows-latest"
+          nodeVersion: $(currentNodeVersion)
+          runFrontendIntegrationTests: true
+        windows-node-maintenance:
+          imageName: "windows-latest"
+          nodeVersion: $(maintenanceNodeVersion)
           runFrontendIntegrationTests: true
     pool:
-        vmImage: $(imageName)
+      vmImage: $(imageName)
     variables:
       - group: object-storage - Integration Tests Variables
     workspace:
       clean: all
 
     steps:
-    - template: templates/build-test.yml
-      parameters:
-        runRushAudit: ${{ parameters.runRushAudit }}
+      - template: templates/build-test.yml
+        parameters:
+          runRushAudit: ${{ parameters.runRushAudit }}
 
   - job: Publish
     dependsOn: BuildAndTest
-    pool: 
-      vmImage: 'windows-latest'
-   
+    pool:
+      vmImage: "windows-latest"
+
     steps:
-    - template: templates/publish.yml
+      - template: templates/publish.yml
