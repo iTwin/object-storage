@@ -40,6 +40,23 @@ describe(`${GoogleServerStorageBindings.name}`, () => {
         } as unknown as GoogleServerStorageBindingsConfig,
         expectedErrorMessage: "bucketName is not defined in configuration",
       },
+      ...[
+        "bucket'name",
+        "bucket\\name",
+        "bucket/name",
+        "bucket name",
+        "ab",
+        "-bucket",
+        "bucket.",
+      ].map((bucketName) => ({
+        config: {
+          dependencyName: Constants.storageType,
+          projectId: "testProjectId",
+          bucketName,
+        } as GoogleServerStorageBindingsConfig,
+        expectedErrorMessage:
+          "bucketName is not a valid Google Cloud Storage bucket name",
+      })),
     ];
     testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 

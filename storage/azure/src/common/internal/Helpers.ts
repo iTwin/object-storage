@@ -21,7 +21,7 @@ import {
 import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
 
 export function assertAzureTransferConfig(
-  transferConfig: TransferConfig | AzureTransferConfig
+  transferConfig: TransferConfig | AzureTransferConfig,
 ): asserts transferConfig is AzureTransferConfig {
   assertTransferConfig(transferConfig);
 
@@ -31,14 +31,18 @@ export function assertAzureTransferConfig(
   assertPrimitiveType(
     transferConfig.authentication,
     "transferConfig.authentication",
-    "string"
+    "string",
   );
 }
 
 export function buildBlobUrl(input: AzureTransferConfigInput): string {
   assertAzureTransferConfig(input.transferConfig);
   const { authentication, baseUrl } = input.transferConfig;
-  return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
+  const encodedObjectKey = buildObjectKey(input.reference)
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+  return `${baseUrl}/${encodedObjectKey}?${authentication}`;
 }
 
 export function buildBlobName(reference: ObjectReference): string {
@@ -47,7 +51,7 @@ export function buildBlobName(reference: ObjectReference): string {
 }
 
 export function formatRetryOptions(
-  retryOptions: RetryOptions
+  retryOptions: RetryOptions,
 ): StoragePipelineOptions {
   return {
     retryOptions: {

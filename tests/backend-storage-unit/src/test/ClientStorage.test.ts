@@ -8,7 +8,10 @@ import { ClientStorage, TransferConfig } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 import { Constants } from "./Constants";
-import { testRelativeDirectoryValidation } from "./test-templates/CommonTests";
+import {
+  testObjectNameValidation,
+  testRelativeDirectoryValidation,
+} from "./test-templates/CommonTests";
 
 const { clientStorage, storageType } = config;
 
@@ -29,7 +32,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.download({
           transferType: "buffer",
           ...commonParams,
-        })
+        }),
       );
     });
 
@@ -38,7 +41,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.download({
           transferType: "stream",
           ...commonParams,
-        })
+        }),
       );
     });
 
@@ -48,7 +51,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           transferType: "local",
           localPath: "testLocalPath",
           ...commonParams,
-        })
+        }),
       );
     });
   });
@@ -59,7 +62,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.upload({
           data: Buffer.from("testPayload"),
           ...commonParams,
-        })
+        }),
       );
     });
 
@@ -68,7 +71,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.upload({
           data: Readable.from("testPayload"),
           ...commonParams,
-        })
+        }),
       );
     });
 
@@ -77,7 +80,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.upload({
           data: "testPath",
           ...commonParams,
-        })
+        }),
       );
     });
   });
@@ -88,7 +91,7 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.uploadInMultipleParts({
           data: Readable.from("testPayload"),
           ...commonParams,
-        })
+        }),
       );
     });
 
@@ -97,7 +100,38 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.uploadInMultipleParts({
           data: "testPath",
           ...commonParams,
-        })
+        }),
+      );
+    });
+  });
+
+  describe("objectName validation", () => {
+    const invalidParams = {
+      reference: Constants.invalidObjectNameReference,
+      transferConfig: testTransferConfig,
+    };
+
+    it(`${clientStorage.download.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.download({ transferType: "buffer", ...invalidParams }),
+      );
+    });
+
+    it(`${clientStorage.upload.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.upload({
+          data: Buffer.from("testPayload"),
+          ...invalidParams,
+        }),
+      );
+    });
+
+    it(`${clientStorage.uploadInMultipleParts.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.uploadInMultipleParts({
+          data: Readable.from("testPayload"),
+          ...invalidParams,
+        }),
       );
     });
   });

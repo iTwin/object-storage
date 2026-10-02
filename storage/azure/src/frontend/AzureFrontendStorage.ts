@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
+import { assertObjectReference } from "@itwin/object-storage-core/lib/common/internal";
 import {
   FrontendStorage,
   FrontendTransferData,
@@ -20,7 +20,7 @@ import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
-    private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory
+    private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory,
   ) {
     super();
   }
@@ -28,20 +28,19 @@ export class AzureFrontendStorage extends FrontendStorage {
   public download(
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "buffer";
-    }
+    },
   ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "stream";
-    }
+    },
   ): Promise<ReadableStream>;
 
   public async download(
-    input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
+    input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput,
   ): Promise<FrontendTransferData> {
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if ("reference" in input) assertObjectReference(input.reference);
 
     const downloadBlob = await this._clientWrapperFactory
       .create(input)
@@ -59,10 +58,9 @@ export class AzureFrontendStorage extends FrontendStorage {
   }
 
   public async upload(
-    input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput
+    input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput,
   ): Promise<void> {
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if ("reference" in input) assertObjectReference(input.reference);
 
     return this._clientWrapperFactory
       .create(input)
@@ -70,10 +68,9 @@ export class AzureFrontendStorage extends FrontendStorage {
   }
 
   public async uploadInMultipleParts(
-    input: FrontendAzureUploadInMultiplePartsInput
+    input: FrontendAzureUploadInMultiplePartsInput,
   ): Promise<void> {
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if ("reference" in input) assertObjectReference(input.reference);
 
     return this._clientWrapperFactory
       .create(input)

@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  assertRelativeDirectory,
+  assertObjectReference,
   instanceOfUrlTransferInput,
   metadataToHeaders,
 } from "@itwin/object-storage-core/lib/common/internal";
@@ -28,7 +28,7 @@ import {
 export class S3FrontendStorage extends FrontendStorage {
   public constructor(
     private _clientWrapperFactory: FrontendS3ClientWrapperFactory,
-    protected _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient()
+    protected _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient(),
   ) {
     super();
   }
@@ -36,33 +36,33 @@ export class S3FrontendStorage extends FrontendStorage {
   public download(
     input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "buffer";
-    }
+    },
   ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
       transferType: "stream";
-    }
+    },
   ): Promise<ReadableStream>;
 
   public async download(
-    input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
+    input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput,
   ): Promise<FrontendTransferData> {
     if (instanceOfUrlTransferInput(input))
       return this._urlTransferClient.download(input);
-    else assertRelativeDirectory(input.reference.relativeDirectory);
+    else assertObjectReference(input.reference);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: FrontendS3ClientWrapper) => {
         const downloadStream = await clientWrapper.download(input.reference);
         return streamToTransferTypeFrontend(downloadStream, input.transferType);
-      }
+      },
     );
   }
 
   public async upload(
-    input: FrontendUrlUploadInput | FrontendConfigUploadInput
+    input: FrontendUrlUploadInput | FrontendConfigUploadInput,
   ): Promise<void> {
     const { data, metadata } = input;
 
@@ -71,22 +71,22 @@ export class S3FrontendStorage extends FrontendStorage {
         input.url,
         data,
         "PUT",
-        metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
+        metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined,
       );
     else {
-      assertRelativeDirectory(input.reference.relativeDirectory);
+      assertObjectReference(input.reference);
       return createAndUseClientFrontend(
         () => this._clientWrapperFactory.create(input.transferConfig),
         async (clientWrapper: FrontendS3ClientWrapper) =>
-          clientWrapper.upload(input.reference, data, metadata)
+          clientWrapper.upload(input.reference, data, metadata),
       );
     }
   }
 
   public async uploadInMultipleParts(
-    input: FrontendUploadInMultiplePartsInput
+    input: FrontendUploadInMultiplePartsInput,
   ): Promise<void> {
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -94,8 +94,8 @@ export class S3FrontendStorage extends FrontendStorage {
         clientWrapper.uploadInMultipleParts(
           input.reference,
           input.data,
-          input.options
-        )
+          input.options,
+        ),
     );
   }
 }

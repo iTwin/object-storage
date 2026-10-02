@@ -19,14 +19,14 @@ export const defaultExpiresInSeconds = 60 * 60;
 
 export function metadataToHeaders(
   metadata: Metadata,
-  prefix: string
+  prefix: string,
 ): Record<string, string> {
   return Object.keys(metadata).reduce(
     (acc: Record<string, string>, suffix: string) => ({
       ...acc,
       [`${prefix}${suffix}`.toLowerCase()]: metadata[suffix],
     }),
-    {}
+    {},
   );
 }
 
@@ -37,7 +37,7 @@ export function buildObjectKey(ref: ObjectReference): string {
 
 export function buildObjectReference(
   objectKey: string,
-  separator = "/"
+  separator = "/",
 ): ObjectReference {
   const parts = objectKey.split(separator).filter((key) => key);
   const lastIndex = parts.length - 1;
@@ -59,7 +59,7 @@ export function buildObjectDirectoryString(directory: ObjectDirectory): string {
 }
 
 export function assertRelativeDirectory(
-  relativeDirectory: string | undefined
+  relativeDirectory: string | undefined,
 ): void {
   if (!relativeDirectory) return;
 
@@ -73,7 +73,38 @@ export function assertRelativeDirectory(
     relativeDirectory[relativeDirectory.length - 1] === separator
   )
     throw new Error(
-      "Relative directory cannot contain slashes at the beginning or the end of the string."
+      "Relative directory cannot contain slashes at the beginning or the end of the string.",
+    );
+
+  assertPathSegments(relativeDirectory, "Relative directory");
+}
+
+export function assertObjectName(objectName: string | undefined): void {
+  if (!objectName) throw new Error("Object name cannot be empty.");
+
+  assertPathSegments(objectName, "Object name");
+}
+
+export function assertObjectReference(reference: ObjectReference): void {
+  assertRelativeDirectory(reference.relativeDirectory);
+  assertObjectName(reference.objectName);
+}
+
+// Empty and dot segments are collapsed by URL handling and object listing, so the stored key would differ.
+function assertPathSegments(path: string, description: string): void {
+  for (const character of path) {
+    const code = character.charCodeAt(0);
+    if (code < 0x20 || code === 0x7f)
+      throw new Error(`${description} cannot contain control characters.`);
+  }
+
+  if (
+    path
+      .split("/")
+      .some((segment) => segment === "" || segment === "." || segment === "..")
+  )
+    throw new Error(
+      `${description} cannot contain empty, '.' or '..' path segments.`,
     );
 }
 
@@ -90,7 +121,7 @@ export function assertBaseDirectory(baseDirectory: string | undefined): void {
     baseDirectory[baseDirectory.length - 1] === separator
   )
     throw new Error(
-      "Base directory cannot contain slashes at the beginning or the end of the string."
+      "Base directory cannot contain slashes at the beginning or the end of the string.",
     );
 }
 
@@ -99,19 +130,19 @@ export function assertTransferConfig(transferConfig: TransferConfig): void {
   assertPrimitiveType(
     transferConfig.baseUrl,
     "transferConfig.baseUrl",
-    "string"
+    "string",
   );
   assertInstanceType(
     transferConfig.expiration,
     "transferConfig.expiration",
-    Date
+    Date,
   );
   if (new Date() > transferConfig.expiration)
     throw new Error("Transfer config is expired");
 }
 
 export function instanceOfUrlTransferInput(
-  input: unknown
+  input: unknown,
 ): input is UrlTransferInput {
   return "url" in (input as UrlTransferInput);
 }
@@ -128,7 +159,7 @@ export function getTransferTimeInSeconds(
     maxTransferTime = 3600,
     minTransferSpeedInKbps = 100,
     padding = 300,
-  }: GetTransferTimeInSecondsOptions = {}
+  }: GetTransferTimeInSecondsOptions = {},
 ): number {
   const bytesPerSecond = minTransferSpeedInKbps * 125;
   const seconds = fileSize / bytesPerSecond + padding;

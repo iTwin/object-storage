@@ -6,7 +6,7 @@
 import { Readable } from "stream";
 
 import {
-  assertRelativeDirectory,
+  assertObjectReference,
   instanceOfUrlTransferInput,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -34,7 +34,7 @@ import { ClientStorageWrapperFactory } from "./wrappers";
 export class GoogleClientStorage extends ClientStorage {
   public constructor(
     private _storageFactory: ClientStorageWrapperFactory,
-    private _urlTransferClient: UrlTransferClient = new UrlTransferClient()
+    private _urlTransferClient: UrlTransferClient = new UrlTransferClient(),
   ) {
     super();
   }
@@ -42,28 +42,28 @@ export class GoogleClientStorage extends ClientStorage {
   public download(
     input: (UrlDownloadInput | GoogleConfigDownloadInput) & {
       transferType: "buffer";
-    }
+    },
   ): Promise<Buffer>;
 
   public download(
     input: (UrlDownloadInput | GoogleConfigDownloadInput) & {
       transferType: "stream";
-    }
+    },
   ): Promise<Readable>;
 
   public download(
     input: (UrlDownloadInput | GoogleConfigDownloadInput) & {
       transferType: "local";
       localPath: string;
-    }
+    },
   ): Promise<string>;
 
   public override async download(
-    input: UrlDownloadInput | GoogleConfigDownloadInput
+    input: UrlDownloadInput | GoogleConfigDownloadInput,
   ): Promise<TransferData> {
     if (instanceOfUrlTransferInput(input))
       return await this._urlTransferClient.download(input);
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
     if (input.transferType === "local") {
       assertLocalFile(input.localPath);
     }
@@ -71,7 +71,7 @@ export class GoogleClientStorage extends ClientStorage {
     const storage = this._storageFactory.createFromToken(input.transferConfig);
     const downloadBuffer = await storage.downloadFile(
       input.reference,
-      input.localPath
+      input.localPath,
     );
 
     if (input.transferType === "local") return input.localPath!;
@@ -79,18 +79,17 @@ export class GoogleClientStorage extends ClientStorage {
   }
 
   public override async upload(
-    input: UrlUploadInput | GoogleConfigUploadInput
+    input: UrlUploadInput | GoogleConfigUploadInput,
   ): Promise<void> {
     const isUrlTransfer = instanceOfUrlTransferInput(input);
-    if (!isUrlTransfer)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if (!isUrlTransfer) assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     if (isUrlTransfer)
       return this._urlTransferClient.upload(
         input.url,
         input.data,
-        input.metadata
+        input.metadata,
       );
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
@@ -98,9 +97,9 @@ export class GoogleClientStorage extends ClientStorage {
   }
 
   public override async uploadInMultipleParts(
-    input: GoogleUploadInMultiplePartsInput
+    input: GoogleUploadInMultiplePartsInput,
   ): Promise<void> {
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
@@ -109,7 +108,7 @@ export class GoogleClientStorage extends ClientStorage {
       input.data,
       input.options?.metadata,
       undefined,
-      input.options?.partSize
+      input.options?.partSize,
     );
   }
 }

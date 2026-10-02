@@ -5,7 +5,11 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
-import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertBaseDirectory,
+  assertObjectReference,
+  assertRelativeDirectory,
+} from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   streamToTransferType,
@@ -82,7 +86,7 @@ export class S3ServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     const downloadStream = await this._s3Client.download(reference);
     return streamToTransferType(downloadStream, transferType, localPath);
   }
@@ -93,7 +97,7 @@ export class S3ServerStorage extends ServerStorage {
     metadata?: Metadata,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     let dataToUpload: Readable | Buffer;
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
@@ -110,7 +114,7 @@ export class S3ServerStorage extends ServerStorage {
     options?: MultipartUploadOptions,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     let dataToUpload: Buffer | Readable;
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
@@ -127,6 +131,7 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     return this._s3Client.upload({
       baseDirectory: directory.baseDirectory,
       objectName: "",
@@ -147,6 +152,7 @@ export class S3ServerStorage extends ServerStorage {
     directory: BaseDirectory,
     maxPageSize = 1000
   ): EntityPageListIterator<ObjectReference> {
+    assertBaseDirectory(directory.baseDirectory);
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
         this._s3Client.getObjectsNextPage(directory, {
@@ -165,6 +171,7 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     const options = { maxPageSize: 1000, includeEmptyFiles: true };
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
@@ -178,17 +185,18 @@ export class S3ServerStorage extends ServerStorage {
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     await this._s3Client.deleteObject(reference);
   }
 
   public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
+    assertBaseDirectory(directory.baseDirectory);
     return this._s3Client.prefixExists(directory);
   }
 
   public async objectExists(reference: ObjectReference): Promise<boolean> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._s3Client.objectExists(reference);
   }
@@ -197,7 +205,7 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._s3Client.updateMetadata(reference, metadata);
   }
@@ -205,7 +213,7 @@ export class S3ServerStorage extends ServerStorage {
   public async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._s3Client.getObjectProperties(reference);
   }
@@ -214,7 +222,7 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     options?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._presignedUrlProvider.getDownloadUrl(reference, options);
   }
@@ -223,7 +231,7 @@ export class S3ServerStorage extends ServerStorage {
     reference: ObjectReference,
     options?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._presignedUrlProvider.getUploadUrl(reference, options);
   }
@@ -268,8 +276,8 @@ export class S3ServerStorage extends ServerStorage {
     targetReference: ObjectReference,
     _options?: CopyObjectOptions
   ): Promise<void> {
-    assertRelativeDirectory(sourceReference.relativeDirectory);
-    assertRelativeDirectory(targetReference.relativeDirectory);
+    assertObjectReference(sourceReference);
+    assertObjectReference(targetReference);
 
     if (!(sourceStorage instanceof S3ServerStorage)) {
       throw new Error(

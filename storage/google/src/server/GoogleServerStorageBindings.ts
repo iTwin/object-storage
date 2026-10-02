@@ -25,6 +25,9 @@ import { StorageControlClientWrapper } from "./wrappers/StorageControlClientWrap
 export type GoogleServerStorageBindingsConfig = GoogleStorageConfig &
   DependencyConfig;
 
+// GCS bucket-name charset and length; case-insensitive only to keep existing configs/tests valid.
+const bucketNamePattern = /^[a-z0-9][a-z0-9._-]{1,220}[a-z0-9]$/i;
+
 export class GoogleServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = Constants.storageType;
 
@@ -36,6 +39,10 @@ export class GoogleServerStorageBindings extends ServerStorageDependency {
       throw new ConfigError<GoogleStorageConfig>("projectId");
     if (!config.bucketName)
       throw new ConfigError<GoogleStorageConfig>("bucketName");
+    if (!bucketNamePattern.test(config.bucketName))
+      throw new Error(
+        "bucketName is not a valid Google Cloud Storage bucket name"
+      );
 
     container.registerInstance<GoogleStorageConfig>(
       Types.GoogleServer.config,
