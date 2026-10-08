@@ -38,24 +38,24 @@ export class AzureClientStorage extends ClientStorage {
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "buffer";
-    },
+    }
   ): Promise<Buffer>;
 
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "stream";
-    },
+    }
   ): Promise<Readable>;
 
   public download(
     input: (UrlDownloadInput | AzureConfigDownloadInput) & {
       transferType: "local";
       localPath: string;
-    },
+    }
   ): Promise<string>;
 
   public async download(
-    input: UrlDownloadInput | AzureConfigDownloadInput,
+    input: UrlDownloadInput | AzureConfigDownloadInput
   ): Promise<TransferData> {
     if ("reference" in input) assertObjectReference(input.reference);
 
@@ -75,12 +75,12 @@ export class AzureClientStorage extends ClientStorage {
     return streamToTransferType(
       downloadStream,
       input.transferType,
-      input.localPath,
+      input.localPath
     );
   }
 
   public async upload(
-    input: UrlUploadInput | AzureConfigUploadInput,
+    input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
@@ -91,7 +91,7 @@ export class AzureClientStorage extends ClientStorage {
   }
 
   public async uploadInMultipleParts(
-    input: AzureUploadInMultiplePartsInput,
+    input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);

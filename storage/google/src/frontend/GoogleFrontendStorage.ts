@@ -28,7 +28,7 @@ import {
 
 export class GoogleFrontendStorage extends FrontendStorage {
   public constructor(
-    private _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient(),
+    private _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient()
   ) {
     super();
   }
@@ -36,17 +36,17 @@ export class GoogleFrontendStorage extends FrontendStorage {
   public download(
     input: (FrontendUrlDownloadInput | FrontendGoogleConfigDownloadInput) & {
       transferType: "buffer";
-    },
+    }
   ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendGoogleConfigDownloadInput) & {
       transferType: "stream";
-    },
+    }
   ): Promise<ReadableStream>;
 
   public async download(
-    input: FrontendUrlDownloadInput | FrontendGoogleConfigDownloadInput,
+    input: FrontendUrlDownloadInput | FrontendGoogleConfigDownloadInput
   ): Promise<FrontendTransferData> {
     if (instanceOfUrlTransferInput(input))
       return this._urlTransferClient.download(input);
@@ -56,7 +56,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
 
     const updatedInput: FrontendUrlDownloadInput = {
       url: `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(
-        input.transferConfig.bucketName,
+        input.transferConfig.bucketName
       )}/o/${encodeURIComponent(this.objectName(input.reference))}?alt=media`,
       transferType: input.transferType,
       storageType: input.transferConfig.storageType,
@@ -73,14 +73,14 @@ export class GoogleFrontendStorage extends FrontendStorage {
 
   private uploadUrl(bucketName: string, reference: ObjectReference): string {
     return `https://storage.googleapis.com/upload/storage/v1/b/${encodeURIComponent(
-      bucketName,
+      bucketName
     )}/o?uploadType=media&name=${encodeURIComponent(
-      this.objectName(reference),
+      this.objectName(reference)
     )}`;
   }
 
   public async upload(
-    input: FrontendUrlUploadInput | FrontendGoogleConfigUploadInput,
+    input: FrontendUrlUploadInput | FrontendGoogleConfigUploadInput
   ): Promise<void> {
     const { data } = input;
 
@@ -91,7 +91,7 @@ export class GoogleFrontendStorage extends FrontendStorage {
     assertGoogleTransferConfig(input.transferConfig);
     const url = this.uploadUrl(
       input.transferConfig.bucketName,
-      input.reference,
+      input.reference
     );
     return this._urlTransferClient.upload(url, input.data, "POST", {
       Authorization: input.transferConfig.authentication,
@@ -101,14 +101,14 @@ export class GoogleFrontendStorage extends FrontendStorage {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   public async uploadInMultipleParts(
-    input: FrontendGoogleUploadInMultiplePartsInput,
+    input: FrontendGoogleUploadInMultiplePartsInput
   ): Promise<void> {
     assertObjectReference(input.reference);
     assertGoogleTransferConfig(input.transferConfig);
 
     const url = this.uploadUrl(
       input.transferConfig.bucketName,
-      input.reference,
+      input.reference
     );
     const data = await streamToTransferTypeFrontend(input.data, "buffer");
 

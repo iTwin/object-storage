@@ -20,7 +20,7 @@ import { FrontendBlockBlobClientWrapperFactory } from "./wrappers";
 
 export class AzureFrontendStorage extends FrontendStorage {
   constructor(
-    private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory,
+    private _clientWrapperFactory: FrontendBlockBlobClientWrapperFactory
   ) {
     super();
   }
@@ -28,17 +28,17 @@ export class AzureFrontendStorage extends FrontendStorage {
   public download(
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "buffer";
-    },
+    }
   ): Promise<ArrayBuffer>;
 
   public download(
     input: (FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput) & {
       transferType: "stream";
-    },
+    }
   ): Promise<ReadableStream>;
 
   public async download(
-    input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput,
+    input: FrontendUrlDownloadInput | FrontendAzureConfigDownloadInput
   ): Promise<FrontendTransferData> {
     if ("reference" in input) assertObjectReference(input.reference);
 
@@ -58,7 +58,7 @@ export class AzureFrontendStorage extends FrontendStorage {
   }
 
   public async upload(
-    input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput,
+    input: FrontendUrlUploadInput | FrontendAzureConfigUploadInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
 
@@ -68,7 +68,7 @@ export class AzureFrontendStorage extends FrontendStorage {
   }
 
   public async uploadInMultipleParts(
-    input: FrontendAzureUploadInMultiplePartsInput,
+    input: FrontendAzureUploadInMultiplePartsInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
 

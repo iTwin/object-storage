@@ -59,7 +59,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public constructor(
     config: AzureServerStorageConfig,
-    client: BlobServiceClientWrapper,
+    client: BlobServiceClientWrapper
   ) {
     super();
 
@@ -69,24 +69,24 @@ export class AzureServerStorage extends ServerStorage {
 
   public download(
     reference: ObjectReference,
-    transferType: "buffer",
+    transferType: "buffer"
   ): Promise<Buffer>;
 
   public download(
     reference: ObjectReference,
-    transferType: "stream",
+    transferType: "stream"
   ): Promise<Readable>;
 
   public download(
     reference: ObjectReference,
     transferType: "local",
-    localPath?: string,
+    localPath?: string
   ): Promise<string>;
 
   public async download(
     reference: ObjectReference,
     transferType: TransferType,
-    localPath?: string,
+    localPath?: string
   ): Promise<TransferData> {
     assertObjectReference(reference);
     if (transferType === "local") {
@@ -95,7 +95,7 @@ export class AzureServerStorage extends ServerStorage {
     }
 
     const downloadStream = await new BlockBlobClientWrapper(
-      this._client.getBlockBlobClient(reference),
+      this._client.getBlockBlobClient(reference)
     ).download();
 
     return streamToTransferType(downloadStream, transferType, localPath);
@@ -105,13 +105,13 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     data: TransferData,
     metadata?: Metadata,
-    headers?: ContentHeaders,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
-      this._client.getBlockBlobClient(reference),
+      this._client.getBlockBlobClient(reference)
     ).upload(data, metadata, headers);
   }
 
@@ -119,13 +119,13 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    headers?: ContentHeaders,
+    headers?: ContentHeaders
   ): Promise<void> {
     assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
-      this._client.getBlockBlobClient(reference),
+      this._client.getBlockBlobClient(reference)
     ).uploadInMultipleParts(data, options, headers);
   }
 
@@ -135,25 +135,25 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public getListDirectoriesPagedIterator(
-    maxPageSize = 1000,
+    maxPageSize = 1000
   ): EntityPageListIterator<BaseDirectory> {
     const pageIterator: EntityPageListIterator<BaseDirectory> =
       new EntityPageListIterator(() =>
-        this._client.getDirectoriesNextPage({ maxPageSize: maxPageSize }),
+        this._client.getDirectoriesNextPage({ maxPageSize: maxPageSize })
       );
     return pageIterator;
   }
 
   public getListObjectsPagedIterator(
     directory: BaseDirectory,
-    maxPageSize = 1000,
+    maxPageSize = 1000
   ): EntityPageListIterator<ObjectReference> {
     assertBaseDirectory(directory.baseDirectory);
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
         this._client.getObjectsNextPage(directory, {
           maxPageSize: maxPageSize,
-        }),
+        })
       );
     return pageIterator;
   }
@@ -194,7 +194,7 @@ export class AzureServerStorage extends ServerStorage {
 
   public async updateMetadata(
     reference: ObjectReference,
-    metadata: Metadata,
+    metadata: Metadata
   ): Promise<void> {
     assertObjectReference(reference);
 
@@ -202,7 +202,7 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async getObjectProperties(
-    reference: ObjectReference,
+    reference: ObjectReference
   ): Promise<ObjectProperties> {
     assertObjectReference(reference);
 
@@ -223,7 +223,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadUrl(
     reference: ObjectReference,
-    expiry?: ExpiryOptions,
+    expiry?: ExpiryOptions
   ): Promise<string> {
     assertObjectReference(reference);
 
@@ -234,7 +234,7 @@ export class AzureServerStorage extends ServerStorage {
       getExpiryDate(expiry),
       this._config.accountName,
       this._config.accountKey,
-      buildBlobName(reference),
+      buildBlobName(reference)
     );
 
     return `${blobClient.url}?${parameters}`;
@@ -243,7 +243,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadUrl(
     reference: ObjectReference,
-    expiry?: ExpiryOptions,
+    expiry?: ExpiryOptions
   ): Promise<string> {
     assertObjectReference(reference);
 
@@ -254,7 +254,7 @@ export class AzureServerStorage extends ServerStorage {
       getExpiryDate(expiry),
       this._config.accountName,
       this._config.accountKey,
-      buildBlobName(reference),
+      buildBlobName(reference)
     );
 
     return `${blobClient.url}?${parameters}`;
@@ -263,7 +263,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadConfig(
     directory: ObjectDirectory,
-    expiry?: ExpiryOptions,
+    expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -273,7 +273,7 @@ export class AzureServerStorage extends ServerStorage {
       "read",
       expiresOn,
       this._config.accountName,
-      this._config.accountKey,
+      this._config.accountKey
     );
 
     return {
@@ -287,7 +287,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadConfig(
     directory: ObjectDirectory,
-    expiry?: ExpiryOptions,
+    expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -297,7 +297,7 @@ export class AzureServerStorage extends ServerStorage {
       "write",
       expiresOn,
       this._config.accountName,
-      this._config.accountKey,
+      this._config.accountKey
     );
 
     return {
@@ -311,7 +311,7 @@ export class AzureServerStorage extends ServerStorage {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
-    expiry?: ExpiryOptions,
+    expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
     assertRelativeDirectory(directory.relativeDirectory);
 
@@ -320,7 +320,7 @@ export class AzureServerStorage extends ServerStorage {
       directory.baseDirectory,
       expiresOn,
       this._config.accountName,
-      this._config.accountKey,
+      this._config.accountKey
     );
 
     return {
@@ -335,20 +335,20 @@ export class AzureServerStorage extends ServerStorage {
     sourceStorage: ServerStorage,
     sourceReference: ObjectReference,
     targetReference: ObjectReference,
-    options?: CopyObjectOptions,
+    options?: CopyObjectOptions
   ): Promise<void> {
     assertObjectReference(sourceReference);
     assertObjectReference(targetReference);
 
     if (!(sourceStorage instanceof AzureServerStorage)) {
       throw new Error(
-        `Source storage must be an instance of ${AzureServerStorage.name} to use ${AzureServerStorage.prototype.copyObject.name} method.`,
+        `Source storage must be an instance of ${AzureServerStorage.name} to use ${AzureServerStorage.prototype.copyObject.name} method.`
       );
     }
 
     const sourceUrl = await sourceStorage.getDownloadUrl(
       sourceReference,
-      options?.expiry,
+      options?.expiry
     );
     const targetBlobClient = this._client.getBlobClient(targetReference);
 
