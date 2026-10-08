@@ -14,21 +14,30 @@ const bundledScriptFileName = setupScriptFileName;
 const webpackConfig = {
   mode: "development",
   optimization: {
-    minimize: false
+    minimize: false,
   },
   plugins: [
-    new webpack.DefinePlugin({ __filename: JSON.stringify("") })
+    new webpack.DefinePlugin({ __filename: JSON.stringify("") }),
+    // Cypress loads only the single bundled setup script, so dynamic imports must not be split into chunks.
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
   ],
   entry: {
-    app: path.resolve(__dirname, "lib", "test", "integration", "frontend", setupScriptFileName)
+    app: path.resolve(
+      __dirname,
+      "lib",
+      "test",
+      "integration",
+      "frontend",
+      setupScriptFileName,
+    ),
   },
   output: {
     filename: bundledScriptFileName,
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
   },
 };
 
 module.exports = {
   default: webpackConfig,
-  bundledScriptFileName
+  bundledScriptFileName,
 };

@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import { S3Client } from "@aws-sdk/client-s3";
 import { STSClient } from "@aws-sdk/client-sts";
+import { expect } from "chai";
+
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
 import {
@@ -164,5 +167,43 @@ describe(`${S3ServerStorageBindings.name}`, () => {
       Constants.validS3ServerStorageConfig,
       bindingsTestCases
     );
+
+    it("should bind presigned URL provider to the configured bucket", async () => {
+      const presignedUrlProvider = resolvePresignedUrlProvider();
+
+      const url = await presignedUrlProvider.getDownloadUrl({
+        baseDirectory: "testBaseDirectory",
+        objectName: "testObjectName",
+      });
+
+      expect(new URL(url).pathname).to.equal(
+        `/${Constants.validS3ServerStorageConfig.bucket}/testBaseDirectory/testObjectName`
+      );
+    });
+
+    it("should not sign request checksums into upload URLs", async () => {
+      const presignedUrlProvider = resolvePresignedUrlProvider();
+
+      const url = await presignedUrlProvider.getUploadUrl({
+        baseDirectory: "testBaseDirectory",
+        objectName: "testObjectName",
+      });
+
+      const checksumParameters = [...new URL(url).searchParams.keys()].filter(
+        (name) => name.toLowerCase().includes("checksum")
+      );
+      expect(checksumParameters).to.be.empty;
+    });
+
+    function resolvePresignedUrlProvider(): PresignedUrlProvider {
+      const container = InversifyWrapper.create();
+      serverBindings.register(container, {
+        ...Constants.validS3ServerStorageConfig,
+        dependencyName: S3Constants.storageType,
+      });
+      return container.resolve<PresignedUrlProvider>(
+        CoreTypes.Server.presignedUrlProvider
+      );
+    }
   });
 });

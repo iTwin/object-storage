@@ -37,7 +37,7 @@ describe("Path validation", () => {
       },
     ].forEach((testCase) => {
       it(`should throw if relative directory has invalid segments (${JSON.stringify(
-        testCase.value,
+        testCase.value
       )})`, () => {
         expect(() => assertRelativeDirectory(testCase.value))
           .to.throw(Error)
@@ -49,10 +49,10 @@ describe("Path validation", () => {
       (relativeDirectory) => {
         it(`should not throw if relative directory is valid (${relativeDirectory})`, () => {
           expect(() =>
-            assertRelativeDirectory(relativeDirectory),
+            assertRelativeDirectory(relativeDirectory)
           ).to.not.throw();
         });
-      },
+      }
     );
   });
 
@@ -69,7 +69,7 @@ describe("Path validation", () => {
       { value: "file\r\n", message: controlCharactersMessage("Object name") },
     ].forEach((testCase) => {
       it(`should throw if object name is invalid (${JSON.stringify(
-        testCase.value,
+        testCase.value
       )})`, () => {
         expect(() => assertObjectName(testCase.value))
           .to.throw(Error)
@@ -91,18 +91,57 @@ describe("Path validation", () => {
   });
 
   describe(`${assertObjectReference.name}()`, () => {
+    [
+      { baseDirectory: "", message: "Base directory cannot be empty." },
+      {
+        baseDirectory: "base\\dir",
+        message: "Base directory cannot contain backslashes.",
+      },
+      {
+        baseDirectory: "/base",
+        message:
+          "Base directory cannot contain slashes at the beginning or the end of the string.",
+      },
+      {
+        baseDirectory: "base/",
+        message:
+          "Base directory cannot contain slashes at the beginning or the end of the string.",
+      },
+    ].forEach((testCase) => {
+      it(`should throw if base directory is '${testCase.baseDirectory}'`, () => {
+        expect(() =>
+          assertObjectReference({
+            baseDirectory: testCase.baseDirectory,
+            relativeDirectory: "a\\b",
+            objectName: "",
+          })
+        )
+          .to.throw(Error)
+          .with.property("message", testCase.message);
+      });
+    });
+
+    it("should allow slashes inside base directory", () => {
+      expect(() =>
+        assertObjectReference({
+          baseDirectory: "base/nested",
+          objectName: "name",
+        })
+      ).to.not.throw();
+    });
+
     it("should validate relative directory before object name", () => {
       expect(() =>
         assertObjectReference({
           baseDirectory: "base",
           relativeDirectory: "a\\b",
           objectName: "",
-        }),
+        })
       )
         .to.throw(Error)
         .with.property(
           "message",
-          "Relative directory cannot contain backslashes.",
+          "Relative directory cannot contain backslashes."
         );
     });
 
@@ -112,7 +151,7 @@ describe("Path validation", () => {
           baseDirectory: "base",
           relativeDirectory: "a/b",
           objectName: "../c",
-        }),
+        })
       )
         .to.throw(Error)
         .with.property("message", segmentsMessage("Object name"));
@@ -124,7 +163,7 @@ describe("Path validation", () => {
           baseDirectory: "base",
           relativeDirectory: "tiles/0x1c/abc",
           objectName: "content-id",
-        }),
+        })
       ).to.not.throw();
     });
   });
