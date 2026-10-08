@@ -588,9 +588,15 @@ importers:
       '@itwin/object-storage-common-config':
         specifier: workspace:*
         version: link:../../utils/common-config
+      '@itwin/object-storage-tests-backend':
+        specifier: workspace:*
+        version: link:../../tests/backend-storage
       '@itwin/object-storage-tests-backend-unit':
         specifier: workspace:*
         version: link:../../tests/backend-storage-unit
+      '@itwin/object-storage-tests-frontend':
+        specifier: workspace:*
+        version: link:../../tests/frontend-storage
       '@types/chai':
         specifier: ^4.3.8
         version: 4.3.20
@@ -627,6 +633,9 @@ importers:
       mocha:
         specifier: ^10.4.0
         version: 10.8.2
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
       nyc:
         specifier: ^18.0.0
         version: 18.0.0
@@ -645,6 +654,15 @@ importers:
       typescript:
         specifier: ^5.1.3
         version: 5.9.3
+      wait-on:
+        specifier: ^7.2.0
+        version: 7.2.0
+      webpack:
+        specifier: ^5.96.1
+        version: 5.111.1(webpack-cli@5.1.4)
+      webpack-cli:
+        specifier: ^5.1.4
+        version: 5.1.4(webpack@5.111.1)
 
   ../../tests/backend-storage:
     dependencies:

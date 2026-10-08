@@ -24,25 +24,25 @@
     {
       "packageName": "@itwin/object-storage-s3",
       "projectFolder": "storage/s3",
-      "versionPolicyName": "lockStepVersionObjectStorage"
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "tags": ["integration-tested"]
     },
     {
       "packageName": "@itwin/object-storage-azure",
       "projectFolder": "storage/azure",
       "versionPolicyName": "lockStepVersionObjectStorage",
-      "tags": [ "integration-tested" ]
+      "tags": ["integration-tested"]
     },
     {
       "packageName": "@itwin/object-storage-google",
       "projectFolder": "storage/google",
       "versionPolicyName": "lockStepVersionObjectStorage",
-      "tags": [ "integration-tested" ]
+      "tags": ["integration-tested"]
     },
     {
       "packageName": "@itwin/object-storage-minio",
       "projectFolder": "storage/minio",
-      "versionPolicyName": "lockStepVersionObjectStorage",
-      "tags": [ "integration-tested" ]
+      "versionPolicyName": "lockStepVersionObjectStorage"
     },
     {
       "packageName": "@itwin/object-storage-oss",
