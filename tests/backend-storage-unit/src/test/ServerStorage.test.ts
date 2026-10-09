@@ -43,6 +43,21 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
       call: (baseDirectory: string) =>
         serverStorage.getListObjectsPagedIterator({ baseDirectory }, 10),
     },
+    {
+      name: serverStorage.getDownloadConfig.name,
+      call: (baseDirectory: string) =>
+        serverStorage.getDownloadConfig({ baseDirectory }),
+    },
+    {
+      name: serverStorage.getUploadConfig.name,
+      call: (baseDirectory: string) =>
+        serverStorage.getUploadConfig({ baseDirectory }),
+    },
+    {
+      name: serverStorage.getDirectoryAccessConfig.name,
+      call: (baseDirectory: string) =>
+        serverStorage.getDirectoryAccessConfig({ baseDirectory }),
+    },
   ].forEach((testCase) => {
     describe(`${testCase.name}()`, () => {
       it("should throw if baseDirectory is invalid", async () => {

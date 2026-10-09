@@ -240,6 +240,7 @@ export class S3ServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<TransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     return this._transferConfigProvider.getDownloadConfig(directory, options);
@@ -249,6 +250,7 @@ export class S3ServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<TransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     return this._transferConfigProvider.getUploadConfig(directory, options);
@@ -259,6 +261,7 @@ export class S3ServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<TransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     return this._transferConfigProvider.getDirectoryAccessConfig(

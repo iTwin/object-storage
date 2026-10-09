@@ -265,6 +265,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
@@ -289,6 +290,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
@@ -313,6 +315,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
