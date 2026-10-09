@@ -8,7 +8,7 @@ import { Readable } from "stream";
 import type { HttpHandlerOptions } from "@aws-sdk/types";
 
 import {
-  assertRelativeDirectory,
+  assertObjectReference,
   instanceOfUrlTransferInput,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -65,7 +65,7 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<TransferData> {
     if (instanceOfUrlTransferInput(input))
       return this._urlTransferClient.download(input);
-    else assertRelativeDirectory(input.reference.relativeDirectory);
+    else assertObjectReference(input.reference);
 
     const options: HttpHandlerOptions = {
       abortSignal: input.abortSignal
@@ -98,8 +98,7 @@ export class S3ClientStorage extends ClientStorage {
     let { data } = input;
     const { metadata } = input;
 
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if ("reference" in input) assertObjectReference(input.reference);
 
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
@@ -117,8 +116,7 @@ export class S3ClientStorage extends ClientStorage {
     input: S3UploadInMultiplePartsInput
   ): Promise<void> {
     let { data } = input;
-    if ("reference" in input)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if ("reference" in input) assertObjectReference(input.reference);
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
       data = createReadStream(data);

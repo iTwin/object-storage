@@ -6,7 +6,7 @@
 import { Readable } from "stream";
 
 import {
-  assertRelativeDirectory,
+  assertObjectReference,
   instanceOfUrlTransferInput,
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
@@ -63,7 +63,7 @@ export class GoogleClientStorage extends ClientStorage {
   ): Promise<TransferData> {
     if (instanceOfUrlTransferInput(input))
       return await this._urlTransferClient.download(input);
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
     if (input.transferType === "local") {
       assertLocalFile(input.localPath);
     }
@@ -82,8 +82,7 @@ export class GoogleClientStorage extends ClientStorage {
     input: UrlUploadInput | GoogleConfigUploadInput
   ): Promise<void> {
     const isUrlTransfer = instanceOfUrlTransferInput(input);
-    if (!isUrlTransfer)
-      assertRelativeDirectory(input.reference.relativeDirectory);
+    if (!isUrlTransfer) assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     if (isUrlTransfer)
@@ -100,7 +99,7 @@ export class GoogleClientStorage extends ClientStorage {
   public override async uploadInMultipleParts(
     input: GoogleUploadInMultiplePartsInput
   ): Promise<void> {
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);

@@ -8,7 +8,11 @@ import { ClientStorage, TransferConfig } from "@itwin/object-storage-core";
 
 import { config } from "./Config";
 import { Constants } from "./Constants";
-import { testRelativeDirectoryValidation } from "./test-templates/CommonTests";
+import {
+  testBaseDirectoryValidation,
+  testObjectNameValidation,
+  testRelativeDirectoryValidation,
+} from "./test-templates/CommonTests";
 
 const { clientStorage, storageType } = config;
 
@@ -97,6 +101,71 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
         clientStorage.uploadInMultipleParts({
           data: "testPath",
           ...commonParams,
+        })
+      );
+    });
+  });
+
+  describe("objectName validation", () => {
+    const invalidParams = {
+      reference: Constants.invalidObjectNameReference,
+      transferConfig: testTransferConfig,
+    };
+
+    it(`${clientStorage.download.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.download({ transferType: "buffer", ...invalidParams })
+      );
+    });
+
+    it(`${clientStorage.upload.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.upload({
+          data: Buffer.from("testPayload"),
+          ...invalidParams,
+        })
+      );
+    });
+
+    it(`${clientStorage.uploadInMultipleParts.name}() should throw if objectName is invalid`, async () => {
+      await testObjectNameValidation(async () =>
+        clientStorage.uploadInMultipleParts({
+          data: Readable.from("testPayload"),
+          ...invalidParams,
+        })
+      );
+    });
+  });
+
+  describe("baseDirectory validation", () => {
+    const buildParams = (baseDirectory: string) => ({
+      reference: { baseDirectory, objectName: "testObjectName" },
+      transferConfig: testTransferConfig,
+    });
+
+    it(`${clientStorage.download.name}() should throw if baseDirectory is invalid`, async () => {
+      await testBaseDirectoryValidation(async (baseDirectory) =>
+        clientStorage.download({
+          transferType: "buffer",
+          ...buildParams(baseDirectory),
+        })
+      );
+    });
+
+    it(`${clientStorage.upload.name}() should throw if baseDirectory is invalid`, async () => {
+      await testBaseDirectoryValidation(async (baseDirectory) =>
+        clientStorage.upload({
+          data: Buffer.from("testPayload"),
+          ...buildParams(baseDirectory),
+        })
+      );
+    });
+
+    it(`${clientStorage.uploadInMultipleParts.name}() should throw if baseDirectory is invalid`, async () => {
+      await testBaseDirectoryValidation(async (baseDirectory) =>
+        clientStorage.uploadInMultipleParts({
+          data: Readable.from("testPayload"),
+          ...buildParams(baseDirectory),
         })
       );
     });

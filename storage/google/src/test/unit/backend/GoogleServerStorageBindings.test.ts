@@ -3,6 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+import { expect } from "chai";
+
+import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
+
 import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ServerStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
@@ -40,14 +44,58 @@ describe(`${GoogleServerStorageBindings.name}`, () => {
         } as unknown as GoogleServerStorageBindingsConfig,
         expectedErrorMessage: "bucketName is not defined in configuration",
       },
+      ...[
+        "bucket'name",
+        "bucket\\name",
+        "bucket/name",
+        "bucket name",
+        "ab",
+        "-bucket",
+        "bucket.",
+        "BucketName",
+        "testBucketName",
+        "a..b",
+        ".bucket",
+        "a".repeat(64),
+        `${"a".repeat(64)}.bucket`,
+        [55, 55, 55, 55].map((length) => "a".repeat(length)).join("."),
+        "192.168.5.4",
+        "goog-bucket",
+        "my-google-bucket",
+      ].map((bucketName) => ({
+        config: {
+          dependencyName: Constants.storageType,
+          projectId: "testProjectId",
+          bucketName,
+        } as GoogleServerStorageBindingsConfig,
+        expectedErrorMessage:
+          "bucketName is not a valid Google Cloud Storage bucket name",
+      })),
     ];
     testInvalidServerConfig(serverBindings, invalidConfigTestCases);
 
     const config: GoogleServerStorageBindingsConfig = {
       dependencyName: Constants.storageType,
       projectId: "testProjectId",
-      bucketName: "testBucketName",
+      bucketName: "test-bucket-name",
     };
+
+    [
+      "abc",
+      "test_bucket-name.1",
+      "a".repeat(63),
+      [63, 63, 63, 30].map((length) => "a".repeat(length)).join("."),
+    ].forEach((bucketName) => {
+      it(`should accept valid bucket name (${bucketName.length} characters)`, () => {
+        expect(() =>
+          serverBindings.register(InversifyWrapper.create(), {
+            ...config,
+            bucketName,
+          })
+        ).to.not.throw();
+      });
+    });
+
     const bindingsTestCases: DependencyBindingsTestCase[] = [];
     [
       {

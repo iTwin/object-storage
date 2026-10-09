@@ -33,4 +33,11 @@ export function assertGoogleTransferConfig(
     "transferConfig.expiration",
     "object"
   );
+  if (!("bucketName" in transferConfig))
+    throw new FalsyValueError("transferConfig.bucketName");
+  assertPrimitiveType(
+    transferConfig.bucketName,
+    "transferConfig.bucketName",
+    "string"
+  );
 }

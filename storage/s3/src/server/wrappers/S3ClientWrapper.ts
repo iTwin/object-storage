@@ -159,7 +159,7 @@ export class S3ClientWrapper {
     const response = await this._client.send(
       new ListObjectsV2Command({
         Bucket: this._bucket,
-        Prefix: directory.baseDirectory,
+        Prefix: `${directory.baseDirectory}/`,
         ContinuationToken: options.continuationToken,
         MaxKeys: options.maxPageSize,
       })

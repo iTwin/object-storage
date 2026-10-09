@@ -25,7 +25,7 @@ const googleTestConfig = {
     instance: {
       dependencyName,
       projectId: "testProjectId",
-      bucketName: "testBucketName",
+      bucketName: "test-bucket-name",
     },
   } as TypedDependencyConfig,
   // eslint-disable-next-line @typescript-eslint/naming-convention
