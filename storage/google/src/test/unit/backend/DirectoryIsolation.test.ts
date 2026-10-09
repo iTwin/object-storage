@@ -12,7 +12,7 @@ import { StorageControlClientWrapper } from "../../../server/wrappers/StorageCon
 
 use(chaiAsPromised);
 
-const bucketName = "testBucketName";
+const bucketName = "test-bucket-name";
 
 function createFakeStorage(objectNames: string[]): {
   storage: Storage;
