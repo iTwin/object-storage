@@ -28,6 +28,19 @@ export function escapeCelStringLiteral(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 }
 
+export function buildAccessBoundaryCondition(
+  bucketPath: string,
+  folderName: string
+): string {
+  const escapedFolderName = escapeCelStringLiteral(folderName);
+  // Trailing "/" is required: CEL startsWith is plain prefix matching, so "a" would also match "ab".
+  return (
+    `resource.name.startsWith('${bucketPath}/objects/${escapedFolderName}/') || ` +
+    `api.getAttribute('storage.googleapis.com/objectListPrefix', '')` +
+    `.startsWith('${escapedFolderName}/')`
+  );
+}
+
 export class StorageControlClientWrapper {
   private readonly _client: StorageControlClient;
   constructor(private readonly _config: GoogleStorageConfig) {
@@ -121,7 +134,6 @@ export class StorageControlClientWrapper {
     action: GoogleStorageConfigType,
     folderName: string
   ): Promise<GoogleTransferConfig> {
-    const escapedFolderName = escapeCelStringLiteral(folderName);
     const cab = {
       accessBoundary: {
         accessBoundaryRules: [
@@ -129,10 +141,10 @@ export class StorageControlClientWrapper {
             availableResource: this.bucketUri,
             availablePermissions: [roleFromConfigType(action)],
             availabilityCondition: {
-              expression:
-                `resource.name.startsWith('${this.bucketPath}/objects/${escapedFolderName}') || ` +
-                `api.getAttribute('storage.googleapis.com/objectListPrefix', '')` +
-                `.startsWith('${escapedFolderName}/')`,
+              expression: buildAccessBoundaryCondition(
+                this.bucketPath,
+                folderName
+              ),
             },
           },
         ],

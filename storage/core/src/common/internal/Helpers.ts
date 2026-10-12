@@ -75,6 +75,38 @@ export function assertRelativeDirectory(
     throw new Error(
       "Relative directory cannot contain slashes at the beginning or the end of the string."
     );
+
+  assertPathSegments(relativeDirectory, "Relative directory");
+}
+
+export function assertObjectName(objectName: string | undefined): void {
+  if (!objectName) throw new Error("Object name cannot be empty.");
+
+  assertPathSegments(objectName, "Object name");
+}
+
+export function assertObjectReference(reference: ObjectReference): void {
+  assertBaseDirectory(reference.baseDirectory);
+  assertRelativeDirectory(reference.relativeDirectory);
+  assertObjectName(reference.objectName);
+}
+
+// Empty and dot segments are collapsed by URL handling and object listing, so the stored key would differ.
+function assertPathSegments(path: string, description: string): void {
+  for (const character of path) {
+    const code = character.charCodeAt(0);
+    if (code < 0x20 || code === 0x7f)
+      throw new Error(`${description} cannot contain control characters.`);
+  }
+
+  if (
+    path
+      .split("/")
+      .some((segment) => segment === "" || segment === "." || segment === "..")
+  )
+    throw new Error(
+      `${description} cannot contain empty, '.' or '..' path segments.`
+    );
 }
 
 export function assertBaseDirectory(baseDirectory: string | undefined): void {

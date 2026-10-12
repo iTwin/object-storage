@@ -38,7 +38,11 @@ export function assertAzureTransferConfig(
 export function buildBlobUrl(input: AzureTransferConfigInput): string {
   assertAzureTransferConfig(input.transferConfig);
   const { authentication, baseUrl } = input.transferConfig;
-  return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
+  const encodedObjectKey = buildObjectKey(input.reference)
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+  return `${baseUrl}/${encodedObjectKey}?${authentication}`;
 }
 
 export function buildBlobName(reference: ObjectReference): string {

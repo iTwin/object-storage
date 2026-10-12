@@ -8,7 +8,11 @@ import { Readable } from "stream";
 
 import { RestError } from "@azure/storage-blob";
 
-import { assertRelativeDirectory } from "@itwin/object-storage-core/lib/common/internal";
+import {
+  assertBaseDirectory,
+  assertObjectReference,
+  assertRelativeDirectory,
+} from "@itwin/object-storage-core/lib/common/internal";
 import {
   assertFileNotEmpty,
   assertLocalFile,
@@ -84,7 +88,7 @@ export class AzureServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (transferType === "local") {
       assertLocalFile(localPath);
       await promises.mkdir(dirname(localPath), { recursive: true });
@@ -103,7 +107,7 @@ export class AzureServerStorage extends ServerStorage {
     metadata?: Metadata,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
@@ -117,7 +121,7 @@ export class AzureServerStorage extends ServerStorage {
     options?: MultipartUploadOptions,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     return new BlockBlobClientWrapper(
@@ -126,6 +130,7 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async createBaseDirectory(directory: BaseDirectory): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     await this._client.getContainerClient(directory.baseDirectory).create();
   }
 
@@ -143,6 +148,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: BaseDirectory,
     maxPageSize = 1000
   ): EntityPageListIterator<ObjectReference> {
+    assertBaseDirectory(directory.baseDirectory);
     const pageIterator: EntityPageListIterator<ObjectReference> =
       new EntityPageListIterator(() =>
         this._client.getObjectsNextPage(directory, {
@@ -161,13 +167,14 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async deleteBaseDirectory(directory: BaseDirectory): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     return this.handleNotFound(async () => {
       await this._client.getContainerClient(directory.baseDirectory).delete();
     });
   }
 
   public async deleteObject(reference: ObjectReference): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this.handleNotFound(async () => {
       await this._client.getBlobClient(reference).delete();
@@ -175,11 +182,12 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public async baseDirectoryExists(directory: BaseDirectory): Promise<boolean> {
+    assertBaseDirectory(directory.baseDirectory);
     return this._client.getContainerClient(directory.baseDirectory).exists();
   }
 
   public async objectExists(reference: ObjectReference): Promise<boolean> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     return this._client.getBlobClient(reference).exists();
   }
@@ -188,7 +196,7 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     await this._client.getBlobClient(reference).setMetadata(metadata);
   }
@@ -196,7 +204,7 @@ export class AzureServerStorage extends ServerStorage {
   public async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     const { lastModified, contentLength, metadata, _response } =
       await this._client.getBlobClient(reference).getProperties();
@@ -217,7 +225,7 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
     const parameters = buildBlobSASParameters(
@@ -237,7 +245,7 @@ export class AzureServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
     const parameters = buildBlobSASParameters(
@@ -257,6 +265,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
@@ -281,6 +290,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
@@ -305,6 +315,7 @@ export class AzureServerStorage extends ServerStorage {
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
   ): Promise<AzureTransferConfig> {
+    assertBaseDirectory(directory.baseDirectory);
     assertRelativeDirectory(directory.relativeDirectory);
 
     const expiresOn = getExpiryDate(expiry);
@@ -329,8 +340,8 @@ export class AzureServerStorage extends ServerStorage {
     targetReference: ObjectReference,
     options?: CopyObjectOptions
   ): Promise<void> {
-    assertRelativeDirectory(sourceReference.relativeDirectory);
-    assertRelativeDirectory(targetReference.relativeDirectory);
+    assertObjectReference(sourceReference);
+    assertObjectReference(targetReference);
 
     if (!(sourceStorage instanceof AzureServerStorage)) {
       throw new Error(

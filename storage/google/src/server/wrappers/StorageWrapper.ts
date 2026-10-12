@@ -3,8 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { Readable } from "stream";
-
 import {
   ApiError,
   Bucket,
@@ -15,10 +13,7 @@ import {
 } from "@google-cloud/storage";
 
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
-import {
-  getExpiryDate,
-  streamToBuffer,
-} from "@itwin/object-storage-core/lib/server/internal";
+import { getExpiryDate } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -67,9 +62,7 @@ export class StorageWrapper {
       uploadOptions.destination = buildObjectKey(reference);
       await this.bucketObject().upload(data, uploadOptions);
     } else {
-      const saveData: Buffer | string =
-        data instanceof Readable ? await streamToBuffer(data) : data ?? "";
-      await this.fileObject(reference).save(saveData, options);
+      await this.fileObject(reference).save(data ?? "", options);
     }
     if (metadata || headers?.cacheControl || headers?.contentEncoding) {
       const [updatedMetadata] = await this.fileObject(reference).getMetadata();
@@ -88,7 +81,7 @@ export class StorageWrapper {
     continuationToken?: string;
   }): Promise<EntityCollectionPage<ObjectReference>> {
     const [files, nextPageToken] = await this.bucketObject().getFiles({
-      prefix: options.directory.baseDirectory,
+      prefix: `${options.directory.baseDirectory}/`,
       maxResults: options.maxPageSize,
       pageToken: options.continuationToken,
     });

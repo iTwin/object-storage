@@ -7,6 +7,7 @@ import { Storage } from "@google-cloud/storage";
 
 import { RetryOptions } from "@itwin/object-storage-core";
 
+import { assertGoogleTransferConfig } from "../../common/Helpers";
 import { GoogleTransferConfig } from "../../common/Interfaces";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
@@ -33,6 +34,7 @@ export class StorageWrapperFactory {
   }
 
   public createFromToken(transferConfig: GoogleTransferConfig): StorageWrapper {
+    assertGoogleTransferConfig(transferConfig);
     return new StorageWrapper(
       new Storage({
         token: transferConfig.authentication,

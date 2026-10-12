@@ -7,6 +7,7 @@ import { Readable } from "stream";
 
 import {
   assertBaseDirectory,
+  assertObjectReference,
   assertRelativeDirectory,
   buildObjectDirectoryString,
 } from "@itwin/object-storage-core/lib/common/internal";
@@ -78,7 +79,7 @@ export class GoogleServerStorage extends ServerStorage {
     transferType: TransferType,
     localPath?: string
   ): Promise<TransferData> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (transferType === "local") {
       assertLocalFile(localPath);
       await this._storage.downloadFile(reference, localPath);
@@ -96,7 +97,7 @@ export class GoogleServerStorage extends ServerStorage {
     metadata?: Metadata,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     await this._storage.uploadFile(reference, data, metadata, headers);
@@ -108,7 +109,7 @@ export class GoogleServerStorage extends ServerStorage {
     options?: MultipartUploadOptions,
     headers?: ContentHeaders
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     if (typeof data === "string") await assertFileNotEmpty(data);
 
     await this._storage.uploadFile(
@@ -120,7 +121,10 @@ export class GoogleServerStorage extends ServerStorage {
     );
   }
 
-  public override createBaseDirectory(directory: BaseDirectory): Promise<void> {
+  public override async createBaseDirectory(
+    directory: BaseDirectory
+  ): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     return this._storageControl.createManagedFolder(directory.baseDirectory);
   }
 
@@ -138,6 +142,7 @@ export class GoogleServerStorage extends ServerStorage {
     directory: BaseDirectory,
     maxPageSize: number
   ): EntityPageListIterator<ObjectReference> {
+    assertBaseDirectory(directory.baseDirectory);
     return new EntityPageListIterator<ObjectReference>(async () => {
       return this._storage.getFilesNextPage({
         directory: directory,
@@ -153,12 +158,13 @@ export class GoogleServerStorage extends ServerStorage {
   public override async deleteBaseDirectory(
     directory: BaseDirectory
   ): Promise<void> {
+    assertBaseDirectory(directory.baseDirectory);
     for await (const objectPage of this.getListObjectsPagedIterator(
       directory,
       100
     )) {
       for (const object of objectPage) {
-        await this.deleteObject(object);
+        await this._storage.deleteFile(object);
       }
     }
 
@@ -166,13 +172,14 @@ export class GoogleServerStorage extends ServerStorage {
   }
 
   public override deleteObject(reference: ObjectReference): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return this._storage.deleteFile(reference);
   }
 
   public override async baseDirectoryExists(
     directory: BaseDirectory
   ): Promise<boolean> {
+    assertBaseDirectory(directory.baseDirectory);
     return await this._storageControl.managedFolderExists(
       directory.baseDirectory
     );
@@ -181,7 +188,7 @@ export class GoogleServerStorage extends ServerStorage {
   public override async objectExists(
     reference: ObjectReference
   ): Promise<boolean> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return await this._storage.fileExists(reference);
   }
 
@@ -191,8 +198,17 @@ export class GoogleServerStorage extends ServerStorage {
     targetReference: ObjectReference,
     _options?: CopyObjectOptions
   ): Promise<void> {
+    assertObjectReference(sourceReference);
+    assertObjectReference(targetReference);
+
+    if (!(sourceStorage instanceof GoogleServerStorage)) {
+      throw new Error(
+        `Source storage must be an instance of ${GoogleServerStorage.name} to use ${GoogleServerStorage.prototype.copyObject.name} method.`
+      );
+    }
+
     return await this._storage.copyFile(
-      (sourceStorage as GoogleServerStorage).bucketName,
+      sourceStorage.bucketName,
       sourceReference,
       targetReference
     );
@@ -202,14 +218,14 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     metadata: Metadata
   ): Promise<void> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return await this._storage.updateMetadata(reference, metadata);
   }
 
   public override async getObjectProperties(
     reference: ObjectReference
   ): Promise<ObjectProperties> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return await this._storage.getObjectProperties(reference);
   }
 
@@ -217,7 +233,7 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return await this._storage.getSignedUrl("read", reference, expiry);
   }
 
@@ -225,7 +241,7 @@ export class GoogleServerStorage extends ServerStorage {
     reference: ObjectReference,
     expiry?: ExpiryOptions
   ): Promise<string> {
-    assertRelativeDirectory(reference.relativeDirectory);
+    assertObjectReference(reference);
     return await this._storage.getSignedUrl("write", reference, expiry);
   }
 

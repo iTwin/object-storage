@@ -8,5 +8,10 @@ const constants = {
     relativeDirectory: "testDirectory1\\testDirectory2",
     objectName: "testObjectName",
   } as const,
+  invalidObjectNameReference: {
+    baseDirectory: "testBaseDirectory",
+    relativeDirectory: "testDirectory1",
+    objectName: "../testObjectName",
+  } as const,
 } as const;
 export { constants as Constants };

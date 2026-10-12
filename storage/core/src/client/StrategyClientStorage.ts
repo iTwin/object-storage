@@ -44,11 +44,15 @@ export class StrategyClientStorage extends ClientStorage {
   }
 
   public override download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "buffer" }
+    input: (UrlDownloadInput | ConfigDownloadInput) & {
+      transferType: "buffer";
+    }
   ): Promise<Buffer>;
 
   public override download(
-    input: (UrlDownloadInput | ConfigDownloadInput) & { transferType: "stream" }
+    input: (UrlDownloadInput | ConfigDownloadInput) & {
+      transferType: "stream";
+    }
   ): Promise<Readable>;
 
   public override download(

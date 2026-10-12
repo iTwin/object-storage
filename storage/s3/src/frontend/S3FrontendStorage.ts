@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  assertRelativeDirectory,
+  assertObjectReference,
   instanceOfUrlTransferInput,
   metadataToHeaders,
 } from "@itwin/object-storage-core/lib/common/internal";
@@ -50,7 +50,7 @@ export class S3FrontendStorage extends FrontendStorage {
   ): Promise<FrontendTransferData> {
     if (instanceOfUrlTransferInput(input))
       return this._urlTransferClient.download(input);
-    else assertRelativeDirectory(input.reference.relativeDirectory);
+    else assertObjectReference(input.reference);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),
@@ -74,7 +74,7 @@ export class S3FrontendStorage extends FrontendStorage {
         metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
       );
     else {
-      assertRelativeDirectory(input.reference.relativeDirectory);
+      assertObjectReference(input.reference);
       return createAndUseClientFrontend(
         () => this._clientWrapperFactory.create(input.transferConfig),
         async (clientWrapper: FrontendS3ClientWrapper) =>
@@ -86,7 +86,7 @@ export class S3FrontendStorage extends FrontendStorage {
   public async uploadInMultipleParts(
     input: FrontendUploadInMultiplePartsInput
   ): Promise<void> {
-    assertRelativeDirectory(input.reference.relativeDirectory);
+    assertObjectReference(input.reference);
 
     return createAndUseClientFrontend(
       () => this._clientWrapperFactory.create(input.transferConfig),

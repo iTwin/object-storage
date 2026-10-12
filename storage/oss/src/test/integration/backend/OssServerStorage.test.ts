@@ -120,7 +120,10 @@ describe(`Oss${ServerStorage.name} internal tests`, () => {
     const client = createS3Client(s3Config);
     const clientWrapper = new S3ClientWrapper(client, bucket);
 
-    const presignedUrlProvider = new S3PresignedUrlProvider(client, bucket);
+    const presignedUrlProvider = new S3PresignedUrlProvider(
+      client,
+      serverStorageConfig
+    );
     const rpcClient = createCore({
       accessKey,
       secretKey,

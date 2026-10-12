@@ -85,7 +85,7 @@ export class S3ServerStorageBindings extends ServerStorageDependency {
       (c: DIContainer) =>
         new S3PresignedUrlProvider(
           c.resolve(S3Client),
-          c.resolve(Types.S3Server.config)
+          c.resolve<S3ServerStorageConfig>(Types.S3Server.config)
         )
     );
     container.registerFactory<TransferConfigProvider>(
