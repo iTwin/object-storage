@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import type { TokenCredential } from "@azure/core-auth";
 import { BlobServiceClient } from "@azure/storage-blob";
 
 import { DIContainer } from "@itwin/cloud-agnostic-core";
@@ -19,6 +20,7 @@ import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   AzureServerStorageConfig,
+  AzureServerStorageCredentialConfig,
   BlobServiceClientWrapper,
 } from "../../../server";
 
@@ -83,5 +85,52 @@ describe(`${AzureServerStorageBindings.name}`, () => {
       },
     ];
     testBindings(serverBindings, config, bindingsTestCases);
+
+    describe("with token credential", () => {
+      testInvalidServerConfig(serverBindings, [
+        {
+          config: {
+            dependencyName: Constants.storageType,
+            accountName: "testAccountName",
+            credential: undefined,
+            baseUrl: "testBaseUrl",
+          } as unknown as AzureServerStorageBindingsConfig,
+          expectedErrorMessage: "credential is not defined in configuration",
+        },
+        {
+          config: {
+            dependencyName: Constants.storageType,
+            accountName: "testAccountName",
+            credential: {} as TokenCredential,
+          } as unknown as AzureServerStorageBindingsConfig,
+          expectedErrorMessage: "baseUrl is not defined in configuration",
+        },
+      ]);
+
+      const credentialConfig: AzureServerStorageCredentialConfig & {
+        dependencyName: string;
+      } = {
+        dependencyName: Constants.storageType,
+        accountName: "testAccountName",
+        baseUrl: "https://testaccountname.blob.core.windows.net",
+        credential: {
+          getToken: () => Promise.resolve(null),
+        },
+      };
+      testBindings(serverBindings, credentialConfig, [
+        {
+          testedClassIdentifier: ServerStorage.name,
+          testedFunction: (c: DIContainer) =>
+            c.resolve<ServerStorage>(CoreTypes.Server.serverStorage),
+          expectedCtor: AzureServerStorage,
+        },
+        {
+          testedClassIdentifier: BlobServiceClientWrapper.name,
+          testedFunction: (c: DIContainer) =>
+            c.resolve(BlobServiceClientWrapper),
+          expectedCtor: BlobServiceClientWrapper,
+        },
+      ]);
+    });
   });
 });

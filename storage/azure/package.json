@@ -45,6 +45,7 @@
     "extends": "./node_modules/@itwin/object-storage-common-config/.eslintrc.js"
   },
   "dependencies": {
+    "@azure/core-auth": "^1.9.0",
     "@azure/core-paging": "^1.6.2",
     "@azure/storage-blob": "^12.27.0",
     "@itwin/cloud-agnostic-core": "workspace:*",
