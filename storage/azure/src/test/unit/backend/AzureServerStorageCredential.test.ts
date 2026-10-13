@@ -134,7 +134,6 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
 
   afterEach(() => {
     sinon.restore();
-    clock.restore();
   });
 
   function credentialStorage(): AzureServerStorage {
@@ -182,7 +181,7 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       } as unknown as AzureServerStorageConfig;
       await expect(
         new AzureServerStorage(config, client).getDownloadUrl(reference)
-      ).to.be.rejectedWith(TypeError);
+      ).to.eventually.be.rejectedWith(TypeError);
       expect(getUserDelegationKey.called).to.be.false;
     });
   });
@@ -237,16 +236,16 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       getUserDelegationKey.onFirstCall().rejects(error);
       const storage = credentialStorage();
 
-      const results = await Promise.allSettled([
-        storage.getDownloadUrl(reference),
-        storage.getUploadUrl(reference),
-      ]);
-      expect(results.map((r) => r.status)).to.deep.equal([
-        "rejected",
-        "rejected",
-      ]);
-      for (const result of results)
-        expect((result as PromiseRejectedResult).reason).to.equal(error);
+      const download = storage.getDownloadUrl(reference);
+      const upload = storage.getUploadUrl(reference);
+      await expect(download).to.eventually.be.rejectedWith(
+        Error,
+        "key request failed"
+      );
+      await expect(upload).to.eventually.be.rejectedWith(
+        Error,
+        "key request failed"
+      );
 
       await storage.getDownloadUrl(reference);
       expect(getUserDelegationKey.calledTwice).to.be.true;
@@ -264,7 +263,10 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
         credentialStorage().getDownloadUrl(reference, {
           expiresInSeconds: 7 * 24 * 60 * 60,
         })
-      ).to.be.rejectedWith("SAS expiry must be less than 7 days");
+      ).to.eventually.be.rejectedWith(
+        Error,
+        "SAS expiry must not exceed the user delegation key's expiry"
+      );
       expect(getUserDelegationKey.called).to.be.false;
     });
   });
@@ -272,8 +274,7 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
 
 describe(`${BlobServiceClientWrapperFactory.name}`, () => {
   function clientCredential(wrapper: BlobServiceClientWrapper): unknown {
-    return (wrapper as unknown as { _client: BlobServiceClient })._client
-      .credential;
+    return wrapper.getContainerClient("container").credential;
   }
 
   it("should authenticate with the token credential", () => {

@@ -8,9 +8,9 @@ This package contains implementations for object storage interfaces exposed by `
 
 ## Authentication
 
-`AzureServerStorage` supports two kinds of authentication. Both are fully supported.
+`AzureServerStorage` supports shared-key and token-credential authentication.
 
-- **Shared key:** pass `accountKey`. Behavior is unchanged.
+- **Shared key:** pass `accountKey`.
 - **Token credential:** pass an Azure SDK `TokenCredential` (for example `ManagedIdentityCredential` from `@azure/identity`) as `credential` and omit `accountKey`. Blob operations use the credential. SAS URLs and configs are signed with [user delegation keys](https://learn.microsoft.com/rest/api/storageservices/create-user-delegation-sas).
 
 ```ts
@@ -26,5 +26,5 @@ const storage = new AzureServerStorage(
 With a token credential:
 
 - the identity needs blob data access and permission to generate user delegation keys, for example the Storage Blob Data Contributor role on the storage account;
-- SAS expiry must be less than 7 days;
+- SAS expiry must not exceed the user delegation key's expiry, which is about 7 days minus 5 minutes from now;
 - the caller creates and owns the credential.

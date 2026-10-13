@@ -65,7 +65,8 @@ export interface AzureServerStorageConfig extends StorageOptions {
 /**
  * Signs SAS URLs and configs with user delegation keys requested through the
  * client. The client must be authenticated with the same token credential.
- * SAS expiry must be less than 7 days.
+ * SAS expiry must not exceed the user delegation key's expiry, which is
+ * about 7 days minus 5 minutes from now.
  */
 export interface AzureServerStorageCredentialConfig
   extends StorageOptions,
@@ -405,7 +406,7 @@ export class AzureServerStorage extends ServerStorage {
       );
       if (expiresOn.getTime() > keyExpiresOn.getTime())
         throw new Error(
-          `SAS expiry ${expiresOn.toISOString()} is later than ${keyExpiresOn.toISOString()}. SAS expiry must be less than 7 days when using a token credential.`
+          `SAS expiry ${expiresOn.toISOString()} is later than ${keyExpiresOn.toISOString()}. SAS expiry must not exceed the user delegation key's expiry (about 7 days minus 5 minutes from now) when using a token credential.`
         );
 
       const key = this._client.getUserDelegationKey(startsOn, keyExpiresOn);
