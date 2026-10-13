@@ -6,7 +6,11 @@ import { promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { RestError } from "@azure/storage-blob";
+import {
+  RestError,
+  StorageSharedKeyCredential,
+  UserDelegationKey,
+} from "@azure/storage-blob";
 
 import {
   assertBaseDirectory,
@@ -44,8 +48,13 @@ import { buildBlobName } from "../common/internal";
 import {
   buildBlobSASParameters,
   buildContainerSASParameters,
+  isCredentialConfig,
 } from "./internal";
-import { BlobServiceClientWrapper, BlockBlobClientWrapper } from "./wrappers";
+import {
+  AzureBlobServiceCredentialConfig,
+  BlobServiceClientWrapper,
+  BlockBlobClientWrapper,
+} from "./wrappers";
 
 export interface AzureServerStorageConfig extends StorageOptions {
   accountName: string;
@@ -53,12 +62,25 @@ export interface AzureServerStorageConfig extends StorageOptions {
   baseUrl: string;
 }
 
+/**
+ * Signs SAS URLs and configs with user delegation keys requested through the
+ * client. The client must be authenticated with the same token credential.
+ * SAS expiry must not exceed the user delegation key's expiry, which is
+ * about 7 days minus 5 minutes from now.
+ */
+export interface AzureServerStorageCredentialConfig
+  extends StorageOptions,
+    AzureBlobServiceCredentialConfig {}
+
 export class AzureServerStorage extends ServerStorage {
-  private readonly _config: AzureServerStorageConfig;
+  private readonly _config:
+    | AzureServerStorageConfig
+    | AzureServerStorageCredentialConfig;
   private readonly _client: BlobServiceClientWrapper;
+  private _delegationKey?: { expiresOn: Date; key: Promise<UserDelegationKey> };
 
   public constructor(
-    config: AzureServerStorageConfig,
+    config: AzureServerStorageConfig | AzureServerStorageCredentialConfig,
     client: BlobServiceClientWrapper
   ) {
     super();
@@ -220,7 +242,6 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadUrl(
     reference: ObjectReference,
     expiry?: ExpiryOptions
@@ -228,19 +249,19 @@ export class AzureServerStorage extends ServerStorage {
     assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
+    const expiresOn = getExpiryDate(expiry);
     const parameters = buildBlobSASParameters(
       reference.baseDirectory,
       "read",
-      getExpiryDate(expiry),
+      expiresOn,
       this._config.accountName,
-      this._config.accountKey,
+      await this.getSigningKey(expiresOn),
       buildBlobName(reference)
     );
 
     return `${blobClient.url}?${parameters}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadUrl(
     reference: ObjectReference,
     expiry?: ExpiryOptions
@@ -248,19 +269,19 @@ export class AzureServerStorage extends ServerStorage {
     assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
+    const expiresOn = getExpiryDate(expiry);
     const parameters = buildBlobSASParameters(
       reference.baseDirectory,
       "write",
-      getExpiryDate(expiry),
+      expiresOn,
       this._config.accountName,
-      this._config.accountKey,
+      await this.getSigningKey(expiresOn),
       buildBlobName(reference)
     );
 
     return `${blobClient.url}?${parameters}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDownloadConfig(
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
@@ -274,7 +295,7 @@ export class AzureServerStorage extends ServerStorage {
       "read",
       expiresOn,
       this._config.accountName,
-      this._config.accountKey
+      await this.getSigningKey(expiresOn)
     );
 
     return {
@@ -285,7 +306,6 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async getUploadConfig(
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
@@ -299,7 +319,7 @@ export class AzureServerStorage extends ServerStorage {
       "write",
       expiresOn,
       this._config.accountName,
-      this._config.accountKey
+      await this.getSigningKey(expiresOn)
     );
 
     return {
@@ -310,7 +330,6 @@ export class AzureServerStorage extends ServerStorage {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   public async getDirectoryAccessConfig(
     directory: ObjectDirectory,
     expiry?: ExpiryOptions
@@ -323,7 +342,7 @@ export class AzureServerStorage extends ServerStorage {
       directory.baseDirectory,
       expiresOn,
       this._config.accountName,
-      this._config.accountKey
+      await this.getSigningKey(expiresOn)
     );
 
     return {
@@ -360,6 +379,43 @@ export class AzureServerStorage extends ServerStorage {
   }
 
   public override async releaseResources(): Promise<void> {}
+
+  /**
+   * Shared key config: a new shared key credential, as before.
+   * Token credential config: a user delegation key valid until `expiresOn`.
+   * Concurrent callers share one key request; a failed request is not cached.
+   */
+  private async getSigningKey(
+    expiresOn: Date
+  ): Promise<StorageSharedKeyCredential | UserDelegationKey> {
+    if (!isCredentialConfig(this._config))
+      return new StorageSharedKeyCredential(
+        this._config.accountName,
+        this._config.accountKey
+      );
+
+    let cached = this._delegationKey;
+    if (!cached || cached.expiresOn.getTime() < expiresOn.getTime()) {
+      // Whole seconds, because the SDK truncates key dates to seconds.
+      // Started 5 minutes ago to tolerate clock skew with Azure.
+      const startsOn = new Date(
+        Math.floor(Date.now() / 1000) * 1000 - 5 * 60 * 1000
+      );
+      const keyExpiresOn = new Date(
+        startsOn.getTime() + 7 * 24 * 60 * 60 * 1000
+      );
+      if (expiresOn.getTime() > keyExpiresOn.getTime())
+        throw new Error("SAS expiry exceeds user delegation key expiry.");
+
+      const key = this._client.getUserDelegationKey(startsOn, keyExpiresOn);
+      cached = { expiresOn: keyExpiresOn, key };
+      this._delegationKey = cached;
+      key.catch(() => {
+        if (this._delegationKey?.key === key) this._delegationKey = undefined;
+      });
+    }
+    return cached.key;
+  }
 
   private async handleNotFound(operation: () => Promise<void>): Promise<void> {
     try {
