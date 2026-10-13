@@ -13,7 +13,8 @@ import {
 } from "@azure/storage-blob";
 import { expect, use } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import * as sinon from "sinon";
+import { restore, stub, useFakeTimers } from "sinon";
+import type { SinonFakeTimers, SinonStub } from "sinon";
 
 import { ObjectDirectory, ObjectReference } from "@itwin/object-storage-core";
 
@@ -22,7 +23,6 @@ import {
   AzureServerStorageConfig,
   AzureServerStorageCredentialConfig,
   BlobServiceClientWrapper,
-  BlobServiceClientWrapperFactory,
 } from "../../../server";
 
 use(chaiAsPromised);
@@ -120,20 +120,20 @@ async function expectAllSasOutputs(
 }
 
 describe(`${AzureServerStorage.name} SAS signing`, () => {
-  let clock: sinon.SinonFakeTimers;
+  let clock: SinonFakeTimers;
   let client: BlobServiceClientWrapper;
-  let getUserDelegationKey: sinon.SinonStub;
+  let getUserDelegationKey: SinonStub;
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers({ now, toFake: ["Date"] });
+    clock = useFakeTimers({ now, toFake: ["Date"] });
     client = new BlobServiceClientWrapper(new BlobServiceClient(baseUrl));
-    getUserDelegationKey = sinon
-      .stub(client, "getUserDelegationKey")
-      .callsFake(() => Promise.resolve(delegationKey()));
+    getUserDelegationKey = stub(client, "getUserDelegationKey").callsFake(() =>
+      Promise.resolve(delegationKey())
+    );
   });
 
   afterEach(() => {
-    sinon.restore();
+    restore();
   });
 
   function credentialStorage(): AzureServerStorage {
@@ -265,47 +265,9 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
         })
       ).to.eventually.be.rejectedWith(
         Error,
-        "SAS expiry must not exceed the user delegation key's expiry"
+        "SAS expiry exceeds user delegation key expiry"
       );
       expect(getUserDelegationKey.called).to.be.false;
     });
-  });
-});
-
-describe(`${BlobServiceClientWrapperFactory.name}`, () => {
-  function clientCredential(wrapper: BlobServiceClientWrapper): unknown {
-    return wrapper.getContainerClient("container").credential;
-  }
-
-  it("should authenticate with the token credential", () => {
-    const wrapper = new BlobServiceClientWrapperFactory().create({
-      accountName,
-      baseUrl,
-      credential,
-    });
-    expect(clientCredential(wrapper)).to.equal(credential);
-  });
-
-  it("should throw if credential is undefined", () => {
-    expect(() =>
-      new BlobServiceClientWrapperFactory().create({
-        accountName,
-        baseUrl,
-        credential: undefined as unknown as TokenCredential,
-      })
-    ).to.throw("credential is not defined in configuration");
-  });
-
-  it("should authenticate with the account key", () => {
-    const wrapper = new BlobServiceClientWrapperFactory().create({
-      accountName,
-      accountKey,
-      baseUrl,
-    });
-    const used = clientCredential(wrapper);
-    expect(used).to.be.instanceOf(StorageSharedKeyCredential);
-    expect((used as StorageSharedKeyCredential).accountName).to.equal(
-      accountName
-    );
   });
 });

@@ -5,7 +5,7 @@
 import type { TokenCredential } from "@azure/core-auth";
 import { BlobServiceClient } from "@azure/storage-blob";
 
-import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
+import { DIContainer } from "@itwin/cloud-agnostic-core";
 import { ServerStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -20,7 +20,7 @@ import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   AzureServerStorageConfig,
-  AzureServerStorageCredentialConfig,
+  AzureServerStorageCredentialBindingsConfig,
   BlobServiceClientWrapper,
 } from "../../../server";
 
@@ -94,8 +94,7 @@ describe(`${AzureServerStorageBindings.name}`, () => {
             accountName: "testAccountName",
             credential: undefined,
             baseUrl: "testBaseUrl",
-          } as unknown as AzureServerStorageCredentialConfig &
-            DependencyConfig,
+          } as unknown as AzureServerStorageCredentialBindingsConfig,
           expectedErrorMessage: "credential is not defined in configuration",
         },
         {
@@ -103,14 +102,12 @@ describe(`${AzureServerStorageBindings.name}`, () => {
             dependencyName: Constants.storageType,
             accountName: "testAccountName",
             credential: {} as TokenCredential,
-          } as unknown as AzureServerStorageCredentialConfig &
-            DependencyConfig,
+          } as unknown as AzureServerStorageCredentialBindingsConfig,
           expectedErrorMessage: "baseUrl is not defined in configuration",
         },
       ]);
 
-      const credentialConfig: AzureServerStorageCredentialConfig &
-        DependencyConfig = {
+      const credentialConfig: AzureServerStorageCredentialBindingsConfig = {
         dependencyName: Constants.storageType,
         accountName: "testAccountName",
         baseUrl: "https://testaccountname.blob.core.windows.net",

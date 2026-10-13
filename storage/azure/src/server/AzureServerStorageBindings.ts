@@ -27,7 +27,7 @@ import {
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;
 
-type AzureServerStorageCredentialBindingsConfig =
+export type AzureServerStorageCredentialBindingsConfig =
   AzureServerStorageCredentialConfig & DependencyConfig;
 
 export class AzureServerStorageBindings extends ServerStorageDependency {

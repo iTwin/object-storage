@@ -405,9 +405,7 @@ export class AzureServerStorage extends ServerStorage {
         startsOn.getTime() + 7 * 24 * 60 * 60 * 1000
       );
       if (expiresOn.getTime() > keyExpiresOn.getTime())
-        throw new Error(
-          `SAS expiry ${expiresOn.toISOString()} is later than ${keyExpiresOn.toISOString()}. SAS expiry must not exceed the user delegation key's expiry (about 7 days minus 5 minutes from now) when using a token credential.`
-        );
+        throw new Error("SAS expiry exceeds user delegation key expiry.");
 
       const key = this._client.getUserDelegationKey(startsOn, keyExpiresOn);
       cached = { expiresOn: keyExpiresOn, key };
