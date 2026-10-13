@@ -27,9 +27,6 @@ import {
 export type AzureServerStorageBindingsConfig = AzureServerStorageConfig &
   DependencyConfig;
 
-export type AzureServerStorageCredentialBindingsConfig =
-  AzureServerStorageCredentialConfig & DependencyConfig;
-
 export class AzureServerStorageBindings extends ServerStorageDependency {
   public readonly dependencyName: string = Constants.storageType;
 
@@ -37,7 +34,7 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
     container: DIContainer,
     config:
       | AzureServerStorageBindingsConfig
-      | AzureServerStorageCredentialBindingsConfig
+      | (AzureServerStorageCredentialConfig & DependencyConfig)
   ): void {
     if (!config.accountName)
       throw new ConfigError<AzureServerStorageConfig>("accountName");

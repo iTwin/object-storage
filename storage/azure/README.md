@@ -8,10 +8,7 @@ This package contains implementations for object storage interfaces exposed by `
 
 ## Authentication
 
-`AzureServerStorage` supports shared-key and token-credential authentication.
-
-- **Shared key:** pass `accountKey`.
-- **Token credential:** pass an Azure SDK `TokenCredential` (for example `ManagedIdentityCredential` from `@azure/identity`) as `credential` and omit `accountKey`. Blob operations use the credential. SAS URLs and configs are signed with [user delegation keys](https://learn.microsoft.com/rest/api/storageservices/create-user-delegation-sas).
+`AzureServerStorage` and `AzureServerStorageBindings` authenticate with either `accountKey` (shared key) or an Azure SDK `TokenCredential` passed as `credential`. If `accountKey` is present, shared key is used. With a token credential, SAS URLs and configs are signed with [user delegation keys](https://learn.microsoft.com/rest/api/storageservices/create-user-delegation-sas).
 
 ```ts
 const config = { accountName, baseUrl, credential };
@@ -21,10 +18,4 @@ const storage = new AzureServerStorage(
 );
 ```
 
-`AzureServerStorageBindings` accepts the same `credential` property. A config that contains `accountKey` always uses shared key, even if it also contains `credential`. There is no fallback between the two kinds.
-
-With a token credential:
-
-- the identity needs blob data access and permission to generate user delegation keys, for example the Storage Blob Data Contributor role on the storage account;
-- SAS expiry must not exceed the user delegation key's expiry, which is about 7 days minus 5 minutes from now;
-- the caller creates and owns the credential.
+The identity needs blob data access and permission to generate user delegation keys, for example the Storage Blob Data Contributor role. SAS expiry must not exceed the user delegation key's expiry, about 7 days minus 5 minutes from now.

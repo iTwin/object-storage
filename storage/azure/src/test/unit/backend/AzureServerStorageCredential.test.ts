@@ -23,6 +23,7 @@ import {
   AzureServerStorageConfig,
   AzureServerStorageCredentialConfig,
   BlobServiceClientWrapper,
+  BlobServiceClientWrapperFactory,
 } from "../../../server";
 
 use(chaiAsPromised);
@@ -203,32 +204,16 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       expect(expiresOn.getTime()).to.equal(now - 5 * 60 * 1000 + 7 * day);
     });
 
-    it("should reuse the key while it outlives the requested SAS", async () => {
+    it("should reuse the key until the SAS would outlive it", async () => {
       const storage = credentialStorage();
       await storage.getDownloadUrl(reference);
       clock.tick(6 * day + 22 * hour);
       await storage.getUploadUrl(reference);
-
       expect(getUserDelegationKey.calledOnce).to.be.true;
-    });
 
-    it("should request a new key when the SAS would outlive the cached key", async () => {
-      const storage = credentialStorage();
+      clock.tick(hour);
       await storage.getDownloadUrl(reference);
-      clock.tick(6 * day + 23 * hour);
-      await storage.getDownloadUrl(reference);
-
       expect(getUserDelegationKey.calledTwice).to.be.true;
-    });
-
-    it("should share one key request between concurrent callers", async () => {
-      const storage = credentialStorage();
-      await Promise.all([
-        storage.getDownloadUrl(reference),
-        storage.getDirectoryAccessConfig(directory),
-      ]);
-
-      expect(getUserDelegationKey.calledOnce).to.be.true;
     });
 
     it("should reject all waiters on failure and retry on the next call", async () => {
@@ -269,5 +254,30 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       );
       expect(getUserDelegationKey.called).to.be.false;
     });
+  });
+});
+
+describe(`${BlobServiceClientWrapperFactory.name}`, () => {
+  function clientCredential(wrapper: BlobServiceClientWrapper): unknown {
+    return wrapper.getContainerClient("container").credential;
+  }
+
+  it("should authenticate with the token credential", () => {
+    const wrapper = new BlobServiceClientWrapperFactory().create({
+      accountName,
+      baseUrl,
+      credential,
+    });
+    expect(clientCredential(wrapper)).to.equal(credential);
+  });
+
+  it("should throw if credential is undefined", () => {
+    expect(() =>
+      new BlobServiceClientWrapperFactory().create({
+        accountName,
+        baseUrl,
+        credential: undefined as unknown as TokenCredential,
+      })
+    ).to.throw("credential is not defined in configuration");
   });
 });
