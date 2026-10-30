@@ -9,6 +9,7 @@ import {
   BlockBlobClient,
   ContainerClient,
   ContainerItem,
+  UserDelegationKey,
 } from "@azure/storage-blob";
 
 import {
@@ -45,6 +46,13 @@ export class BlobServiceClientWrapper {
     return this._client
       .getContainerClient(reference.baseDirectory)
       .getBlockBlobClient(buildBlobName(reference));
+  }
+
+  public async getUserDelegationKey(
+    startsOn: Date,
+    expiresOn: Date
+  ): Promise<UserDelegationKey> {
+    return this._client.getUserDelegationKey(startsOn, expiresOn);
   }
 
   public async getDirectoriesNextPage(options: {
