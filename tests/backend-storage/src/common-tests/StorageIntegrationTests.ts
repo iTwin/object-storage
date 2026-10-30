@@ -5,7 +5,7 @@
 import { readdirSync } from "fs";
 import { join } from "path";
 
-import Mocha from "mocha";
+import * as Mocha from "mocha";
 
 import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 
@@ -80,7 +80,10 @@ export class StorageIntegrationTests extends Bindable {
       },
     };
 
-    const mocha = new Mocha(mochaOptions);
+    // require("mocha") is a namespace on Node 22 but the constructor on Node 26; both expose it as .Mocha.
+    const MochaConstructor = (Mocha as unknown as { Mocha: typeof Mocha })
+      .Mocha;
+    const mocha = new MochaConstructor(mochaOptions);
     const testDirectory = __dirname;
 
     readdirSync(testDirectory)
