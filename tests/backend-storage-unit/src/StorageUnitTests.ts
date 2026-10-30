@@ -72,7 +72,10 @@ export class StorageUnitTests extends Bindable {
       },
     };
 
-    const mocha = new Mocha(mochaOptions);
+    // require("mocha") is a namespace on Node 22 but the constructor on Node 26; both expose it as .Mocha.
+    const MochaConstructor = (Mocha as unknown as { Mocha: typeof Mocha })
+      .Mocha;
+    const mocha = new MochaConstructor(mochaOptions);
     const testDirectory = join(__dirname, "test");
 
     readdirSync(testDirectory)

@@ -3,6 +3,7 @@
   "rushVersion": "5.149.0",
   "pnpmVersion": "9.15.5",
   "ensureConsistentVersions": true,
+  "nodeSupportedVersionRange": "^22.17.0 || ^24.0.0 || ^26.0.0",
   "projectFolderMinDepth": 1,
   "projectFolderMaxDepth": 2,
   "repository": {

@@ -429,7 +429,6 @@ describe(`${ServerStorage.name}: ${serverStorage.constructor.name}`, () => {
     });
   });
 
-  // eslint-disable-next-line deprecation/deprecation
   describe(`${serverStorage.list.name}()`, () => {
     it("should list objects. DEPRECATED", async () => {
       await serverStorageListTest(
