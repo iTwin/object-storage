@@ -5,7 +5,7 @@
 import { readdirSync } from "fs";
 import { join } from "path";
 
-import * as Mocha from "mocha";
+import Mocha from "mocha";
 
 import { InversifyWrapper } from "@itwin/cloud-agnostic-core/lib/inversify";
 

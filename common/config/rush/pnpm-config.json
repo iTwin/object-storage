@@ -3,6 +3,7 @@
   "globalOverrides": {
     "fast-xml-parser": "5.8.0",
     "serialize-javascript": "7.0.5",
-    "uuid": "11.1.1"
+    "uuid": "11.1.1",
+    "decode-uri-component": "0.5.1"
   }
 }

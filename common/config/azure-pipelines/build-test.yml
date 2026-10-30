@@ -6,8 +6,8 @@ parameters:
     default: true
 
 variables:
-  currentNodeVersion: "26.8.1"
-  maintenanceNodeVersion: "22.23.2"
+  currentNodeVersion: "26.x"
+  maintenanceNodeVersion: "22.x"
 
 trigger: none
 
