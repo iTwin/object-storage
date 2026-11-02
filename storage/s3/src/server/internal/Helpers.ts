@@ -37,15 +37,8 @@ export function getExpiresInSeconds(options?: ExpiryOptions): number {
   return defaultExpiresInSeconds; // expires in one hour by default
 }
 
-export function getActions(): string[] {
-  const actions: string[] = [
-    "s3:GetObject",
-    "s3:PutObject",
-    "s3:DeleteObject",
-    "s3:ListBucket",
-  ];
-
-  return actions;
+export function getObjectActions(): string[] {
+  return ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"];
 }
 
 export function assertPolicyResourceDirectory(directory: string): void {
