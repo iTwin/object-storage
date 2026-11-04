@@ -26,7 +26,8 @@ export interface AzureBlobServiceConfig {
 
 /**
  * Authenticates with an Azure SDK token credential, such as a managed
- * identity, instead of an account key. Used only when `accountKey` is absent.
+ * identity, instead of an account key. Used only when the config has no
+ * `accountKey` property, not even an undefined one.
  */
 export interface AzureBlobServiceCredentialConfig {
   accountName: string;

@@ -379,11 +379,6 @@ export class AzureServerStorage extends ServerStorage {
 
   public override async releaseResources(): Promise<void> {}
 
-  /**
-   * Shared key config: a new shared key credential, as before.
-   * Token credential config: a user delegation key valid until `expiresOn`.
-   * Concurrent callers share one key request; a failed request is not cached.
-   */
   private async getSigningKey(
     expiresOn: Date
   ): Promise<StorageSharedKeyCredential | UserDelegationKey> {

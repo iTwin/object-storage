@@ -8,7 +8,7 @@ This package contains implementations for object storage interfaces exposed by `
 
 ## Authentication
 
-`AzureServerStorage` and `AzureServerStorageBindings` authenticate with either `accountKey` (shared key) or an Azure SDK `TokenCredential` passed as `credential`. If `accountKey` is present, shared key is used. With a token credential, SAS URLs and configs are signed with [user delegation keys](https://learn.microsoft.com/rest/api/storageservices/create-user-delegation-sas).
+`AzureServerStorage` and `AzureServerStorageBindings` authenticate with either `accountKey` (shared key) or an Azure SDK `TokenCredential` passed as `credential`. If the config has an `accountKey` property, even an undefined or empty one, shared key is used; omit the property to use `credential`. With a token credential, SAS URLs and configs are signed with [user delegation keys](https://learn.microsoft.com/rest/api/storageservices/create-user-delegation-sas).
 
 ```ts
 const config = { accountName, baseUrl, credential };
