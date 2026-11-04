@@ -4,50 +4,80 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   BlobSASPermissions,
+  BlobSASSignatureValues,
   ContainerSASPermissions,
   generateBlobSASQueryParameters,
   StorageSharedKeyCredential,
+  UserDelegationKey,
 } from "@azure/storage-blob";
+
+import type {
+  AzureBlobServiceConfig,
+  AzureBlobServiceCredentialConfig,
+} from "../wrappers";
+
+/**
+ * A config selects token credential authentication only when it has a
+ * `credential` property and no `accountKey` property. Any config with
+ * `accountKey` uses shared key authentication.
+ */
+export function isCredentialConfig(
+  config: AzureBlobServiceConfig | AzureBlobServiceCredentialConfig
+): config is AzureBlobServiceCredentialConfig {
+  return "credential" in config && !("accountKey" in config);
+}
 
 export function buildBlobSASParameters(
   containerName: string,
   readOrWrite: "read" | "write",
   expiresOn: Date,
   accountName: string,
-  accountKey: string,
+  signingKey: StorageSharedKeyCredential | UserDelegationKey,
   blobName?: string
 ): string {
   const permissions = new BlobSASPermissions();
   permissions.read = readOrWrite === "read";
   permissions.write = readOrWrite === "write";
 
-  const parameters = generateBlobSASQueryParameters(
+  return signSASParameters(
     {
       containerName,
       blobName,
       permissions,
       expiresOn,
     },
-    new StorageSharedKeyCredential(accountName, accountKey)
+    accountName,
+    signingKey
   );
-  return parameters.toString();
 }
 
 export function buildContainerSASParameters(
   containerName: string,
   expiresOn: Date,
   accountName: string,
-  accountKey: string
+  signingKey: StorageSharedKeyCredential | UserDelegationKey
 ): string {
   const permissions = getContainerSASPermissions();
-  const parameters = generateBlobSASQueryParameters(
+  return signSASParameters(
     {
       containerName,
       permissions,
       expiresOn,
     },
-    new StorageSharedKeyCredential(accountName, accountKey)
+    accountName,
+    signingKey
   );
+}
+
+function signSASParameters(
+  values: BlobSASSignatureValues,
+  accountName: string,
+  signingKey: StorageSharedKeyCredential | UserDelegationKey
+): string {
+  const parameters =
+    signingKey instanceof StorageSharedKeyCredential
+      ? generateBlobSASQueryParameters(values, signingKey)
+      : generateBlobSASQueryParameters(values, signingKey, accountName);
 
   return parameters.toString();
 }

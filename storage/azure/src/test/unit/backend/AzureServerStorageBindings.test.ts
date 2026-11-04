@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { BlobServiceClient } from "@azure/storage-blob";
 
-import { DIContainer } from "@itwin/cloud-agnostic-core";
+import { DependencyConfig, DIContainer } from "@itwin/cloud-agnostic-core";
 import { ServerStorage, Types as CoreTypes } from "@itwin/object-storage-core";
 import {
   DependencyBindingsTestCase,
@@ -19,6 +19,7 @@ import {
   AzureServerStorageBindings,
   AzureServerStorageBindingsConfig,
   AzureServerStorageConfig,
+  AzureServerStorageCredentialConfig,
   BlobServiceClientWrapper,
 } from "../../../server";
 
@@ -83,5 +84,43 @@ describe(`${AzureServerStorageBindings.name}`, () => {
       },
     ];
     testBindings(serverBindings, config, bindingsTestCases);
+
+    describe("with token credential", () => {
+      testInvalidServerConfig(serverBindings, [
+        {
+          config: {
+            dependencyName: Constants.storageType,
+            accountName: "testAccountName",
+            credential: undefined,
+            baseUrl: "testBaseUrl",
+          } as unknown as AzureServerStorageCredentialConfig & DependencyConfig,
+          expectedErrorMessage: "credential is not defined in configuration",
+        },
+      ]);
+
+      const credentialConfig: AzureServerStorageCredentialConfig &
+        DependencyConfig = {
+        dependencyName: Constants.storageType,
+        accountName: "testAccountName",
+        baseUrl: "https://testaccountname.blob.core.windows.net",
+        credential: {
+          getToken: () => Promise.resolve(null),
+        },
+      };
+      testBindings(serverBindings, credentialConfig, [
+        {
+          testedClassIdentifier: ServerStorage.name,
+          testedFunction: (c: DIContainer) =>
+            c.resolve<ServerStorage>(CoreTypes.Server.serverStorage),
+          expectedCtor: AzureServerStorage,
+        },
+        {
+          testedClassIdentifier: BlobServiceClientWrapper.name,
+          testedFunction: (c: DIContainer) =>
+            c.resolve(BlobServiceClientWrapper),
+          expectedCtor: BlobServiceClientWrapper,
+        },
+      ]);
+    });
   });
 });
