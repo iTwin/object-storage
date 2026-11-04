@@ -394,9 +394,10 @@ export class AzureServerStorage extends ServerStorage {
         this._config.accountKey
       );
 
+    // Whole seconds, because the SDK truncates SAS and key dates to seconds.
+    const sasExpiresOn = Math.floor(expiresOn.getTime() / 1000) * 1000;
     let cached = this._delegationKey;
-    if (!cached || cached.expiresOn.getTime() < expiresOn.getTime()) {
-      // Whole seconds, because the SDK truncates key dates to seconds.
+    if (!cached || cached.expiresOn.getTime() < sasExpiresOn) {
       // Started 5 minutes ago to tolerate clock skew with Azure.
       const startsOn = new Date(
         Math.floor(Date.now() / 1000) * 1000 - 5 * 60 * 1000
@@ -404,7 +405,7 @@ export class AzureServerStorage extends ServerStorage {
       const keyExpiresOn = new Date(
         startsOn.getTime() + 7 * 24 * 60 * 60 * 1000
       );
-      if (expiresOn.getTime() > keyExpiresOn.getTime())
+      if (sasExpiresOn > keyExpiresOn.getTime())
         throw new Error("SAS expiry exceeds user delegation key expiry.");
 
       const key = this._client.getUserDelegationKey(startsOn, keyExpiresOn);

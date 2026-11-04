@@ -237,8 +237,9 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
     });
 
     it("should allow SAS expiry up to 7 days minus 5 minutes", async () => {
+      clock.tick(500);
       await credentialStorage().getDownloadUrl(reference, {
-        expiresOn: new Date(now + maxCredentialExpiry),
+        expiresInSeconds: maxCredentialExpiry / 1000,
       });
       expect(getUserDelegationKey.calledOnce).to.be.true;
     });
