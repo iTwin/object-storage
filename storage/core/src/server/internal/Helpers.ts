@@ -19,6 +19,7 @@ import {
   ExpiryOptions,
   TransferData,
   TransferType,
+  UploadTransferOptions,
   UrlDownloadInput,
 } from "../Interfaces";
 
@@ -54,6 +55,15 @@ export async function getUploadSize(
   if (typeof data === "string") return (await promises.stat(data)).size;
   if (data instanceof Readable) return undefined;
   return data.byteLength;
+}
+
+/**
+ * {@link UploadTransferOptions} with the signal converted by
+ * `createClientAbortSignal`, as passed to storage client wrappers.
+ */
+export interface ClientUploadTransferOptions
+  extends Omit<UploadTransferOptions, "abortSignal"> {
+  abortSignal?: AbortSignal;
 }
 
 export type UploadProgressHandler = (

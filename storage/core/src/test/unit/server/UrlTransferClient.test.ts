@@ -105,6 +105,32 @@ describe(`${UrlTransferClient.name}.upload()`, () => {
     expect(receivedBodies[0].equals(content)).to.be.true;
   });
 
+  it("should not report progress ahead of the data received by the server", async () => {
+    const largeContent = Buffer.alloc(16 * 1024 * 1024, "a");
+    let serverReadBytes = 0;
+    handler = (request, response, body) => {
+      request.pause();
+      request.on("data", (chunk: Buffer) => (serverReadBytes += chunk.length));
+      setTimeout(() => request.resume(), 200);
+      void body.then(() => response.end());
+    };
+    let serverReadBytesAtTotal: number | undefined;
+
+    await new UrlTransferClient().upload(url, largeContent, undefined, {
+      onProgress: ({ loadedBytes }) => {
+        if (
+          loadedBytes === largeContent.byteLength &&
+          serverReadBytesAtTotal === undefined
+        )
+          serverReadBytesAtTotal = serverReadBytes;
+      },
+    });
+
+    expect(serverReadBytesAtTotal).to.be.greaterThan(
+      largeContent.byteLength / 2
+    );
+  });
+
   it("should not fail upload if progress callback throws", async () => {
     await new UrlTransferClient().upload(url, content, undefined, {
       onProgress: () => {

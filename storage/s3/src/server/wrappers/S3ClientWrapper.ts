@@ -5,6 +5,7 @@
 import { Readable } from "stream";
 
 import {
+  AbortMultipartUploadCommand,
   CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
@@ -23,6 +24,7 @@ import {
 } from "@itwin/object-storage-core/lib/common/internal";
 import {
   bufferToChunkedStream,
+  ClientUploadTransferOptions,
   createUploadProgressHandler,
   streamToBuffer,
   throwIfAborted,
@@ -39,7 +41,6 @@ import {
   EntityCollectionPage,
   ObjectReference,
   TransferData,
-  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 export class S3ClientWrapper {
@@ -71,10 +72,7 @@ export class S3ClientWrapper {
     data?: TransferData,
     metadata?: Metadata,
     headers?: ContentHeaders,
-    transferOptions?: {
-      abortSignal?: AbortSignal;
-      onProgress?: TransferProgressCallback;
-    }
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = transferOptions ?? {};
     throwIfAborted(abortSignal);
@@ -106,17 +104,14 @@ export class S3ClientWrapper {
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
     headers?: ContentHeaders,
-    transferOptions?: {
-      abortSignal?: AbortSignal;
-      onProgress?: TransferProgressCallback;
-    }
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = transferOptions ?? {};
     const { queueSize, partSize, metadata } = options ?? {};
 
     /* eslint-disable @typescript-eslint/naming-convention */
     const upload = new Upload({
-      client: this._client,
+      client: S3ClientWrapper.withAbortSignal(this._client, abortSignal),
       queueSize,
       partSize,
       leavePartsOnError: false,
@@ -140,16 +135,33 @@ export class S3ClientWrapper {
         progress(event.loaded ?? 0, event.total)
       );
 
-    const onAbort = (): void => {
-      void upload.abort();
-    };
-    abortSignal?.addEventListener("abort", onAbort, { once: true });
-    try {
-      throwIfAborted(abortSignal);
-      await upload.done();
-    } finally {
-      abortSignal?.removeEventListener("abort", onAbort);
-    }
+    throwIfAborted(abortSignal);
+    await upload.done();
+  }
+
+  /**
+   * lib-storage does not pass its own abort signal to requests:
+   * `Upload.abort()` only rejects `done()` and lets requests in flight finish,
+   * which can still create the object. Instead, the returned client adds
+   * `abortSignal` to every request except `AbortMultipartUpload`, which
+   * lib-storage sends to clean up after a failed upload.
+   */
+  private static withAbortSignal(
+    client: S3Client,
+    abortSignal: AbortSignal | undefined
+  ): S3Client {
+    if (!abortSignal) return client;
+    const send = async (
+      command: Parameters<S3Client["send"]>[0],
+      options?: HttpHandlerOptions
+    ): Promise<unknown> =>
+      client.send(
+        command,
+        command instanceof AbortMultipartUploadCommand
+          ? options
+          : { ...options, abortSignal }
+      );
+    return Object.create(client, { send: { value: send } }) as S3Client;
   }
 
   /**

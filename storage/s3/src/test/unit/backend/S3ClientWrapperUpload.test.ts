@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { AddressInfo } from "net";
+import { Readable } from "stream";
 
 import { S3Client } from "@aws-sdk/client-s3";
 import { expect, use } from "chai";
@@ -26,7 +27,7 @@ interface ReceivedRequest {
   body: Buffer;
 }
 
-describe(`${S3ClientWrapper.name}.upload()`, () => {
+describe(`${S3ClientWrapper.name} upload`, () => {
   const reference: ObjectReference = {
     baseDirectory: "base",
     objectName: "object.txt",
@@ -161,5 +162,70 @@ describe(`${S3ClientWrapper.name}.upload()`, () => {
       })
     ).to.be.rejected.and.eventually.have.property("name", "AbortError");
     expect(requestCount).to.equal(1);
+  });
+
+  it("should stop sending data if multipart upload with a single part is aborted", async () => {
+    const abortController = new AbortController();
+    let serverRequest: IncomingMessage | undefined;
+    let requestClosed: Promise<void> | undefined;
+    onRequest = (request) => {
+      // Keeps the body in socket buffers so that it cannot be fully sent
+      // before the abort.
+      request.pause();
+      serverRequest = request;
+      requestClosed = new Promise((resolve) => request.once("close", resolve));
+      abortController.abort();
+    };
+
+    await expect(
+      wrapper.uploadInMultipleParts(
+        reference,
+        Readable.from([Buffer.alloc(4 * 1024 * 1024)]),
+        undefined,
+        undefined,
+        { abortSignal: abortController.signal }
+      )
+    ).to.be.rejected.and.eventually.have.property("name", "AbortError");
+    serverRequest?.resume();
+    await requestClosed;
+
+    expect(requestCount).to.equal(1);
+    expect(receivedRequests).to.be.empty;
+  });
+
+  it("should abort multipart upload before rejecting if aborted while uploading parts", async () => {
+    const abortController = new AbortController();
+    const requestMethods: string[] = [];
+    onRequest = (request) => {
+      requestMethods.push(request.method ?? "");
+      if (request.method === "PUT") abortController.abort();
+    };
+    handler = (request, response) => {
+      if (request.method === "POST")
+        response
+          .writeHead(200, { "content-type": "application/xml" })
+          .end(
+            "<InitiateMultipartUploadResult><Bucket>test-bucket</Bucket>" +
+              "<Key>base/object.txt</Key><UploadId>upload-1</UploadId>" +
+              "</InitiateMultipartUploadResult>"
+          );
+      else if (request.method === "DELETE") response.writeHead(204).end();
+      else response.writeHead(200, { etag: '"etag"' }).end();
+    };
+
+    await expect(
+      wrapper.uploadInMultipleParts(
+        reference,
+        Readable.from([Buffer.alloc(6 * 1024 * 1024)]),
+        undefined,
+        undefined,
+        { abortSignal: abortController.signal }
+      )
+    ).to.be.rejected.and.eventually.have.property("name", "AbortError");
+
+    expect(requestMethods.filter((method) => method === "POST")).to.have.length(
+      1
+    );
+    expect(requestMethods[requestMethods.length - 1]).to.equal("DELETE");
   });
 });

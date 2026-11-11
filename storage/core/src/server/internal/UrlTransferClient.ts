@@ -7,13 +7,12 @@ import { Readable } from "stream";
 
 import axios from "axios";
 
+import { createClientAbortSignal, RetryOptions } from "../../common";
 import {
-  createClientAbortSignal,
-  GenericAbortSignal,
-  RetryOptions,
-  TransferProgressCallback,
-} from "../../common";
-import { TransferData, UrlDownloadInput } from "../Interfaces";
+  TransferData,
+  UploadTransferOptions,
+  UrlDownloadInput,
+} from "../Interfaces";
 
 import {
   assertFileNotEmpty,
@@ -25,11 +24,6 @@ import {
   throwIfAborted,
   UploadProgressHandler,
 } from "./Helpers";
-
-export interface UrlUploadOptions {
-  abortSignal?: GenericAbortSignal;
-  onProgress?: TransferProgressCallback;
-}
 
 export class UrlTransferClient {
   public constructor(private readonly _retryOptions: RetryOptions = {}) {}
@@ -69,7 +63,7 @@ export class UrlTransferClient {
     url: string,
     data: TransferData,
     headers?: Record<string, string>,
-    options?: UrlUploadOptions
+    options?: UploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = options ?? {};
     const signal = abortSignal
@@ -169,6 +163,10 @@ export class UrlTransferClient {
       axios.put(url, data, {
         headers,
         signal,
+        // When following redirects, axios sends the body through
+        // follow-redirects, which takes it all at once without backpressure,
+        // so progress would reach the total long before the data is sent.
+        ...(progress && { maxRedirects: 0 }),
         onUploadProgress: progress
           ? (event) => progress(event.loaded, event.total)
           : undefined,

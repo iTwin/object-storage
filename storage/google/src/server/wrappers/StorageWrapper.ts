@@ -19,6 +19,7 @@ import {
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
 import {
   bufferToChunkedStream,
+  ClientUploadTransferOptions,
   createUploadProgressHandler,
   getExpiryDate,
   getUploadSize,
@@ -34,7 +35,6 @@ import {
   ObjectProperties,
   ObjectReference,
   TransferData,
-  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
@@ -61,10 +61,7 @@ export class StorageWrapper {
     metadata?: Metadata,
     headers?: ContentHeaders,
     chunkSize?: number,
-    transferOptions?: {
-      abortSignal?: AbortSignal;
-      onProgress?: TransferProgressCallback;
-    }
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = transferOptions ?? {};
     const progress = createUploadProgressHandler(
@@ -89,6 +86,8 @@ export class StorageWrapper {
       // name, the same way `bucket.upload` does.
       // `pipeline` only reacts to an already aborted signal after a buffer
       // source has started the upload, so it is checked explicitly.
+      // A `Buffer` is sent in chunks, because the SDK takes a single chunk in
+      // full at once and destroying the stream would no longer stop the upload.
       throwIfAborted(abortSignal);
       const source =
         typeof data === "string"
@@ -105,6 +104,9 @@ export class StorageWrapper {
       uploadOptions.destination = buildObjectKey(reference);
       await this.bucketObject().upload(data, uploadOptions);
     } else {
+      // For a `Buffer` the SDK reports progress only once, with the full size,
+      // before the data is sent. It reports progress per chunk it is given,
+      // and a `Buffer` is one chunk.
       await this.fileObject(reference).save(data ?? "", options);
     }
 

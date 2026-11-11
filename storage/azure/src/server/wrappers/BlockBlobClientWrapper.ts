@@ -12,6 +12,7 @@ import {
 } from "@azure/storage-blob";
 
 import {
+  ClientUploadTransferOptions,
   createUploadProgressHandler,
   getUploadSize,
   throwIfAborted,
@@ -22,7 +23,6 @@ import {
   MultipartUploadData,
   MultipartUploadOptions,
   TransferData,
-  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 export class BlockBlobClientWrapper {
@@ -53,10 +53,7 @@ export class BlockBlobClientWrapper {
     data: TransferData,
     metadata?: Metadata,
     headers?: ContentHeaders,
-    transferOptions?: {
-      abortSignal?: AbortSignal;
-      onProgress?: TransferProgressCallback;
-    }
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = transferOptions ?? {};
     const progress = createUploadProgressHandler(
@@ -72,12 +69,13 @@ export class BlockBlobClientWrapper {
         progress &&
         ((event: { loadedBytes: number }) => progress(event.loadedBytes)),
     };
-    // For streams, cancellation may not stop per-block uploads, because the
-    // SDK does not pass `abortSignal` to them (Azure SDK bug, see
-    // https://github.com/Azure/azure-sdk-for-js/issues/32028).
     if (typeof data === "string")
       await this._client.uploadFile(data, uploadOptions);
     else if (data instanceof Readable) {
+      // `uploadStream` passes `abortSignal` only to the final commit request,
+      // not to the block uploads, so a cancelled stream upload still sends
+      // every block before it rejects. The signal is checked first so that
+      // nothing is sent if it is already aborted.
       throwIfAborted(abortSignal);
       await this._client.uploadStream(
         data,
@@ -85,17 +83,19 @@ export class BlockBlobClientWrapper {
         undefined,
         uploadOptions
       );
-    } else await this._client.upload(data, data.byteLength, uploadOptions);
+    } else {
+      // For a `Buffer` the SDK calls `onProgress` only once, with the full
+      // size, before the data is sent. It reports progress per chunk only for
+      // streams (https://github.com/Azure/azure-sdk-for-js/issues/27322).
+      await this._client.upload(data, data.byteLength, uploadOptions);
+    }
   }
 
   public async uploadInMultipleParts(
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
     headers?: ContentHeaders,
-    transferOptions?: {
-      abortSignal?: AbortSignal;
-      onProgress?: TransferProgressCallback;
-    }
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
     const { abortSignal, onProgress } = transferOptions ?? {};
     const progress = createUploadProgressHandler(

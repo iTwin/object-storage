@@ -25,9 +25,8 @@ export interface UrlDownloadInput extends UrlTransferInput {
   abortSignal?: GenericAbortSignal;
 }
 
-export interface UrlUploadInput extends UrlTransferInput {
-  data: TransferData;
-  metadata?: Metadata;
+/** Options to cancel an upload and to follow its progress. */
+export interface UploadTransferOptions {
   /**
    * Signal to cancel the upload. A cancelled upload rejects with an error
    * whose `name` is `"AbortError"`.
@@ -36,8 +35,16 @@ export interface UrlUploadInput extends UrlTransferInput {
   /**
    * Called as data is sent. See {@link TransferProgressCallback} and
    * {@link TransferProgress} for details.
+   * @note When set, URL uploads do not follow HTTP redirects, except on Azure.
    */
   onProgress?: TransferProgressCallback;
+}
+
+export interface UrlUploadInput
+  extends UrlTransferInput,
+    UploadTransferOptions {
+  data: TransferData;
+  metadata?: Metadata;
 }
 
 export interface ConfigDownloadInput extends ConfigTransferInput {
@@ -46,36 +53,18 @@ export interface ConfigDownloadInput extends ConfigTransferInput {
   abortSignal?: GenericAbortSignal;
 }
 
-export interface ConfigUploadInput extends ConfigTransferInput {
+export interface ConfigUploadInput
+  extends ConfigTransferInput,
+    UploadTransferOptions {
   data: TransferData;
   metadata?: Metadata;
-  /**
-   * Signal to cancel the upload. A cancelled upload rejects with an error
-   * whose `name` is `"AbortError"`.
-   */
-  abortSignal?: GenericAbortSignal;
-  /**
-   * Called as data is sent. See {@link TransferProgressCallback} and
-   * {@link TransferProgress} for details.
-   */
-  onProgress?: TransferProgressCallback;
 }
 
-export interface UploadInMultiplePartsInput {
+export interface UploadInMultiplePartsInput extends UploadTransferOptions {
   data: MultipartUploadData;
   reference: ObjectReference;
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
-  /**
-   * Signal to cancel the upload. A cancelled upload rejects with an error
-   * whose `name` is `"AbortError"`.
-   */
-  abortSignal?: GenericAbortSignal;
-  /**
-   * Called as data is sent. See {@link TransferProgressCallback} and
-   * {@link TransferProgress} for details.
-   */
-  onProgress?: TransferProgressCallback;
 }
 
 /** Abstraction for a single entity page returned by the API. */
