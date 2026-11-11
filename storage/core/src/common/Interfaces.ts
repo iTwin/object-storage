@@ -76,3 +76,24 @@ export interface RetryOptions {
 export interface StorageOptions {
   retryOptions?: RetryOptions;
 }
+
+/** Upload progress reported to {@link TransferProgressCallback}. */
+export interface TransferProgress {
+  /**
+   * Bytes sent so far in the current attempt. May drop back to 0 if the upload
+   * is retried from scratch.
+   */
+  loadedBytes: number;
+  /**
+   * Total upload size, when known (`Buffer` length or local file size).
+   * `undefined` for streams of unknown size.
+   */
+  totalBytes?: number;
+}
+
+/**
+ * Called as upload data is sent. Completion is signalled by the upload
+ * promise resolving, not by a progress event.
+ * @note Exceptions thrown by the callback are caught and ignored.
+ */
+export type TransferProgressCallback = (progress: TransferProgress) => void;

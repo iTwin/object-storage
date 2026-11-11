@@ -7,7 +7,12 @@ import { createWriteStream, promises } from "fs";
 import { dirname } from "path";
 import { Readable } from "stream";
 
-import { ConfigTransferInput, UrlTransferInput } from "../../common";
+import {
+  ConfigTransferInput,
+  GenericAbortSignal,
+  TransferProgressCallback,
+  UrlTransferInput,
+} from "../../common";
 import { defaultExpiresInSeconds } from "../../common/internal";
 import {
   ConfigDownloadInput,
@@ -28,6 +33,56 @@ export async function assertFileNotEmpty(filePath: string): Promise<void> {
   if (fileStats.size === 0) {
     throw new Error("Provided path is an empty file.");
   }
+}
+
+export function createAbortError(): Error {
+  const error = new Error("Aborted");
+  error.name = "AbortError";
+  return error;
+}
+
+export function throwIfAborted(
+  signal?: Pick<GenericAbortSignal, "aborted">
+): void {
+  if (signal?.aborted) throw createAbortError();
+}
+
+/** Returns the upload size in bytes, or `undefined` for streams. */
+export async function getUploadSize(
+  data: TransferData
+): Promise<number | undefined> {
+  if (typeof data === "string") return (await promises.stat(data)).size;
+  if (data instanceof Readable) return undefined;
+  return data.byteLength;
+}
+
+export type UploadProgressHandler = (
+  loadedBytes: number,
+  sdkTotalBytes?: number
+) => void;
+
+/**
+ * Returns `undefined` if there is no callback. The known `totalBytes` takes
+ * precedence over the total reported by the SDK. Callback exceptions are
+ * ignored so that they can never break an upload.
+ */
+export function createUploadProgressHandler(
+  onProgress: TransferProgressCallback | undefined,
+  totalBytes?: number
+): UploadProgressHandler | undefined {
+  if (!onProgress) return undefined;
+  return (loadedBytes, sdkTotalBytes) => {
+    const total = totalBytes ?? sdkTotalBytes;
+    try {
+      onProgress(
+        total === undefined
+          ? { loadedBytes }
+          : { loadedBytes, totalBytes: total }
+      );
+    } catch {
+      // Ignored, see function description.
+    }
+  };
 }
 
 export function isLocalTransferInput(
@@ -60,6 +115,27 @@ export async function streamToBuffer(stream: Readable): Promise<Buffer> {
 
 export function bufferToStream(buffer: Buffer): Readable {
   return Readable.from(buffer);
+}
+
+/**
+ * Streams `data` in chunks of at most `chunkSize` bytes without copying it.
+ * `onChunkConsumed` receives the number of bytes consumed so far each time
+ * the consumer asks for the next chunk.
+ */
+export function bufferToChunkedStream(
+  data: ArrayBufferView,
+  chunkSize = 64 * 1024,
+  onChunkConsumed?: (consumedBytes: number) => void
+): Readable {
+  const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+  function* readChunks(): Generator<Uint8Array> {
+    for (let offset = 0; offset < bytes.byteLength; offset += chunkSize) {
+      const end = Math.min(offset + chunkSize, bytes.byteLength);
+      yield bytes.subarray(offset, end);
+      onChunkConsumed?.(end);
+    }
+  }
+  return Readable.from(readChunks(), { objectMode: false });
 }
 
 export async function streamToLocalFile(

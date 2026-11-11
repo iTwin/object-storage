@@ -3,6 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+import { createReadStream } from "fs";
+import { Readable } from "stream";
+import { pipeline } from "stream/promises";
+
 import {
   ApiError,
   Bucket,
@@ -13,7 +17,13 @@ import {
 } from "@google-cloud/storage";
 
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
-import { getExpiryDate } from "@itwin/object-storage-core/lib/server/internal";
+import {
+  bufferToChunkedStream,
+  createUploadProgressHandler,
+  getExpiryDate,
+  getUploadSize,
+  throwIfAborted,
+} from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -24,6 +34,7 @@ import {
   ObjectProperties,
   ObjectReference,
   TransferData,
+  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 import { GoogleStorageConfig } from "./GoogleStorageConfig";
@@ -49,21 +60,54 @@ export class StorageWrapper {
     data?: TransferData,
     metadata?: Metadata,
     headers?: ContentHeaders,
-    chunkSize?: number
+    chunkSize?: number,
+    transferOptions?: {
+      abortSignal?: AbortSignal;
+      onProgress?: TransferProgressCallback;
+    }
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    const progress = createUploadProgressHandler(
+      onProgress,
+      onProgress && data !== undefined ? await getUploadSize(data) : undefined
+    );
+
     const options: SaveOptions = {
       metadata: { ...metadata },
       chunkSize: chunkSize,
     };
     options.contentType = headers?.contentType;
     options.gzip = headers?.contentEncoding === "gzip";
-    if (typeof data === "string") {
+    if (progress)
+      options.onUploadProgress = (event: { bytesWritten: number }) =>
+        progress(event.bytesWritten);
+
+    if (abortSignal && data !== undefined) {
+      // The SDK accepts no abort signal. Uploads are cancelled by destroying
+      // the stream returned by `createWriteStream`, which `pipeline` does on
+      // abort. `createWriteStream` detects the content type from the object
+      // name, the same way `bucket.upload` does.
+      // `pipeline` only reacts to an already aborted signal after a buffer
+      // source has started the upload, so it is checked explicitly.
+      throwIfAborted(abortSignal);
+      const source =
+        typeof data === "string"
+          ? createReadStream(data)
+          : data instanceof Readable
+          ? data
+          : bufferToChunkedStream(data);
+      const destination = this.fileObject(reference).createWriteStream(options);
+      if (options.onUploadProgress)
+        destination.on("progress", options.onUploadProgress);
+      await pipeline(source, destination, { signal: abortSignal });
+    } else if (typeof data === "string") {
       const uploadOptions: UploadOptions = { ...options };
       uploadOptions.destination = buildObjectKey(reference);
       await this.bucketObject().upload(data, uploadOptions);
     } else {
       await this.fileObject(reference).save(data ?? "", options);
     }
+
     if (metadata || headers?.cacheControl || headers?.contentEncoding) {
       const [updatedMetadata] = await this.fileObject(reference).getMetadata();
       updatedMetadata.metadata = { ...updatedMetadata.metadata, ...metadata };

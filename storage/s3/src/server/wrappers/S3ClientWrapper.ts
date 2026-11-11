@@ -15,13 +15,19 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import type { HttpHandlerOptions } from "@aws-sdk/types";
+import type { HttpHandlerOptions, HttpRequest } from "@aws-sdk/types";
 
 import {
   buildObjectKey,
   buildObjectReference,
 } from "@itwin/object-storage-core/lib/common/internal";
-import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
+import {
+  bufferToChunkedStream,
+  createUploadProgressHandler,
+  streamToBuffer,
+  throwIfAborted,
+  UploadProgressHandler,
+} from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -33,6 +39,7 @@ import {
   EntityCollectionPage,
   ObjectReference,
   TransferData,
+  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 export class S3ClientWrapper {
@@ -63,8 +70,14 @@ export class S3ClientWrapper {
     reference: ObjectReference,
     data?: TransferData,
     metadata?: Metadata,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: {
+      abortSignal?: AbortSignal;
+      onProgress?: TransferProgressCallback;
+    }
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    throwIfAborted(abortSignal);
     /* eslint-disable @typescript-eslint/naming-convention */
     const input: PutObjectCommandInput = {
       Bucket: this._bucket,
@@ -78,15 +91,27 @@ export class S3ClientWrapper {
     input.ContentEncoding = headers?.contentEncoding;
     input.CacheControl = headers?.cacheControl;
     input.ContentType = headers?.contentType;
-    await this._client.send(new PutObjectCommand(input));
+
+    const command = new PutObjectCommand(input);
+    const progress = createUploadProgressHandler(
+      onProgress,
+      ArrayBuffer.isView(input.Body) ? input.Body.byteLength : undefined
+    );
+    if (progress) S3ClientWrapper.addProgressMiddleware(command, progress);
+    await this._client.send(command, { abortSignal });
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: {
+      abortSignal?: AbortSignal;
+      onProgress?: TransferProgressCallback;
+    }
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
     const { queueSize, partSize, metadata } = options ?? {};
 
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -107,7 +132,57 @@ export class S3ClientWrapper {
     });
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    await upload.done();
+    // lib-storage computes the total (Buffer length or file size for
+    // fs.ReadStream).
+    const progress = createUploadProgressHandler(onProgress);
+    if (progress)
+      upload.on("httpUploadProgress", (event) =>
+        progress(event.loaded ?? 0, event.total)
+      );
+
+    const onAbort = (): void => {
+      void upload.abort();
+    };
+    abortSignal?.addEventListener("abort", onAbort, { once: true });
+    try {
+      throwIfAborted(abortSignal);
+      await upload.done();
+    } finally {
+      abortSignal?.removeEventListener("abort", onAbort);
+    }
+  }
+
+  /**
+   * Swaps the Buffer body of every attempt for a stream of chunks, so that
+   * progress is reported as the HTTP handler reads the body. The original
+   * request is not modified, because the retry middleware reuses it.
+   */
+  private static addProgressMiddleware(
+    command: PutObjectCommand,
+    progress: UploadProgressHandler
+  ): void {
+    command.middlewareStack.add(
+      (next) => async (args) => {
+        const request = args.request as HttpRequest;
+        if (!ArrayBuffer.isView(request.body)) return next(args);
+
+        progress(0);
+        const progressRequest: HttpRequest = Object.assign(
+          Object.create(Object.getPrototypeOf(request) as object) as object,
+          request,
+          {
+            headers: { ...request.headers },
+            body: bufferToChunkedStream(request.body, undefined, progress),
+          }
+        );
+        return next({ ...args, request: progressRequest });
+      },
+      {
+        step: "deserialize",
+        priority: "low",
+        name: "objectStorageUploadProgressMiddleware",
+      }
+    );
   }
 
   public async getDirectoriesNextPage(options: {

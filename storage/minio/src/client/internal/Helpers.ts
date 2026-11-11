@@ -9,6 +9,7 @@ import { metadataToHeaders } from "@itwin/object-storage-core/lib/common/interna
 import {
   assertFileNotEmpty,
   streamToBuffer,
+  throwIfAborted,
   UrlTransferClient,
 } from "@itwin/object-storage-core/lib/server/internal";
 
@@ -20,7 +21,8 @@ export async function handleMinioUrlUpload(
 ): Promise<void> {
   // minio responds with 411 error if Content-Length header is not present
   // used streamToBuffer to get the length before uploading for streams
-  const { data, metadata, url } = input;
+  const { data, metadata, url, abortSignal, onProgress } = input;
+  throwIfAborted(abortSignal);
 
   let dataToUpload: Buffer;
   if (typeof data === "string") {
@@ -37,5 +39,8 @@ export async function handleMinioUrlUpload(
     // eslint-disable-next-line @typescript-eslint/naming-convention
     "Content-Length": dataToUpload.byteLength.toString(),
   };
-  return urlTransferClient.upload(url, dataToUpload, headers);
+  return urlTransferClient.upload(url, dataToUpload, headers, {
+    abortSignal,
+    onProgress,
+  });
 }

@@ -11,6 +11,7 @@ import {
   MultipartUploadOptions,
   ObjectReference,
   TransferConfig,
+  TransferProgressCallback,
   UrlTransferInput,
 } from "../common";
 
@@ -27,6 +28,16 @@ export interface UrlDownloadInput extends UrlTransferInput {
 export interface UrlUploadInput extends UrlTransferInput {
   data: TransferData;
   metadata?: Metadata;
+  /**
+   * Signal to cancel the upload. A cancelled upload rejects with an error
+   * whose `name` is `"AbortError"`.
+   */
+  abortSignal?: GenericAbortSignal;
+  /**
+   * Called as data is sent. See {@link TransferProgressCallback} and
+   * {@link TransferProgress} for details.
+   */
+  onProgress?: TransferProgressCallback;
 }
 
 export interface ConfigDownloadInput extends ConfigTransferInput {
@@ -38,6 +49,16 @@ export interface ConfigDownloadInput extends ConfigTransferInput {
 export interface ConfigUploadInput extends ConfigTransferInput {
   data: TransferData;
   metadata?: Metadata;
+  /**
+   * Signal to cancel the upload. A cancelled upload rejects with an error
+   * whose `name` is `"AbortError"`.
+   */
+  abortSignal?: GenericAbortSignal;
+  /**
+   * Called as data is sent. See {@link TransferProgressCallback} and
+   * {@link TransferProgress} for details.
+   */
+  onProgress?: TransferProgressCallback;
 }
 
 export interface UploadInMultiplePartsInput {
@@ -45,6 +66,16 @@ export interface UploadInMultiplePartsInput {
   reference: ObjectReference;
   transferConfig: TransferConfig;
   options?: MultipartUploadOptions;
+  /**
+   * Signal to cancel the upload. A cancelled upload rejects with an error
+   * whose `name` is `"AbortError"`.
+   */
+  abortSignal?: GenericAbortSignal;
+  /**
+   * Called as data is sent. See {@link TransferProgressCallback} and
+   * {@link TransferProgress} for details.
+   */
+  onProgress?: TransferProgressCallback;
 }
 
 /** Abstraction for a single entity page returned by the API. */

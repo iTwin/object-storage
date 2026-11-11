@@ -12,10 +12,17 @@ import {
 } from "@azure/storage-blob";
 
 import {
+  createUploadProgressHandler,
+  getUploadSize,
+  throwIfAborted,
+} from "@itwin/object-storage-core/lib/server/internal";
+
+import {
   ContentHeaders,
   MultipartUploadData,
   MultipartUploadOptions,
   TransferData,
+  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 export class BlockBlobClientWrapper {
@@ -45,41 +52,75 @@ export class BlockBlobClientWrapper {
   public async upload(
     data: TransferData,
     metadata?: Metadata,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: {
+      abortSignal?: AbortSignal;
+      onProgress?: TransferProgressCallback;
+    }
   ): Promise<void> {
-    const blobHTTPHeaders = this.getBlobHTTPHeaders(headers);
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    const progress = createUploadProgressHandler(
+      onProgress,
+      onProgress ? await getUploadSize(data) : undefined
+    );
+
+    const uploadOptions = {
+      metadata,
+      blobHTTPHeaders: this.getBlobHTTPHeaders(headers),
+      abortSignal,
+      onProgress:
+        progress &&
+        ((event: { loadedBytes: number }) => progress(event.loadedBytes)),
+    };
+    // For streams, cancellation may not stop per-block uploads, because the
+    // SDK does not pass `abortSignal` to them (Azure SDK bug, see
+    // https://github.com/Azure/azure-sdk-for-js/issues/32028).
     if (typeof data === "string")
-      await this._client.uploadFile(data, { metadata, blobHTTPHeaders });
-    else if (data instanceof Readable)
-      await this._client.uploadStream(data, undefined, undefined, {
-        metadata,
-        blobHTTPHeaders,
-      });
-    else
-      await this._client.upload(data, data.byteLength, {
-        metadata,
-        blobHTTPHeaders,
-      });
+      await this._client.uploadFile(data, uploadOptions);
+    else if (data instanceof Readable) {
+      throwIfAborted(abortSignal);
+      await this._client.uploadStream(
+        data,
+        undefined,
+        undefined,
+        uploadOptions
+      );
+    } else await this._client.upload(data, data.byteLength, uploadOptions);
   }
 
   public async uploadInMultipleParts(
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: {
+      abortSignal?: AbortSignal;
+      onProgress?: TransferProgressCallback;
+    }
   ): Promise<void> {
-    const blobHTTPHeaders = this.getBlobHTTPHeaders(headers);
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    const progress = createUploadProgressHandler(
+      onProgress,
+      onProgress ? await getUploadSize(data) : undefined
+    );
+
     const { metadata, partSize, queueSize } = options ?? {};
-    if (data instanceof Readable)
-      await this._client.uploadStream(data, partSize, queueSize, {
-        metadata,
-        blobHTTPHeaders,
-      });
-    else
+    const uploadOptions = {
+      metadata,
+      blobHTTPHeaders: this.getBlobHTTPHeaders(headers),
+      abortSignal,
+      onProgress:
+        progress &&
+        ((event: { loadedBytes: number }) => progress(event.loadedBytes)),
+    };
+    // See the comment about stream cancellation in `upload`.
+    if (data instanceof Readable) {
+      throwIfAborted(abortSignal);
+      await this._client.uploadStream(data, partSize, queueSize, uploadOptions);
+    } else
       await this._client.uploadFile(data, {
-        metadata,
+        ...uploadOptions,
         blockSize: partSize,
         concurrency: queueSize,
-        blobHTTPHeaders,
       });
   }
 }

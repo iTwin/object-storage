@@ -31,13 +31,16 @@ import {
   testMultipartUploadWithMetadataFromStream,
   testMultipartUploadWithRelativeDir,
   testMultipartUploadWithRelativeDirFromStream,
+  testUploadCancel,
   testUploadFromBufferToUrl,
   testUploadFromBufferWithConfig,
   testUploadFromStreamToUrl,
   testUploadFromStreamWithConfig,
+  testUploadProgress,
   testUploadToUrl,
   testUploadToUrlWithMetadata,
   testUploadToUrlWithRelativeDir,
+  testUploadWithAbortedSignal,
   testUploadWithConfig,
   testUploadWithMetadataFromBufferToUrl,
   testUploadWithMetadataFromBufferWithConfig,
@@ -49,6 +52,7 @@ import {
   testUploadWithRelativeDirFromStreamToUrl,
   testUploadWithRelativeDirFromStreamWithConfig,
   testUploadWithRelativeDirWithConfig,
+  testUploadWithSignal,
 } from "./test-templates/UploadTests";
 import { assertLocalFile } from "./utils/Helpers";
 
@@ -140,6 +144,30 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
           dataToAssert: contentBuffer,
         });
       });
+
+      it("should fail to upload to URL if signal is already aborted", async () => {
+        await testUploadWithAbortedSignal({
+          testedStorage: clientStorage,
+          uploadMethod: "url",
+        });
+      });
+
+      it("should cancel file upload to URL", async () => {
+        await testUploadCancel({
+          testedStorage: clientStorage,
+          uploadMethod: "url",
+        });
+      });
+
+      for (const dataType of ["buffer", "path"] as const) {
+        it(`should report progress when uploading a file from ${dataType} to URL`, async () => {
+          await testUploadProgress({
+            testedStorage: clientStorage,
+            uploadMethod: "url",
+            dataType,
+          });
+        });
+      }
     });
 
     describe(`${clientStorage.download.name}() & ${serverStorage.getDownloadUrl.name}()`, () => {
@@ -347,6 +375,48 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
               transferConfigType.getTransferConfigCallback,
           });
         });
+
+        it(`should fail to upload with config if signal is already aborted`, async () => {
+          await testUploadWithAbortedSignal({
+            testedStorage: clientStorage,
+            uploadMethod: "config",
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
+          });
+        });
+
+        it(`should cancel file upload using transfer config`, async () => {
+          await testUploadCancel({
+            testedStorage: clientStorage,
+            uploadMethod: "config",
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
+          });
+        });
+
+        for (const dataType of ["buffer", "path"] as const) {
+          it(`should report progress when uploading a file from ${dataType} using transfer config`, async () => {
+            await testUploadProgress({
+              testedStorage: clientStorage,
+              uploadMethod: "config",
+              getTransferConfigCallback:
+                transferConfigType.getTransferConfigCallback,
+              dataType,
+            });
+          });
+        }
+
+        for (const dataType of ["buffer", "path", "stream"] as const) {
+          it(`should upload a file from ${dataType} with signal and metadata using transfer config`, async () => {
+            await testUploadWithSignal({
+              testedStorage: clientStorage,
+              uploadMethod: "config",
+              getTransferConfigCallback:
+                transferConfigType.getTransferConfigCallback,
+              dataType,
+            });
+          });
+        }
       });
 
       describe(`${clientStorage.uploadInMultipleParts.name}() & ${transferConfigType.getConfigFunctionName}()`, () => {
@@ -449,6 +519,46 @@ describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
               transferConfigType.getTransferConfigCallback,
           });
         });
+
+        it(`should fail to upload in multiple parts if signal is already aborted`, async () => {
+          await testUploadWithAbortedSignal({
+            testedStorage: clientStorage,
+            uploadMethod: "multipart",
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
+          });
+        });
+
+        it(`should cancel file upload in multiple parts`, async () => {
+          await testUploadCancel({
+            testedStorage: clientStorage,
+            uploadMethod: "multipart",
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
+          });
+        });
+
+        it(`should report progress when uploading a file from path in multiple parts`, async () => {
+          await testUploadProgress({
+            testedStorage: clientStorage,
+            uploadMethod: "multipart",
+            getTransferConfigCallback:
+              transferConfigType.getTransferConfigCallback,
+            dataType: "path",
+          });
+        });
+
+        for (const dataType of ["path", "stream"] as const) {
+          it(`should upload a file from ${dataType} in multiple parts with signal and metadata`, async () => {
+            await testUploadWithSignal({
+              testedStorage: clientStorage,
+              uploadMethod: "multipart",
+              getTransferConfigCallback:
+                transferConfigType.getTransferConfigCallback,
+              dataType,
+            });
+          });
+        }
       });
     }
 
