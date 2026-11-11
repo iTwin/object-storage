@@ -18,6 +18,7 @@ import { UrlTransferClient } from "@itwin/object-storage-core/lib/server/interna
 
 import {
   ClientStorage,
+  createClientAbortSignal,
   TransferData,
   UrlDownloadInput,
   UrlUploadInput,
@@ -89,17 +90,33 @@ export class GoogleClientStorage extends ClientStorage {
       return this._urlTransferClient.upload(
         input.url,
         input.data,
-        input.metadata
+        input.metadata,
+        { abortSignal: input.abortSignal, onProgress: input.onProgress }
       );
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
-    await storage.uploadFile(input.reference, input.data, input.metadata);
+    await storage.uploadFile(
+      input.reference,
+      input.data,
+      input.metadata,
+      undefined,
+      undefined,
+      {
+        abortSignal: input.abortSignal
+          ? createClientAbortSignal(input.abortSignal)
+          : undefined,
+        onProgress: input.onProgress,
+      }
+    );
   }
 
   public override async uploadInMultipleParts(
     input: GoogleUploadInMultiplePartsInput
   ): Promise<void> {
     assertObjectReference(input.reference);
+    const abortSignal = input.abortSignal
+      ? createClientAbortSignal(input.abortSignal)
+      : undefined;
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     const storage = this._storageFactory.createFromToken(input.transferConfig);
@@ -108,7 +125,8 @@ export class GoogleClientStorage extends ClientStorage {
       input.data,
       input.options?.metadata,
       undefined,
-      input.options?.partSize
+      input.options?.partSize,
+      { abortSignal, onProgress: input.onProgress }
     );
   }
 }

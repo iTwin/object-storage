@@ -8,12 +8,21 @@ import { Readable } from "stream";
 import axios from "axios";
 
 import { createClientAbortSignal, RetryOptions } from "../../common";
-import { TransferData, UrlDownloadInput } from "../Interfaces";
+import {
+  TransferData,
+  UploadTransferOptions,
+  UrlDownloadInput,
+} from "../Interfaces";
 
 import {
   assertFileNotEmpty,
   assertLocalFile,
+  createAbortError,
+  createUploadProgressHandler,
+  getUploadSize,
   streamToLocalFile,
+  throwIfAborted,
+  UploadProgressHandler,
 } from "./Helpers";
 
 export class UrlTransferClient {
@@ -53,19 +62,40 @@ export class UrlTransferClient {
   public async upload(
     url: string,
     data: TransferData,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
+    options?: UploadTransferOptions
   ): Promise<void> {
+    const { abortSignal, onProgress } = options ?? {};
+    const signal = abortSignal
+      ? createClientAbortSignal(abortSignal)
+      : undefined;
+    throwIfAborted(signal);
+
+    const progress = createUploadProgressHandler(
+      onProgress,
+      onProgress ? await getUploadSize(data) : undefined
+    );
+
     if (data instanceof Readable) {
       // Streams cannot be retried as they are consumed on first read
-      await UrlTransferClient.putData(url, data, headers);
+      progress?.(0);
+      await UrlTransferClient.putData(url, data, headers, signal, progress);
       return;
     }
     await this.withRetry(async () => {
       if (typeof data === "string") await assertFileNotEmpty(data);
+      throwIfAborted(signal);
       const dataToUpload =
         typeof data === "string" ? createReadStream(data) : data;
-      await UrlTransferClient.putData(url, dataToUpload, headers);
-    });
+      progress?.(0);
+      await UrlTransferClient.putData(
+        url,
+        dataToUpload,
+        headers,
+        signal,
+        progress
+      );
+    }, signal);
   }
 
   private async withRetry<T>(
@@ -110,9 +140,7 @@ export class UrlTransferClient {
       }, ms);
       const onAbort = (): void => {
         clearTimeout(timer);
-        const error = new Error("Aborted");
-        error.name = "AbortError";
-        reject(error);
+        reject(createAbortError());
       };
       signal?.addEventListener("abort", onAbort, { once: true });
     });
@@ -127,9 +155,23 @@ export class UrlTransferClient {
   private static async putData(
     url: string,
     data: Readable | Buffer,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
+    signal?: AbortSignal,
+    progress?: UploadProgressHandler
   ): Promise<void> {
-    await axios.put(url, data, { headers });
+    await UrlTransferClient.convertAbortErrorName(
+      axios.put(url, data, {
+        headers,
+        signal,
+        // When following redirects, axios sends the body through
+        // follow-redirects, which takes it all at once without backpressure,
+        // so progress would reach the total long before the data is sent.
+        ...(progress && { maxRedirects: 0 }),
+        onUploadProgress: progress
+          ? (event) => progress(event.loaded, event.total)
+          : undefined,
+      })
+    );
   }
 
   private static async downloadAsBuffer(

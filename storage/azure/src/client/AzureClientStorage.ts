@@ -83,21 +83,33 @@ export class AzureClientStorage extends ClientStorage {
     input: UrlUploadInput | AzureConfigUploadInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
+    const abortSignal = input.abortSignal
+      ? createClientAbortSignal(input.abortSignal)
+      : undefined;
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
-      .upload(input.data, input.metadata);
+      .upload(input.data, input.metadata, undefined, {
+        abortSignal,
+        onProgress: input.onProgress,
+      });
   }
 
   public async uploadInMultipleParts(
     input: AzureUploadInMultiplePartsInput
   ): Promise<void> {
     if ("reference" in input) assertObjectReference(input.reference);
+    const abortSignal = input.abortSignal
+      ? createClientAbortSignal(input.abortSignal)
+      : undefined;
     if (typeof input.data === "string") await assertFileNotEmpty(input.data);
 
     return this._clientWrapperFactory
       .create(input)
-      .uploadInMultipleParts(input.data, input.options);
+      .uploadInMultipleParts(input.data, input.options, undefined, {
+        abortSignal,
+        onProgress: input.onProgress,
+      });
   }
 }
