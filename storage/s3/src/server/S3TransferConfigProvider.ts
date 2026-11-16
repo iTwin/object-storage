@@ -20,8 +20,8 @@ import { Constants, S3TransferConfig } from "../common";
 
 import {
   assertPolicyResourceDirectory,
-  getActions,
   getExpiresInSeconds,
+  getObjectActions,
 } from "./internal";
 import { S3ServerStorageConfig } from "./S3ServerStorage";
 import { StsWrapper } from "./wrappers";
@@ -125,7 +125,7 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
     directory: ObjectDirectory,
     options?: ExpiryOptions
   ): Promise<S3TransferConfig> {
-    const actions = getActions();
+    const actions = getObjectActions();
     const directoryPath = buildObjectDirectoryString(directory);
     assertBaseDirectory(directory.baseDirectory);
     assertPolicyResourceDirectory(directoryPath);
@@ -136,10 +136,17 @@ export class S3TransferConfigProvider implements TransferConfigProvider {
         {
           Effect: "Allow",
           Action: actions,
-          Resource: [
-            `arn:aws:s3:::${this._config.bucket}/${directoryPath}/*`,
-            `arn:aws:s3:::${this._config.bucket}`,
-          ],
+          Resource: [`arn:aws:s3:::${this._config.bucket}/${directoryPath}/*`],
+        },
+        {
+          Effect: "Allow",
+          Action: ["s3:ListBucket"],
+          Resource: [`arn:aws:s3:::${this._config.bucket}`],
+          Condition: {
+            StringLike: {
+              "s3:prefix": [`${directoryPath}/`, `${directoryPath}/*`],
+            },
+          },
         },
       ],
     };
