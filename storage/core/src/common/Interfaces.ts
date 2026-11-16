@@ -76,3 +76,29 @@ export interface RetryOptions {
 export interface StorageOptions {
   retryOptions?: RetryOptions;
 }
+
+/** Upload progress reported to {@link TransferProgressCallback}. */
+export interface TransferProgress {
+  /**
+   * Bytes sent so far in the current attempt.
+   */
+  loadedBytes: number;
+  /**
+   * Total upload size, when known (`Buffer` length or local file size).
+   * `undefined` for streams of unknown size.
+   */
+  totalBytes?: number;
+}
+
+/**
+ * Called as upload data is sent. Completion is signalled by the upload
+ * promise resolving, not by a progress event.
+ *
+ * @note How often it is called depends on the storage and the upload method. Some
+ * uploads report once per uploaded part or block (5 MiB or more), so data
+ * smaller than one part may be reported in a single event. A `Buffer` uploaded
+ * to Azure or Google may be reported once, with its full size, before it is
+ * sent.
+ * @note Exceptions thrown by the callback are caught and ignored.
+ */
+export type TransferProgressCallback = (progress: TransferProgress) => void;

@@ -15,6 +15,7 @@ import {
   UrlTransferClient,
   assertFileNotEmpty,
   streamToTransferType,
+  throwIfAborted,
 } from "@itwin/object-storage-core/lib/server/internal";
 
 import {
@@ -99,16 +100,23 @@ export class S3ClientStorage extends ClientStorage {
     const { metadata } = input;
 
     if ("reference" in input) assertObjectReference(input.reference);
+    const abortSignal = input.abortSignal
+      ? createClientAbortSignal(input.abortSignal)
+      : undefined;
 
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
+      throwIfAborted(abortSignal);
       data = createReadStream(data);
     }
 
     return createAndUseClient(
       () => this._clientWrapperFactory.create(input.transferConfig),
       async (clientWrapper: S3ClientWrapper) =>
-        clientWrapper.upload(input.reference, data, metadata)
+        clientWrapper.upload(input.reference, data, metadata, undefined, {
+          abortSignal,
+          onProgress: input.onProgress,
+        })
     );
   }
 
@@ -117,8 +125,12 @@ export class S3ClientStorage extends ClientStorage {
   ): Promise<void> {
     let { data } = input;
     if ("reference" in input) assertObjectReference(input.reference);
+    const abortSignal = input.abortSignal
+      ? createClientAbortSignal(input.abortSignal)
+      : undefined;
     if (typeof data === "string") {
       await assertFileNotEmpty(data);
+      throwIfAborted(abortSignal);
       data = createReadStream(data);
     }
 
@@ -128,7 +140,9 @@ export class S3ClientStorage extends ClientStorage {
         clientWrapper.uploadInMultipleParts(
           input.reference,
           data,
-          input.options
+          input.options,
+          undefined,
+          { abortSignal, onProgress: input.onProgress }
         )
     );
   }

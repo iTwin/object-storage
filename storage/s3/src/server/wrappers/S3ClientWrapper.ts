@@ -5,6 +5,7 @@
 import { Readable } from "stream";
 
 import {
+  AbortMultipartUploadCommand,
   CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
@@ -15,13 +16,20 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import type { HttpHandlerOptions } from "@aws-sdk/types";
+import type { HttpHandlerOptions, HttpRequest } from "@aws-sdk/types";
 
 import {
   buildObjectKey,
   buildObjectReference,
 } from "@itwin/object-storage-core/lib/common/internal";
-import { streamToBuffer } from "@itwin/object-storage-core/lib/server/internal";
+import {
+  bufferToChunkedStream,
+  ClientUploadTransferOptions,
+  createUploadProgressHandler,
+  streamToBuffer,
+  throwIfAborted,
+  UploadProgressHandler,
+} from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -63,8 +71,11 @@ export class S3ClientWrapper {
     reference: ObjectReference,
     data?: TransferData,
     metadata?: Metadata,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    throwIfAborted(abortSignal);
     /* eslint-disable @typescript-eslint/naming-convention */
     const input: PutObjectCommandInput = {
       Bucket: this._bucket,
@@ -78,20 +89,29 @@ export class S3ClientWrapper {
     input.ContentEncoding = headers?.contentEncoding;
     input.CacheControl = headers?.cacheControl;
     input.ContentType = headers?.contentType;
-    await this._client.send(new PutObjectCommand(input));
+
+    const command = new PutObjectCommand(input);
+    const progress = createUploadProgressHandler(
+      onProgress,
+      ArrayBuffer.isView(input.Body) ? input.Body.byteLength : undefined
+    );
+    if (progress) S3ClientWrapper.addProgressMiddleware(command, progress);
+    await this._client.send(command, { abortSignal });
   }
 
   public async uploadInMultipleParts(
     reference: ObjectReference,
     data: MultipartUploadData,
     options?: MultipartUploadOptions,
-    headers?: ContentHeaders
+    headers?: ContentHeaders,
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
     const { queueSize, partSize, metadata } = options ?? {};
 
     /* eslint-disable @typescript-eslint/naming-convention */
     const upload = new Upload({
-      client: this._client,
+      client: S3ClientWrapper.withAbortSignal(this._client, abortSignal),
       queueSize,
       partSize,
       leavePartsOnError: false,
@@ -107,7 +127,74 @@ export class S3ClientWrapper {
     });
     /* eslint-enable @typescript-eslint/naming-convention */
 
+    // lib-storage computes the total (Buffer length or file size for
+    // fs.ReadStream).
+    const progress = createUploadProgressHandler(onProgress);
+    if (progress)
+      upload.on("httpUploadProgress", (event) =>
+        progress(event.loaded ?? 0, event.total)
+      );
+
+    throwIfAborted(abortSignal);
     await upload.done();
+  }
+
+  /**
+   * lib-storage does not pass its own abort signal to requests:
+   * `Upload.abort()` only rejects `done()` and lets requests in flight finish,
+   * which can still create the object. Instead, the returned client adds
+   * `abortSignal` to every request except `AbortMultipartUpload`, which
+   * lib-storage sends to clean up after a failed upload.
+   */
+  private static withAbortSignal(
+    client: S3Client,
+    abortSignal: AbortSignal | undefined
+  ): S3Client {
+    if (!abortSignal) return client;
+    const send = async (
+      command: Parameters<S3Client["send"]>[0],
+      options?: HttpHandlerOptions
+    ): Promise<unknown> =>
+      client.send(
+        command,
+        command instanceof AbortMultipartUploadCommand
+          ? options
+          : { ...options, abortSignal }
+      );
+    return Object.create(client, { send: { value: send } }) as S3Client;
+  }
+
+  /**
+   * Swaps the Buffer body of every attempt for a stream of chunks, so that
+   * progress is reported as the HTTP handler reads the body. The original
+   * request is not modified, because the retry middleware reuses it.
+   */
+  private static addProgressMiddleware(
+    command: PutObjectCommand,
+    progress: UploadProgressHandler
+  ): void {
+    command.middlewareStack.add(
+      (next) => async (args) => {
+        const request = args.request as HttpRequest;
+        if (!ArrayBuffer.isView(request.body)) return next(args);
+
+        progress(0);
+        const progressRequest: HttpRequest = Object.assign(
+          Object.create(Object.getPrototypeOf(request) as object) as object,
+          request,
+          {
+            headers: { ...request.headers },
+            body: bufferToChunkedStream(request.body, undefined, progress),
+          }
+        );
+        return next({ ...args, request: progressRequest });
+      },
+      {
+        step: "deserialize",
+        priority: "low",
+        name: "objectStorageUploadProgressMiddleware",
+      }
+    );
   }
 
   public async getDirectoriesNextPage(options: {

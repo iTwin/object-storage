@@ -11,6 +11,7 @@ import {
   MultipartUploadOptions,
   ObjectReference,
   TransferConfig,
+  TransferProgressCallback,
   UrlTransferInput,
 } from "../common";
 
@@ -24,7 +25,24 @@ export interface UrlDownloadInput extends UrlTransferInput {
   abortSignal?: GenericAbortSignal;
 }
 
-export interface UrlUploadInput extends UrlTransferInput {
+/** Options to cancel an upload and to follow its progress. */
+export interface UploadTransferOptions {
+  /**
+   * Signal to cancel the upload. A cancelled upload rejects with an error
+   * whose `name` is `"AbortError"`.
+   */
+  abortSignal?: GenericAbortSignal;
+  /**
+   * Called as data is sent. See {@link TransferProgressCallback} and
+   * {@link TransferProgress} for details.
+   * @note When set, URL uploads do not follow HTTP redirects, except on Azure.
+   */
+  onProgress?: TransferProgressCallback;
+}
+
+export interface UrlUploadInput
+  extends UrlTransferInput,
+    UploadTransferOptions {
   data: TransferData;
   metadata?: Metadata;
 }
@@ -35,12 +53,14 @@ export interface ConfigDownloadInput extends ConfigTransferInput {
   abortSignal?: GenericAbortSignal;
 }
 
-export interface ConfigUploadInput extends ConfigTransferInput {
+export interface ConfigUploadInput
+  extends ConfigTransferInput,
+    UploadTransferOptions {
   data: TransferData;
   metadata?: Metadata;
 }
 
-export interface UploadInMultiplePartsInput {
+export interface UploadInMultiplePartsInput extends UploadTransferOptions {
   data: MultipartUploadData;
   reference: ObjectReference;
   transferConfig: TransferConfig;

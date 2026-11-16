@@ -5,14 +5,20 @@
 import { createReadStream } from "fs";
 import { Readable } from "stream";
 
+import { AbortController } from "abort-controller";
+import { expect } from "chai";
+
 import {
   BaseDirectory,
   ClientStorage,
+  GenericAbortSignal,
   Metadata,
   MultipartUploadData,
   ObjectReference,
   TransferConfig,
   TransferData,
+  TransferProgress,
+  TransferProgressCallback,
 } from "@itwin/object-storage-core";
 
 import { TestRemoteDirectory } from "../../utils";
@@ -470,5 +476,167 @@ export async function testMultipartUploadWithMetadata(
   });
 
   await checkUploadedFileValidity(reference, params.dataToAssert);
+  await queryAndAssertMetadata(reference, metadata);
+}
+
+export interface UploadTransferOptionsTestCase {
+  testedStorage: ClientStorage;
+  uploadMethod: "url" | "config" | "multipart";
+  getTransferConfigCallback?: (directory: string) => Promise<TransferConfig>;
+}
+
+type Uploader = (
+  data: TransferData,
+  options: {
+    abortSignal?: GenericAbortSignal;
+    onProgress?: TransferProgressCallback;
+    metadata?: Metadata;
+  }
+) => Promise<void>;
+
+async function prepareUpload(
+  params: UploadTransferOptionsTestCase
+): Promise<{ reference: ObjectReference; upload: Uploader }> {
+  const { testedStorage, uploadMethod, getTransferConfigCallback } = params;
+  const testBaseDirectory: BaseDirectory = (
+    await testDirectoryManager.createNew()
+  ).baseDirectory;
+  const reference: ObjectReference = {
+    baseDirectory: testBaseDirectory.baseDirectory,
+    objectName: "test-upload-transfer-options",
+  };
+
+  if (uploadMethod === "url") {
+    const url = await serverStorage.getUploadUrl(reference);
+    return {
+      reference,
+      upload: async (data, options) =>
+        testedStorage.upload({ storageType, url, data, ...options }),
+    };
+  }
+
+  const transferConfig = await getTransferConfigCallback!(
+    reference.baseDirectory
+  );
+  return {
+    reference,
+    upload: async (data, { metadata, ...options }) =>
+      uploadMethod === "config"
+        ? testedStorage.upload({
+            reference,
+            transferConfig,
+            data,
+            metadata,
+            ...options,
+          })
+        : testedStorage.uploadInMultipleParts({
+            reference,
+            transferConfig,
+            data: data as MultipartUploadData,
+            options: { metadata },
+            ...options,
+          }),
+  };
+}
+
+async function getUploadData(
+  params: UploadTransferOptionsTestCase,
+  content: Buffer
+): Promise<TransferData> {
+  // Multipart upload does not accept buffers.
+  return params.uploadMethod === "multipart"
+    ? testLocalFileManager.createAndWriteFile("test-upload-abort.txt", content)
+    : content;
+}
+
+export async function testUploadWithAbortedSignal(
+  params: UploadTransferOptionsTestCase
+): Promise<void> {
+  const { reference, upload } = await prepareUpload(params);
+  const data = await getUploadData(params, Buffer.from("test-upload-abort"));
+  const abortController = new AbortController();
+  abortController.abort();
+
+  await expect(
+    upload(data, { abortSignal: abortController.signal })
+  ).to.eventually.be.rejected.and.have.property("name", "AbortError");
+  expect(await serverStorage.objectExists(reference)).to.be.false;
+}
+
+export async function testUploadCancel(
+  params: UploadTransferOptionsTestCase
+): Promise<void> {
+  const { upload } = await prepareUpload(params);
+  const data = await getUploadData(params, Buffer.alloc(1024 * 1024, "a"));
+  const abortController = new AbortController();
+
+  const uploadPromise = upload(data, { abortSignal: abortController.signal });
+  abortController.abort();
+
+  await expect(uploadPromise).to.eventually.be.rejected.and.have.property(
+    "name",
+    "AbortError"
+  );
+}
+
+export async function testUploadProgress(
+  params: UploadTransferOptionsTestCase & { dataType: "buffer" | "path" }
+): Promise<void> {
+  const { reference, upload } = await prepareUpload(params);
+  const content = Buffer.alloc(256 * 1024, "a");
+  const data =
+    params.dataType === "buffer"
+      ? content
+      : await testLocalFileManager.createAndWriteFile(
+          "test-upload-progress.txt",
+          content
+        );
+  const events: TransferProgress[] = [];
+
+  await upload(data, { onProgress: (progress) => events.push(progress) });
+
+  expect(events).to.not.be.empty;
+  events.forEach((event) =>
+    expect(event.loadedBytes).to.be.at.most(content.byteLength)
+  );
+  expect(events[events.length - 1]).to.deep.equal({
+    loadedBytes: content.byteLength,
+    totalBytes: content.byteLength,
+  });
+  await checkUploadedFileValidity(reference, content);
+}
+
+/**
+ * Some clients upload differently when given a signal (for example, Google
+ * streams the data through `createWriteStream`), so a successful upload with
+ * a signal that is never aborted is checked separately.
+ */
+export async function testUploadWithSignal(
+  params: UploadTransferOptionsTestCase & {
+    dataType: "buffer" | "path" | "stream";
+  }
+): Promise<void> {
+  const { reference, upload } = await prepareUpload(params);
+  const content = Buffer.alloc(256 * 1024, "a");
+  const metadata: Metadata = { test: "test-metadata" };
+  let data: TransferData = content;
+  if (params.dataType !== "buffer") {
+    const filePath = await testLocalFileManager.createAndWriteFile(
+      "test-upload-with-signal.txt",
+      content
+    );
+    data = params.dataType === "path" ? filePath : createReadStream(filePath);
+  }
+  const events: TransferProgress[] = [];
+
+  await upload(data, {
+    abortSignal: new AbortController().signal,
+    onProgress: (progress) => events.push(progress),
+    metadata,
+  });
+
+  expect(events).to.not.be.empty;
+  expect(events[events.length - 1].loadedBytes).to.equal(content.byteLength);
+  await checkUploadedFileValidity(reference, content);
   await queryAndAssertMetadata(reference, metadata);
 }

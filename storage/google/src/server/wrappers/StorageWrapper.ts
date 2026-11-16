@@ -3,6 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+import { createReadStream } from "fs";
+import { Readable } from "stream";
+import { pipeline } from "stream/promises";
+
 import {
   ApiError,
   Bucket,
@@ -13,7 +17,14 @@ import {
 } from "@google-cloud/storage";
 
 import { buildObjectKey } from "@itwin/object-storage-core/lib/common/internal";
-import { getExpiryDate } from "@itwin/object-storage-core/lib/server/internal";
+import {
+  bufferToChunkedStream,
+  ClientUploadTransferOptions,
+  createUploadProgressHandler,
+  getExpiryDate,
+  getUploadSize,
+  throwIfAborted,
+} from "@itwin/object-storage-core/lib/server/internal";
 
 import {
   BaseDirectory,
@@ -49,21 +60,56 @@ export class StorageWrapper {
     data?: TransferData,
     metadata?: Metadata,
     headers?: ContentHeaders,
-    chunkSize?: number
+    chunkSize?: number,
+    transferOptions?: ClientUploadTransferOptions
   ): Promise<void> {
+    const { abortSignal, onProgress } = transferOptions ?? {};
+    const progress = createUploadProgressHandler(
+      onProgress,
+      onProgress && data !== undefined ? await getUploadSize(data) : undefined
+    );
+
     const options: SaveOptions = {
       metadata: { ...metadata },
       chunkSize: chunkSize,
     };
     options.contentType = headers?.contentType;
     options.gzip = headers?.contentEncoding === "gzip";
-    if (typeof data === "string") {
+    if (progress)
+      options.onUploadProgress = (event: { bytesWritten: number }) =>
+        progress(event.bytesWritten);
+
+    if (abortSignal && data !== undefined) {
+      // The SDK accepts no abort signal. Uploads are cancelled by destroying
+      // the stream returned by `createWriteStream`, which `pipeline` does on
+      // abort. `createWriteStream` detects the content type from the object
+      // name, the same way `bucket.upload` does.
+      // `pipeline` only reacts to an already aborted signal after a buffer
+      // source has started the upload, so it is checked explicitly.
+      // A `Buffer` is sent in chunks, because the SDK takes a single chunk in
+      // full at once and destroying the stream would no longer stop the upload.
+      throwIfAborted(abortSignal);
+      const source =
+        typeof data === "string"
+          ? createReadStream(data)
+          : data instanceof Readable
+          ? data
+          : bufferToChunkedStream(data);
+      const destination = this.fileObject(reference).createWriteStream(options);
+      if (options.onUploadProgress)
+        destination.on("progress", options.onUploadProgress);
+      await pipeline(source, destination, { signal: abortSignal });
+    } else if (typeof data === "string") {
       const uploadOptions: UploadOptions = { ...options };
       uploadOptions.destination = buildObjectKey(reference);
       await this.bucketObject().upload(data, uploadOptions);
     } else {
+      // For a `Buffer` the SDK reports progress only once, with the full size,
+      // before the data is sent. It reports progress per chunk it is given,
+      // and a `Buffer` is one chunk.
       await this.fileObject(reference).save(data ?? "", options);
     }
+
     if (metadata || headers?.cacheControl || headers?.contentEncoding) {
       const [updatedMetadata] = await this.fileObject(reference).getMetadata();
       updatedMetadata.metadata = { ...updatedMetadata.metadata, ...metadata };
