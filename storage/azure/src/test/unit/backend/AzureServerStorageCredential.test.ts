@@ -160,6 +160,29 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       expect(getUserDelegationKey.called).to.be.false;
     });
 
+    it("should sign the blob the caller passed even if the reference changes afterwards", async () => {
+      const config: AzureServerStorageConfig = {
+        accountName,
+        accountKey,
+        baseUrl,
+      };
+      const expiresOn = new Date(now + hour);
+      const mutableReference = { ...reference };
+      const url = new AzureServerStorage(config, client).getDownloadUrl(
+        mutableReference,
+        { expiresOn }
+      );
+      mutableReference.objectName = "other.bim";
+
+      expect(await url).to.equal(
+        `${baseUrl}/container/dir/object.bim?${sharedKeySigner(
+          BlobSASPermissions.parse("r"),
+          expiresOn,
+          "dir/object.bim"
+        )}`
+      );
+    });
+
     it("should keep the existing error when neither accountKey nor credential is present", async () => {
       const config = {
         accountName,

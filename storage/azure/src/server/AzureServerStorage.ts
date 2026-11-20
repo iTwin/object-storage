@@ -248,6 +248,7 @@ export class AzureServerStorage extends ServerStorage {
     assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
+    const blobName = buildBlobName(reference);
     const expiresOn = getExpiryDate(expiry);
     const parameters = buildBlobSASParameters(
       reference.baseDirectory,
@@ -255,7 +256,7 @@ export class AzureServerStorage extends ServerStorage {
       expiresOn,
       this._config.accountName,
       await this.getSigningKey(expiresOn),
-      buildBlobName(reference)
+      blobName
     );
 
     return `${blobClient.url}?${parameters}`;
@@ -268,6 +269,7 @@ export class AzureServerStorage extends ServerStorage {
     assertObjectReference(reference);
 
     const blobClient = this._client.getBlockBlobClient(reference);
+    const blobName = buildBlobName(reference);
     const expiresOn = getExpiryDate(expiry);
     const parameters = buildBlobSASParameters(
       reference.baseDirectory,
@@ -275,7 +277,7 @@ export class AzureServerStorage extends ServerStorage {
       expiresOn,
       this._config.accountName,
       await this.getSigningKey(expiresOn),
-      buildBlobName(reference)
+      blobName
     );
 
     return `${blobClient.url}?${parameters}`;
