@@ -16,7 +16,9 @@ import { Constants, Types } from "../common";
 import {
   AzureServerStorage,
   AzureServerStorageConfig,
+  AzureServerStorageCredentialConfig,
 } from "./AzureServerStorage";
+import { isCredentialConfig } from "./internal";
 import {
   BlobServiceClientWrapper,
   BlobServiceClientWrapperFactory,
@@ -30,19 +32,20 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
 
   public override register(
     container: DIContainer,
-    config: AzureServerStorageBindingsConfig
+    config:
+      | AzureServerStorageBindingsConfig
+      | (AzureServerStorageCredentialConfig & DependencyConfig)
   ): void {
     if (!config.accountName)
       throw new ConfigError<AzureServerStorageConfig>("accountName");
-    if (!config.accountKey)
+    if (!isCredentialConfig(config) && !config.accountKey)
       throw new ConfigError<AzureServerStorageConfig>("accountKey");
     if (!config.baseUrl)
       throw new ConfigError<AzureServerStorageConfig>("baseUrl");
 
-    container.registerInstance<AzureServerStorageConfig>(
-      Types.AzureServer.config,
-      config
-    );
+    container.registerInstance<
+      AzureServerStorageConfig | AzureServerStorageCredentialConfig
+    >(Types.AzureServer.config, config);
     container.registerFactory<ServerStorage>(
       CoreTypes.Server.serverStorage,
       (c: DIContainer) => {
@@ -56,16 +59,16 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
     container.registerFactory(
       BlobServiceClientWrapperFactory,
       (c: DIContainer) => {
-        const resolvedConfig = c.resolve<AzureServerStorageBindingsConfig>(
-          Types.AzureServer.config
-        );
+        const resolvedConfig = c.resolve<
+          AzureServerStorageConfig | AzureServerStorageCredentialConfig
+        >(Types.AzureServer.config);
         return new BlobServiceClientWrapperFactory(resolvedConfig.retryOptions);
       }
     );
     container.registerFactory(BlobServiceClientWrapper, (c: DIContainer) => {
-      const resolvedConfig = c.resolve<AzureServerStorageBindingsConfig>(
-        Types.AzureServer.config
-      );
+      const resolvedConfig = c.resolve<
+        AzureServerStorageConfig | AzureServerStorageCredentialConfig
+      >(Types.AzureServer.config);
       return c.resolve(BlobServiceClientWrapperFactory).create(resolvedConfig);
     });
   }
