@@ -160,21 +160,6 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
       expect(getUserDelegationKey.called).to.be.false;
     });
 
-    it("should use the account key when credential is also present", async () => {
-      const config = { accountName, accountKey, baseUrl, credential };
-      await expectAllSasOutputs(
-        new AzureServerStorage(config, client),
-        sharedKeySigner
-      );
-      expect(getUserDelegationKey.called).to.be.false;
-    });
-
-    it("should use shared key when accountKey is present but empty", async () => {
-      const config = { accountName, accountKey: "", baseUrl, credential };
-      await new AzureServerStorage(config, client).getDownloadUrl(reference);
-      expect(getUserDelegationKey.called).to.be.false;
-    });
-
     it("should keep the existing error when neither accountKey nor credential is present", async () => {
       const config = {
         accountName,
@@ -190,6 +175,14 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
   describe("token credential", () => {
     it("should sign all SAS outputs with a user delegation key", async () => {
       await expectAllSasOutputs(credentialStorage(), delegationSigner);
+    });
+
+    it("should use the credential when accountKey is also present", async () => {
+      const config = { accountName, accountKey, baseUrl, credential };
+      await expectAllSasOutputs(
+        new AzureServerStorage(config, client),
+        delegationSigner
+      );
     });
 
     it("should request a 7 day key started 5 minutes ago", async () => {
@@ -272,13 +265,13 @@ describe(`${BlobServiceClientWrapperFactory.name}`, () => {
     expect(clientCredential(wrapper)).to.equal(credential);
   });
 
-  it("should throw if credential is undefined", () => {
+  it("should throw instead of creating an anonymous client if credential is undefined", () => {
     expect(() =>
       new BlobServiceClientWrapperFactory().create({
         accountName,
         baseUrl,
         credential: undefined as unknown as TokenCredential,
       })
-    ).to.throw("credential is not defined in configuration");
+    ).to.throw(TypeError);
   });
 });

@@ -94,7 +94,7 @@ describe(`${AzureServerStorageBindings.name}`, () => {
             credential: undefined,
             baseUrl: "testBaseUrl",
           } as unknown as AzureServerStorageCredentialConfig & DependencyConfig,
-          expectedErrorMessage: "credential is not defined in configuration",
+          expectedErrorMessage: "accountKey is not defined in configuration",
         },
       ]);
 

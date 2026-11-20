@@ -16,15 +16,10 @@ import type {
   AzureBlobServiceCredentialConfig,
 } from "../wrappers";
 
-/**
- * A config selects token credential authentication only when it has a
- * `credential` property and no `accountKey` property. Any config with
- * `accountKey` uses shared key authentication.
- */
 export function isCredentialConfig(
   config: AzureBlobServiceConfig | AzureBlobServiceCredentialConfig
 ): config is AzureBlobServiceCredentialConfig {
-  return "credential" in config && !("accountKey" in config);
+  return "credential" in config && !!config.credential;
 }
 
 export function buildBlobSASParameters(

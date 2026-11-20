@@ -9,8 +9,6 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
-import { ConfigError } from "@itwin/cloud-agnostic-core/lib/internal";
-
 import { RetryOptions } from "@itwin/object-storage-core";
 
 import { formatRetryOptions } from "../../common/internal";
@@ -26,8 +24,8 @@ export interface AzureBlobServiceConfig {
 
 /**
  * Authenticates with an Azure SDK token credential, such as a managed
- * identity, instead of an account key. Used only when the config has no
- * `accountKey` property, not even an undefined one.
+ * identity, instead of an account key. A set `credential` takes precedence
+ * over `accountKey`.
  */
 export interface AzureBlobServiceCredentialConfig {
   accountName: string;
@@ -41,18 +39,9 @@ export class BlobServiceClientWrapperFactory {
   public create(
     config: AzureBlobServiceConfig | AzureBlobServiceCredentialConfig
   ): BlobServiceClientWrapper {
-    let credential: StorageSharedKeyCredential | TokenCredential;
-    if (isCredentialConfig(config)) {
-      // newPipeline(undefined) silently creates an anonymous client.
-      if (!config.credential)
-        throw new ConfigError<AzureBlobServiceCredentialConfig>("credential");
-      credential = config.credential;
-    } else {
-      credential = new StorageSharedKeyCredential(
-        config.accountName,
-        config.accountKey
-      );
-    }
+    const credential = isCredentialConfig(config)
+      ? config.credential
+      : new StorageSharedKeyCredential(config.accountName, config.accountKey);
     return new BlobServiceClientWrapper(
       new BlobServiceClient(
         config.baseUrl,

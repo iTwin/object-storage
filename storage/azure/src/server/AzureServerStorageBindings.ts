@@ -38,10 +38,7 @@ export class AzureServerStorageBindings extends ServerStorageDependency {
   ): void {
     if (!config.accountName)
       throw new ConfigError<AzureServerStorageConfig>("accountName");
-    if (isCredentialConfig(config)) {
-      if (!config.credential)
-        throw new ConfigError<AzureServerStorageCredentialConfig>("credential");
-    } else if (!config.accountKey)
+    if (!isCredentialConfig(config) && !config.accountKey)
       throw new ConfigError<AzureServerStorageConfig>("accountKey");
     if (!config.baseUrl)
       throw new ConfigError<AzureServerStorageConfig>("baseUrl");
