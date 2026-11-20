@@ -18,4 +18,4 @@ const storage = new AzureServerStorage(
 );
 ```
 
-The identity needs blob data access and permission to generate user delegation keys, for example the Storage Blob Data Contributor role. SAS expiry must not exceed the user delegation key's expiry, about 7 days minus 5 minutes from now.
+The identity needs blob data access and permission to generate user delegation keys, for example the Storage Blob Data Contributor role at storage account scope or wider. SAS expiry must not exceed the user delegation key's expiry, about 7 days minus 5 minutes from now.

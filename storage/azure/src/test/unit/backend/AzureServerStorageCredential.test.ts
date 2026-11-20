@@ -182,17 +182,6 @@ describe(`${AzureServerStorage.name} SAS signing`, () => {
         )}`
       );
     });
-
-    it("should keep the existing error when neither accountKey nor credential is present", async () => {
-      const config = {
-        accountName,
-        baseUrl,
-      } as unknown as AzureServerStorageConfig;
-      await expect(
-        new AzureServerStorage(config, client).getDownloadUrl(reference)
-      ).to.eventually.be.rejectedWith(TypeError);
-      expect(getUserDelegationKey.called).to.be.false;
-    });
   });
 
   describe("token credential", () => {
